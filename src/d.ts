@@ -17,20 +17,11 @@ export interface CladeDescription {
   unselected_sample_locations: string[];
 
   muts_from_parent: number;
+  n_cousins: number;
+  cousin_locations: string[];
+  min_cousin_date: string;
+  max_cousin_date: string;
 
   geo_monophyletic: boolean;
   min_transmissions_across_demes: any;
-}
-
-export interface InsightText {
-  cluster_diffusion_if_monophyly_true: {
-    title: String;
-    subtitle: String;
-    body: String;
-  };
-  cluster_diffusion_if_monophyly_false: {
-    title: String;
-    subtitle: String;
-    body: String;
-  };
 }

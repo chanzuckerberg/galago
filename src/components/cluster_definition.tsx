@@ -6,7 +6,7 @@ type CladeProps = {
 };
 
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
-function Narrative(props: CladeProps) {
+function ClusterDefinition(props: CladeProps) {
   const { data } = props;
 
   return (
@@ -58,4 +58,4 @@ function Narrative(props: CladeProps) {
   );
 }
 
-export default Narrative;
+export default ClusterDefinition;
