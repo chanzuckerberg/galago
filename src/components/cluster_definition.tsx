@@ -14,9 +14,7 @@ function Narrative(props: CladeProps) {
         maxWidth: "50em",
       }}
     >
-      <h4>
-        What is the smallest genomic cluster that contains all of your samples?
-      </h4>
+      <h4>How tightly clustered are your selected samples?</h4>
       <h2>
         {` 
         ${

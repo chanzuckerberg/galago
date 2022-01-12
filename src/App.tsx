@@ -1,4 +1,4 @@
-import Narrative from "./components/narrative_cluster_diffusion";
+import Narrative from "./components/cluster_definition";
 import stub_data from "../stub_data/random_clade_humboldt";
 
 function App() {
