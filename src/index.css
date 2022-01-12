@@ -5,6 +5,25 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.3;
+  padding: 4em 1em;
+  color: #333;
+}
+
+h1,
+h2,
+strong {
+  /* margin-top: 1em;
+  padding-top: 1em; */
+  color: #111;
+}
+
+h3,
+h4,
+h5 {
+  /* margin-top: 1em;
+  padding-top: 1em; */
+  color: #777;
 }
 
 code {

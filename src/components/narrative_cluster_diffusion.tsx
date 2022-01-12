@@ -9,11 +9,14 @@ function Narrative(props: CladeProps) {
 
   return (
     <div
-      style={{ width: `30em`, padding: `10px`, border: `2px solid lightgray` }}
+      style={{
+        margin: "auto",
+        maxWidth: "50em",
+      }}
     >
-      <h5>
+      <h4>
         What is the smallest genomic cluster that contains all of your samples?
-      </h5>
+      </h4>
       <h2>
         {` 
         ${
