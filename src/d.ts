@@ -35,6 +35,7 @@ export interface CladeDescription {
 
 export interface DatasetDescription {
   n_samples: number;
+  timepoints: string[];
   geo_home: {
     location: string;
     division: string;
@@ -42,7 +43,6 @@ export interface DatasetDescription {
     region: string;
   };
   dataset_census: {
-    timepoints: string[];
     location_match: number[];
     division_match: number[];
     country_match: number[];
@@ -52,7 +52,6 @@ export interface DatasetDescription {
     within_8_muts: number[];
   };
   available_census: {
-    timepoints: string[];
     location_match: number[];
     division_match: number[];
     country_match: number[];
