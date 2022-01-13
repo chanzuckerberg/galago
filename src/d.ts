@@ -6,9 +6,12 @@ export interface CladeDescription {
   max_bn_sample_muts: number;
   min_trans_per_mut: number;
   max_trans_per_mut: number;
-
+  // TODO: figure out how to use dates
   mrca: string;
-  tmrca: number;
+  mrca_matches: string[];
+  tmrca: string;
+  tmrca_min: string;
+  tmrca_max: string;
   samples_monophyletic: boolean;
   n_onward_with_accumulated_muts: number;
   n_total_samples: number;
