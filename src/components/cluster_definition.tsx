@@ -33,15 +33,14 @@ function ClusterDefinition(props: CladeProps) {
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
-        <p>
-          {`Your selected samples are separated from each other by
+        {`Your selected samples are separated from each other by
         ${data.min_bn_sample_muts} - ${data.max_bn_sample_muts} mutations (or,
         on average, about ${data.min_bn_sample_muts * data.min_trans_per_mut} - 
         ${data.max_bn_sample_muts * data.max_trans_per_mut} transmission
         events).`}
-        </p>
-        <p>
-          {` 
+      </p>
+      <p>
+        {` 
         ${
           data.samples_monophyletic
             ? `These samples form their own genomic cluster.`
@@ -52,7 +51,6 @@ function ClusterDefinition(props: CladeProps) {
               }.`
         }
         Here, "genomic cluster" means the smallest subtree or "clade" that contains all of your samples. You can also think of this as the shortest plausible transmission chain connecting your samples to each other.`}
-        </p>
       </p>
     </div>
   );
