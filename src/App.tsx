@@ -2,6 +2,7 @@ import ClusterDefinition from "./components/cluster_definition";
 import ClusterUniqueness from "./components/cluster_uniqueness";
 import TMRCA from "./components/tmrca";
 import stub_data from "../stub_data/random_clade_humboldt";
+import MinIntroductions from "./components/min_introductions";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <ClusterDefinition data={stub_data} />
       <TMRCA data={stub_data} />
       <ClusterUniqueness data={stub_data} />
+      <MinIntroductions data={stub_data} />
     </div>
   );
 }

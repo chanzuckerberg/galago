@@ -25,6 +25,9 @@ export interface CladeDescription {
   min_cousin_date: string;
   max_cousin_date: string;
 
+  geo_attr: string;
+  geo_attr_val: string;
   geo_monophyletic: boolean;
-  min_transmissions_across_demes: any;
+  min_transmissions_across_demes: number;
+  introductions_source_locations: string[];
 }
