@@ -22,15 +22,15 @@ function TMRCA(props: CladeProps) {
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`The index case of this genomic cluster likely existed between ${data.tmrca_min} and ${data.tmrca_max} (95% CI).`}
+        {`The primary case of this genomic cluster likely existed between ${data.tmrca_min} and ${data.tmrca_max} (95% CI).`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
-        {`The index case's pathogen genome sequence 
+        {`The primary case's pathogen genome sequence 
         ${
           data.mrca_matches.length == 0
             ? "does not match any samples in this dataset."
-            : `was most likely identical to sample(s): ${data.mrca_matches}. Importantly, it is also possible that the true index case is not be represented in this dataset (but has an identical sequence to these sample(s)). `
+            : `was most likely identical to sample(s): ${data.mrca_matches}. Importantly, it is also possible that the true primary case is not be represented in this dataset (but has an identical sequence to these sample(s)). `
         }
         `}
       </p>
