@@ -13,6 +13,7 @@ export interface CladeDescription {
   tmrca_min: string;
   tmrca_max: string;
   samples_monophyletic: boolean;
+  onward_muts_threshold: number;
   n_onward_with_accumulated_muts: number;
   n_total_samples: number;
 
