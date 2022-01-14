@@ -22,33 +22,35 @@ function ClusterDefinition(props: CladeProps) {
       <h2>
         {` 
         ${
-          data.samples_monophyletic // TITLE CHANGES DEPENDING ON IF SAMPLES FORM A MONOPHYLETIC SUBCLADE
-            ? `Your ${data.n_selected_samples} selected samples are all more closely related to each other than to anything else in this dataset.`
-            : `Your ${
-                data.n_selected_samples
-              } selected samples are also closely related to ${
-                data.n_total_samples - data.n_selected_samples
-              } samples from other locations.`
+          data.unselected_samples_in_cluster.length == 0 // TITLE CHANGES DEPENDING ON IF SAMPLES FORM A MONOPHYLETIC SUBCLADE
+            ? `Your ${data.selected_samples.length} selected samples are all more closely related to each other than to anything else in this dataset.`
+            : `Your ${data.selected_samples.length} selected samples are also closely related to ${data.unselected_samples_in_cluster.length} samples from other locations.`
         }`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
         {`Your selected samples are separated from each other by
-        ${data.min_bn_sample_muts} - ${data.max_bn_sample_muts} mutations (or,
-        on average, about ${data.min_bn_sample_muts * data.min_trans_per_mut} - 
-        ${data.max_bn_sample_muts * data.max_trans_per_mut} transmission
+        ${data.muts_bn_selected_minmax[0]} - ${
+          data.muts_bn_selected_minmax[1]
+        } mutations (or,
+        on average, about ${
+          data.muts_bn_selected_minmax[0] * data.muts_per_trans_minmax[0]
+        } - 
+        ${
+          data.muts_bn_selected_minmax[1] * data.muts_per_trans_minmax[1]
+        } transmission
         events).`}
       </p>
       <p>
         {` 
         ${
-          data.samples_monophyletic
+          data.unselected_samples_in_cluster.length == 0
             ? `These samples form their own genomic cluster.`
             : `The genomic cluster containing your samples also includes ${
-                data.n_total_samples - data.n_selected_samples
-              } samples from these locations: ${
-                data.unselected_sample_locations
-              }.`
+                data.unselected_samples_in_cluster.length
+              } samples from these locations: ${new Set(
+                data.unselected_samples_in_cluster.map((a) => a.location)
+              )}.`
         }
         Here, "genomic cluster" means the smallest subtree or "clade" that contains all of your samples. You can also think of this as the shortest plausible transmission chain connecting your samples to each other.`}
       </p>

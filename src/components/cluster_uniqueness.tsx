@@ -8,6 +8,8 @@ type CladeProps = {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function ClusterUniqueness(props: CladeProps) {
   const { data } = props;
+  const { cousin_dates } = data.cousins.map((a) => a.collection_date);
+  const { cousin_locations } = new Set(data.cousins.map((a) => a.location));
 
   return (
     <div
@@ -26,7 +28,11 @@ function ClusterUniqueness(props: CladeProps) {
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
-        {`The most closely related genomic cluster contains ${data.n_cousins} samples dated between ${data.min_cousin_date} and ${data.max_cousin_date}   from these location(s): ${data.cousin_locations}.`}
+        {`The most closely related genomic cluster contains ${
+          data.cousins.length
+        } samples dated between 
+        ${Math.min.apply(cousin_dates)} and ${Math.max.apply(cousin_dates)}
+           from these location(s): ${cousin_locations}.`}
       </p>
     </div>
   );
