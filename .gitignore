@@ -4,3 +4,5 @@ dist
 dist-ssr
 *.local
 stub_data
+.ipynb_checkpoints/*
+*.ipynb
