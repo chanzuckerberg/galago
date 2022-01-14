@@ -284,8 +284,13 @@ def pairwise_dist_minmax(samples):
 
 def describe_sample(sample, mrca=None):
     standard_attrs = ['name', 'location', 'division', 'country', 'region']
-    description = {attr: getattr(sample, attr) for attr in standard_attrs if attr in sample.features}
-    description['collection_date'] = getattr(sample, 'num_date_value')
+    description = {}
+    for attr in standard_attrs:
+        if attr in sample.features:
+            description[attr] = getattr(sample, attr)
+        else:
+            description[attr] = None
+    description['collection_date'] = getattr(sample, 'num_date')
     description['metadata'] = {attr: getattr(sample, attr) for attr in sample.features if attr not in description}
     if mrca is None:
         description['muts_from_mrca'] = None
@@ -329,9 +334,9 @@ def describe_clade(selected_samples, tree,
     desc['muts_from_parent'] = clade_uniqueness(mrca)
     desc['cousins'] = [describe_sample(c, mrca) for c in get_cousins(mrca, min_parent_muts)]
     
-    desc['mut_bn_selected_minmax'] = pairwise_dist_minmax(samples)
+    desc['muts_bn_selected_minmax'] = pairwise_dist_minmax(samples)
     ###### BROKEN! TODO: SWITCH TO MATUTILS INTRODUCE #########
-    transmissions_across_demes = {
+    desc['transmissions_across_demes'] = {
     'location': [],
     'division': [],
     'country': [],
@@ -342,7 +347,7 @@ def describe_clade(selected_samples, tree,
 
 
 def describe_dataset(tree):
-    return [describe_sample(s) for s in tree.get_children()]
+    return {'all_samples': [describe_sample(s) for s in tree.get_children()]}
     
 def write_as_ts(clade_description, dataset_description, filepath):
     ofile = open(filepath, 'w')
@@ -350,11 +355,13 @@ def write_as_ts(clade_description, dataset_description, filepath):
     header = 'import { CladeDescription, DatasetDescription } from "../src/d";'
     clade_header = 'const clade_description: CladeDescription = '
     dataset_header = 'const dataset_description: DatasetDescription = '
+    footer = 'export default { clade_description, dataset_description };'
     
     ofile.write(header+'\n\n'+clade_header)
     json.dump(clade_description, ofile, indent=1)
     ofile.write('\n\n'+dataset_header)
     json.dump(dataset_description, ofile, indent=1)
+    ofile.write('\n\n'+footer)
 
 
 # In[40]:

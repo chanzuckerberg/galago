@@ -6,7 +6,7 @@ export interface Sample {
   region: string;
   collection_date: string;
   muts_from_mrca: number;
-  metadata: object;
+  metadata: any;
 }
 
 export interface Introduction {
@@ -20,9 +20,8 @@ export interface CladeDescription {
   selected_samples: Sample[];
   unselected_samples_in_cluster: Sample[];
 
-  muts_bn_selected: number[];
-  min_trans_per_mut: number;
-  max_trans_per_mut: number;
+  muts_bn_selected_minmax: number[];
+  muts_per_trans_minmax: number[];
 
   // TODO: figure out how to use dates
   mrca: Sample;
