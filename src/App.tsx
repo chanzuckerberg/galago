@@ -15,7 +15,7 @@ function App() {
       <ClusterDefinition data={stub_data.clade_description} />
       <TMRCA data={stub_data.clade_description} />
       <ClusterUniqueness data={stub_data.clade_description} />
-      <MinIntroductions data={stub_data.clade_description} />
+      {/* <MinIntroductions data={stub_data.clade_description} /> */}
       <OnwardTransmission data={stub_data.clade_description} />
     </div>
   );
