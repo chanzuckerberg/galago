@@ -9,6 +9,7 @@ import json # necessary to read in exported nextstrain JSON file
 # from pprint import pprint
 from itertools import combinations
 import argparse
+from numpy import NaN
 import datetime
 
 
@@ -289,11 +290,11 @@ def describe_sample(sample, mrca=None):
         if attr in sample.features:
             description[attr] = getattr(sample, attr)
         else:
-            description[attr] = None
+            description[attr] = ''
     description['collection_date'] = getattr(sample, 'num_date')
     description['metadata'] = {attr: getattr(sample, attr) for attr in sample.features if attr not in description}
     if mrca is None:
-        description['muts_from_mrca'] = None
+        description['muts_from_mrca'] = NaN
     else:
         description['muts_from_mrca'] = sample.get_distance(mrca)
     return description
