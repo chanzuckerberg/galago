@@ -6,16 +6,16 @@
 
 import ete3 as et # phylogenetics library that provides tree data structure with nice methods for inspection and manipulation
 import json # necessary to read in exported nextstrain JSON file
-# from pprint import pprint
+from pprint import pprint
 from itertools import combinations
 import argparse
 from numpy import NaN
 import datetime
 
-
 # # Load and parse the tree
 
 # In[2]:
+
 
 
 def make_node(data_dict):
