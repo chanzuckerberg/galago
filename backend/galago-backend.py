@@ -26,15 +26,17 @@ def make_node(data_dict):
     node.name = data_dict['name'] # copy name
     node.dist = 0.    # initialize for the root node
     
-    
-    '''          "num_date": {
-            "confidence": [
-              2019.9794520547946,
-              2019.9794520547946
-            ],
-            "value": 2019.9794520547946
-          },'''
-    
+    def parse_decimal_date(dec_date):
+        '''KNOWN BUG: WILL NOT HANDLE LEAP YEARS'''
+        year = int(dec_date)
+        try:
+            ordinal_day = datetime.date.fromordinal(round((dec_date - year)*365))
+        except ValueError:
+            print('potential bad date', dec_date)
+            ordinal_day = datetime.date.fromordinal(1)
+        date = datetime.date(year, ordinal_day.month, ordinal_day.day)
+        return date.strftime('%Y-%M-%D')
+
     def add_features(attrs, node):
         '''
         attrs: dictionary of either `branch_attrs` or `node_attrs` from the nextstrain json
@@ -43,15 +45,27 @@ def make_node(data_dict):
                      these can later be referenced via `node.attribute_name => value`
         '''
         for k,v in attrs.items():
-            if not isinstance(v, dict):
+            if not isinstance(v, dict): # not a dictionary / no nesting present
+                if 'date' in k and type(v) == float:
+                    v = parse_decimal_date(v)
                 node.add_feature(k, v)
-            elif len(v) == 0:
+            elif len(v) == 0: # empty dict
                 continue
-            elif len(v) == 1 and 'value' in v:
-                node.add_feature(k, v['value'])
-            else:
-                unpacked = { k+'_'+k2 : v2 for k2,v2 in v.items()}
-                node.add_features(**unpacked)
+            elif len(v) == 1 and 'value' in v: # only dictionary element is 'value'
+                if 'date' in k and type(v) == float:
+                    v = parse_decimal_date(v['value'])
+                else:
+                    v = v['value']
+                node.add_feature(k, v)
+            else: # unpack nested dictionary with multiple items
+                for k2,v2 in v.items():
+                    if k2 == 'value':
+                        k2 = k
+                    else:
+                        k2 = k+'_'+k2
+                    if 'date' in k2 and type(v2) == float:
+                        v2 = parse_decimal_date(v2)
+                    node.add_feature(k2, v2)
 
     if 'branch_attrs' in data_dict:
         add_features(data_dict['branch_attrs'], node)        
