@@ -1,17 +1,3 @@
-export interface Node {
-  name: string;
-  parent?: Node;
-  div: number;
-  branch_length: number;
-  location: string;
-  division: string;
-  country: string;
-  region: string;
-  collection_date: string;
-  metadata: any;
-  children: Node[];
-}
-
 export interface Introduction {
   source_loc: string;
   date_min: string;
