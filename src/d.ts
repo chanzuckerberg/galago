@@ -1,12 +1,15 @@
-export interface Sample {
+export interface Node {
   name: string;
+  parent?: Node;
+  div: number;
+  branch_length: number;
   location: string;
   division: string;
   country: string;
   region: string;
   collection_date: string;
-  muts_from_mrca: number;
   metadata: any;
+  children: Node[];
 }
 
 export interface Introduction {
@@ -17,17 +20,17 @@ export interface Introduction {
 }
 
 export interface CladeDescription {
-  selected_samples: Sample[];
-  unselected_samples_in_cluster: Sample[];
+  selected_samples: Node[];
+  unselected_samples_in_cluster: Node[];
 
   muts_bn_selected_minmax: number[];
   muts_per_trans_minmax: number[];
 
   // TODO: figure out how to use dates
-  mrca: Sample;
+  mrca: Node;
 
   muts_from_parent: number;
-  cousins: Sample[];
+  cousins: Node[];
 
   home_geo: {
     location: string;
@@ -45,5 +48,5 @@ export interface CladeDescription {
 }
 
 export interface DatasetDescription {
-  all_samples: Sample[];
+  all_samples: Node[];
 }
