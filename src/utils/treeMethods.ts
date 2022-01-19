@@ -22,7 +22,11 @@ export const traverse_preorder = (
     node_fn(node);
   }
 
-  if (node.children) {
+  if (
+    node.children !== undefined &&
+    Array.isArray(node.children) &&
+    node.children.length > 0
+  ) {
     // then visit children, left to right
     for (var i = 0; i < node.children.length; i++) {
       traverse_preorder(
