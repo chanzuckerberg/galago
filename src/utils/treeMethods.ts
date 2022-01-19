@@ -1,12 +1,101 @@
-import { Node } from "../d";
+// LIGHTLY ADAPTED FROM https://github.com/veg/phylotree.js UNDER TERMS OF THEIR MIT LICENSE
+// Copyright (c) 2016 iGEM/UCSD evolutionary biology and bioinformatics group
 
-const traverseTree = (root_node: Node) => {
-  // in: root node of the tree
-  // does: walks through the tree, making a note for each internal node with the `leaves` (terminal nodes / samples) that descend from it
-  // e.g.: internal_node = {name: 'foo', 'parent': Node, children: [other_internal_node_1, terminal_node, other_terminal_node_that_descends_from_other_internal_node_1], leaves: [terminal_node]}
+import { NSNode } from "./nextstrainAdapter";
+
+const preOrder = (node: NSNode, callback?: Function, parent?: NSNode) => {
+  if (callback) {
+    callback(node);
+  }
+  if (parent) {
+    node.parent = parent;
+  }
+
+  if (node.children) {
+    for (var i = 0; i < node.children.length; i++) {
+      preOrder(
+        (node = node.children[i]),
+        (callback = callback),
+        (parent = node)
+      );
+    }
+  }
 };
 
-const findMRCA = (samples: Node[]) => {
-  // in: array of nodes (samples)
-  // out: single node, representing the shallowest (furthest from the root / closest to the leaves) node in the tree that contains all of the samples as descendents
+const postOrder = (node: NSNode, callback?: Function) => {
+  if (node.children) {
+    for (var i = 0; i < node.children.length; i++) {
+      postOrder((node = node.children[i]), (callback = callback));
+    }
+  }
+
+  if (callback) {
+    callback(node);
+  }
+};
+
+const mrca = (target_nodes: NSNode[]) => {
+  // if only one node given, return itself
+  if (new Set(target_nodes).size === 1) {
+    return target_nodes[0];
+  }
+
+  var ref_node: NSNode | null = null; // first node in the list of targets
+  var ref_node_path: NSNode[] = []; // path between ref_node and the root
+  var paths = [];
+
+  for (var i = 0; i < target_nodes.length; i++) {
+    // iterate over target nodes and record the path between this node and the root of the tree
+    var current_node: NSNode | null = target_nodes[i];
+    var this_path = Object();
+    this_path["node"] = current_node;
+    this_path["path"] = [];
+
+    while (current_node) {
+      // while we haven't yet reached the root...
+      this_path["path"].push(current_node);
+      if (!ref_node) {
+        // if no reference node defined yet, add the current_node to the 'ref_node_path' list
+        ref_node_path.push(current_node);
+      }
+      if (current_node.parent) {
+        // if not yet at the root, move up to the parent
+        current_node = current_node.parent;
+      } else {
+        current_node = null;
+      } // if we reach the root, break the loop and reset the current_node pointer
+      current_node = null;
+    }
+    paths.push(this_path); // add this path to the list of node paths
+
+    if (!ref_node) {
+      // if no reference node, use the current_node target node
+      ref_node = target_nodes[i];
+    }
+  }
+
+  for (i = 0; i < ref_node_path.length; i++) {
+    // the mrca must be contained in the path between the first node and the root. test each one.
+    var current_candidate_node = ref_node_path[i];
+    var still_a_candidate = true;
+    for (i = 0; i < paths.length; i++) {
+      // iterate through the paths between each target node and the root of the tree
+      var current_target_node = paths[i]["node"];
+      var current_path = paths[i]["path"];
+
+      // if the current candidate node is not present in every path between each target node and the root, move on -- it's not the mrca
+      if (
+        current_target_node !== ref_node &&
+        !current_path.includes(current_candidate_node)
+      ) {
+        still_a_candidate = false;
+        break;
+      }
+
+      if (still_a_candidate) {
+        var mrca = current_candidate_node; // because nodes are added to each path in order from most recent -> most ancestral, the first time we encounter a node that is in every path, we've found the mrca
+        return mrca;
+      }
+    }
+  }
 };
