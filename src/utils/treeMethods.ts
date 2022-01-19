@@ -1,11 +1,12 @@
-// LIGHTLY ADAPTED FROM https://github.com/veg/phylotree.js UNDER TERMS OF THEIR MIT LICENSE
-// Copyright (c) 2016 iGEM/UCSD evolutionary biology and bioinformatics group
-
 import { NSNode } from "./nextstrainAdapter";
 
-const preOrder = (node: NSNode, callback?: Function, parent?: NSNode) => {
-  if (callback) {
-    callback(node);
+export const traverse_preorder = (
+  node: NSNode,
+  node_fn?: Function,
+  parent?: NSNode
+) => {
+  if (node_fn) {
+    node_fn(node);
   }
   if (parent) {
     node.parent = parent;
@@ -13,28 +14,28 @@ const preOrder = (node: NSNode, callback?: Function, parent?: NSNode) => {
 
   if (node.children) {
     for (var i = 0; i < node.children.length; i++) {
-      preOrder(
+      traverse_preorder(
         (node = node.children[i]),
-        (callback = callback),
+        (node_fn = node_fn),
         (parent = node)
       );
     }
   }
 };
 
-const postOrder = (node: NSNode, callback?: Function) => {
+export const traverse_postorder = (node: NSNode, node_fn?: Function) => {
   if (node.children) {
     for (var i = 0; i < node.children.length; i++) {
-      postOrder((node = node.children[i]), (callback = callback));
+      traverse_postorder((node = node.children[i]), (node_fn = node_fn));
     }
   }
 
-  if (callback) {
-    callback(node);
+  if (node_fn) {
+    node_fn(node);
   }
 };
 
-const mrca = (target_nodes: NSNode[]) => {
+export const find_mrca = (target_nodes: NSNode[]) => {
   // if only one node given, return itself
   if (new Set(target_nodes).size === 1) {
     return target_nodes[0];
