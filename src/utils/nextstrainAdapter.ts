@@ -6,7 +6,7 @@ export interface NSNode {
   branch_attrs: {
     // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
     length: number | undefined; // not in default nextstrain export; add later via traversal
-    // HELP: add escape hatch here to allow for other arbitrary [key, value] pairs to exist
+    [key: string]: any;
   };
   node_attrs: {
     // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
@@ -14,8 +14,8 @@ export interface NSNode {
     location: { value: string };
     country: { value: string };
     region: { value: string };
-    num_date: { value: number; confidence: number[] }; // HELP: these should be dates (they come in as decimals but we'll want to display them as ISO YYYY-MM-DD)
-    // HELP: add escape hatch here to allow for other arbitrary [key, value] pairs to exist
+    num_date: { value: number; confidence: number[] };
+    [key: string]: any;
   };
 }
 
