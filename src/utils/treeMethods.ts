@@ -55,10 +55,10 @@ export const find_mrca = (target_nodes: NSNode[]) => {
   }
 
   // iterate over target nodes and record the path between this node and the root of the tree
-  var paths = [];
-  for (var i = 0; i < target_nodes.length; i++) {
-    var current_node: NSNode | null = target_nodes[i];
-    var this_path = [];
+  var paths: Array<Array<NSNode>> = [];
+  for (let i = 0; i < target_nodes.length; i++) {
+    let current_node: NSNode | null = target_nodes[i];
+    let this_path: Array<NSNode> = [];
 
     while (current_node) {
       // while we haven't yet reached the root, record each great-great-/great-/grand-/parent
@@ -75,13 +75,13 @@ export const find_mrca = (target_nodes: NSNode[]) => {
   }
 
   // the mrca must be contained in every path between each target node and the root. use the first one as a reference to compare to.
-  var reference_path = paths[0];
-  for (i = 0; i < reference_path.length; i++) {
-    var current_candidate_node = reference_path[i];
-    var still_a_candidate = true;
-    for (i = 1; i < paths.length; i++) {
+  let reference_path: Array<NSNode> = paths[0];
+  for (let i = 0; i < reference_path.length; i++) {
+    let current_candidate_node: NSNode = reference_path[i];
+    let still_a_candidate: boolean = true;
+    for (let i = 1; i < paths.length; i++) {
       // iterate through the paths between each subsequent target node and the root of the tree
-      var current_path = paths[i];
+      let current_path: Array<NSNode> = paths[i];
 
       // if the current candidate node is not present in any path, it's not the mrca -- move on
       if (!current_path.includes(current_candidate_node)) {
@@ -91,7 +91,7 @@ export const find_mrca = (target_nodes: NSNode[]) => {
 
       // because nodes are added to each path in order from most recent -> most ancestral, the first time we encounter a node that is in every path, we've found the mrca
       if (still_a_candidate) {
-        var mrca = current_candidate_node;
+        const mrca: NSNode = current_candidate_node;
         return mrca;
       }
     }
