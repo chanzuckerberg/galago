@@ -36,6 +36,8 @@ export const traverse_preorder = (
       );
     }
   }
+
+  return node;
 };
 
 export const traverse_postorder = (node: NSNode, node_fn?: Function) => {
@@ -50,6 +52,7 @@ export const traverse_postorder = (node: NSNode, node_fn?: Function) => {
     // then visit current node and do something
     node_fn(node);
   }
+  return node;
 };
 
 export const find_mrca = (target_nodes: NSNode[]) => {
