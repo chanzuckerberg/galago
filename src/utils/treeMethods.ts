@@ -29,6 +29,7 @@ export const traverse_preorder = (
   ) {
     // then visit children, left to right
     for (var i = 0; i < node.children.length; i++) {
+      //HELP: why is this still an error even after exhaustive checks in lines 25 - 29?
       traverse_preorder(
         (node = node.children[i]),
         (node_fn = node_fn),
@@ -111,7 +112,7 @@ export const get_dist = (target_nodes: NSNode[]) => {
   const mrca = get_mrca(target_nodes);
   console.assert(mrca !== undefined);
   const node1_to_mrca: number =
-    target_nodes[0].node_attrs.div - mrca.node_attrs.div;
+    target_nodes[0].node_attrs.div - mrca.node_attrs.div; // HELP: line 102 declares this as a NSNode, not undefined. Why is typescript still concerned about it being undefined?
   const node2_to_mrca: number =
     target_nodes[1].node_attrs.div - mrca.node_attrs.div;
   return node1_to_mrca + node2_to_mrca;
