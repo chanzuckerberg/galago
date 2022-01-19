@@ -1,18 +1,29 @@
 import { NSNode } from "./nextstrainAdapter";
 
+export const branch_length_from_div = (node: NSNode) => {
+  if (node.parent) {
+    node.branch_attrs["length"] =
+      node.node_attrs["div"] - node.parent.node_attrs["div"];
+  }
+};
+
 export const traverse_preorder = (
   node: NSNode,
   node_fn?: Function,
   parent?: NSNode
 ) => {
-  if (node_fn) {
-    node_fn(node);
-  }
   if (parent) {
+    // visit current node first. while we're at it, make sure we have pointers to parents on all our nodes
     node.parent = parent;
   }
 
+  if (node_fn) {
+    // do something
+    node_fn(node);
+  }
+
   if (node.children) {
+    // then visit children, left to right
     for (var i = 0; i < node.children.length; i++) {
       traverse_preorder(
         (node = node.children[i]),
@@ -25,12 +36,14 @@ export const traverse_preorder = (
 
 export const traverse_postorder = (node: NSNode, node_fn?: Function) => {
   if (node.children) {
+    // visit children first, left to rigt
     for (var i = 0; i < node.children.length; i++) {
       traverse_postorder((node = node.children[i]), (node_fn = node_fn));
     }
   }
 
   if (node_fn) {
+    // then visit current node and do something
     node_fn(node);
   }
 };

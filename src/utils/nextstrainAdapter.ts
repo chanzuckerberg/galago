@@ -23,3 +23,9 @@ export interface NSJSON {
   meta: any; // we don't care about this nextstrain-specific metadata right now
   tree: NSNode;
 }
+
+import { traverse_preorder, branch_length_from_div } from "./treeMethods";
+export const ingest_nextstrain = (nextstrain_json: NSJSON) => {
+  var tree = traverse_preorder(nextstrain_json.tree, branch_length_from_div); // assign parents and branch lengths
+  return tree;
+};
