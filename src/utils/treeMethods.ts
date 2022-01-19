@@ -55,7 +55,7 @@ export const traverse_postorder = (node: NSNode, node_fn?: Function) => {
   return node;
 };
 
-export const find_mrca = (target_nodes: NSNode[]) => {
+export const get_mrca = (target_nodes: NSNode[]) => {
   // if only one node given, return itself
   if (new Set(target_nodes).size === 1) {
     return target_nodes[0];
@@ -103,4 +103,45 @@ export const find_mrca = (target_nodes: NSNode[]) => {
       }
     }
   }
+};
+
+export const get_dist = (target_nodes: NSNode[]) => {
+  console.assert(target_nodes.length === 2, target_nodes);
+
+  const mrca = get_mrca(target_nodes);
+  console.assert(mrca !== undefined);
+  const node1_to_mrca: number =
+    target_nodes[0].node_attrs.div - mrca.node_attrs.div;
+  const node2_to_mrca: number =
+    target_nodes[1].node_attrs.div - mrca.node_attrs.div;
+  return node1_to_mrca + node2_to_mrca;
+};
+
+export const get_pairwise_distances = (target_nodes: NSNode[]) => {
+  let pairwise_dist: Array<{ nodes: Array<NSNode>; dist: number }> = [];
+
+  for (let i = 0; i < target_nodes.length - 1; i++) {
+    for (let j = i + 1; j < target_nodes.length; j++) {
+      let pair = [target_nodes[i], target_nodes[j]];
+      let result = { nodes: pair, dist: get_dist(pair) };
+      pairwise_dist.push(result);
+    }
+  }
+
+  return pairwise_dist;
+};
+
+export const get_leaves = (mrca: NSNode) => {
+  const all_children: Array<NSNode> = traverse_preorder(mrca); // HELP: will this give me an array of *all* the returned values (from each recursive iteration?)
+  return all_children.filter((n: NSNode) => {
+    n.children === undefined || n.children.length === 0;
+  });
+};
+
+export const get_root = (node: NSNode) => {
+  let current_node = node;
+  while (node.parent) {
+    current_node = node.parent;
+  }
+  return node;
 };
