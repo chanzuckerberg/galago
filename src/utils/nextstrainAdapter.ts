@@ -1,7 +1,7 @@
 export interface NSNode {
   name: string;
-  parent: NSNode | undefined; // not in default nextstrain export; add later via traversal
-  children: NSNode[]; // terminal nodes (leaves) have no children
+  parent?: NSNode | undefined; // not in default nextstrain export; add later via traversal
+  children?: Array<NSNode> | undefined; // direct descendents of this node (nodes or leaves)
 
   branch_attrs: {
     // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
