@@ -1,4 +1,6 @@
 import { CladeDescription } from "../d";
+import { NSNode } from "../utils/nextstrainAdapter";
+import { get_dist } from "../utils/treeMethods";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
 type CladeProps = {
@@ -8,11 +10,18 @@ type CladeProps = {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function TMRCA(props: CladeProps) {
   const { data } = props;
-  const mrca_matches = data.selected_samples
-    .filter((s) => s.muts_from_mrca === 0)
-    .concat(
-      data.unselected_samples_in_cluster.filter((s) => s.muts_from_mrca === 0)
-    );
+
+  const all_samples: NSNode[] = data.selected_samples.concat(
+    data.unselected_samples_in_cluster
+  );
+
+  let mrca_distances: Object = Object.fromEntries(
+    all_samples.map((x) => [x.name, get_dist([x, data.mrca])])
+  );
+
+  let mrca_matches: string[] = Object.values(mrca_distances).filter(
+    (m) => m === 0
+  );
 
   return (
     <div
@@ -27,7 +36,7 @@ function TMRCA(props: CladeProps) {
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`The primary case of this genomic cluster likely existed between ${data.mrca.metadata.num_date_confidence[0]} and ${data.mrca.metadata.num_date_confidence[1]} (95% CI).`}
+        {`The primary case of this genomic cluster likely existed between ${data.mrca.node_attrs.num_date.confidence[0]} and ${data.mrca.node_attrs.num_date.confidence[1]} (95% CI).`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
