@@ -18,7 +18,8 @@ function DatasetGeoCompletion(props: DatasetProps) {
     >
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h4>
-        How representative is your dataset relative to publicly available data?
+        How geographically representative is your dataset relative to publicly
+        available data?
         <br />
         (Should we be concerned about sampling bias?)
       </h4>
