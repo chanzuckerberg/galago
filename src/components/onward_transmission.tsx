@@ -1,4 +1,6 @@
-import { CladeDescription, Sample } from "../d";
+import { CladeDescription } from "../d";
+import { NSNode } from "../utils/nextstrainAdapter";
+import { get_dist } from "../utils/treeMethods";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
 type CladeProps = {
@@ -8,34 +10,13 @@ type CladeProps = {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function OnwardTransmission(props: CladeProps) {
   const { data } = props;
+  const all_samples: NSNode[] = data.selected_samples.concat(
+    data.unselected_samples_in_cluster
+  );
 
-  const { mrca_matches } = data.selected_samples
-    .filter((s) => s.muts_from_mrca === 0)
-    .concat(
-      data.unselected_samples_in_cluster.filter((s) => s.muts_from_mrca === 0)
-    );
-
-  const { gray_zone } = data.selected_samples
-    .filter(
-      (s) =>
-        s.muts_from_mrca > data.muts_per_trans_minmax[0] &&
-        s.muts_from_mrca <= data.muts_per_trans_minmax[1]
-    )
-    .concat(
-      data.unselected_samples_in_cluster.filter(
-        (s) =>
-          s.muts_from_mrca > data.muts_per_trans_minmax[0] &&
-          s.muts_from_mrca <= data.muts_per_trans_minmax[1]
-      )
-    );
-
-  const { onward } = data.selected_samples
-    .filter((s) => s.muts_from_mrca > data.muts_per_trans_minmax[1])
-    .concat(
-      data.unselected_samples_in_cluster.filter(
-        (s) => s.muts_from_mrca > data.muts_per_trans_minmax[1]
-      )
-    );
+  let mrca_distances: Object = Object.fromEntries(
+    all_samples.map((x) => [x.name, get_dist([x, data.mrca])])
+  );
 
   return (
     <div
@@ -51,16 +32,12 @@ function OnwardTransmission(props: CladeProps) {
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
         {`In this cluster, ${
-          mrca_matches.length
-        } sample(s) are identical to the primary case; ${
-          gray_zone.length
-        } sample(s) have ${data.muts_per_trans_minmax[0] + 1} - ${
-          data.muts_per_trans_minmax[1]
-        } mutations relative to the primary case; and ${
-          data.onward.length
-        } sample(s) with ${
-          data.muts_per_trans_minmax[1] + 1
-        }+ mutations from the primary case.`}
+          Object.values(mrca_distances).filter((n) => n === 0).length
+        } sample(s) are identical to the primary case and ${
+          Object.values(mrca_distances).filter(
+            (n) => n > data.muts_per_trans_minmax[1]
+          ).length
+        } sample(s) are most likely tertiary cases`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
