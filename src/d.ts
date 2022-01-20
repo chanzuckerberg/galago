@@ -52,7 +52,8 @@ export const describe_clade = (
   },
   muts_per_trans_minmax: number[]
 ) => {
-  const muts_bn_selected: number[] = get_pairwise_distances(selected_samples);
+  const muts_bn_selected: Array<{ nodes: NSNode[]; dist: number }> =
+    get_pairwise_distances(selected_samples);
   const mrca: NSNode = get_mrca(selected_samples); // same issue as in `treeMethods` line 115 (return value is declared as NSNode, why is this still mad)
   let clade: CladeDescription = {
     selected_samples: selected_samples,
@@ -66,8 +67,8 @@ export const describe_clade = (
     home_geo: home_geo,
     muts_per_trans_minmax: muts_per_trans_minmax,
     muts_bn_selected_minmax: [
-      Math.min.apply(muts_bn_selected),
-      Math.max.apply(muts_bn_selected),
+      Math.min.apply(muts_bn_selected.map((a) => a.dist)),
+      Math.max.apply(muts_bn_selected.map((a) => a.dist)),
     ],
     muts_from_parent: get_dist([mrca, mrca.parent]),
   };
