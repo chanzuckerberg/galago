@@ -106,16 +106,46 @@ export const get_mrca = (target_nodes: NSNode[]) => {
   }
 };
 
+export const get_path = (target_nodes: NSNode[]) => {
+  console.assert(new Set(target_nodes).size === 2);
+
+  const mrca: NSNode = get_mrca(target_nodes);
+
+  let path1: NSNode[] = [];
+  let path2: NSNode[] = [];
+  let current_node: NSNode = target_nodes[0];
+
+  while (current_node !== mrca) {
+    path1.push(current_node);
+    current_node = current_node.parent;
+  }
+
+  path1.push(mrca);
+  current_node = target_nodes[1];
+
+  while (current_node !== mrca) {
+    path2.push(current_node);
+    current_node = current_node.parent;
+  }
+
+  return { mrca: mrca, path: path1.concat(path2.reverse()) };
+};
+
 export const get_dist = (target_nodes: NSNode[]) => {
   console.assert(target_nodes.length === 2, target_nodes);
 
-  const mrca = get_mrca(target_nodes);
-  console.assert(mrca !== undefined);
-  const node1_to_mrca: number =
-    target_nodes[0].node_attrs.div - mrca.node_attrs.div; // HELP: line 102 declares this as a NSNode, not undefined. Why is typescript still concerned about it being undefined?
-  const node2_to_mrca: number =
-    target_nodes[1].node_attrs.div - mrca.node_attrs.div;
-  return node1_to_mrca + node2_to_mrca;
+  const mp = get_path(target_nodes); // HELP: review of how to unpack things in js....
+  const mrca = mp["mrca"];
+  const path = mp["path"];
+  let dist = 0;
+
+  for (let i = 0; i < path.length; i++) {
+    if (path[i] === mrca) {
+      continue; // the branch_length attribute is always the branch leading *into* the node. the mrca's distance to parent is not relevant.
+    }
+    dist = dist + path[i].branch_attrs.length;
+  }
+  return dist;
 };
 
 export const get_pairwise_distances = (target_nodes: NSNode[]) => {
