@@ -8,8 +8,12 @@ type CladeProps = {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function ClusterUniqueness(props: CladeProps) {
   const { data } = props;
-  const { cousin_dates } = data.cousins.map((a) => a.collection_date);
-  const { cousin_locations } = new Set(data.cousins.map((a) => a.location));
+  const cousin_dates: Array<number> = data.cousins.map(
+    (a) => a.node_attrs.num_date.value
+  );
+  const cousin_locations: Set<string> = new Set(
+    data.cousins.map((a) => a.node_attrs.location.value)
+  );
 
   return (
     <div
@@ -19,7 +23,10 @@ function ClusterUniqueness(props: CladeProps) {
       }}
     >
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
-      <h4>How similar are your samples to the rest of the dataset?</h4>
+      <h4>
+        How similar or distinct are your samples compared to the rest of the
+        dataset?
+      </h4>
 
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>
