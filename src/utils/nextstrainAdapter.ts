@@ -34,10 +34,11 @@ export const initialize_tree = (node: NSNode, parent?: Node) => {
   //add parent and branch length to each node
   if (parent) {
     newNode.parent = parent;
-    newNode = branch_length_from_div(newNode);
+    newNode.branch_attrs.length =
+      newNode.node_attrs["div"] - newNode.parent.node_attrs["div"];
   } else {
     newNode.parent = undefined;
-    newNode.branch_attrs["length"] = NaN;
+    newNode.branch_attrs.length = NaN;
   }
 
   // add a placeholder for children so we don't have so many type errors

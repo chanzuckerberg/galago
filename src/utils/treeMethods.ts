@@ -1,13 +1,6 @@
 import { NSNode } from "./nextstrainAdapter";
 import { Node } from "../d";
 
-export const branch_length_from_div = (node: Node) => {
-  if (node.parent) {
-    node.branch_attrs["length"] =
-      node.node_attrs["div"] - node.parent.node_attrs["div"];
-  }
-};
-
 export const traverse_preorder = (
   node: Node,
   node_fn?: Function,
