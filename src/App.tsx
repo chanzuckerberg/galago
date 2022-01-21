@@ -19,7 +19,8 @@ function App() {
   var all_samples: Array<Node> = get_leaves(get_root(tree));
   // var dataset: Object = Object.fromEntries(all_samples.map((x) => [x.name, x]));
 
-  var selected_samples: Array<Node> = random_sample(10, all_samples);
+  // var selected_samples: Array<Node> = random_sample(10, all_samples);
+  var selected_samples: Array<Node> = all_samples.slice(-5);
   console.log("selected...", selected_samples);
 
   var clade_description: CladeDescription = describe_clade(
