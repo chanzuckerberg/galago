@@ -2,7 +2,7 @@ import {
   get_mrca,
   get_leaves,
   get_pairwise_distances,
-  get_dist,
+  get_root,
 } from "./utils/treeMethods";
 
 // export interface Introduction {
@@ -62,7 +62,7 @@ export interface CladeDescription {
 
 export const describe_clade = (
   selected_samples: Array<Node>,
-  tree: Node,
+  // tree: Node,
   home_geo: {
     location: string;
     division: string;
