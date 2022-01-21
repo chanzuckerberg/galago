@@ -6,13 +6,12 @@ export const traverse_preorder = (
   node_fn?: Function,
   collection: Node[] = []
 ) => {
-  // first visit the node, do something
+  // first visit the node, maybe do something
   if (node_fn) {
-    // do something
     node_fn(node);
   }
 
-  collection.push(node);
+  collection.push(node); // make a note that we've seen this node
   // then visit children, left to right
   if (node.children.length > 0) {
     for (var i = 0; i < node.children.length; i++) {
@@ -34,7 +33,6 @@ export const traverse_postorder = (
       collection = traverse_postorder(node.children[i], node_fn, collection);
     }
   }
-  // }
 
   if (node_fn) {
     // then visit current node and do something
@@ -171,7 +169,6 @@ export const get_leaves = (mrca: Node) => {
       leaves.push(all_children[i]);
     }
   }
-  console.log("get leaves found....", leaves);
   return leaves;
 };
 
