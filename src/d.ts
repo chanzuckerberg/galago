@@ -87,8 +87,8 @@ export const describe_clade = (
     home_geo: home_geo,
     muts_per_trans_minmax: muts_per_trans_minmax,
     muts_bn_selected_minmax: [
-      Math.min.apply(muts_bn_selected.map((a) => a.dist)),
-      Math.max.apply(muts_bn_selected.map((a) => a.dist)),
+      Math.min(...muts_bn_selected.map((a) => a["dist"])),
+      Math.max(...muts_bn_selected.map((a) => a["dist"])),
     ],
   };
   return clade;
