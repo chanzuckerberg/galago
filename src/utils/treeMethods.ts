@@ -8,13 +8,15 @@ export const branch_length_from_div = (node: NSNode) => {
 };
 
 export const traverse_preorder = (
-  node: NSNode,
+  node: NSNode, // Sidney: this is a tree, though?
   node_fn?: Function,
   parent?: NSNode
 ) => {
+  console.log(node, node.children);
+
   if (parent) {
     // visit current node first. while we're at it, make sure we have pointers to parents on all our nodes
-    node.parent = parent;
+    node.parent = parent; // Sidney: mutation?
   }
 
   if (node_fn) {
@@ -22,32 +24,28 @@ export const traverse_preorder = (
     node_fn(node);
   }
 
-  if (
-    node.children !== undefined &&
-    Array.isArray(node.children) &&
-    node.children.length > 0
-  ) {
-    // then visit children, left to right
-    for (var i = 0; i < node.children.length; i++) {
-      //HELP: why is this still an error even after exhaustive checks in lines 25 - 29?
-      traverse_preorder(
-        (node = node.children[i]),
-        (node_fn = node_fn),
-        (parent = node)
-      );
-    }
+  const childrenArr: NSNode[] = node.children ? node.children?.slice(0) : [];
+
+  // then visit children, left to right
+  for (var i = 0; i < childrenArr.length; i++) {
+    //HELP: why is this still an error even after exhaustive checks in lines 25 - 29?
+    traverse_preorder(
+      (node = childrenArr[i]),
+      (node_fn = node_fn),
+      (parent = node)
+    );
   }
 
   return node;
 };
 
 export const traverse_postorder = (node: NSNode, node_fn?: Function) => {
-  if (node.children) {
-    // visit children first, left to rigt
-    for (var i = 0; i < node.children.length; i++) {
-      traverse_postorder((node = node.children[i]), (node_fn = node_fn));
-    }
+  // if (node.children) {
+  // visit children first, left to rigt
+  for (var i = 0; i < node.children.length; i++) {
+    traverse_postorder((node = node.children[i]), (node_fn = node_fn));
   }
+  // }
 
   if (node_fn) {
     // then visit current node and do something

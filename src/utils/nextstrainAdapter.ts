@@ -26,8 +26,7 @@ export interface NSJSON {
 }
 
 import { traverse_preorder, branch_length_from_div } from "./treeMethods";
+
 export const ingest_nextstrain = (nextstrain_json: NSJSON) => {
-  let tree: NSNode = nextstrain_json.tree;
-  traverse_preorder(tree, branch_length_from_div); // assign parents and branch lengths
-  return tree;
+  return traverse_preorder(nextstrain_json.tree, branch_length_from_div); // assign parents and branch lengths
 };
