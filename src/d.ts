@@ -95,5 +95,14 @@ export const describe_clade = (
 };
 
 export interface DatasetDescription {
-  all_samples: Node[];
+  all_samples: { [key: string]: Node };
 }
+
+export const describe_dataset = (tree: Node) => {
+  const nodes = get_leaves(get_root(tree));
+
+  let dataset: DatasetDescription = {
+    all_samples: Object.fromEntries(nodes.map((x) => [x.name, x])),
+  };
+  return dataset;
+};
