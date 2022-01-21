@@ -1,5 +1,4 @@
-import { CladeDescription } from "../d";
-import { NSNode } from "../utils/nextstrainAdapter";
+import { CladeDescription, Node } from "../d";
 import { get_dist } from "../utils/treeMethods";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
@@ -10,12 +9,12 @@ type CladeProps = {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function OnwardTransmission(props: CladeProps) {
   const { data } = props;
-  const all_samples: NSNode[] = data.selected_samples.concat(
+  const all_samples: Node[] = data.selected_samples.concat(
     data.unselected_samples_in_cluster
   );
 
   let mrca_distances: Object = Object.fromEntries(
-    all_samples.map((x) => [x.name, get_dist([x, data.mrca])])
+    all_samples.map((x) => [x.name, data.mrca ? get_dist([x, data.mrca]) : NaN])
   );
 
   return (
