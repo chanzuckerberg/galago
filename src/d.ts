@@ -81,9 +81,9 @@ export const describe_clade = (
     unselected_samples_in_cluster: get_leaves(mrca).filter(
       (n) => !selected_samples.includes(n)
     ),
-    cousins: get_leaves(mrca.parent).filter(
-      (n) => !get_leaves(mrca).includes(n)
-    ),
+    cousins: mrca.parent
+      ? get_leaves(mrca.parent).filter((n) => !get_leaves(mrca).includes(n))
+      : [],
     home_geo: home_geo,
     muts_per_trans_minmax: muts_per_trans_minmax,
     muts_bn_selected_minmax: [
