@@ -29,12 +29,10 @@ export const traverse_postorder = (
   collection: Node[] = []
 ) => {
   // visit children first, left to rigt
-  for (var i = 0; i < node.children.length; i++) {
-    traverse_postorder(
-      (node = node.children[i]),
-      (node_fn = node_fn),
-      (collection = collection)
-    );
+  if (node.children.length > 0) {
+    for (var i = 0; i < node.children.length; i++) {
+      collection = traverse_postorder(node.children[i], node_fn, collection);
+    }
   }
   // }
 
