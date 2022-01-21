@@ -54,6 +54,12 @@ export const get_mrca = (target_nodes: Node[]) => {
     return target_nodes[0];
   }
 
+  if (target_nodes.length <= 1) {
+    return console.assert(
+      target_nodes.length > 1,
+      "No nodes passed to mrca function!"
+    );
+  }
   // iterate over target nodes and record the path between this node and the root of the tree
   var paths: Array<Array<Node>> = [];
   for (let i = 0; i < target_nodes.length; i++) {
@@ -75,7 +81,7 @@ export const get_mrca = (target_nodes: Node[]) => {
   }
 
   // the mrca must be contained in every path between each target node and the root. use the first one as a reference to compare to.
-  let reference_path: Array<Node> = paths[0];
+  let reference_path: Array<Node> = paths[0] ? paths[0] : [];
   for (let i = 0; i < reference_path.length; i++) {
     let current_candidate_node: Node = reference_path[i];
     let still_a_candidate: boolean = true;
