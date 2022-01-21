@@ -40,7 +40,7 @@ export interface CladeDescription {
   muts_bn_selected_minmax: number[];
   muts_per_trans_minmax: number[]; // user input
 
-  mrca: Node;
+  mrca: Node | void;
 
   muts_from_parent: number;
   cousins: Node[];
@@ -74,16 +74,17 @@ export const describe_clade = (
 ) => {
   const muts_bn_selected: Array<{ nodes: Node[]; dist: number }> =
     get_pairwise_distances(selected_samples);
-  const mrca: Node = get_mrca(selected_samples);
+  const mrca: Node | void = get_mrca(selected_samples);
   let clade: CladeDescription = {
     selected_samples: selected_samples,
     mrca: mrca,
-    unselected_samples_in_cluster: get_leaves(mrca).filter(
-      (n) => !selected_samples.includes(n)
-    ),
-    cousins: mrca.parent
-      ? get_leaves(mrca.parent).filter((n) => !get_leaves(mrca).includes(n))
+    unselected_samples_in_cluster: mrca
+      ? get_leaves(mrca).filter((n) => !selected_samples.includes(n))
       : [],
+    cousins:
+      mrca && mrca.parent
+        ? get_leaves(mrca.parent).filter((n) => !get_leaves(mrca).includes(n))
+        : [],
     home_geo: home_geo,
     muts_per_trans_minmax: muts_per_trans_minmax,
     muts_bn_selected_minmax: [
