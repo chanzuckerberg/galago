@@ -6,3 +6,4 @@ dist-ssr
 stub_data
 .ipynb_checkpoints/*
 *.ipynb
+.vscode
