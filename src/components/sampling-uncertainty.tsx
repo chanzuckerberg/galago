@@ -1,8 +1,8 @@
-import { DatasetDescription } from "../d";
+import { Node } from "../d";
 
 // THIS KIND OF CARD DESCRIBES A DATASET
 type DatasetProps = {
-  data: DatasetDescription;
+  all_samples: { [key: string]: Node };
 };
 
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
