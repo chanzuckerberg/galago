@@ -14,12 +14,10 @@ export const traverse_preorder = (
 
   collection.push(node);
   // then visit children, left to right
-  for (var i = 0; i < node.children.length; i++) {
-    traverse_preorder(
-      (node = node.children[i]),
-      (node_fn = node_fn),
-      (collection = collection)
-    );
+  if (node.children.length > 0) {
+    for (var i = 0; i < node.children.length; i++) {
+      collection = traverse_preorder(node.children[i], node_fn, collection);
+    }
   }
 
   return collection;
