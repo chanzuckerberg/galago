@@ -1,4 +1,3 @@
-import { NSNode } from "./utils/nextstrainAdapter";
 import {
   get_mrca,
   get_leaves,
@@ -13,17 +12,38 @@ import {
 //   n_samples: string;
 // }
 
+export interface Node {
+  name: string;
+  parent: Node | undefined; // not in default nextstrain export; add later via traversal
+  children: Array<Node>; // direct descendents of this node (nodes or leaves)
+
+  branch_attrs: {
+    // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
+    length: number; // not in default nextstrain export; add later via traversal
+    [key: string]: any;
+  };
+  node_attrs: {
+    // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
+    div: number;
+    location: { value: string };
+    country: { value: string };
+    region: { value: string };
+    num_date: { value: number; confidence: number[] };
+    [key: string]: any;
+  };
+}
+
 export interface CladeDescription {
-  selected_samples: NSNode[];
-  unselected_samples_in_cluster: NSNode[];
+  selected_samples: Node[];
+  unselected_samples_in_cluster: Node[];
 
   muts_bn_selected_minmax: number[];
   muts_per_trans_minmax: number[]; // user input
 
-  mrca: NSNode;
+  mrca: Node;
 
   muts_from_parent: number;
-  cousins: NSNode[];
+  cousins: Node[];
 
   home_geo: {
     // user input
@@ -42,8 +62,8 @@ export interface CladeDescription {
 }
 
 export const describe_clade = (
-  selected_samples: Array<NSNode>,
-  tree: NSNode,
+  selected_samples: Array<Node>,
+  tree: Node,
   home_geo: {
     location: string;
     division: string;
@@ -52,9 +72,9 @@ export const describe_clade = (
   },
   muts_per_trans_minmax: number[]
 ) => {
-  const muts_bn_selected: Array<{ nodes: NSNode[]; dist: number }> =
+  const muts_bn_selected: Array<{ nodes: Node[]; dist: number }> =
     get_pairwise_distances(selected_samples);
-  const mrca: NSNode = get_mrca(selected_samples); // same issue as in `treeMethods` line 115 (return value is declared as NSNode, why is this still mad)
+  const mrca: Node = get_mrca(selected_samples);
   let clade: CladeDescription = {
     selected_samples: selected_samples,
     mrca: mrca,
