@@ -1,15 +1,14 @@
 import { Node } from "../d";
-import { branch_length_from_div } from "./treeMethods";
 
 export interface NSNode {
   name: string;
   children?: Array<NSNode> | undefined; // direct descendents of this node (nodes or leaves)
 
-  branch_attrs: {
+  branch_attrs?: {
     // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
     [key: string]: any;
   };
-  node_attrs: {
+  node_attrs?: {
     // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
     div: number;
     // location: { value: string };
@@ -29,7 +28,23 @@ export interface NSJSON {
 export const initialize_tree = (node: NSNode, parent?: Node) => {
   // initializes a tree from the nextstrain JSON. specifically, adds parents, branch lengths and children.
 
-  let newNode: Node = node; // we fix the typescript error about parents on the next line.
+  let newNode: Node = node; // we fix the typescript error about parents below.
+
+  if (!newNode.branch_attrs) {
+    newNode.branch_attrs = {
+      length: NaN,
+    };
+  }
+
+  if (!newNode.node_attrs) {
+    newNode.node_attrs = {
+      div: NaN,
+      location: { value: "" },
+      country: { value: "" },
+      region: { value: "" },
+      num_date: { value: NaN, confidence: [NaN, NaN] },
+    };
+  }
 
   //add parent and branch length to each node
   if (parent) {
