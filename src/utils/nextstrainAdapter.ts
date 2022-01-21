@@ -25,8 +25,17 @@ export interface NSJSON {
   tree: NSNode;
 }
 
-export const initialize_tree = (node: NSNode, parent?: Node) => {
+export const initialize_tree = (
+  node: NSNode,
+  parent?: Node,
+  counter: number = 0
+) => {
   // initializes a tree from the nextstrain JSON. specifically, adds parents, branch lengths and children.
+
+  if (counter > 10000) {
+    console.error("infinite recursion in tree initiation");
+    return;
+  }
 
   let newNode: Node = node; // we fix the typescript error about parents below.
 
@@ -84,7 +93,8 @@ export const initialize_tree = (node: NSNode, parent?: Node) => {
   for (var i = 0; i < newNode.children.length; i++) {
     newNode.children[i] = initialize_tree(
       (node = newNode.children[i]),
-      (parent = newNode)
+      (parent = newNode),
+      (counter = counter + 1)
     );
   }
 
