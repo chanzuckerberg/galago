@@ -165,9 +165,14 @@ export const get_pairwise_distances = (target_nodes: Node[]) => {
 
 export const get_leaves = (mrca: Node) => {
   const all_children: Array<Node> = traverse_preorder(mrca);
-  return all_children.filter((n: Node) => {
-    n.children.length === 0;
-  });
+  let leaves: Node[] = [];
+  for (let i = 0; i < all_children.length; i++) {
+    if (all_children[i].children.length === 0) {
+      leaves.push(all_children[i]);
+    }
+  }
+  console.log("get leaves found....", leaves);
+  return leaves;
 };
 
 export const get_root = (node: Node) => {
