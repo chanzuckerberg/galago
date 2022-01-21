@@ -31,7 +31,9 @@ function ClusterUniqueness(props: CladeProps) {
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`This genomic cluster is differentiated from background circulation by at least ${data.muts_from_parent} inherited mutation(s).`}
+        {`This genomic cluster is differentiated from background circulation by at least ${
+          data.mrca ? data.mrca.branch_attrs.length : NaN
+        } inherited mutation(s).`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>

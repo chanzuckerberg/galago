@@ -42,7 +42,6 @@ export interface CladeDescription {
 
   mrca: Node | void;
 
-  muts_from_parent: number;
   cousins: Node[];
 
   home_geo: {
@@ -91,7 +90,6 @@ export const describe_clade = (
       Math.min.apply(muts_bn_selected.map((a) => a.dist)),
       Math.max.apply(muts_bn_selected.map((a) => a.dist)),
     ],
-    muts_from_parent: get_dist([mrca, mrca.parent]),
   };
   return clade;
 };
