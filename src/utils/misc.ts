@@ -15,7 +15,7 @@ export const random_sample = (n: number, array: Array<any>) => {
     indices.push(index);
   }
 
-  let selected: Node[] = [];
+  let selected: Array<any> = [];
   for (let i = 0; i < n; i++) {
     selected.push(array[i]);
   }
