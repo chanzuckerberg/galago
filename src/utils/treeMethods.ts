@@ -15,7 +15,6 @@ export const traverse_preorder = (
   collection.push(node);
   // then visit children, left to right
   for (var i = 0; i < node.children.length; i++) {
-    //HELP: why is this still an error even after exhaustive checks in lines 25 - 29?
     traverse_preorder(
       (node = node.children[i]),
       (node_fn = node_fn),

@@ -14,13 +14,13 @@ import { get_root, get_leaves } from "./utils/treeMethods";
 
 function App() {
   var tree: Node = ingest_nextstrain(nextstrain_json);
-    n = array.length;
+  console.log("tree root name", tree.name);
 
   var all_samples: Array<Node> = get_leaves(get_root(tree));
   // var dataset: Object = Object.fromEntries(all_samples.map((x) => [x.name, x]));
 
   var selected_samples: Array<Node> = random_sample(10, all_samples);
-    // for each of n iterations...
+  console.log("selected...", selected_samples);
 
   var clade_description: CladeDescription = describe_clade(
     selected_samples,
