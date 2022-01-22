@@ -18,16 +18,18 @@ function SamplingBias(props: DatasetProps) {
     >
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h4>
-        How geographically representative is your dataset relative to publicly
-        available data?
+        [WIP] How representative is your dataset relative to publicly available
+        data?
         <br />
-        (Should we be concerned about sampling bias?)
+        (Should we be concerned about sampling bias changing the interpretations
+        in this report?)
       </h4>
 
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>{`This dataset contains X% of publicly available data within X mutations of your samples.`}</h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>{`Inline plot of dataset distribution across space and time coming soon`}</p>
+      <p>{`Write up some explanation of how we can only make inferences based on the data we know exists and missing data can skew our interpretations. `}</p>
     </div>
   );
 }

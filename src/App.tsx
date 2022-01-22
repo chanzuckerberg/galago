@@ -11,7 +11,7 @@ import { ingest_nextstrain } from "./utils/nextstrainAdapter";
 import { describe_clade, Node, CladeDescription } from "./d";
 import { random_sample } from "./utils/misc";
 import { get_root, get_leaves } from "./utils/treeMethods";
-import SamplingBias from "./components/sampling-uncertainty";
+import SamplingBias from "./components/sampling_uncertainty";
 import Assumptions from "./components/assumptions";
 
 function App() {
