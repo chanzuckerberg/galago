@@ -1,6 +1,7 @@
 import ClusterDefinition from "./components/cluster_definition";
 import ClusterUniqueness from "./components/cluster_uniqueness";
 import TMRCA from "./components/tmrca";
+import PhyloUncertainty from "./components/phylo_uncertainty";
 // import MinIntroductions from "./components/PAUSED_min_introductions";
 import OnwardTransmission from "./components/onward_transmission";
 // import DatasetGeoCompletion from "./components/dataset_geo_completion";
@@ -42,6 +43,7 @@ function App() {
       <ClusterUniqueness data={clade_description} />
       <TMRCA data={clade_description} />
       <OnwardTransmission data={clade_description} />
+      <PhyloUncertainty data={all_samples} />
       {/* <MinIntroductions data={clade_description} /> */}
     </div>
   );
