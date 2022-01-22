@@ -161,6 +161,19 @@ export const get_pairwise_distances = (target_nodes: Node[]) => {
   return pairwise_dist;
 };
 
+export const get_parent_for_cousins = (node: Node, min_muts: number = 1) => {
+  if (!node.parent) {
+    return node;
+  }
+  let accumulated_dist: number = node.branch_attrs.length;
+  let parent_candidate: Node = node.parent;
+  while (parent_candidate.parent && accumulated_dist < min_muts) {
+    accumulated_dist = accumulated_dist + parent_candidate.branch_attrs.length;
+    parent_candidate = parent_candidate.parent;
+  }
+  return parent_candidate;
+};
+
 export const get_leaves = (mrca: Node) => {
   const all_children: Array<Node> = traverse_preorder(mrca);
   let leaves: Node[] = [];

@@ -1,4 +1,5 @@
 import { CladeDescription } from "../d";
+import { get_dist } from "../utils/treeMethods";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
 type CladeProps = {
@@ -32,7 +33,9 @@ function ClusterUniqueness(props: CladeProps) {
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
         {`This genomic cluster is differentiated from background circulation by at least ${
-          data.mrca ? data.mrca.branch_attrs.length : NaN
+          data.parent_for_cousins && data.mrca
+            ? get_dist([data.mrca, data.parent_for_cousins])
+            : NaN
         } inherited mutation(s).`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}

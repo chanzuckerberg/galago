@@ -3,6 +3,7 @@ import {
   get_leaves,
   get_pairwise_distances,
   get_root,
+  get_parent_for_cousins,
 } from "./utils/treeMethods";
 
 // export interface Introduction {
@@ -41,6 +42,7 @@ export interface CladeDescription {
   muts_per_trans_minmax: number[]; // user input
 
   mrca: Node | void;
+  parent_for_cousins: Node | undefined;
 
   cousins: Node[];
 
@@ -69,20 +71,27 @@ export const describe_clade = (
     country: string;
     region: string;
   },
-  muts_per_trans_minmax: number[]
+  muts_per_trans_minmax: number[],
+  min_muts_to_parent: number
 ) => {
   const muts_bn_selected: Array<{ nodes: Node[]; dist: number }> =
     get_pairwise_distances(selected_samples);
   const mrca: Node | void = get_mrca(selected_samples);
+  const parent_for_cousins: Node | undefined = mrca
+    ? get_parent_for_cousins(mrca, min_muts_to_parent)
+    : undefined;
   let clade: CladeDescription = {
     selected_samples: selected_samples,
     mrca: mrca,
     unselected_samples_in_cluster: mrca
       ? get_leaves(mrca).filter((n) => !selected_samples.includes(n))
       : [],
+    parent_for_cousins: parent_for_cousins,
     cousins:
-      mrca && mrca.parent
-        ? get_leaves(mrca.parent).filter((n) => !get_leaves(mrca).includes(n))
+      mrca && parent_for_cousins
+        ? get_leaves(parent_for_cousins).filter(
+            (n) => !get_leaves(mrca).includes(n)
+          )
         : [],
     home_geo: home_geo,
     muts_per_trans_minmax: muts_per_trans_minmax,
