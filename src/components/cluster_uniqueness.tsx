@@ -43,7 +43,9 @@ function ClusterUniqueness(props: CladeProps) {
         {`The most closely related genomic cluster contains ${
           data.cousins.length
         } samples dated between 
-        ${Math.min.apply(cousin_dates)} and ${Math.max.apply(cousin_dates)}
+        ${Math.min(...cousin_dates).toFixed(2)} and ${Math.max(
+          ...cousin_dates
+        ).toFixed(2)}
            from these location(s): ${cousin_locations}.`}
       </p>
     </div>
