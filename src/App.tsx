@@ -12,6 +12,7 @@ import { describe_clade, Node, CladeDescription } from "./d";
 import { random_sample } from "./utils/misc";
 import { get_root, get_leaves } from "./utils/treeMethods";
 import SamplingBias from "./components/sampling-uncertainty";
+import Assumptions from "./components/assumptions";
 
 function App() {
   var tree: Node = ingest_nextstrain(nextstrain_json);
@@ -44,6 +45,7 @@ function App() {
       <TMRCA data={clade_description} />
       <OnwardTransmission data={clade_description} />
       <PhyloUncertainty data={all_samples} />
+      <Assumptions data={clade_description} />
       {/* <MinIntroductions data={clade_description} /> */}
     </div>
   );
