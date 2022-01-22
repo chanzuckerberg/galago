@@ -17,9 +17,8 @@ function TMRCA(props: CladeProps) {
   let mrca_distances: Object = Object.fromEntries(
     all_samples.map((x) => [x.name, data.mrca ? get_dist([x, data.mrca]) : NaN])
   );
-
-  let mrca_matches: string[] = Object.values(mrca_distances).filter(
-    (m) => m === 0
+  let mrca_matches: string[] = Object.keys(mrca_distances).filter(
+    (m: string) => mrca_distances[m] === 0
   );
 
   return (
@@ -36,9 +35,13 @@ function TMRCA(props: CladeProps) {
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
         {`The primary case of this genomic cluster likely existed between ${
-          data.mrca ? data.mrca.node_attrs.num_date.confidence[0] : NaN
+          data.mrca
+            ? data.mrca.node_attrs.num_date.confidence[0].toFixed(2)
+            : NaN
         } and ${
-          data.mrca ? data.mrca.node_attrs.num_date.confidence[1] : NaN
+          data.mrca
+            ? data.mrca.node_attrs.num_date.confidence[1].toFixed(2)
+            : NaN
         } (95% CI).`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
