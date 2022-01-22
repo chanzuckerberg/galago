@@ -8,7 +8,10 @@ type CladeProps = {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function ClusterDefinition(props: CladeProps) {
   const { data } = props;
-
+  console.log(data.unselected_samples_in_cluster);
+  const locations = data.unselected_samples_in_cluster.map(
+    (a) => a.node_attrs.location.value
+  );
   return (
     <div
       style={{
@@ -24,7 +27,7 @@ function ClusterDefinition(props: CladeProps) {
         ${
           data.unselected_samples_in_cluster.length == 0 // TITLE CHANGES DEPENDING ON IF SAMPLES FORM A MONOPHYLETIC SUBCLADE
             ? `Your ${data.selected_samples.length} selected samples are all more closely related to each other than to anything else in this dataset and form their own "genomic cluster."`
-            : `Your ${data.selected_samples.length} selected samples are also closely related to ${data.unselected_samples_in_cluster.length} samples from other locations. Together, they form a "genomic cluster."`
+            : `Your ${data.selected_samples.length} selected samples are also closely related to ${data.unselected_samples_in_cluster.length} other sample(s). Together, they form a "genomic cluster."`
         }`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
@@ -46,13 +49,7 @@ function ClusterDefinition(props: CladeProps) {
         ${
           data.unselected_samples_in_cluster.length == 0
             ? `These samples form their own genomic cluster.`
-            : `The genomic cluster containing your samples also includes ${
-                data.unselected_samples_in_cluster.length
-              } samples from these locations: ${new Set(
-                data.unselected_samples_in_cluster.map(
-                  (a) => a.node_attrs.location.value
-                )
-              )}.`
+            : `The genomic cluster containing your samples also includes ${data.unselected_samples_in_cluster.length} samples from these locations: ${locations}.`
         }
         Here, "genomic cluster" means the smallest subtree (or "clade") that contains all of your samples. You can also think of this as the shortest plausible transmission chain connecting your samples to each other.`}
       </p>
