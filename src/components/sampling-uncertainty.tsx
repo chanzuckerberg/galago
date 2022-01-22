@@ -2,11 +2,11 @@ import { Node } from "../d";
 
 // THIS KIND OF CARD DESCRIBES A DATASET
 type DatasetProps = {
-  all_samples: { [key: string]: Node };
+  data: { [key: string]: Node };
 };
 
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
-function DatasetGeoCompletion(props: DatasetProps) {
+function SamplingBias(props: DatasetProps) {
   const { data } = props;
 
   return (
@@ -25,11 +25,11 @@ function DatasetGeoCompletion(props: DatasetProps) {
       </h4>
 
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
-      <h2>{`TITLE HERE`}</h2>
+      <h2>{`This dataset contains X% of publicly available data within X mutations of your samples.`}</h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
-      <p>{`FOO BAR ${4 + 3}`}</p>
+      <p>{`Inline plot of dataset distribution across space and time coming soon`}</p>
     </div>
   );
 }
 
-export default DatasetGeoCompletion;
+export default SamplingBias;
