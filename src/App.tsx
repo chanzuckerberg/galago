@@ -31,7 +31,8 @@ function App() {
       country: "USA",
       region: "North America",
     },
-    [0, 3]
+    [0, 2],
+    1
   );
 
   return (
