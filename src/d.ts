@@ -43,6 +43,7 @@ export interface CladeDescription {
 
   mrca: Node | void;
   parent_for_cousins: Node | undefined;
+  min_muts_to_parent: number;
 
   cousins: Node[];
 
@@ -87,6 +88,7 @@ export const describe_clade = (
       ? get_leaves(mrca).filter((n) => !selected_samples.includes(n))
       : [],
     parent_for_cousins: parent_for_cousins,
+    min_muts_to_parent: min_muts_to_parent,
     cousins:
       mrca && parent_for_cousins
         ? get_leaves(parent_for_cousins).filter(
