@@ -78,7 +78,7 @@ export const initialize_tree = (
       !Object.keys(newNode.node_attrs).includes(attr) ||
       !newNode.node_attrs.attr
     ) {
-      newNode.node_attrs[attr] = { value: "" };
+      newNode.node_attrs[attr] = { value: "unknown" };
     }
   }
 
