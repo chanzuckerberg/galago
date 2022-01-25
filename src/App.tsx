@@ -15,37 +15,37 @@ import SamplingBias from "./components/sampling_uncertainty";
 import Assumptions from "./components/assumptions";
 
 function App() {
-  var tree: Node = ingest_nextstrain(nextstrain_json);
+  // var tree: Node = ingest_nextstrain(nextstrain_json);
 
-  var all_samples: Array<Node> = get_leaves(get_root(tree));
-  // var dataset: Object = Object.fromEntries(all_samples.map((x) => [x.name, x]));
+  // var all_samples: Array<Node> = get_leaves(get_root(tree));
+  // // var dataset: Object = Object.fromEntries(all_samples.map((x) => [x.name, x]));
 
-  // var selected_samples: Array<Node> = random_sample(10, all_samples);
-  var selected_samples: Array<Node> = all_samples.slice(-10);
+  // // var selected_samples: Array<Node> = random_sample(10, all_samples);
+  // var selected_samples: Array<Node> = all_samples.slice(-10);
 
-  var clade_description: CladeDescription = describe_clade(
-    selected_samples,
-    {
-      location: "Humboldt",
-      division: "California",
-      country: "USA",
-      region: "North America",
-    },
-    [0, 2],
-    1
-  );
+  // var clade_description: CladeDescription = describe_clade(
+  //   selected_samples,
+  //   {
+  //     location: "Humboldt",
+  //     division: "California",
+  //     country: "USA",
+  //     region: "North America",
+  //   },
+  //   [0, 2],
+  //   1
+  // );
 
   return (
     <div>
       <h1>Galago</h1>
       <h3>A little tree explorer for public health</h3>
-      <SamplingBias data={all_samples} />
-      <ClusterDefinition data={clade_description} />
+      <SamplingBias />
+      {/* <ClusterDefinition data={clade_description} />
       <ClusterUniqueness data={clade_description} />
       <TMRCA data={clade_description} />
       <OnwardTransmission data={clade_description} />
       <PhyloUncertainty data={all_samples} />
-      <Assumptions data={clade_description} />
+      <Assumptions data={clade_description} /> */}
       {/* <MinIntroductions data={clade_description} /> */}
     </div>
   );
