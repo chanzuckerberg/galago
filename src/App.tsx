@@ -24,26 +24,24 @@ import Assumptions from "./components/assumptions";
 
 function App() {
   //@ts-ignore
+  var tree: Node = ingest_nextstrain(nextstrain_json);
   //@ts-ignore
   var gisaid_census: Array<GISAIDRecord> = gisaid_counts_file.data;
 
-  // var all_samples: Array<Node> = get_leaves(get_root(tree));
-  // // var dataset: Object = Object.fromEntries(all_samples.map((x) => [x.name, x]));
+  var all_samples: Array<Node> = get_leaves(get_root(tree));
+  var selected_samples: Array<Node> = all_samples.slice(-10);
 
-  // // var selected_samples: Array<Node> = random_sample(10, all_samples);
-  // var selected_samples: Array<Node> = all_samples.slice(-10);
-
-  // var clade_description: CladeDescription = describe_clade(
-  //   selected_samples,
-  //   {
-  //     location: "Humboldt",
-  //     division: "California",
-  //     country: "USA",
-  //     region: "North America",
-  //   },
-  //   [0, 2],
-  //   1
-  // );
+  var clade_description: CladeDescription = describe_clade(
+    selected_samples,
+    {
+      location: "Humboldt",
+      division: "California",
+      country: "USA",
+      region: "North America",
+    },
+    [0, 2],
+    1
+  );
 
   return (
     <div>
