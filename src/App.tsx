@@ -19,7 +19,7 @@ import {
 } from "./d";
 import { random_sample } from "./utils/misc";
 import { get_root, get_leaves } from "./utils/treeMethods";
-import SamplingBias from "./components/sampling_uncertainty";
+import SamplingBias from "./components/sampling_bias";
 import Assumptions from "./components/assumptions";
 
 function App() {
@@ -49,7 +49,11 @@ function App() {
     <div>
       <h1>Galago</h1>
       <h3>A little tree explorer for public health</h3>
-      <SamplingBias />
+      <SamplingBias
+        gisaid_census={gisaid_census}
+        all_samples={all_samples}
+        selected_samples={selected_samples}
+      />
       {/* <ClusterDefinition data={clade_description} />
       <ClusterUniqueness data={clade_description} />
       <TMRCA data={clade_description} />
