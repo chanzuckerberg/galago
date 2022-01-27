@@ -38,7 +38,7 @@ export interface Node {
     location: { value: string };
     country: { value: string };
     region: { value: string };
-    num_date: { value: number; confidence: number[] };
+    num_date: { value: Date | null; confidence: Array<Date | null> };
     [key: string]: any;
   };
 }

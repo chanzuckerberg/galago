@@ -1,4 +1,5 @@
 import { Node } from "../d";
+import { numericToDateObject } from "./misc";
 
 export interface NSNode {
   name: string;
@@ -47,12 +48,26 @@ export const initialize_tree = (
 
   if (!newNode.node_attrs) {
     newNode.node_attrs = {
+      // no attributes present
       div: NaN,
       location: { value: "" },
       country: { value: "" },
       region: { value: "" },
-      num_date: { value: NaN, confidence: [NaN, NaN] },
+      num_date: { value: null, confidence: [null, null] },
     };
+  } else if (newNode.node_attrs.num_date.value) {
+    newNode.node_attrs.num_date.value = numericToDateObject(
+      newNode.node_attrs.num_date.value
+    );
+    if (Object.keys(newNode.node_attrs.num_date).includes("confidence")) {
+      newNode.node_attrs.num_date.confidence[0] = numericToDateObject(
+        newNode.node_attrs.num_date.confidence[0]
+      );
+      newNode.node_attrs.num_date.confidence[1] = numericToDateObject(
+        newNode.node_attrs.num_date.confidence[1]
+      );
+      console.log(newNode.node_attrs.num_date.value);
+    }
   }
 
   //add parent and branch length to each node

@@ -21,3 +21,21 @@ export const random_sample = (n: number, array: Array<any>) => {
   }
   return selected;
 };
+
+//NOTE: isLeapYear and numericToDateObject borrowed from github.com/nextstrain/auspice with permission. Their license applies to reuse.
+export const isLeapYear = (year: number) => {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+};
+
+export const numericToDateObject = (numDate: number) => {
+  /* Beware: for `Date`, months are 0-indexed, days are 1-indexed */
+  const fracPart = numDate % 1;
+  const year = Math.floor(numDate);
+  const nDaysInYear = isLeapYear(year) ? 366 : 365;
+  const nDays = fracPart * nDaysInYear;
+  const date = new Date(
+    new Date(year, 0, 1).getTime() + nDays * 24 * 60 * 60 * 1000
+  );
+  // console.log(year, nDays);
+  return date;
+};
