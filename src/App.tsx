@@ -7,8 +7,14 @@ import OnwardTransmission from "./components/onward_transmission";
 // import DatasetGeoCompletion from "./components/dataset_geo_completion";
 
 import { nextstrain_json } from "../stub_data/ncov_humboldt";
+import { gisaid_counts_file } from "../stub_data/gisaid_counts";
 import { ingest_nextstrain } from "./utils/nextstrainAdapter";
-import { describe_clade, Node, CladeDescription } from "./d";
+import {
+  describe_clade,
+  Node,
+  CladeDescription,
+  GISAIDRecord,
+} from "./d";
 import { random_sample } from "./utils/misc";
 import { get_root, get_leaves } from "./utils/treeMethods";
 import SamplingBias from "./components/sampling_uncertainty";
@@ -16,6 +22,7 @@ import Assumptions from "./components/assumptions";
 
 function App() {
   // var tree: Node = ingest_nextstrain(nextstrain_json);
+  var gisaid_census: Array<GISAIDRecord> = gisaid_counts_file.data;
 
   // var all_samples: Array<Node> = get_leaves(get_root(tree));
   // // var dataset: Object = Object.fromEntries(all_samples.map((x) => [x.name, x]));

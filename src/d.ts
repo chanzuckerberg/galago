@@ -6,6 +6,15 @@ import {
   get_parent_for_cousins,
 } from "./utils/treeMethods";
 
+export interface GISAIDRecord {
+  days_before_2022_01_26: 28 | 84 | 364 | 36400;
+  region: string;
+  country: string;
+  division: string;
+  location: string;
+  strain: number;
+}
+
 // export interface Introduction {
 //   source_loc: string;
 //   date_min: string;
