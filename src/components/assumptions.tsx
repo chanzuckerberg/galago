@@ -9,12 +9,7 @@ type CladeProps = {
 function Assumptions(props: CladeProps) {
   const { data } = props;
   return (
-    <div
-      style={{
-        margin: "auto",
-        maxWidth: "50em",
-      }}
-    >
+    <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h4>How much of this report depends on heuristics?</h4>
 

@@ -10,12 +10,7 @@ function PhyloUncertainty(props: DatasetProps) {
   // const { data } = props;
 
   return (
-    <div
-      style={{
-        margin: "auto",
-        maxWidth: "50em",
-      }}
-    >
+    <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h4>{`How confident can we be in the phylogenetic tree underlying this report?`}</h4>
 

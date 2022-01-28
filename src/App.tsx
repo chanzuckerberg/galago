@@ -47,7 +47,12 @@ function App() {
   );
 
   return (
-    <div>
+    <div
+      style={{
+        margin: "auto",
+        maxWidth: "50em",
+      }}
+    >
       <h1>Galago</h1>
       <h3>A little tree explorer for public health</h3>
       <SamplingBias

@@ -18,12 +18,7 @@ function OnwardTransmission(props: CladeProps) {
   );
 
   return (
-    <div
-      style={{
-        margin: "auto",
-        maxWidth: "50em",
-      }}
-    >
+    <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h4>How much onward transmission have we observed?</h4>
 

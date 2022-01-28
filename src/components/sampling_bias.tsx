@@ -12,12 +12,7 @@ function SamplingBias(props: SamplingBiasProps) {
 
   console.log("in sampling bias", all_samples, gisaid_census, selected_samples);
   return (
-    <div
-      style={{
-        margin: "auto",
-        maxWidth: "50em",
-      }}
-    >
+    <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h4>
         [WIP] How representative is your dataset relative to publicly available

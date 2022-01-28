@@ -13,12 +13,7 @@ function ClusterDefinition(props: CladeProps) {
     (a) => a.node_attrs.location.value
   );
   return (
-    <div
-      style={{
-        margin: "auto",
-        maxWidth: "50em",
-      }}
-    >
+    <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h4>How closely related are your selected samples?</h4>
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}

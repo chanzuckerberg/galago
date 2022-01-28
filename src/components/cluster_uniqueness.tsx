@@ -17,12 +17,7 @@ function ClusterUniqueness(props: CladeProps) {
   );
 
   return (
-    <div
-      style={{
-        margin: "auto",
-        maxWidth: "50em",
-      }}
-    >
+    <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h4>
         How similar or distinct are your samples compared to the rest of the
