@@ -8,7 +8,7 @@ type CladeProps = {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function ClusterDefinition(props: CladeProps) {
   const { data } = props;
-  console.log(data.unselected_samples_in_cluster);
+  // console.log(data.unselected_samples_in_cluster);
   const locations = data.unselected_samples_in_cluster.map(
     (a) => a.node_attrs.location.value
   );
