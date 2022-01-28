@@ -159,13 +159,15 @@ const add_column_to_table = (
   );
 };
 
+interface SampleTableProps {
+  gisaid_census: GISAIDRecord[];
+  all_samples: Array<Node>;
+  selected_samples: Array<Node>;
+}
+
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
-function SampleDistributionTable(
-  gisaid_census: Array<GISAIDRecord>,
-  all_samples: Array<Node>,
-  selected_samples: Array<Node>
-) {
-  // const { data } = props;
+function SampleDistributionTable(props: SampleTableProps) {
+  const { all_samples, gisaid_census, selected_samples } = props;
 
   return (
     <div // actual table container
