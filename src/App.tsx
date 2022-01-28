@@ -16,6 +16,7 @@ import {
   Node,
   CladeDescription,
   GISAIDRecord,
+  GISAIDRawCounts,
 } from "./d";
 import { random_sample } from "./utils/misc";
 import { get_root, get_leaves } from "./utils/treeMethods";
@@ -26,7 +27,9 @@ function App() {
   //@ts-ignore
   var tree: Node = ingest_nextstrain(nextstrain_json);
   //@ts-ignore
-  var gisaid_census: Array<GISAIDRecord> = gisaid_counts_file.data;
+
+  const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
+  const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
 
   var all_samples: Array<Node> = get_leaves(get_root(tree));
   var selected_samples: Array<Node> = all_samples.slice(-10);
@@ -43,15 +46,17 @@ function App() {
     1
   );
 
+  var dataset_for_counts: any = {
+    gisaid_census: gisaid_census,
+    all_samples: all_samples,
+    selected_samples: selected_samples,
+  };
+
   return (
     <div>
       <h1>Galago</h1>
       <h3>A little tree explorer for public health</h3>
-      <SamplingBias
-        gisaid_census={gisaid_census}
-        all_samples={all_samples}
-        selected_samples={selected_samples}
-      />
+      <SamplingBias data={dataset_for_counts} />
       {/* <ClusterDefinition data={clade_description} />
       <ClusterUniqueness data={clade_description} />
       <TMRCA data={clade_description} />

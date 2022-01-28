@@ -1,11 +1,14 @@
 import { CladeDescription, Node, GISAIDRecord } from "../d";
 import SampleDistributionTable from "./sample_distribution_table";
 
-function SamplingBias(
-  gisaid_census: Array<GISAIDRecord>,
-  all_samples: Array<Node>,
-  selected_samples: Array<Node>
-) {
+interface SamplingBiasProps {
+  gisaid_census: GISAIDRecord[];
+  all_samples: Array<Node>;
+  selected_samples: Array<Node>;
+}
+
+function SamplingBias(props: SamplingBiasProps) {
+  const { all_samples, gisaid_census, selected_samples } = props;
   return (
     <div
       style={{
@@ -34,11 +37,7 @@ function SamplingBias(
           // box-shadow: "inset -3px -3px 10px 5px #999999",
         }}
       >
-        <SampleDistributionTable
-          gisaid_census={gisaid_census}
-          all_samples={all_samples}
-          selected_samples={selected_samples}
-        />
+        {/* <SampleDistributionTable data={props} /> */}
       </div>
     </div>
   );
