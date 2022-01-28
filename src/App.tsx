@@ -46,17 +46,15 @@ function App() {
     1
   );
 
-  var dataset_for_counts: any = {
-    gisaid_census: gisaid_census,
-    all_samples: all_samples,
-    selected_samples: selected_samples,
-  };
-
   return (
     <div>
       <h1>Galago</h1>
       <h3>A little tree explorer for public health</h3>
-      <SamplingBias data={dataset_for_counts} />
+      <SamplingBias
+        gisaid_census={gisaid_census}
+        all_samples={all_samples}
+        selected_samples={selected_samples}
+      />
       {/* <ClusterDefinition data={clade_description} />
       <ClusterUniqueness data={clade_description} />
       <TMRCA data={clade_description} />

@@ -66,7 +66,7 @@ export const initialize_tree = (
       newNode.node_attrs.num_date.confidence[1] = numericToDateObject(
         newNode.node_attrs.num_date.confidence[1]
       );
-      console.log(newNode.node_attrs.num_date.value);
+      // console.log(newNode.node_attrs.num_date.value);
     }
   }
 
