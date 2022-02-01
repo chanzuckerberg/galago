@@ -37,16 +37,15 @@ export const initialize_tree = (
     console.error("infinite recursion in tree initiation");
     return;
   }
+  let newNode: Node = { ...node }; // we fix the typescript error about parents below.
 
-  let newNode: Node = node; // we fix the typescript error about parents below.
-
-  if (!newNode.branch_attrs) {
-    newNode.branch_attrs = {
+  if (!Object.keys(newNode).includes("branch_attrs")) {
+    newNode["branch_attrs"] = {
       length: NaN,
     };
   }
 
-  if (!newNode.node_attrs) {
+  if (!Object.keys(newNode).includes("node_attrs")) {
     newNode.node_attrs = {
       // no attributes present
       div: NaN,
@@ -55,18 +54,28 @@ export const initialize_tree = (
       region: { value: "" },
       num_date: { value: null, confidence: [null, null] },
     };
-  } else if (newNode.node_attrs.num_date.value) {
-    newNode.node_attrs.num_date.value = numericToDateObject(
-      newNode.node_attrs.num_date.value
-    );
+  }
+  if (Object.keys(newNode.node_attrs).includes("num_date")) {
+    if (
+      Object.keys(newNode.node_attrs.num_date).includes("value") &&
+      typeof newNode.node_attrs.num_date.value === "number"
+    ) {
+      newNode.node_attrs.num_date.value = numericToDateObject(
+        newNode.node_attrs.num_date.value
+      );
+    }
     if (Object.keys(newNode.node_attrs.num_date).includes("confidence")) {
-      newNode.node_attrs.num_date.confidence[0] = numericToDateObject(
-        newNode.node_attrs.num_date.confidence[0]
-      );
-      newNode.node_attrs.num_date.confidence[1] = numericToDateObject(
-        newNode.node_attrs.num_date.confidence[1]
-      );
-      // console.log(newNode.node_attrs.num_date.value);
+      if (
+        typeof newNode.node_attrs.num_date.confidence[0] === "number" &&
+        typeof newNode.node_attrs.num_date.confidence[1] === "number"
+      ) {
+        newNode.node_attrs.num_date.confidence[0] = numericToDateObject(
+          newNode.node_attrs.num_date.confidence[0]
+        );
+        newNode.node_attrs.num_date.confidence[1] = numericToDateObject(
+          newNode.node_attrs.num_date.confidence[1]
+        );
+      }
     }
   }
 
@@ -102,7 +111,7 @@ export const initialize_tree = (
     !Object.keys(newNode.node_attrs).includes("num_date") ||
     !newNode.node_attrs.num_date
   ) {
-    newNode.node_attrs.num_date = { value: NaN, confidence: [NaN, NaN] };
+    newNode.node_attrs.num_date = { value: null, confidence: [null, null] };
   }
   // now recursively visit children, left to right
   for (var i = 0; i < newNode.children.length; i++) {

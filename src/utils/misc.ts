@@ -33,9 +33,7 @@ export const numericToDateObject = (numDate: number) => {
   const year = Math.floor(numDate);
   const nDaysInYear = isLeapYear(year) ? 366 : 365;
   const nDays = fracPart * nDaysInYear;
-  const date = new Date(
-    new Date(year, 0, 1).getTime() + nDays * 24 * 60 * 60 * 1000
-  );
-  // console.log(year, nDays);
+  const date = new Date(year, 0, 1);
+  date.setDate(date.getDate() + nDays);
   return date;
 };
