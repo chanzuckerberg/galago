@@ -10,7 +10,6 @@ interface SamplingBiasProps {
 function SamplingBias(props: SamplingBiasProps) {
   const { all_samples, gisaid_census, selected_samples } = props;
 
-  console.log("in sampling bias", all_samples, gisaid_census, selected_samples);
   return (
     <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
