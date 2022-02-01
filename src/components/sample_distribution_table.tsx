@@ -150,9 +150,11 @@ const add_counts_cell_to_column = (
         height: set_height,
       }}
     >
-      {`${numerator} / ${denominator}`}
+      {`${numerator.toLocaleString("en-US")} / ${denominator.toLocaleString(
+        "en-US"
+      )}`}
       <br />
-      {`(${((numerator / denominator) * 100).toFixed(0)}%)`}
+      {`(${((numerator / denominator) * 100).toFixed(1)}%)`}
     </p>
   );
 };
