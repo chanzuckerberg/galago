@@ -5,7 +5,7 @@ import PhyloUncertainty from "./components/phylo_uncertainty";
 // import MinIntroductions from "./components/PAUSED_min_introductions";
 import OnwardTransmission from "./components/onward_transmission";
 // import DatasetGeoCompletion from "./components/dataset_geo_completion";
-
+//@ts-ignore -- we're intentionally not typing the tree json for now
 import { nextstrain_json } from "../stub_data/demo_tree";
 import { gisaid_counts_file } from "../stub_data/gisaid_counts";
 import { ingest_nextstrain } from "./utils/nextstrainAdapter";
