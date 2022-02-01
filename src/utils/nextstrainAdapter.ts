@@ -37,6 +37,7 @@ export const initialize_tree = (
     console.error("infinite recursion in tree initiation");
     return;
   }
+  //@ts-ignore
   let newNode: Node = { ...node }; // we fix the typescript error about parents below.
 
   if (!Object.keys(newNode).includes("branch_attrs")) {
@@ -115,6 +116,7 @@ export const initialize_tree = (
   }
   // now recursively visit children, left to right
   for (var i = 0; i < newNode.children.length; i++) {
+    //@ts-ignore -- initialize_tree always returns an object of type Node
     newNode.children[i] = initialize_tree(
       (node = newNode.children[i]),
       (parent = newNode),
@@ -126,6 +128,7 @@ export const initialize_tree = (
 };
 
 export const ingest_nextstrain = (nextstrain_json: NSJSON) => {
+  //@ts-ignore -- initialize_tree always returns an object of type Node
   const tree: Node = initialize_tree(nextstrain_json.tree); // adds parents, branch lengths, and children to NSJSON
   return tree; // assign parents and branch lengths
 };
