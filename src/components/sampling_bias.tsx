@@ -33,7 +33,11 @@ function SamplingBias(props: SamplingBiasProps) {
           // box-shadow: "inset -3px -3px 10px 5px #999999",
         }}
       >
-        {/* <SampleDistributionTable data={props} /> */}
+        <SampleDistributionTable
+          gisaid_census={gisaid_census}
+          all_samples={all_samples}
+          selected_samples={selected_samples}
+        />
       </div>
     </div>
   );
