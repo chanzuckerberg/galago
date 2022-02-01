@@ -6,11 +6,13 @@ const filter_tally = (
     division: string;
     country: string;
     region: string;
+    strain?: number;
+    num_date?: number;
   }>,
-  home_geo = {
-    location: "Humboldt County",
-    division: "California",
-    country: "USA",
+  home_geo: {
+    location: string;
+    division: string;
+    country: string;
   },
   specificity_level: "location" | "division" | "country" | "global",
   recency: 28 | 84 | 364 | 36400,
@@ -54,10 +56,10 @@ const filter_tally = (
 
 const get_current_counts = (
   records: Array<Node>,
-  home_geo = {
-    location: "Humboldt County",
-    division: "California",
-    country: "USA",
+  home_geo: {
+    location: string;
+    division: string;
+    country: string;
   },
   specificity_level: "location" | "division" | "country" | "global",
   recency: 28 | 84 | 364 | 36400
@@ -77,6 +79,15 @@ const get_current_counts = (
     const matches_recency: boolean = diff.getUTCDate() - 1 <= recency;
     return matches_recency;
   };
+  // console.log(
+  //   "node_attrs_without_location",
+  //   node_attrs.filter((n) => n.division.value === "unknown").length
+  // );
+  // console.log(
+  //   "node_attrs_with_location",
+  //   node_attrs.filter((n) => n.division.value !== "unknown")
+  // );
+
   const matching_records = filter_tally(
     node_attrs,
     home_geo,
@@ -84,15 +95,16 @@ const get_current_counts = (
     recency,
     node_attrs_recency_match
   );
+  // console.log("matching_records", matching_records);
   return matching_records.length; // if looking at the present dataset / tree / clade, we can just count the N samples
 };
 
 const get_gisaid_counts = (
   records: Array<GISAIDRecord>,
-  home_geo = {
-    location: "Humboldt County",
-    division: "California",
-    country: "USA",
+  home_geo: {
+    location: string;
+    division: string;
+    country: string;
   },
   specificity_level: "location" | "division" | "country" | "global",
   recency: 28 | 84 | 364 | 36400
@@ -107,7 +119,7 @@ const get_gisaid_counts = (
     return matches_recency;
   };
 
-  const matching_records = filter_tally(
+  const matching_records: Array<GISAIDRecord> = filter_tally(
     records,
     home_geo,
     specificity_level,
@@ -116,17 +128,17 @@ const get_gisaid_counts = (
   );
 
   return matching_records
-    .map((r: Object) => r["strain"])
+    .map((r: GISAIDRecord) => r["strain"])
     .reduce((a: number, b: number) => a + b, 0);
 };
 
-const add_counts_cell_to_column = (
+const add_counts_cell = (
   current_samples: Node[],
   gisaid_records: GISAIDRecord[],
-  home_geo = {
-    location: "Humboldt County",
-    division: "California",
-    country: "USA",
+  home_geo: {
+    location: string;
+    division: string;
+    country: string;
   },
   specificity_level: "location" | "division" | "country" | "global",
   recency: 28 | 84 | 364 | 36400,
@@ -151,6 +163,7 @@ const add_counts_cell_to_column = (
         flexShrink: 0,
         flexGrow: 0,
       }}
+      key={`${specificity_level}+${recency}`}
     >
       {`${numerator.toLocaleString("en-US")} / ${denominator.toLocaleString(
         "en-US"
@@ -161,11 +174,7 @@ const add_counts_cell_to_column = (
   );
 };
 
-const add_text_cell_to_column = (
-  text: string,
-  set_width: number,
-  set_height: number
-) => {
+const add_text_cell = (text: string, set_width: string, set_height: string) => {
   return (
     <p
       style={{
@@ -175,24 +184,27 @@ const add_text_cell_to_column = (
         flexShrink: 0,
         flexGrow: 0,
       }}
+      key={text}
     >
       {`${text}`}
     </p>
   );
 };
 
-const add_column_to_table = (
-  numerator_data: Node[],
-  denominator_data: GISAIDRecord[],
-  home_geo = {
-    location: "Humboldt County",
-    division: "California",
-    country: "USA",
+const add_row_to_table = (
+  current_samples: Node[],
+  gisaid_records: GISAIDRecord[],
+  home_geo: {
+    location: string;
+    division: string;
+    country: string;
   },
-  recency: 28 | 84 | 364 | 36400
+  specificity: "location" | "division" | "country" | "global",
+  label: string,
   set_width: string = "200",
   set_height: string = "50"
 ) => {
+  const recency_options = [28, 84, 364, 36400];
   return (
     <div
       style={{
@@ -203,7 +215,18 @@ const add_column_to_table = (
         justifyContent: "space-between",
       }}
     >
-      {add_text_cell_to_column("foobar", 100, 100)}
+      {add_text_cell(label, set_width, set_height)}
+      {recency_options.map((recency) =>
+        add_counts_cell(
+          current_samples,
+          gisaid_records,
+          home_geo,
+          specificity,
+          recency,
+          set_width,
+          set_height
+        )
+      )}
     </div>
   );
 };
@@ -217,6 +240,28 @@ interface SampleTableProps {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function SampleDistributionTable(props: SampleTableProps) {
   const { all_samples, gisaid_census, selected_samples } = props;
+  // const recency_options = [28, 84, 364, 36400];
+  const specificity_options = ["location", "division", "country", "global"];
+
+  const home_geo = {
+    location: "Alameda County",
+    division: "California",
+    country: "USA",
+  };
+  const row_labels = {
+    location: home_geo["location"],
+    division: "Other CA counties",
+    country: "Other states",
+    global: "All",
+  };
+
+  const column_labels = [
+    "Location",
+    "Last 4 weeks",
+    "Last 3 months",
+    "Last 1 year",
+    "Total",
+  ];
 
   return (
     <div // actual table container
@@ -239,11 +284,18 @@ function SampleDistributionTable(props: SampleTableProps) {
           alignItems: "space-between",
         }}
       >
-      {add_column_to_table(
-        all_samples,
-        gisaid_census,
-        { location: "Humboldt County", division: "California", country: "USA" },
-        28
+        {column_labels.map((t) => add_text_cell(t, "10", "50"))}
+      </div>
+      {specificity_options.map((s) =>
+        add_row_to_table(
+          all_samples,
+          gisaid_census,
+          home_geo,
+          s,
+          row_labels[s],
+          "200",
+          "50"
+        )
       )}
     </div>
   );
