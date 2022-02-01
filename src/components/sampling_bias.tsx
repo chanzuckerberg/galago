@@ -30,7 +30,7 @@ function SamplingBias(props: SamplingBiasProps) {
         style={{
           maxWidth: 500,
           overflow: "scroll",
-          // box-shadow: "inset -3px -3px 10px 5px #999999",
+          margin: "auto",
         }}
       >
         <SampleDistributionTable

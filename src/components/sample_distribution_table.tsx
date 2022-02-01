@@ -146,8 +146,10 @@ const add_counts_cell_to_column = (
   return (
     <p
       style={{
-        width: set_width,
+        maxWidth: set_width,
         height: set_height,
+        flexShrink: 0,
+        flexGrow: 0,
       }}
     >
       {`${numerator.toLocaleString("en-US")} / ${denominator.toLocaleString(
@@ -167,9 +169,11 @@ const add_text_cell_to_column = (
   return (
     <p
       style={{
-        width: set_width,
+        maxWidth: set_width,
+        overflow: "wrap",
         height: set_height,
-        border: "3px solid blue",
+        flexShrink: 0,
+        flexGrow: 0,
       }}
     >
       {`${text}`}
@@ -186,14 +190,17 @@ const add_column_to_table = (
     country: "USA",
   },
   recency: 28 | 84 | 364 | 36400
+  set_width: string = "200",
+  set_height: string = "50"
 ) => {
   return (
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         margin: 0,
         padding: 0,
+        justifyContent: "space-between",
       }}
     >
       {add_text_cell_to_column("foobar", 100, 100)}
@@ -214,12 +221,24 @@ function SampleDistributionTable(props: SampleTableProps) {
   return (
     <div // actual table container
       style={{
-        border: "3px solid pink",
         display: "flex",
-        flexDirection: "row",
-        // width: 2000,
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "space-between",
+        maxWidth: 800,
+        padding: 10,
       }}
     >
+      <div // Top labels
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          margin: 0,
+          padding: 0,
+          justifyContent: "space-between",
+          alignItems: "space-between",
+        }}
+      >
       {add_column_to_table(
         all_samples,
         gisaid_census,
