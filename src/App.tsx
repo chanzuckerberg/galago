@@ -56,14 +56,14 @@ function App() {
       <SamplingBias
         gisaid_census={gisaid_census}
         all_samples={all_samples}
-        selected_samples={selected_samples}
+        clade_description={clade_description}
       />
-      {/* <ClusterDefinition data={clade_description} />
+      <ClusterDefinition data={clade_description} />
       <ClusterUniqueness data={clade_description} />
       <TMRCA data={clade_description} />
       <OnwardTransmission data={clade_description} />
-      <PhyloUncertainty data={all_samples} />
-      <Assumptions data={clade_description} /> */}
+      {/* <PhyloUncertainty data={all_samples} /> */}
+      <Assumptions data={clade_description} />
       {/* <MinIntroductions data={clade_description} /> */}
     </div>
   );
