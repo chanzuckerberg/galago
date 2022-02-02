@@ -64,30 +64,26 @@ export const get_current_counts = (
   specificity_level: "location" | "division" | "country" | "global",
   recency: 28 | 84 | 364 | 36400
 ) => {
-  const node_attrs = records.map((r: any) => r.node_attrs); // just take the node_attrs dictionary for each node
+  let node_attrs = records.map((r: any) => r.node_attrs); // just take the node_attrs dictionary for each node
   const node_attrs_recency_match = (node_attrs: Object, recency: number) => {
     // samples in the current dataset / tree have actual dates
-    if (
-      !(
-        Object.keys(node_attrs).includes("num_date") &&
-        Object.keys(node_attrs.num_date).includes("value")
-      )
-    ) {
+    if (!Object.keys(node_attrs).includes("num_date")) {
       return false;
     }
-    const diff: Date = new Date(Date.now() - node_attrs["num_date"]["value"]);
+    const diff: Date = new Date(Date.now() - node_attrs["num_date"]);
     const matches_recency: boolean = diff.getUTCDate() - 1 <= recency;
     return matches_recency;
   };
-  // console.log(
-  //   "node_attrs_without_location",
-  //   node_attrs.filter((n) => n.division.value === "unknown").length
-  // );
-  // console.log(
-  //   "node_attrs_with_location",
-  //   node_attrs.filter((n) => n.division.value !== "unknown")
-  // );
 
+  const node_attr_values = (node_attrs: Object) => {
+    return {
+      location: node_attrs.location.value,
+      division: node_attrs.division.value,
+      country: node_attrs.country.value,
+      num_date: node_attrs.num_date.value,
+    };
+  };
+  node_attrs = node_attrs.map((n) => node_attr_values(n));
   const matching_records = filter_tally(
     node_attrs,
     home_geo,
