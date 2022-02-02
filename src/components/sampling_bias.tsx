@@ -61,8 +61,8 @@ function SamplingBias(props: SamplingBiasProps) {
       </div>
       <p>
         Learn more about{" "}
-        <a href="https://alliblk.github.io/genepi-book/sample-selection.html#contextual-data-as-a-backdrop">
-          the importance of contextual data
+        <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#what-kind-of-sampling-do-you-need-to-answer-the-question">
+          the importance of contextual data for outbreak analysis using trees
         </a>{" "}
         and{" "}
         <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#the-transmission-tree-does-not-equate-the-phylogenetic-tree">
