@@ -24,12 +24,12 @@ function TMRCA(props: CladeProps) {
   return (
     <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
-      <h4>When did this genomic cluster arise?</h4>
+      <h4>When did this clade arise?</h4>
 
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`The primary case of this genomic cluster likely existed ${
+        {`This clade's primary case likely occurred ${
           data.mrca && data.mrca.node_attrs.num_date.confidence.length === 2
             ? `between ${data.mrca.node_attrs.num_date.confidence[0]
                 .toISOString()
@@ -57,7 +57,11 @@ function TMRCA(props: CladeProps) {
       <p>
         Learn more about{" "}
         <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#temporally-resolved-phylogenetic-trees.">
-          inferring dates using phylogenetic trees.
+          inferring dates using phylogenetic trees
+        </a>{" "}
+        and{" "}
+        <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#estimating-the-start-and-duration-of-an-outbreak.">
+          how sampling may effect these estimates.
         </a>
       </p>
     </div>
