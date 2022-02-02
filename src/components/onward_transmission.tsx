@@ -25,7 +25,7 @@ function OnwardTransmission(props: CladeProps) {
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`In this cluster, ${
+        {`In this clade, ${
           Object.values(mrca_distances).filter((n) => n === 0).length
         } sample(s) are identical to the primary case and ${
           Object.values(mrca_distances).filter(
@@ -49,6 +49,16 @@ function OnwardTransmission(props: CladeProps) {
           data.muts_per_trans_minmax[1] + 1
         }+ mutations represent tertiary or further
         downstream transmission.`}
+      </p>
+      <p>
+        Learn more about{" "}
+        <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#how-many-mutations-are-enough-to-rule-linkage-out">
+          ruling out direct linkage
+        </a>{" "}
+        and{" "}
+        <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#assessing-linkage-between-cases">
+          more generally assessing linkage patterns between cases.
+        </a>
       </p>
     </div>
   );
