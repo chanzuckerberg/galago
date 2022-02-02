@@ -11,23 +11,21 @@ function Assumptions(props: CladeProps) {
   return (
     <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
-      <h4>How much of this report depends on heuristics?</h4>
+      <h4>What assumptions influence this report?</h4>
 
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`Parameters and assumptions used in this report`}
+        {`Parameters used in this report`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
-      <p>{`Soon, enable users to set these parameters themselves.`}</p>
-
       <p>
-        {`Most of the data described in this report is strictly observational -- meaning that we aren't applying many heuristics to the data when generating these insights. However, there are a few places where we are making some heuristic assumptions:`}
+        {`Most of the data and insights described in this report are strictly observational (meaning they don't depend on heuristics or "judgement calls"). However, there are a few exceptions:`}
       </p>
       <ul>
-        <li>{`Min and max number of mutations per transmission: ${data.muts_bn_selected_minmax}. This determines the thresholds we use when estimating which samples most likely represent tertiary cases (onward transmission).`}</li>
+        <li>{`We assume that the number of mutations that occurs with each transmission ranges between ${data.muts_bn_selected_minmax[0]} - ${data.muts_bn_selected_minmax[1]}. This determines which samples are mostly likely from tertiary cases (onward transmission).`}</li>
         <li>
-          {`Minimum number of mutations between the primary case of your genomic cluster and its parent: ${data.min_muts_to_parent}. This determines how narrowly or broadly we search for closely related samples ("cousins") `}
+          {`When looking for "cousins" (samples that are outside your clade of interest but closely related), we look at all the samples that descend from a parent (or grandparent, etc) of the primary case of your clade. To select which grand/parent to look at (i.e., how narrowly or broadly we search for "cousins"), we choose the most recent parent that is separated from your clade's primary case by at least ${data.min_muts_to_parent} mutation(s).`}
         </li>
       </ul>
     </div>
