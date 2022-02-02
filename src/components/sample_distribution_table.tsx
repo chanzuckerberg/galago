@@ -247,8 +247,8 @@ function SampleDistributionTable(props: SampleTableProps) {
   const row_labels = {
     location: home_geo["location"],
     division: "Other CA counties",
-    country: "Other states",
-    global: "All",
+    country: "Other U.S. states",
+    global: "Other countries",
   };
 
   const column_labels = [
