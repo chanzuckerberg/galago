@@ -54,7 +54,7 @@ const filter_tally = (
   return matching_records;
 };
 
-const get_current_counts = (
+export const get_current_counts = (
   records: Array<Node>,
   home_geo: {
     location: string;
@@ -99,7 +99,7 @@ const get_current_counts = (
   return matching_records.length; // if looking at the present dataset / tree / clade, we can just count the N samples
 };
 
-const get_gisaid_counts = (
+export const get_gisaid_counts = (
   records: Array<GISAIDRecord>,
   home_geo: {
     location: string;
