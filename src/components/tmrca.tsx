@@ -29,15 +29,20 @@ function TMRCA(props: CladeProps) {
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`The primary case of this genomic cluster likely existed between ${
-          data.mrca
-            ? data.mrca.node_attrs.num_date.confidence[0].toFixed(2)
-            : NaN
-        } and ${
-          data.mrca
-            ? data.mrca.node_attrs.num_date.confidence[1].toFixed(2)
-            : NaN
-        } (95% CI).`}
+        {`The primary case of this genomic cluster likely existed ${
+          data.mrca && data.mrca.node_attrs.num_date.confidence.length === 2
+            ? `between ${data.mrca.node_attrs.num_date.confidence[0]
+                .toISOString()
+                .substring(
+                  0,
+                  10
+                )} and ${data.mrca.node_attrs.num_date.confidence[1]
+                .toISOString()
+                .substring(0, 10)} (95% CI).`
+            : `around ${data.mrca.node_attrs.num_date.value
+                .toISOString()
+                .substring(0, 10)}`
+        }`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
@@ -48,6 +53,12 @@ function TMRCA(props: CladeProps) {
             : `was most likely identical to sample(s): ${mrca_matches}. Importantly, it is also possible that the true primary case is not be represented in this dataset (but has an identical sequence to these sample(s)). `
         }
         `}
+      </p>
+      <p>
+        Learn more about{" "}
+        <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#temporally-resolved-phylogenetic-trees.">
+          inferring dates using phylogenetic trees.
+        </a>
       </p>
     </div>
   );
