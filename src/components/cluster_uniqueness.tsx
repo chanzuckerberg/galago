@@ -9,11 +9,20 @@ type CladeProps = {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function ClusterUniqueness(props: CladeProps) {
   const { data } = props;
-  const cousin_dates: Array<number> = data.cousins.map(
-    (a) => a.node_attrs.num_date.value
-  );
-  const cousin_locations: Set<string> = new Set(
-    data.cousins.map((a) => a.node_attrs.location.value)
+
+  const cousin_dates: Array<Date | null> = data.cousins
+    .map((a) => a.node_attrs.num_date.value)
+    .sort(function (a, b) {
+      const date1 = new Date(a);
+      const date2 = new Date(b);
+      return date1 - date2;
+    });
+  const cousin_locations: Array<string> = [
+    ...new Set(data.cousins.map((a) => a.node_attrs.location.value)),
+  ];
+
+  const cousin_distances: number[] = data.cousins.map((c: Node) =>
+    get_dist([c, data.mrca])
   );
 
   return (
@@ -27,20 +36,18 @@ function ClusterUniqueness(props: CladeProps) {
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <h2>
         {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`This genomic cluster is differentiated from background circulation by at least ${
-          data.parent_for_cousins && data.mrca
-            ? get_dist([data.mrca, data.parent_for_cousins])
-            : NaN
-        } inherited mutation(s).`}
+        {`This clade is separated by other samples in the dataset by ${Math.min(
+          ...cousin_distances
+        )} or more mutation(s).`}
       </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
-        {`The most closely related genomic cluster contains ${
+        {`The most closely related "cousins" to your clade of interest include ${
           data.cousins.length
-        } samples dated between 
-        ${Math.min(...cousin_dates).toFixed(2)} and ${Math.max(
-          ...cousin_dates
-        ).toFixed(2)}
+        } sample(s) dated between 
+        ${cousin_dates[0].toISOString().substring(0, 10)} and ${cousin_dates[1]
+          .toISOString()
+          .substring(0, 10)}
            from these location(s): ${cousin_locations}.`}
       </p>
     </div>
