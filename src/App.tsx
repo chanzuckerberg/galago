@@ -35,7 +35,7 @@ function App() {
   var clade_description: CladeDescription = describe_clade(
     selected_samples,
     {
-      location: "Humboldt",
+      location: "Alameda County",
       division: "California",
       country: "USA",
       region: "North America",

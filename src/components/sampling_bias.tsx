@@ -8,7 +8,7 @@ import {
 interface SamplingBiasProps {
   gisaid_census: GISAIDRecord[];
   all_samples: Array<Node>;
-  selected_samples: CladeDescription;
+  clade_description: CladeDescription;
 }
 
 function SamplingBias(props: SamplingBiasProps) {
@@ -56,7 +56,7 @@ function SamplingBias(props: SamplingBiasProps) {
         <SampleDistributionTable
           gisaid_census={gisaid_census}
           all_samples={all_samples}
-          selected_samples={clade_description.selected_samples}
+          clade_description={clade_description}
         />
       </div>
       <p>

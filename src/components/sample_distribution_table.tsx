@@ -1,4 +1,4 @@
-import { Node, GISAIDRecord } from "../d";
+import { Node, GISAIDRecord, CladeDescription } from "../d";
 
 const filter_tally = (
   records: Array<{
@@ -230,22 +230,17 @@ const add_row_to_table = (
 interface SampleTableProps {
   gisaid_census: GISAIDRecord[];
   all_samples: Array<Node>;
-  selected_samples: Array<Node>;
+  clade_description: CladeDescription;
 }
 
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function SampleDistributionTable(props: SampleTableProps) {
-  const { all_samples, gisaid_census, selected_samples } = props;
+  const { all_samples, gisaid_census, clade_description } = props;
   // const recency_options = [28, 84, 364, 36400];
   const specificity_options = ["location", "division", "country", "global"];
 
-  const home_geo = {
-    location: "Alameda County",
-    division: "California",
-    country: "USA",
-  };
   const row_labels = {
-    location: home_geo["location"],
+    location: clade_description["home_geo"]["location"],
     division: "Other CA counties",
     country: "Other U.S. states",
     global: "Other countries",
@@ -286,7 +281,7 @@ function SampleDistributionTable(props: SampleTableProps) {
         add_row_to_table(
           all_samples,
           gisaid_census,
-          home_geo,
+          clade_description.home_geo,
           s,
           row_labels[s],
           "200",
