@@ -4,6 +4,7 @@ import {
   get_pairwise_distances,
   get_root,
   get_parent_for_cousins,
+  get_state_changes,
 } from "./utils/treeMethods";
 
 // export interface Introduction {
@@ -55,6 +56,8 @@ export interface CladeDescription {
     region: string;
   };
 
+  subtrees: Node[];
+
   // transmissions_across_demes: {
   //   location: Introduction[];
   //   division: Introduction[];
@@ -81,6 +84,23 @@ export const describe_clade = (
   const parent_for_cousins: Node | undefined = mrca
     ? get_parent_for_cousins(mrca, min_muts_to_parent)
     : undefined;
+
+  let subtrees: Node[] = [];
+  const geo_levels = ["location", "division", "country"];
+  for (let i = 0; i < geo_levels.length; i++) {
+    if (
+      Object.keys(selected_samples[0].node_attrs[geo_levels[i]]).includes(
+        "confidence"
+      )
+    ) {
+      subtrees = get_state_changes(
+        get_root(selected_samples[0]),
+        geo_levels[i]
+      );
+      break;
+    }
+  }
+
   let clade: CladeDescription = {
     selected_samples: selected_samples,
     mrca: mrca,
@@ -101,6 +121,7 @@ export const describe_clade = (
       Math.min(...muts_bn_selected.map((a) => a["dist"])),
       Math.max(...muts_bn_selected.map((a) => a["dist"])),
     ],
+    subtrees: subtrees,
   };
   return clade;
 };

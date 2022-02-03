@@ -206,4 +206,48 @@ export const get_root = (node: Node) => {
   return node;
 };
 
-export const get_state_changes = (tree: Node, trait: string) => {};
+export const get_state_changes = (tree: Node, trait: string) => {
+  const all_nodes: Node[] = traverse_preorder(tree);
+  let subtrees: Array<Node[]> = [];
+  const is_leaf = (node: Node) => {
+    return node.children.length == 0;
+  };
+  const traits_match = (node: Node, trait_to_check: string = trait) => {
+    console.log(node);
+    if (
+      !node.parent ||
+      !Object.keys(node.node_attrs).includes(trait_to_check) ||
+      !Object.keys(node.parent.node_attrs).includes(trait_to_check)
+    ) {
+      return false;
+    }
+
+    const node_trait_value =
+      typeof node.node_attrs[trait_to_check] == "object" &&
+      node.node_attrs[trait_to_check]["value"]
+        ? node.node_attrs[trait_to_check]["value"]
+        : node.node_attrs.trait_to_check;
+    const parent_trait_value = node.parent.node_attrs.trait_to_check.value
+      ? node.parent.node_attrs[trait_to_check]["value"]
+      : node.parent.node_attrs["trait_to_check"];
+    console.log(node_trait_value, parent_trait_value);
+    return node_trait_value == parent_trait_value;
+  };
+
+  all_nodes.forEach((n) => {
+    if (!traits_match(n)) {
+      console.log(
+        "traversing subtree, switch from ",
+        n.parent && n.parent.node_attrs && n.parent.node_attrs.trait
+          ? n.parent.node_attrs.trait
+          : "missing upstream data",
+        n.node_attrs && n.node_attrs.trait
+          ? n.node_attrs.trait
+          : "missing downstream data"
+      );
+      subtrees.push(traverse_preorder(n, undefined, is_leaf, traits_match, []));
+    }
+  });
+
+  return subtrees.filter((s) => s.length > 0).map((st) => get_mrca(st));
+};
