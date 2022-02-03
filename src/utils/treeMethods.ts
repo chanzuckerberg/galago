@@ -3,44 +3,57 @@ import { Node } from "../d";
 
 export const traverse_preorder = (
   node: Node,
-  node_fn?: Function,
+  apply_fn?: Function,
+  collect_condition?: Function,
+  traverse_condition?: Function,
   collection: Node[] = []
 ) => {
   // first visit the node, maybe do something
-  if (node_fn) {
-    node_fn(node);
+  if (apply_fn) {
+    apply_fn(node);
   }
 
-  collection.push(node); // make a note that we've seen this node
+  if (!collect_condition || collect_condition(node)) {
+    collection.push(node); // make a note that we've seen this node
+  }
   // then visit children, left to right
   if (node.children.length > 0) {
-    for (var i = 0; i < node.children.length; i++) {
-      collection = traverse_preorder(node.children[i], node_fn, collection);
+    const children_to_visit = traverse_condition
+      ? node.children.filter((n) => traverse_condition(n))
+      : node.children;
+    for (let i = 0; i < children_to_visit.length; i++) {
+      collection = traverse_preorder(
+        children_to_visit[i],
+        apply_fn,
+        collect_condition,
+        traverse_condition,
+        collection
+      );
     }
   }
 
   return collection;
 };
 
-export const traverse_postorder = (
-  node: Node,
-  node_fn?: Function,
-  collection: Node[] = []
-) => {
-  // visit children first, left to rigt
-  if (node.children.length > 0) {
-    for (var i = 0; i < node.children.length; i++) {
-      collection = traverse_postorder(node.children[i], node_fn, collection);
-    }
-  }
+// export const traverse_postorder = (
+//   node: Node,
+//   node_fn?: Function,
+//   collection: Node[] = []
+// ) => {
+//   // visit children first, left to rigt
+//   if (node.children.length > 0) {
+//     for (var i = 0; i < node.children.length; i++) {
+//       collection = traverse_postorder(node.children[i], node_fn, collection);
+//     }
+//   }
 
-  if (node_fn) {
-    // then visit current node and do something
-    node_fn(node);
-  }
-  collection.push(node);
-  return collection;
-};
+//   if (node_fn) {
+//     // then visit current node and do something
+//     node_fn(node);
+//   }
+//   collection.push(node);
+//   return collection;
+// };
 
 export const get_mrca = (target_nodes: Node[]) => {
   // if only one node given, return itself
@@ -192,3 +205,5 @@ export const get_root = (node: Node) => {
   }
   return node;
 };
+
+export const get_state_changes = (tree: Node, trait: string) => {};
