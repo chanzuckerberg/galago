@@ -58,7 +58,7 @@ export const filter_tally = (
 };
 
 export const get_current_counts = (
-  records: Array<FlattenedAttrs>,
+  records: Array<Node>,
   home_geo: HomeGeo,
   specificity_level: SpecificityLevels,
   recency: RecencyValues
