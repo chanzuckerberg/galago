@@ -1,3 +1,4 @@
+import { Node, GISAIDRecord } from "../d";
 export type FlattenedAttrs = {
   num_date: Date | null;
   location: string;
@@ -57,14 +58,12 @@ export const filter_tally = (
 };
 
 export const get_current_counts = (
-  records: Array<Node>,
+  records: Array<FlattenedAttrs>,
   home_geo: HomeGeo,
   specificity_level: SpecificityLevels,
   recency: RecencyValues
 ) => {
-  const node_attrs: Array<Node["node_attrs"]> = records.map(
-    (r: any) => r.node_attrs
-  ); // just take the node_attrs dictionary for each node
+  const node_attrs = records.map((r: any) => r.node_attrs); // just take the node_attrs dictionary for each node
 
   const node_attr_values = (node_attrs: Node["node_attrs"]) => {
     return {
