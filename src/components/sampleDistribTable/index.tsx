@@ -1,9 +1,9 @@
-import { CladeDescription, Node, GISAIDRecord } from "../d";
-import SampleDistributionTable from "./sample_distribution_table";
+import { CladeDescription, Node, GISAIDRecord } from "../../d";
+import SampleDistributionTable from "./table";
 import {
   get_current_counts,
   get_gisaid_counts,
-} from "./sample_distribution_table";
+} from "../../utils/countSamples";
 
 interface SamplingBiasProps {
   gisaid_census: GISAIDRecord[];

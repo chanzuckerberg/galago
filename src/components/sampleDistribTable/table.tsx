@@ -1,4 +1,4 @@
-import { Node, GISAIDRecord, CladeDescription } from "../d";
+import { Node, GISAIDRecord, CladeDescription } from "../../d";
 import {
   HomeGeo,
   RecencyValues,
