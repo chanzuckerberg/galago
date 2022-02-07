@@ -14,7 +14,7 @@ import { ingest_nextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
 import { get_root, get_leaves } from "./utils/treeMethods";
-import SamplingBias from "./components/sampling_bias";
+import SamplingBias from "./components/sampleDistribTable";
 import Assumptions from "./components/assumptions";
 
 function App() {
