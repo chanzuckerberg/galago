@@ -73,7 +73,7 @@ const add_row_to_table = (
   set_width: string = "200",
   set_height: string = "50"
 ) => {
-  const recency_options = [28, 84, 364, 36400];
+  const recency_options: RecencyValues[] = [28, 84, 364, 36400];
   return (
     <div
       style={{
@@ -109,7 +109,12 @@ interface SampleTableProps {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function SampleDistributionTable(props: SampleTableProps) {
   const { all_samples, gisaid_census, clade_description } = props;
-  const specificity_options = ["location", "division", "country", "global"];
+  const specificity_options: Array<SpecificityLevels> = [
+    "location",
+    "division",
+    "country",
+    "global",
+  ];
 
   const row_labels = {
     location: clade_description["home_geo"]["location"],
