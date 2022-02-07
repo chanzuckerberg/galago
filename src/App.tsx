@@ -9,14 +9,8 @@ import OnwardTransmission from "./components/onward_transmission";
 import { nextstrain_json } from "../stub_data/demo_tree";
 import { gisaid_counts_file } from "../stub_data/gisaid_counts";
 import { ingest_nextstrain } from "./utils/nextstrainAdapter";
-import {
-  describe_clade,
-  Node,
-  CladeDescription,
-  GISAIDRecord,
-  GISAIDRawCounts,
-} from "./d";
-import { random_sample } from "./utils/misc";
+import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
+import { describe_clade } from "./utils/describeClade";
 import { get_root, get_leaves } from "./utils/treeMethods";
 import SamplingBias from "./components/sampling_bias";
 import Assumptions from "./components/assumptions";
