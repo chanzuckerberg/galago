@@ -1,3 +1,5 @@
+import { Helmet } from "react-helmet";
+
 import ClusterDefinition from "./components/cluster_definition";
 import ClusterUniqueness from "./components/cluster_uniqueness";
 import TMRCA from "./components/tmrca";
@@ -43,8 +45,21 @@ function App() {
       style={{
         margin: "auto",
         maxWidth: "50em",
+        fontFamily: "Noto Serif",
       }}
     >
+      <Helmet>
+        <meta charSet="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{`Home — Galago`}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap"
+          rel="stylesheet"
+        />
+      </Helmet>
       <h1>Galago</h1>
       <h3>A little tree explorer for public health</h3>
       <SamplingBias
