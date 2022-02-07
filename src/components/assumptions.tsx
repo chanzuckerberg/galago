@@ -11,13 +11,8 @@ function Assumptions(props: CladeProps) {
   return (
     <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
-      <h4>What assumptions influence this report?</h4>
+      <h2>What assumptions influence this report?</h2>
 
-      {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
-      <h2>
-        {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`Parameters used in this report`}
-      </h2>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
         {`Most of the data and insights described in this report are strictly observational (meaning they don't depend on heuristics or "judgement calls"). However, there are a few exceptions:`}
