@@ -1,21 +1,25 @@
 import { Node, GISAIDRecord, CladeDescription } from "../d";
 
+type FlattenedAttrs = {
+  num_date: Date | null;
+  location: string;
+  division: string;
+  country: string;
+};
+type HomeGeo = {
+  location: string;
+  division: string;
+  country: string;
+};
+type SpecificityLevels = "location" | "division" | "country" | "global";
+
+type RecencyValues = 28 | 84 | 364 | 36400;
+
 const filter_tally = (
-  records: Array<{
-    location: string;
-    division: string;
-    country: string;
-    region: string;
-    strain?: number;
-    num_date?: number;
-  }>,
-  home_geo: {
-    location: string;
-    division: string;
-    country: string;
-  },
-  specificity_level: "location" | "division" | "country" | "global",
-  recency: 28 | 84 | 364 | 36400,
+  records: Array<FlattenedAttrs> | Array<GISAIDRecord>,
+  home_geo: HomeGeo,
+  specificity_level: SpecificityLevels,
+  recency: RecencyValues,
   recency_fn: Function
 ) => {
   let matching_records: Array<Object> = [];
@@ -56,26 +60,15 @@ const filter_tally = (
 
 export const get_current_counts = (
   records: Array<Node>,
-  home_geo: {
-    location: string;
-    division: string;
-    country: string;
-  },
-  specificity_level: "location" | "division" | "country" | "global",
-  recency: 28 | 84 | 364 | 36400
+  home_geo: HomeGeo,
+  specificity_level: SpecificityLevels,
+  recency: RecencyValues
 ) => {
-  let node_attrs = records.map((r: any) => r.node_attrs); // just take the node_attrs dictionary for each node
-  const node_attrs_recency_match = (node_attrs: Object, recency: number) => {
-    // samples in the current dataset / tree have actual dates
-    if (!Object.keys(node_attrs).includes("num_date")) {
-      return false;
-    }
-    const diff: Date = new Date(Date.now() - node_attrs["num_date"]);
-    const matches_recency: boolean = diff.getUTCDate() - 1 <= recency;
-    return matches_recency;
-  };
+  const node_attrs: Array<Node["node_attrs"]> = records.map(
+    (r: any) => r.node_attrs
+  ); // just take the node_attrs dictionary for each node
 
-  const node_attr_values = (node_attrs: Object) => {
+  const node_attr_values = (node_attrs: Node["node_attrs"]) => {
     return {
       location: node_attrs.location.value,
       division: node_attrs.division.value,
@@ -83,9 +76,31 @@ export const get_current_counts = (
       num_date: node_attrs.num_date.value,
     };
   };
-  node_attrs = node_attrs.map((n) => node_attr_values(n));
+
+  // further flatten to just the values
+  const flat_node_attrs: FlattenedAttrs[] = node_attrs.map((n) =>
+    node_attr_values(n)
+  );
+
+  const node_attrs_recency_match = (
+    node_attrs: FlattenedAttrs,
+    recency: number
+  ) => {
+    // samples in the current dataset / tree have actual dates
+    if (
+      !Object.keys(node_attrs).includes("num_date") ||
+      !node_attrs["num_date"] ||
+      !(node_attrs["num_date"] instanceof Date)
+    ) {
+      return false;
+    }
+    const diff: Date = new Date(Date.now() - node_attrs["num_date"].getDate());
+    const matches_recency: boolean = diff.getUTCDate() - 1 <= recency;
+    return matches_recency;
+  };
+
   const matching_records = filter_tally(
-    node_attrs,
+    flat_node_attrs,
     home_geo,
     specificity_level,
     recency,
@@ -97,13 +112,9 @@ export const get_current_counts = (
 
 export const get_gisaid_counts = (
   records: Array<GISAIDRecord>,
-  home_geo: {
-    location: string;
-    division: string;
-    country: string;
-  },
-  specificity_level: "location" | "division" | "country" | "global",
-  recency: 28 | 84 | 364 | 36400
+  home_geo: HomeGeo,
+  specificity_level: SpecificityLevels,
+  recency: RecencyValues
 ) => {
   const gisaid_record_recency_match = (
     gisaid_record: GISAIDRecord,
@@ -236,7 +247,6 @@ interface SampleTableProps {
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function SampleDistributionTable(props: SampleTableProps) {
   const { all_samples, gisaid_census, clade_description } = props;
-  // const recency_options = [28, 84, 364, 36400];
   const specificity_options = ["location", "division", "country", "global"];
 
   const row_labels = {
