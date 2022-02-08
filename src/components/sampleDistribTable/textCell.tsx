@@ -5,7 +5,10 @@ const TextCell = (props: { text: string }) => {
       style={{
         width: 150,
         textAlign: "right",
-        fontSize: 14,
+        fontSize: 12,
+        fontWeight: 700,
+        fontFamily:
+          "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
       }}
       key={text}
     >{`${text}`}</p>
