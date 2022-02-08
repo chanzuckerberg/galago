@@ -36,7 +36,7 @@ function SampleDistributionTable(props: SampleTableProps) {
   };
 
   const column_labels = [
-    "Location",
+    "",
     "Last 4 weeks",
     "Last 3 months",
     "Last 1 year",

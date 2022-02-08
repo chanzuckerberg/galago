@@ -17,7 +17,7 @@ function SamplingBias(props: SamplingBiasProps) {
   return (
     <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
-      <h2>Your data in geographic context</h2>
+      <h2>Your samples in geographic context</h2>
       <p style={{ fontStyle: "italic" }}>
         How representative is your dataset relative to publicly available data?
         Should you be concerned about sampling bias changing the interpretations
