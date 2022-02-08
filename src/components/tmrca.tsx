@@ -48,9 +48,17 @@ function TMRCA(props: CladeProps) {
         </p>
         <p>
           The primary case's pathogen genome sequence
-          {mrca_matches.length === 0
-            ? "does not match any samples in this dataset."
-            : `was most likely identical to sample(s): ${mrca_matches}. Importantly, it is also possible that the true primary case is not be represented in this dataset (but has an identical sequence to these sample(s)). `}
+          {mrca_matches.length === 0 ? (
+            "does not match any samples in this dataset."
+          ) : (
+            <>
+              was most likely identical to sample(s):{" "}
+              <span className="dataPoint">{mrca_matches}</span>. Importantly, it
+              is also possible that the true primary case is not be represented
+              in this dataset (but has an identical sequence to these
+              sample(s)).{" "}
+            </>
+          )}
         </p>
       </div>
       <p>

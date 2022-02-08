@@ -68,8 +68,7 @@ function SamplingBias(props: SamplingBiasProps) {
       </p>
       <div // container that sets the max width to something a mobile device can handle and enables left/right scrolling
         style={{
-          maxWidth: 500,
-          overflow: "scroll",
+          overflow: "visible",
           margin: "auto",
         }}
       >
