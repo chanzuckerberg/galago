@@ -1,11 +1,10 @@
 import { Helmet } from "react-helmet";
 
-import ClusterDefinition from "./components/cluster_definition";
-import ClusterUniqueness from "./components/cluster_uniqueness";
+import ClusterUniqueness from "./components/clusterUniqueness";
 import TMRCA from "./components/tmrca";
 import PhyloUncertainty from "./components/phylo_uncertainty";
 // import MinIntroductions from "./components/PAUSED_min_introductions";
-import OnwardTransmission from "./components/onward_transmission";
+import OnwardTransmission from "./components/onwardTransmission";
 // import DatasetGeoCompletion from "./components/dataset_geo_completion";
 //@ts-ignore -- we're intentionally not typing the tree json for now
 import { nextstrain_json } from "../stub_data/demo_tree";
@@ -15,7 +14,8 @@ import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
 import { get_root, get_leaves } from "./utils/treeMethods";
 import SamplingBias from "./components/sampleDistribTable";
-import Assumptions from "./components/assumptions";
+import Assumptions from "./components/assumptions.mdx";
+import ClusterDefinition from "./components/cluster_definition.mdx";
 
 function App() {
   //@ts-ignore
@@ -41,13 +41,7 @@ function App() {
   );
 
   return (
-    <div
-      style={{
-        margin: "auto",
-        maxWidth: "50em",
-        fontFamily: "Noto Serif",
-      }}
-    >
+    <div>
       <Helmet>
         <meta charSet="utf-8" />
         <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
@@ -60,8 +54,7 @@ function App() {
           rel="stylesheet"
         />
       </Helmet>
-      <h1>Galago</h1>
-      <h3>A little tree explorer for public health</h3>
+      <h1>Alameda County Report</h1>
       <SamplingBias
         gisaid_census={gisaid_census}
         all_samples={all_samples}

@@ -17,35 +17,55 @@ function SamplingBias(props: SamplingBiasProps) {
   return (
     <div>
       {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
-      <h4>
+      <h2>Your data in geographic context</h2>
+      <p style={{ fontStyle: "italic" }}>
         How representative is your dataset relative to publicly available data?
-        <br />
-        (Should we be concerned about sampling bias changing the interpretations
-        in this report?)
-      </h4>
-
+        Should you be concerned about sampling bias changing the interpretations
+        in this report?
+      </p>
       {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
-      <h2>{`This dataset contains ${(
-        (get_current_counts(
-          all_samples,
-          clade_description.home_geo,
-          "division",
-          36400
-        ) /
-          get_gisaid_counts(
-            gisaid_census,
-            clade_description.home_geo,
-            "division",
-            36400
-          )) *
-        100
-      ).toFixed(0)}% of publicly available data from ${
-        clade_description.home_geo.division
-      }.`}</h2>
-
+      <p className="results">
+        {
+          <>
+            This dataset contains{" "}
+            <span className="dataPoint">
+              {(
+                (get_current_counts(
+                  all_samples,
+                  clade_description.home_geo,
+                  "division",
+                  36400
+                ) /
+                  get_gisaid_counts(
+                    gisaid_census,
+                    clade_description.home_geo,
+                    "division",
+                    36400
+                  )) *
+                100
+              ).toFixed(0)}
+              %
+            </span>{" "}
+            of publicly available data from{" "}
+            {clade_description.home_geo.division}.
+          </>
+        }
+      </p>
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
-      <p>{`The phylogenetic tree underlying this report represents the most likely genetic relationships between samples in this dataset. Because pathogens evolve and spread on similar timescales, we can use this to learn about the transmission chain(s) that led to your samples of interest. Importantly, though, the tree does not take into account cases that are not sampled (or not included in this dataset), which can lead to sampling bias that influences our inferences.`}</p>
-      <p>{`One way that we can minimize sampling bias is by including enough representative, contextual data that is similar to our outbreak of interest.`}</p>
+      <p>
+        The phylogenetic tree underlying this report represents the most likely
+        genetic relationships between samples in this dataset. Because pathogens
+        evolve and spread on similar timescales, we can use this to learn about
+        the transmission chain(s) that led to your samples of interest.
+        Importantly, though, the tree does not take into account cases that are
+        not sampled (or not included in this dataset), which can lead to
+        sampling bias that influences our inferences.
+      </p>
+      <p>
+        One way that we can minimize sampling bias is by including enough
+        representative, contextual data that is similar to our outbreak of
+        interest.
+      </p>
       <div // container that sets the max width to something a mobile device can handle and enables left/right scrolling
         style={{
           maxWidth: 500,

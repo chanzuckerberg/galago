@@ -27,29 +27,28 @@ function ClusterUniqueness(props: CladeProps) {
 
   return (
     <div>
-      {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
-      <h4>
+      <h2>How unique are your samples, relative to the entire dataset? </h2>
+      <p style={{ fontStyle: "italic" }}>
         How similar or distinct are your samples compared to the rest of the
         dataset?
-      </h4>
-
-      {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
-      <h2>
-        {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-        {`This clade is separated by other samples in the dataset by ${Math.min(
-          ...cousin_distances
-        )} or more mutation(s).`}
-      </h2>
-      {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
-      <p>
-        {`The most closely related "cousins" to your clade of interest include ${
-          data.cousins.length
-        } sample(s) dated between 
-        ${cousin_dates[0].toISOString().substring(0, 10)} and ${cousin_dates[1]
-          .toISOString()
-          .substring(0, 10)}
-           from these location(s): ${cousin_locations}.`}
       </p>
+      <div className="results">
+        <p>
+          {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
+          {`This clade is separated by other samples in the dataset by ${Math.min(
+            ...cousin_distances
+          )} or more mutation(s).`}
+        </p>
+        <p>
+          {`The most closely related "cousins" to your clade of interest include ${
+            data.cousins.length
+          } sample(s) dated between ${cousin_dates[0]
+            .toISOString()
+            .substring(0, 10)} and ${cousin_dates[1]
+            .toISOString()
+            .substring(0, 10)} from these location(s): ${cousin_locations}.`}
+        </p>
+      </div>
     </div>
   );
 }
