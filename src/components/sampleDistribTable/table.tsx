@@ -47,7 +47,6 @@ function SampleDistributionTable(props: SampleTableProps) {
     <div // actual table container
       style={{
         position: "relative",
-        left: -60,
         borderTop: "1px solid black",
         display: "flex",
         flexDirection: "column",
