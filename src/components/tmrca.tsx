@@ -23,36 +23,34 @@ function TMRCA(props: CladeProps) {
 
   return (
     <div>
-      {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h2>When did this clade arise?</h2>
-      {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
-      {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <div className="results">
         <p>
           {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-          {`This clade's primary case likely occurred ${
-            data.mrca && data.mrca.node_attrs.num_date.confidence.length === 2
-              ? `between ${data.mrca.node_attrs.num_date.confidence[0]
-                  .toISOString()
-                  .substring(
-                    0,
-                    10
-                  )} and ${data.mrca.node_attrs.num_date.confidence[1]
-                  .toISOString()
-                  .substring(0, 10)} (95% CI).`
-              : `around ${data.mrca.node_attrs.num_date.value
-                  .toISOString()
-                  .substring(0, 10)}`
-          }`}
+          <>
+            This clade's primary case likely occurred{" "}
+            <span className="dataPoint">
+              {data.mrca &&
+              data.mrca.node_attrs.num_date.confidence.length === 2
+                ? `between ${data.mrca.node_attrs.num_date.confidence[0]
+                    .toISOString()
+                    .substring(
+                      0,
+                      10
+                    )} and ${data.mrca.node_attrs.num_date.confidence[1]
+                    .toISOString()
+                    .substring(0, 10)} (95% CI).`
+                : ` around ${data.mrca.node_attrs.num_date.value
+                    .toISOString()
+                    .substring(0, 10)}`}
+            </span>
+          </>
         </p>
         <p>
-          {`The primary case's pathogen genome sequence 
-        ${
-          mrca_matches.length === 0
+          The primary case's pathogen genome sequence
+          {mrca_matches.length === 0
             ? "does not match any samples in this dataset."
-            : `was most likely identical to sample(s): ${mrca_matches}. Importantly, it is also possible that the true primary case is not be represented in this dataset (but has an identical sequence to these sample(s)). `
-        }
-        `}
+            : `was most likely identical to sample(s): ${mrca_matches}. Importantly, it is also possible that the true primary case is not be represented in this dataset (but has an identical sequence to these sample(s)). `}
         </p>
       </div>
       <p>

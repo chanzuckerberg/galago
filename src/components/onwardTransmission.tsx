@@ -41,32 +41,28 @@ function OnwardTransmission(props: CladeProps) {
         in their body. Usually, a primary case transmits one dominant pathogen
         genotype to all of their secondary cases.
       </p>
-      <div className="results">
-        <p>
-          Sometimes you may observe a few different genotypes which vary by 1 -{" "}
-          <span className="dataPoint">{data.muts_per_trans_minmax[1]}</span>{" "}
-          mutations being transmitted during the same superspreader event.
-        </p>
-      </div>
+      <p>
+        Sometimes you may observe a few different genotypes which vary by 1 -{" "}
+        <span className="dataPoint">{data.muts_per_trans_minmax[1]}</span>{" "}
+        mutations being transmitted during the same superspreader event.
+      </p>
       <p>
         As a rule of thumb, we generally consider it unlikely for samples which
         are identical to the primary case to be the result of onward
         transmission.
       </p>
-      <div className="results">
-        <p>
-          Samples with 1 -{" "}
-          <span className="dataPoint">{data.muts_per_trans_minmax[1]}</span>{" "}
-          mutations may either be secondary cases or further downstream.
-        </p>
-        <p>
-          {`It's usually a reasonable to assume that samples with 
+      <p>
+        Samples with 1 -{" "}
+        <span className="dataPoint">{data.muts_per_trans_minmax[1]}</span>{" "}
+        mutations may either be secondary cases or further downstream.
+      </p>
+      <p>
+        {`It's usually a reasonable to assume that samples with 
         ${
           data.muts_per_trans_minmax[1] + 1
         }+ mutations represent tertiary or further
         downstream transmission.`}
-        </p>
-      </div>
+      </p>
       <p>
         Learn more about{" "}
         <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#how-many-mutations-are-enough-to-rule-linkage-out">
