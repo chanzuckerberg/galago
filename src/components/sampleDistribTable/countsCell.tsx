@@ -41,6 +41,9 @@ const CountsCell = (props: CountsCellProps) => {
       style={{
         width: 120,
         textAlign: "right",
+        fontSize: 12,
+        fontFamily:
+          "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
       }}
       key={`${specificity_level}+${recency}`}
     >

@@ -8,9 +8,17 @@ body {
   padding: 4em 1em;
   color: #333;
   margin: auto;
-  max-width: 35em;
+  max-width: 65em;
   font-size: 16px;
   font-family: "Noto Serif";
+}
+
+p,
+ul,
+li,
+ol,
+a {
+  max-width: 35em;
 }
 
 h1 {

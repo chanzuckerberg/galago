@@ -11,19 +11,19 @@ interface SamplingBiasProps {
   clade_description: CladeDescription;
 }
 
+import Sidenote from "../sidenote";
+
 function SamplingBias(props: SamplingBiasProps) {
   const { all_samples, gisaid_census, clade_description } = props;
 
   return (
     <div>
-      {/* SUBTITLE: WHAT QUESTION ARE WE ANSWERING? */}
       <h2>Your samples in geographic context</h2>
       <p style={{ fontStyle: "italic" }}>
         How representative is your dataset relative to publicly available data?
         Should you be concerned about sampling bias changing the interpretations
         in this report?
       </p>
-      {/* TITLE: TAKEHOME / BRIEF ANSWER TO THE QUESTION */}
       <p className="results">
         {
           <>
@@ -54,9 +54,14 @@ function SamplingBias(props: SamplingBiasProps) {
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
         The phylogenetic tree underlying this report represents the most likely
-        genetic relationships between samples in this dataset. Because pathogens
+        genetic relationships between samples in this dataset.
+        <sup style={{ fontSize: 10 }}>1</sup>
+        <Sidenote
+          num={1}
+          text="Because pathogens
         evolve and spread on similar timescales, we can use this to learn about
-        the transmission chain(s) that led to your samples of interest.
+        the transmission chain(s) that led to your samples of interest."
+        />{" "}
         Importantly, though, the tree does not take into account cases that are
         not sampled (or not included in this dataset), which can lead to
         sampling bias that influences our inferences.

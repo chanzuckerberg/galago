@@ -1,5 +1,6 @@
 import { CladeDescription, Node } from "../d";
 import { get_dist } from "../utils/treeMethods";
+import Sidenote from "./sidenote";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
 type CladeProps = {
@@ -40,21 +41,34 @@ function OnwardTransmission(props: CladeProps) {
         means that any individual case has multiple pathogen genotypes present
         in their body. Usually, a primary case transmits one dominant pathogen
         genotype to all of their secondary cases.
-      </p>
-      <p>
-        Sometimes you may observe a few different genotypes which vary by 1 -{" "}
-        <span className="dataPoint">{data.muts_per_trans_minmax[1]}</span>{" "}
-        mutations being transmitted during the same superspreader event.
-      </p>
-      <p>
-        As a rule of thumb, we generally consider it unlikely for samples which
-        are identical to the primary case to be the result of onward
-        transmission.
-      </p>
-      <p>
-        Samples with 1 -{" "}
-        <span className="dataPoint">{data.muts_per_trans_minmax[1]}</span>{" "}
-        mutations may either be secondary cases or further downstream.
+        <sup style={{ fontSize: 10 }}>2</sup>
+        <Sidenote
+          num={2}
+          text={
+            <>
+              <span>
+                Sometimes you may observe a few different genotypes which vary
+                by 1 -{" "}
+                <span className="dataPoint">
+                  {data.muts_per_trans_minmax[1]}
+                </span>{" "}
+                mutations being transmitted during the same superspreader event.
+              </span>
+              <p>
+                As a rule of thumb, we generally consider it unlikely for
+                samples which are identical to the primary case to be the result
+                of onward transmission.
+              </p>
+              <p>
+                Samples with 1 -{" "}
+                <span className="dataPoint">
+                  {data.muts_per_trans_minmax[1]}
+                </span>{" "}
+                mutations may either be secondary cases or further downstream.
+              </p>
+            </>
+          }
+        />
       </p>
       <p>
         {`It's usually a reasonable to assume that samples with 

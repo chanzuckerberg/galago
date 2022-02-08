@@ -47,7 +47,7 @@ function SampleDistributionTable(props: SampleTableProps) {
     <div // actual table container
       style={{
         position: "relative",
-        left: -190,
+        left: -60,
         borderTop: "1px solid black",
         display: "flex",
         flexDirection: "column",
@@ -65,7 +65,7 @@ function SampleDistributionTable(props: SampleTableProps) {
           margin: 0,
           padding: 0,
           justifyContent: "space-between",
-          alignItems: "space-between",
+          alignItems: "baseline",
         }}
       >
         {column_labels.map((t) => (
