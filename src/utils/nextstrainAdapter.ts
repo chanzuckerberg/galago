@@ -99,10 +99,7 @@ export const initialize_tree = (
   const required_node_attrs = ["location", "division", "country", "region"];
   for (let i = 0; i < required_node_attrs.length; i++) {
     let attr = required_node_attrs[i];
-    if (
-      !Object.keys(newNode.node_attrs).includes(attr) ||
-      !newNode.node_attrs.attr
-    ) {
+    if (!Object.keys(newNode.node_attrs).includes(attr)) {
       newNode.node_attrs[attr] = { value: "unknown" };
     }
   }
