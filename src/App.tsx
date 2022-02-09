@@ -54,7 +54,8 @@ function App() {
           rel="stylesheet"
         />
       </Helmet>
-      <h1>Alameda County Report</h1>
+      <h1>Galago</h1>
+      <h3>A little tree explorer by CZ Gen Epi</h3>
       <SamplingBias
         gisaid_census={gisaid_census}
         all_samples={all_samples}
