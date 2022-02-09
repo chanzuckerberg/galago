@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet";
-
-import ClusterUniqueness from "./components/clusterUniqueness";
+import CladeUniqueness from "./components/cladeUniqueness";
 import TMRCA from "./components/tmrca";
 import PhyloUncertainty from "./components/phylo_uncertainty";
 // import MinIntroductions from "./components/PAUSED_min_introductions";
@@ -15,7 +14,7 @@ import { describe_clade } from "./utils/describeClade";
 import { get_root, get_leaves } from "./utils/treeMethods";
 import SamplingBias from "./components/sampleDistribTable";
 import Assumptions from "./components/assumptions.mdx";
-import ClusterDefinition from "./components/cluster_definition.mdx";
+import CladeDefinition from "./components/CladeDefinition.mdx";
 
 function App() {
   //@ts-ignore
@@ -61,8 +60,8 @@ function App() {
         all_samples={all_samples}
         clade_description={clade_description}
       />
-      <ClusterDefinition data={clade_description} />
-      <ClusterUniqueness data={clade_description} />
+      <CladeDefinition data={clade_description} />
+      <CladeUniqueness data={clade_description} />
       <TMRCA data={clade_description} />
       <OnwardTransmission data={clade_description} />
       {/* <PhyloUncertainty data={all_samples} /> */}

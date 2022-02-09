@@ -1,5 +1,6 @@
 import { CladeDescription, Node } from "../d";
 import { get_dist } from "../utils/treeMethods";
+import Sidenote from "./sidenote";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
 type CladeProps = {
@@ -20,7 +21,6 @@ function TMRCA(props: CladeProps) {
   let mrca_matches: string[] = Object.keys(mrca_distances).filter(
     (m: string) => mrca_distances[m] === 0
   );
-
   return (
     <div>
       <h2>When did this clade arise?</h2>
@@ -28,6 +28,21 @@ function TMRCA(props: CladeProps) {
         <p>
           {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
           <>
+            <Sidenote
+              num="5"
+              text={
+                <span>
+                  Learn more about{" "}
+                  <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#temporally-resolved-phylogenetic-trees.">
+                    inferring dates using phylogenetic trees
+                  </a>{" "}
+                  and{" "}
+                  <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#estimating-the-start-and-duration-of-an-outbreak.">
+                    how sampling may effect these estimates.
+                  </a>
+                </span>
+              }
+            />
             This clade's primary case likely occurred{" "}
             <span className="dataPoint">
               {data.mrca &&
@@ -39,11 +54,12 @@ function TMRCA(props: CladeProps) {
                       10
                     )} and ${data.mrca.node_attrs.num_date.confidence[1]
                     .toISOString()
-                    .substring(0, 10)} (95% CI).`
+                    .substring(0, 10)} (95% CI)`
                 : ` around ${data.mrca.node_attrs.num_date.value
                     .toISOString()
                     .substring(0, 10)}`}
             </span>
+            .<sup fontSize="10">5</sup>
           </>
         </p>
         <p>
@@ -52,25 +68,17 @@ function TMRCA(props: CladeProps) {
             "does not match any samples in this dataset."
           ) : (
             <>
-              was most likely identical to sample(s):{" "}
-              <span className="dataPoint">{mrca_matches}</span>. Importantly, it
-              is also possible that the true primary case is not be represented
-              in this dataset (but has an identical sequence to these
-              sample(s)).{" "}
+              {`was most likely identical to sample(s): `}
+              {mrca_matches.map((m) => (
+                <span className="dataPoint">{m}</span>
+              ))}
+              . Importantly, it is also possible that the true primary case is
+              not be represented in this dataset (but has an identical sequence
+              to these sample(s)).
             </>
           )}
         </p>
       </div>
-      <p>
-        Learn more about{" "}
-        <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#temporally-resolved-phylogenetic-trees.">
-          inferring dates using phylogenetic trees
-        </a>{" "}
-        and{" "}
-        <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#estimating-the-start-and-duration-of-an-outbreak.">
-          how sampling may effect these estimates.
-        </a>
-      </p>
     </div>
   );
 }

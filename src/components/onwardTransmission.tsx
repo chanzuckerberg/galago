@@ -24,68 +24,66 @@ function OnwardTransmission(props: CladeProps) {
       <div className="results">
         <p>
           {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-          {`In this clade, ${
-            Object.values(mrca_distances).filter((n) => n === 0).length
-          } sample(s) are identical to the primary case and ${
-            Object.values(mrca_distances).filter(
-              (n) => n > data.muts_per_trans_minmax[1]
-            ).length
-          } sample(s) are most likely tertiary cases`}
+          In this clade,{" "}
+          <span className="dataPoint">
+            {Object.values(mrca_distances).filter((n) => n === 0).length}
+          </span>{" "}
+          sample(s) are identical to the primary case and{" "}
+          <span className="dataPoint">
+            {
+              Object.values(mrca_distances).filter(
+                (n) => n > data.muts_per_trans_minmax[1]
+              ).length
+            }
+          </span>{" "}
+          sample(s) are most likely tertiary cases.
         </p>
       </div>
       <p>
-        Differentiating between a superspreader event (where one primary cases
-        transmits to many secondary cases) and onward transmission (here,
-        defined as tertiary or further downstream cases), can be tricky.
-        Mutations occur as a pathogen replicates within the host's body, which
-        means that any individual case has multiple pathogen genotypes present
-        in their body. Usually, a primary case transmits one dominant pathogen
-        genotype to all of their secondary cases.
-        <sup style={{ fontSize: 10 }}>2</sup>
         <Sidenote
-          num={2}
+          num={6}
           text={
             <>
               <span>
-                Sometimes you may observe a few different genotypes which vary
-                by 1 -{" "}
+                An infected case may have multiple pathogen genotypes present in
+                their body, generated as the pathogen replicates. This means
+                that sometimes you may observe a few different genotypes which
+                vary by 1 -{" "}
                 <span className="dataPoint">
                   {data.muts_per_trans_minmax[1]}
                 </span>{" "}
                 mutations being transmitted during the same superspreader event.
               </span>
-              <p>
-                As a rule of thumb, we generally consider it unlikely for
-                samples which are identical to the primary case to be the result
-                of onward transmission.
-              </p>
-              <p>
-                Samples with 1 -{" "}
-                <span className="dataPoint">
-                  {data.muts_per_trans_minmax[1]}
-                </span>{" "}
-                mutations may either be secondary cases or further downstream.
-              </p>
             </>
           }
         />
+        Differentiating between a superspreader event (where one primary cases
+        transmits to many secondary cases) and onward transmission (here,
+        defined as tertiary or further downstream cases), can be tricky.
+        <sup style={{ fontSize: 10 }}>6</sup>
       </p>
       <p>
-        {`It's usually a reasonable to assume that samples with 
-        ${
-          data.muts_per_trans_minmax[1] + 1
-        }+ mutations represent tertiary or further
-        downstream transmission.`}
-      </p>
-      <p>
-        Learn more about{" "}
-        <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#how-many-mutations-are-enough-to-rule-linkage-out">
-          ruling out direct linkage
-        </a>{" "}
-        and{" "}
-        <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#assessing-linkage-between-cases">
-          more generally assessing linkage patterns between cases.
-        </a>
+        Samples 0 -{" "}
+        <span className="dataPoint">{data.muts_per_trans_minmax[1]}</span>{" "}
+        mutations from the reference may represent either primary or secondary
+        cases. It's usually reasonable to assume that samples with
+        <span className="dataPoint">{data.muts_per_trans_minmax[1] + 1}</span>+
+        mutations represent tertiary or further downstream transmission.{" "}
+        <sup style={{ fontSize: 10 }}>7</sup>
+        <Sidenote
+          num="7"
+          text={
+            <span>
+              <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#how-many-mutations-are-enough-to-rule-linkage-out">
+                Learn more about ruling out direct linkage
+              </a>{" "}
+              and{" "}
+              <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#assessing-linkage-between-cases">
+                more generally assessing linkage patterns between cases.
+              </a>
+            </span>
+          }
+        />
       </p>
     </div>
   );

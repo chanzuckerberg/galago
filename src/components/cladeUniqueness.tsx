@@ -7,7 +7,7 @@ type CladeProps = {
 };
 
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
-function ClusterUniqueness(props: CladeProps) {
+function CladeUniqueness(props: CladeProps) {
   const { data } = props;
 
   const cousin_dates: Array<Date | null> = data.cousins
@@ -27,30 +27,33 @@ function ClusterUniqueness(props: CladeProps) {
 
   return (
     <div>
-      <h2>How unique are your samples, relative to the entire dataset? </h2>
-      <p style={{ fontStyle: "italic" }}>
-        How similar or distinct are your samples compared to the rest of the
-        dataset?
-      </p>
+      <h2>How unique is this clade, relative to the entire dataset? </h2>
       <div className="results">
         <p>
           {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
-          {`This clade is separated by other samples in the dataset by ${Math.min(
-            ...cousin_distances
-          )} or more mutation(s).`}
+          {`This clade is separated by other samples in the dataset by `}
+          <span className="dataPoint">
+            {Math.min(...cousin_distances)}
+          </span>{" "}
+          {`or more mutation(s).`}
         </p>
         <p>
-          {`The most closely related "cousins" to your clade of interest include ${
-            data.cousins.length
-          } sample(s) dated between ${cousin_dates[0]
-            .toISOString()
-            .substring(0, 10)} and ${cousin_dates[1]
-            .toISOString()
-            .substring(0, 10)} from these location(s): ${cousin_locations}.`}
+          {`The most closely related "cousins" to your clade of interest include `}
+          <span className="dataPoint">{data.cousins.length}</span> sample(s)
+          dated between{" "}
+          <span className="dataPoint">
+            {cousin_dates[0].toISOString().substring(0, 10)} and{" "}
+            {cousin_dates[1].toISOString().substring(0, 10)}
+          </span>{" "}
+          {`from these location(s): `}{" "}
+          {cousin_locations.map((l) => (
+            <span className="dataPoint">{l}</span>
+          ))}
+          .
         </p>
       </div>
     </div>
   );
 }
 
-export default ClusterUniqueness;
+export default CladeUniqueness;
