@@ -23,23 +23,11 @@ function App() {
 
   const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
   const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
+  const [tree, setTree] = useState<null | Node>(null);
+  const [isFilePicked, setIsFilePicked] = useState<boolean>(false);
+  const [selectedSamples, setSelectedSamples] = useState<string | null>(null);
 
-  var clade_description: CladeDescription = describe_clade(
-    selected_samples,
-    {
-      location: "Alameda County",
-      division: "California",
-      country: "USA",
-      region: "North America",
-    },
-    [0, 2],
-    1
-  );
-
-  const [tree, setTree] = useState();
-  const [isFilePicked, setIsFilePicked] = useState(false);
-
-  const changeHandler = (event: any) => {
+  const handleTreeUpload = (event: any) => {
     const fileReader = new FileReader();
 
     setIsFilePicked(true);
@@ -49,7 +37,7 @@ function App() {
     fileReader.onload = (event) => {
       if (event && event.target) {
         //@ts-ignore
-        var tree: Node = ingest_nextstrain(event.target.result);
+        var tree: Node = ingest_nextstrain(JSON.parse(event.target.result));
         setTree(tree);
       }
     };
@@ -59,7 +47,17 @@ function App() {
 
   if (tree) {
     var all_samples: Array<Node> = get_leaves(get_root(tree));
-    var selected_samples: Array<Node> = all_samples.slice(-10);
+    var clade_description: CladeDescription = describe_clade(
+      selectedSamples,
+      {
+        location: "Alameda County",
+        division: "California",
+        country: "USA",
+        region: "North America",
+      },
+      [0, 2],
+      1
+    );
   }
 
   return (
@@ -88,7 +86,7 @@ function App() {
         Galago
       </p>
       <h1>Alameda County Report</h1>
-      <input type="file" name="file" onChange={changeHandler} />
+      <input type="file" name="file" onChange={handleTreeUpload} />
 
       {isFilePicked && selectedFile ? (
         <div>
