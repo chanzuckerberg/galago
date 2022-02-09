@@ -33,21 +33,20 @@ function SamplingBias(props: SamplingBiasProps) {
                   all_samples,
                   clade_description.home_geo,
                   "division",
-                  84
+                  28
                 ) /
                   get_gisaid_counts(
                     gisaid_census,
                     clade_description.home_geo,
                     "division",
-                    84
+                    28
                   )) *
                 100
               ).toFixed(0)}
               %
             </span>{" "}
             of the publicly available data from{" "}
-            {clade_description.home_geo.division} collected in the last 3
-            months.
+            {clade_description.home_geo.division} collected in the last 4 weeks.
           </>
         }
       </p>
