@@ -18,9 +18,8 @@ function SamplingBias(props: SamplingBiasProps) {
 
   return (
     <div>
-      <h2>Your samples in geographic context</h2>
+      <h2>How representative is your dataset?</h2>
       <p style={{ fontStyle: "italic" }}>
-        How representative is your dataset relative to publicly available data?
         Should you be concerned about sampling bias changing the interpretations
         in this report?
       </p>
@@ -34,20 +33,21 @@ function SamplingBias(props: SamplingBiasProps) {
                   all_samples,
                   clade_description.home_geo,
                   "division",
-                  36400
+                  84
                 ) /
                   get_gisaid_counts(
                     gisaid_census,
                     clade_description.home_geo,
                     "division",
-                    36400
+                    84
                   )) *
                 100
               ).toFixed(0)}
               %
             </span>{" "}
-            of publicly available data from{" "}
-            {clade_description.home_geo.division}.
+            of the publicly available data from{" "}
+            {clade_description.home_geo.division} collected in the last 3
+            months.
           </>
         }
       </p>
@@ -58,13 +58,20 @@ function SamplingBias(props: SamplingBiasProps) {
         <sup style={{ fontSize: 10 }}>1</sup>
         <Sidenote
           num={1}
-          text="Because pathogens
+          text=<span>Because pathogens
         evolve and spread on similar timescales, we can use this to learn about
-        the transmission chain(s) that led to your samples of interest."
+        the transmission chain(s) that led to your samples of interest.{" "}<a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#the-transmission-tree-does-not-equate-the-phylogenetic-tree">
+        Learn more.
+      </a></span>
         />{" "}
         Importantly, though, the tree does not take into account cases that are
         not sampled (or not included in this dataset), which can lead to
-        sampling bias that influences our inferences.
+        sampling bias that influences our inferences
+        <sup style={{ fontSize: 10 }}>2</sup>.         <Sidenote
+          num={2}
+          text=<span>Learn more about{" "}
+        <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#what-kind-of-sampling-do-you-need-to-answer-the-question">
+          the importance of contextual data for outbreak analysis using trees</a></span> />
       </p>
       <p>
         One way that we can minimize sampling bias is by including enough
@@ -83,16 +90,6 @@ function SamplingBias(props: SamplingBiasProps) {
           clade_description={clade_description}
         />
       </div>
-      <p>
-        Learn more about{" "}
-        <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#what-kind-of-sampling-do-you-need-to-answer-the-question">
-          the importance of contextual data for outbreak analysis using trees
-        </a>{" "}
-        and{" "}
-        <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#the-transmission-tree-does-not-equate-the-phylogenetic-tree">
-          the differences between transmission trees and phylogenetic trees.
-        </a>
-      </p>
     </div>
   );
 }
