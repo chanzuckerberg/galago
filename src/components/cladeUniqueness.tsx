@@ -1,4 +1,4 @@
-import { CladeDescription } from "../d";
+import { CladeDescription, Node } from "../d";
 import { get_dist } from "../utils/treeMethods";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
