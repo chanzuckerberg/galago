@@ -6,7 +6,7 @@ import PhyloUncertainty from "./components/phylo_uncertainty";
 import OnwardTransmission from "./components/onwardTransmission";
 // import DatasetGeoCompletion from "./components/dataset_geo_completion";
 //@ts-ignore -- we're intentionally not typing the tree json for now
-import { nextstrain_json } from "../stub_data/ncov_humboldt";
+import { nextstrain_json } from "../stub_data/demo_tree";
 import { gisaid_counts_file } from "../stub_data/gisaid_counts";
 import { ingest_nextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
@@ -30,7 +30,7 @@ function App() {
   var clade_description: CladeDescription = describe_clade(
     selected_samples,
     {
-      location: "Humboldt County",
+      location: "Alameda County",
       division: "California",
       country: "USA",
       region: "North America",
