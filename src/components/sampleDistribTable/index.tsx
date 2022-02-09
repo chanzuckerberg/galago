@@ -57,20 +57,33 @@ function SamplingBias(props: SamplingBiasProps) {
         <sup style={{ fontSize: 10 }}>1</sup>
         <Sidenote
           num={1}
-          text=<span>Because pathogens
-        evolve and spread on similar timescales, we can use this to learn about
-        the transmission chain(s) that led to your samples of interest.{" "}<a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#the-transmission-tree-does-not-equate-the-phylogenetic-tree">
-        Learn more.
-      </a></span>
+          text={
+            <span>
+              Because pathogens evolve and spread on similar timescales, we can
+              use this to learn about the transmission chain(s) that led to your
+              samples of interest.{" "}
+              <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#the-transmission-tree-does-not-equate-the-phylogenetic-tree">
+                Learn more.
+              </a>
+            </span>
+          }
         />{" "}
         Importantly, though, the tree does not take into account cases that are
         not sampled (or not included in this dataset), which can lead to
         sampling bias that influences our inferences
-        <sup style={{ fontSize: 10 }}>2</sup>.         <Sidenote
+        <sup style={{ fontSize: 10 }}>2</sup>.{" "}
+        <Sidenote
           num={2}
-          text=<span>Learn more about{" "}
-        <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#what-kind-of-sampling-do-you-need-to-answer-the-question">
-          the importance of contextual data for outbreak analysis using trees</a></span> />
+          text={
+            <span>
+              Learn more about{" "}
+              <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#what-kind-of-sampling-do-you-need-to-answer-the-question">
+                the importance of contextual data for outbreak analysis using
+                trees
+              </a>
+            </span>
+          }
+        />
       </p>
       <p>
         One way that we can minimize sampling bias is by including enough
