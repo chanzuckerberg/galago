@@ -69,8 +69,10 @@ function TMRCA(props: CladeProps) {
           ) : (
             <>
               {`was most likely identical to sample(s): `}
-              {mrca_matches.map((m) => (
-                <span className="dataPoint">{m}</span>
+              {mrca_matches.map((m, i) => (
+                <span key={i} className="dataPoint">
+                  {m}
+                </span>
               ))}
               . Importantly, it is also possible that the true primary case is
               not be represented in this dataset (but has an identical sequence

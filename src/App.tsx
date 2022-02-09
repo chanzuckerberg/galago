@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import { Helmet } from "react-helmet";
 import CladeUniqueness from "./components/cladeUniqueness";
 import TMRCA from "./components/tmrca";
@@ -18,14 +20,9 @@ import CladeDefinition from "./components/CladeDefinition.mdx";
 
 function App() {
   //@ts-ignore
-  var tree: Node = ingest_nextstrain(nextstrain_json);
-  //@ts-ignore
 
   const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
   const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
-
-  var all_samples: Array<Node> = get_leaves(get_root(tree));
-  var selected_samples: Array<Node> = all_samples.slice(-10);
 
   var clade_description: CladeDescription = describe_clade(
     selected_samples,
@@ -38,6 +35,32 @@ function App() {
     [0, 2],
     1
   );
+
+  const [tree, setTree] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
+
+  const changeHandler = (event: any) => {
+    const fileReader = new FileReader();
+
+    setIsFilePicked(true);
+
+    fileReader.readAsText(event.target.files[0], "application/JSON");
+
+    fileReader.onload = (event) => {
+      if (event && event.target) {
+        //@ts-ignore
+        var tree: Node = ingest_nextstrain(event.target.result);
+        setTree(tree);
+      }
+    };
+  };
+
+  console.log("selected file", tree);
+
+  if (tree) {
+    var all_samples: Array<Node> = get_leaves(get_root(tree));
+    var selected_samples: Array<Node> = all_samples.slice(-10);
+  }
 
   return (
     <div>
@@ -53,20 +76,49 @@ function App() {
           rel="stylesheet"
         />
       </Helmet>
-      <h1>Galago</h1>
-      <h3>A little tree explorer by CZ Gen Epi</h3>
-      <SamplingBias
-        gisaid_census={gisaid_census}
-        all_samples={all_samples}
-        clade_description={clade_description}
-      />
-      <CladeDefinition data={clade_description} />
-      <CladeUniqueness data={clade_description} />
-      <TMRCA data={clade_description} />
-      <OnwardTransmission data={clade_description} />
-      {/* <PhyloUncertainty data={all_samples} /> */}
-      <Assumptions data={clade_description} />
-      {/* <MinIntroductions data={clade_description} /> */}
+      <p
+        style={{
+          position: "absolute",
+          left: 20,
+          top: 20,
+          fontSize: 24,
+          margin: 0,
+        }}
+      >
+        Galago
+      </p>
+      <h1>Alameda County Report</h1>
+      <input type="file" name="file" onChange={changeHandler} />
+
+      {isFilePicked && selectedFile ? (
+        <div>
+          <p>Filename: {selectedFile.name}</p>
+          <p>Filetype: {selectedFile.type}</p>
+          <p>Size in bytes: {selectedFile.size}</p>
+          <p>
+            lastModifiedDate:{" "}
+            {selectedFile.lastModifiedDate.toLocaleDateString()}
+          </p>
+        </div>
+      ) : (
+        <p>Select a file to show details</p>
+      )}
+      {isFilePicked && (
+        <div>
+          <SamplingBias
+            gisaid_census={gisaid_census}
+            all_samples={all_samples}
+            clade_description={clade_description}
+          />
+          <CladeDefinition data={clade_description} />
+          <CladeUniqueness data={clade_description} />
+          <TMRCA data={clade_description} />
+          <OnwardTransmission data={clade_description} />
+          {/* <PhyloUncertainty data={all_samples} /> */}
+          <Assumptions data={clade_description} />
+          {/* <MinIntroductions data={clade_description} /> */}
+        </div>
+      )}
     </div>
   );
 }

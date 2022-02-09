@@ -46,8 +46,10 @@ function CladeUniqueness(props: CladeProps) {
             {cousin_dates[1].toISOString().substring(0, 10)}
           </span>{" "}
           {`from these location(s): `}{" "}
-          {cousin_locations.map((l) => (
-            <span className="dataPoint">{l}</span>
+          {cousin_locations.map((l, i) => (
+            <span key={i} className="dataPoint">
+              {l}
+            </span>
           ))}
           .
         </p>
