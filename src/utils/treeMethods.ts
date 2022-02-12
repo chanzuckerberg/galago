@@ -109,9 +109,11 @@ export const get_mrca = (target_nodes: Node[]) => {
       }
     }
   }
-  return console.error(
+  console.error(
     "Nodes are not part of a contiguous tree structure! Cannot find mrca."
   );
+
+  return get_root(target_nodes[0]);
 };
 
 export const get_path = (target_nodes: Node[]) => {
