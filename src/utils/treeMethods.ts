@@ -251,3 +251,24 @@ export const get_state_changes = (tree: Node, trait: string) => {
 
   return subtrees.filter((s) => s.length > 0).map((st) => get_mrca(st));
 };
+
+export const describeTree = (node: Node, get_root_first: boolean = false) => {
+  if (get_root_first) {
+    node = get_root(node);
+  }
+
+  const all_objects = traverse_preorder(node);
+  const leaves = all_objects.filter((o) => o.children.length == 0);
+  const height = leaves
+    .sort((a, b) => a.node_attrs.div - b.node_attrs.div)
+    .slice(-1)[0].node_attrs.div;
+  console.log(
+    "loaded tree and found:",
+    "total nodes",
+    all_objects.length,
+    "total leaves",
+    leaves.length,
+    "max divergence",
+    height
+  );
+};
