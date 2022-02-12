@@ -16,7 +16,7 @@ import {
 
 export interface Node {
   name: string;
-  parent: Node | undefined; // not in default nextstrain export; add later via traversal
+  parent: Node | null; // not in default nextstrain export; add later via traversal
   children: Array<Node>; // direct descendents of this node (nodes or leaves)
 
   branch_attrs: {
@@ -30,7 +30,7 @@ export interface Node {
     location: { value: string };
     country: { value: string };
     region: { value: string };
-    num_date: { value: Date | null; confidence: Array<Date | null> };
+    num_date: { value: Date; confidence: Array<Date> };
     [key: string]: any;
   };
 }
@@ -42,8 +42,8 @@ export interface CladeDescription {
   muts_bn_selected_minmax: number[];
   muts_per_trans_minmax: number[]; // user input
 
-  mrca: Node | void;
-  parent_for_cousins: Node | undefined;
+  mrca: Node;
+  parent_for_cousins: Node;
   min_muts_to_parent: number;
 
   cousins: Node[];
