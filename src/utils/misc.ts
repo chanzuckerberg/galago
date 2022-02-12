@@ -28,6 +28,10 @@ export const isLeapYear = (year: number) => {
 };
 
 export const numericToDateObject = (numDate: number) => {
+  if (isNaN(numDate)) {
+    return NaN;
+  }
+
   /* Beware: for `Date`, months are 0-indexed, days are 1-indexed */
   const fracPart = numDate % 1;
   const year = Math.floor(numDate);
