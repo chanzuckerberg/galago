@@ -61,12 +61,8 @@ export const get_mrca = (target_nodes: Node[]) => {
     return target_nodes[0];
   }
 
-  if (target_nodes.length <= 1) {
-    return console.assert(
-      target_nodes.length > 1,
-      "No nodes passed to mrca function!"
-    );
-  }
+  console.assert(target_nodes.length > 1, "No nodes passed to mrca function!");
+
   // iterate over target nodes and record the path between this node and the root of the tree
   var paths: Array<Array<Node>> = [];
   for (let i = 0; i < target_nodes.length; i++) {
@@ -119,7 +115,7 @@ export const get_mrca = (target_nodes: Node[]) => {
 export const get_path = (target_nodes: Node[]) => {
   console.assert(new Set(target_nodes).size === 2);
 
-  const mrca: Node | void = get_mrca(target_nodes);
+  const mrca: Node = get_mrca(target_nodes);
   if (!mrca) {
     console.error("No MRCA found! Cannot get path");
   }
