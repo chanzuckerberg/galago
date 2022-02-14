@@ -8,7 +8,7 @@ import OnwardTransmission from "./components/onwardTransmission";
 //@ts-ignore -- we're intentionally not typing the tree json for now
 import { nextstrain_json } from "../stub_data/demo_tree";
 import { gisaid_counts_file } from "../stub_data/gisaid_counts";
-import { ingest_nextstrain } from "./utils/nextstrainAdapter";
+import { ingestNextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
 import { get_root, get_leaves } from "./utils/treeMethods";
@@ -18,7 +18,7 @@ import CladeDefinition from "./components/CladeDefinition.mdx";
 
 function App() {
   //@ts-ignore
-  var tree: Node = ingest_nextstrain(nextstrain_json);
+  var tree: Node = ingestNextstrain(nextstrain_json);
   //@ts-ignore
 
   const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
