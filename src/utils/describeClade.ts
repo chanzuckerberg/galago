@@ -23,7 +23,12 @@ export const describe_clade = (
     get_pairwise_distances(selected_samples);
   const mrca: Node = get_mrca(selected_samples);
   const tmrca = mrca.node_attrs.num_date.value;
-  console.log(tmrca, typeof tmrca, isNaN(tmrca));
+  console.log(
+    "MRCA DATE / TYPE / NAN IN DESCRIBE CLADE",
+    tmrca,
+    typeof tmrca,
+    isNaN(tmrca)
+  );
   const parent_for_cousins: Node | undefined = get_parent_for_cousins(
     mrca,
     min_muts_to_parent

@@ -1,20 +1,26 @@
 import { CladeDescription, Node } from "../d";
 import { get_dist } from "../utils/treeMethods";
 
-// THIS KIND OF CARD DESCRIBES A CLADE
 type CladeProps = {
   data: CladeDescription;
 };
 
-// PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function CladeUniqueness(props: CladeProps) {
   const { data } = props;
+  const tmrca = data.mrca.node_attrs.num_date.value;
+  console.log(
+    "MRCA DATE / TYPE / NAN IN CLADE UNIQUENESS",
+    tmrca,
+    typeof tmrca,
+    isNaN(tmrca)
+  );
 
-  const cousin_dates: Array<Date | null> = data.cousins
+  const cousin_dates: Array<Date> = data.cousins
     .map((a) => a.node_attrs.num_date.value)
     .sort(function (a, b) {
       const date1 = new Date(a);
       const date2 = new Date(b);
+      //@ts-ignore -- for whatever reason typescript doesn't like arithmetic with date objects, but this totally works
       return date1 - date2;
     });
   const cousin_locations: Array<string> = [

@@ -18,12 +18,11 @@ import CladeDefinition from "./components/CladeDefinition.mdx";
 
 function App() {
   //@ts-ignore
-  var tree: Node = ingestNextstrain(nextstrain_json);
-  //@ts-ignore
-
   const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
   const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
 
+  //@ts-ignore
+  var tree: Node = ingestNextstrain(nextstrain_json);
   var all_samples: Array<Node> = get_leaves(get_root(tree));
   var selected_samples: Array<Node> = all_samples.slice(-10);
 
@@ -37,6 +36,13 @@ function App() {
     },
     [0, 2],
     1
+  );
+  const tmrca = clade_description.mrca.node_attrs.num_date.value;
+  console.log(
+    "MRCA DATE / TYPE / NAN IN APP",
+    tmrca,
+    typeof tmrca,
+    isNaN(tmrca)
   );
 
   return (
