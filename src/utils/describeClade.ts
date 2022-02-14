@@ -10,7 +10,6 @@ import {
 
 export const describe_clade = (
   selected_samples: Array<Node>,
-  // tree: Node,
   home_geo: {
     location: string;
     division: string;
@@ -22,28 +21,13 @@ export const describe_clade = (
 ) => {
   const muts_bn_selected: Array<{ nodes: Node[]; dist: number }> =
     get_pairwise_distances(selected_samples);
-  const mrca: Node | void = get_mrca(selected_samples);
-  const parent_for_cousins: Node | undefined = mrca
-    ? get_parent_for_cousins(mrca, min_muts_to_parent)
-    : undefined;
-
-  // let subtrees: Node[] = [];
-  // const geo_levels = ["location", "division", "country"];
-  // for (let i = 0; i < geo_levels.length; i++) {
-  //   console.log(geo_levels[i]);
-  // }
-  //     if (
-  //       Object.keys(selected_samples[0].node_attrs[geo_levels[i]]).includes(
-  //         "confidence"
-  //       )
-  //     ) {
-  //       subtrees = get_state_changes(
-  //         get_root(selected_samples[0]),
-  //         geo_levels[i]
-  //       );
-  //       break;
-  //     }
-  //   }
+  const mrca: Node = get_mrca(selected_samples);
+  const tmrca = mrca.node_attrs.num_date.value;
+  console.log(tmrca, typeof tmrca, isNaN(tmrca));
+  const parent_for_cousins: Node | undefined = get_parent_for_cousins(
+    mrca,
+    min_muts_to_parent
+  );
 
   let clade: CladeDescription = {
     selected_samples: selected_samples,
@@ -65,7 +49,8 @@ export const describe_clade = (
       Math.min(...muts_bn_selected.map((a) => a["dist"])),
       Math.max(...muts_bn_selected.map((a) => a["dist"])),
     ],
-    subtrees: [], // subtrees,
+    subtrees: [], //catalog_subclades(selected_samples, mrca), // subtrees,
   };
+  console.log("clade description", clade);
   return clade;
 };
