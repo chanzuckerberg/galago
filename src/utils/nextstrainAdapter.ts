@@ -1,21 +1,16 @@
 import { Node } from "../d";
 import { numericToDateObject } from "./misc";
+import { describeTree } from "./treeMethods";
 
 export interface NSNode {
   name: string;
   children?: Array<NSNode> | undefined; // direct descendents of this node (nodes or leaves)
 
   branch_attrs?: {
-    // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
     [key: string]: any;
   };
   node_attrs?: {
-    // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
     div: number;
-    // location: { value: string };
-    // country: { value: string };
-    // region: { value: string };
-    // num_date: { value: number; confidence: number[] };
     [key: string]: any;
   };
 }
@@ -26,106 +21,64 @@ export interface NSJSON {
   tree: NSNode;
 }
 
-export const initialize_tree = (
-  node: NSNode,
-  parent?: Node,
-  counter: number = 0
-) => {
-  // initializes a tree from the nextstrain JSON. specifically, adds parents, branch lengths and children.
+export const NSNodeToNode = (node: NSNode, parent: Node | "root") => {
+  let tmpNode: any = { ...node };
 
-  if (counter > 10000) {
-    console.error("infinite recursion in tree initiation");
-    return;
-  }
-  //@ts-ignore
-  let newNode: Node = { ...node }; // we fix the typescript error about parents below.
+  // fix any missing relationships
+  tmpNode.parent = parent && parent != "root" ? parent : null;
+  tmpNode.children ??= [];
+  tmpNode.branch_attrs ??= {};
+  tmpNode.node_attrs ??= {};
 
-  if (!Object.keys(newNode).includes("branch_attrs")) {
-    newNode["branch_attrs"] = {
-      length: NaN,
-    };
-  }
+  tmpNode.branch_attrs.length =
+    parent && tmpNode.node_attrs["div"] && tmpNode.parent.node_attrs["div"]
+      ? tmpNode.node_attrs["div"] - tmpNode.parent.node_attrs["div"]
+      : NaN;
+  ["location", "division", "country"].forEach(
+    (attr) => (tmpNode.node_attrs[attr] ??= { value: "unknown" })
+  );
 
-  if (!Object.keys(newNode).includes("node_attrs")) {
-    newNode.node_attrs = {
-      // no attributes present
-      div: NaN,
-      location: { value: "" },
-      country: { value: "" },
-      region: { value: "" },
-      num_date: { value: null, confidence: [null, null] },
-    };
+  // convert dates
+  const rawNumDateData = tmpNode.node_attrs.num_date.value;
+  tmpNode.node_attrs.num_date.value = tmpNode.node_attrs.num_date.value
+    ? numericToDateObject(tmpNode.node_attrs.num_date.value)
+    : NaN;
+  tmpNode.node_attrs.num_date.confidence
+    ? tmpNode.node_attrs.num_date.confidence.map((n: number) =>
+        numericToDateObject(n)
+      )
+    : [NaN, NaN];
+
+  if (isNaN(tmpNode.node_attrs.num_date.value)) {
+    console.log(rawNumDateData, tmpNode.node_attrs.num_date.value);
   }
-  if (Object.keys(newNode.node_attrs).includes("num_date")) {
-    if (
-      Object.keys(newNode.node_attrs.num_date).includes("value") &&
-      typeof newNode.node_attrs.num_date.value === "number"
-    ) {
-      newNode.node_attrs.num_date.value = numericToDateObject(
-        newNode.node_attrs.num_date.value
-      );
-    }
-    if (Object.keys(newNode.node_attrs.num_date).includes("confidence")) {
-      if (
-        typeof newNode.node_attrs.num_date.confidence[0] === "number" &&
-        typeof newNode.node_attrs.num_date.confidence[1] === "number"
-      ) {
-        newNode.node_attrs.num_date.confidence[0] = numericToDateObject(
-          newNode.node_attrs.num_date.confidence[0]
-        );
-        newNode.node_attrs.num_date.confidence[1] = numericToDateObject(
-          newNode.node_attrs.num_date.confidence[1]
-        );
-      }
-    }
+  if (isNaN(tmpNode.node_attrs.num_date.value)) {
+    console.log("original numdate values", rawNumDateData);
+  }
+  if (!(tmpNode.node_attrs.num_date.value instanceof Date)) {
+    console.log(rawNumDateData);
   }
 
-  //add parent and branch length to each node
-  if (parent) {
-    newNode.parent = parent;
-    newNode.branch_attrs.length =
-      newNode.node_attrs["div"] - newNode.parent.node_attrs["div"];
-  } else {
-    newNode.parent = undefined;
-    newNode.branch_attrs.length = NaN;
-  }
+  const newNode: Node = { ...tmpNode };
+  return newNode;
+};
 
-  // add a placeholder for children so we don't have so many type errors
-  if (!newNode.children) {
-    newNode.children = [];
-  }
+export const initializeTree = (node: NSNode, parent: Node | "root") => {
+  // convert the current node
+  let newNode: Node = NSNodeToNode(node, parent);
 
-  // backfill any missing geo metadata
-  const required_node_attrs = ["location", "division", "country", "region"];
-  for (let i = 0; i < required_node_attrs.length; i++) {
-    let attr = required_node_attrs[i];
-    if (!Object.keys(newNode.node_attrs).includes(attr)) {
-      newNode.node_attrs[attr] = { value: "unknown" };
-    }
-  }
-
-  // backfill any missing dates
-  if (
-    !Object.keys(newNode.node_attrs).includes("num_date") ||
-    !newNode.node_attrs.num_date
-  ) {
-    newNode.node_attrs.num_date = { value: null, confidence: [null, null] };
-  }
   // now recursively visit children, left to right
-  for (var i = 0; i < newNode.children.length; i++) {
-    //@ts-ignore -- initialize_tree always returns an object of type Node
-    newNode.children[i] = initialize_tree(
-      (node = newNode.children[i]),
-      (parent = newNode),
-      (counter = counter + 1)
-    );
+  if (newNode.children && newNode.children.length > 0) {
+    for (var i = 0; i < newNode.children.length; i++) {
+      newNode.children[i] = initializeTree(newNode.children[i], newNode);
+    }
   }
 
   return newNode;
 };
 
-export const ingest_nextstrain = (nextstrain_json: NSJSON) => {
-  //@ts-ignore -- initialize_tree always returns an object of type Node
-  const tree: Node = initialize_tree(nextstrain_json.tree); // adds parents, branch lengths, and children to NSJSON
-  return tree; // assign parents and branch lengths
+export const ingestNextstrain = (nextstrain_json: NSJSON) => {
+  const tree: Node = initializeTree(nextstrain_json.tree, "root"); // root has no parent
+  describeTree(tree);
+  return tree;
 };
