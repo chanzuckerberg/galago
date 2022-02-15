@@ -67,17 +67,18 @@ function SampleDistributionTable(props: SampleTableProps) {
           alignItems: "baseline",
         }}
       >
-        {column_labels.map((t) => (
-          <TextCell text={t} />
+        {column_labels.map((t, i) => (
+          <TextCell text={t} key={i} />
         ))}
       </div>
-      {specificity_options.map((s) => (
+      {specificity_options.map((s, i) => (
         <TableRow
           current_samples={all_samples}
           gisaid_records={gisaid_census}
           home_geo={clade_description.home_geo}
           specificity={s}
           label={row_labels[s]}
+          key={i}
         />
       ))}
     </div>
