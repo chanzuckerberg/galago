@@ -29,13 +29,14 @@ const TableRow = (props: {
       }}
     >
       <TextCell text={label} />
-      {recency_options.map((recency) => (
+      {recency_options.map((recency, i) => (
         <CountsCell
           current_samples={current_samples}
           gisaid_records={gisaid_records}
           home_geo={home_geo}
           specificity_level={specificity}
           recency={recency}
+          key={i}
         />
       ))}
     </div>
