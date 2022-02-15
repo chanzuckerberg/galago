@@ -66,13 +66,13 @@ function App() {
         all_samples={all_samples}
         clade_description={clade_description}
       />
-      <CladeDefinition data={clade_description} />
-      <CladeUniqueness data={clade_description} />
-      <TMRCA data={clade_description} />
-      <OnwardTransmission data={clade_description} />
-      {/* <PhyloUncertainty data={all_samples} /> */}
-      <Assumptions data={clade_description} />
-      {/* <MinIntroductions data={clade_description} /> */}
+      <CladeDefinition clade_description={clade_description} />
+      <CladeUniqueness clade_description={clade_description} />
+      <TMRCA clade_description={clade_description} />
+      <OnwardTransmission clade_description={clade_description} />
+      {/* <PhyloUncertainty clade_description={all_samples} /> */}
+      <Assumptions clade_description={clade_description} />
+      {/* <MinIntroductions clade_description={clade_description} /> */}
     </div>
   );
 }

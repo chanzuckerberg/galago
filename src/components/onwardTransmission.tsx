@@ -4,18 +4,21 @@ import Sidenote from "./sidenote";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
 type CladeProps = {
-  data: CladeDescription;
+  clade_description: CladeDescription;
 };
 
-// PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
+// PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND clade_description WITHIN THE TEXT AND UPDATE IT WHEN THE clade_description INPUT CHANGES
 function OnwardTransmission(props: CladeProps) {
-  const { data } = props;
-  const all_samples: Node[] = data.selected_samples.concat(
-    data.unselected_samples_in_cluster
+  const { clade_description } = props;
+  const all_samples: Node[] = clade_description.selected_samples.concat(
+    clade_description.unselected_samples_in_cluster
   );
 
   let mrca_distances: Object = Object.fromEntries(
-    all_samples.map((x) => [x.name, data.mrca ? get_dist([x, data.mrca]) : NaN])
+    all_samples.map((x) => [
+      x.name,
+      clade_description.mrca ? get_dist([x, clade_description.mrca]) : NaN,
+    ])
   );
 
   return (
@@ -32,7 +35,7 @@ function OnwardTransmission(props: CladeProps) {
           <span className="dataPoint">
             {
               Object.values(mrca_distances).filter(
-                (n) => n > data.muts_per_trans_minmax[1]
+                (n) => n > clade_description.muts_per_trans_minmax[1]
               ).length
             }
           </span>{" "}
@@ -50,7 +53,7 @@ function OnwardTransmission(props: CladeProps) {
                 that sometimes you may observe a few different genotypes which
                 vary by 1 -{" "}
                 <span className="dataPoint">
-                  {data.muts_per_trans_minmax[1]}
+                  {clade_description.muts_per_trans_minmax[1]}
                 </span>{" "}
                 mutations being transmitted during the same superspreader event.
               </span>
@@ -64,11 +67,15 @@ function OnwardTransmission(props: CladeProps) {
       </p>
       <p>
         Samples 0 -{" "}
-        <span className="dataPoint">{data.muts_per_trans_minmax[1]}</span>{" "}
+        <span className="dataPoint">
+          {clade_description.muts_per_trans_minmax[1]}
+        </span>{" "}
         mutations from the reference may represent either primary or secondary
         cases. It's usually reasonable to assume that samples with
-        <span className="dataPoint">{data.muts_per_trans_minmax[1] + 1}</span>+
-        mutations represent tertiary or further downstream transmission.{" "}
+        <span className="dataPoint">
+          {clade_description.muts_per_trans_minmax[1] + 1}
+        </span>
+        + mutations represent tertiary or further downstream transmission.{" "}
         <sup style={{ fontSize: 10 }}>7</sup>
         <Sidenote
           num="7"

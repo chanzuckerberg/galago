@@ -18,16 +18,16 @@ import Sidenote from "./sidenote";
         }
       />
       Your <span className="dataPoint">
-        {props.data.selected_samples.length}
+        {props.clade_description.selected_samples.length}
       </span> selected samples are separated from each other by <span className="dataPoint">
-        {props.data.muts_bn_selected_minmax[0]} -{" "}
-        {props.data.muts_bn_selected_minmax[1]}
+        {props.clade_description.muts_bn_selected_minmax[0]} -{" "}
+        {props.clade_description.muts_bn_selected_minmax[1]}
       </span> mutations (or, on average, about <span className="dataPoint">
-        {props.data.muts_bn_selected_minmax[0] *
-          props.data.muts_per_trans_minmax[0]}{" "}
+        {props.clade_description.muts_bn_selected_minmax[0] *
+          props.clade_description.muts_per_trans_minmax[0]}{" "}
         -{" "}
-        {props.data.muts_bn_selected_minmax[1] *
-          props.data.muts_per_trans_minmax[1]}
+        {props.clade_description.muts_bn_selected_minmax[1] *
+          props.clade_description.muts_per_trans_minmax[1]}
       </span> transmission events<sup fontSize="10">3</sup>).
     </>
   </p>
@@ -46,7 +46,7 @@ import Sidenote from "./sidenote";
         </span>
       }
     />
-    {props.data.unselected_samples_in_cluster.length == 0 ? ( // TITLE CHANGES DEPENDING ON IF SAMPLES FORM A MONOPHYLETIC SUBCLADE
+    {props.clade_description.unselected_samples_in_cluster.length == 0 ? ( // TITLE CHANGES DEPENDING ON IF SAMPLES FORM A MONOPHYLETIC SUBCLADE
       <>
         Your selected samples are all more closely related to each other than to
         anything else in this dataset and form their own "clade."
@@ -56,7 +56,7 @@ import Sidenote from "./sidenote";
       <>
         Your selected samples are also closely related to{" "}
         <span className="dataPoint">
-          {props.data.unselected_samples_in_cluster.length}
+          {props.clade_description.unselected_samples_in_cluster.length}
         </span>{" "}
         other sample(s). Together, they form a "clade."
         <sup fontSize="10">4</sup>
@@ -64,7 +64,7 @@ import Sidenote from "./sidenote";
     )}
   </p>
   <p>
-    {props.data.unselected_samples_in_cluster.length == 0 ? (
+    {props.clade_description.unselected_samples_in_cluster.length == 0 ? (
       <>
         Your selected samples form their own clade without any other samples
         from this dataset.
@@ -73,10 +73,10 @@ import Sidenote from "./sidenote";
       <>
         The clade containing your samples also includes{" "}
         <span className="dataPoint">
-          {props.data.unselected_samples_in_cluster.length}
+          {props.clade_description.unselected_samples_in_cluster.length}
         </span>{" "}
         samples from these location(s):{" "}
-        {props.data.unselected_samples_in_cluster.map((a) => (
+        {props.clade_description.unselected_samples_in_cluster.map((a) => (
           <span className="dataPoint">{a.node_attrs.location.value}</span>
         ))}
       </>

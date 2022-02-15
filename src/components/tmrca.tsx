@@ -4,19 +4,22 @@ import Sidenote from "./sidenote";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
 type CladeProps = {
-  data: CladeDescription;
+  clade_description: CladeDescription;
 };
 
 // PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function TMRCA(props: CladeProps) {
-  const { data } = props;
+  const { clade_description } = props;
 
-  const all_samples: Node[] = data.selected_samples.concat(
-    data.unselected_samples_in_cluster
+  const all_samples: Node[] = clade_description.selected_samples.concat(
+    clade_description.unselected_samples_in_cluster
   );
 
   let mrca_distances: Object = Object.fromEntries(
-    all_samples.map((x) => [x.name, data.mrca ? get_dist([x, data.mrca]) : NaN])
+    all_samples.map((x) => [
+      x.name,
+      clade_description.mrca ? get_dist([x, clade_description.mrca]) : NaN,
+    ])
   );
   let mrca_matches: string[] = Object.keys(mrca_distances).filter(
     (m: string) => mrca_distances[m] === 0
@@ -45,17 +48,17 @@ function TMRCA(props: CladeProps) {
             />
             This clade's primary case likely occurred{" "}
             <span className="dataPoint">
-              {data.mrca &&
-              data.mrca.node_attrs.num_date.confidence.length === 2
-                ? `between ${data.mrca.node_attrs.num_date.confidence[0]
+              {clade_description.mrca &&
+              clade_description.mrca.node_attrs.num_date.confidence.length === 2
+                ? `between ${clade_description.mrca.node_attrs.num_date.confidence[0]
                     .toISOString()
                     .substring(
                       0,
                       10
-                    )} and ${data.mrca.node_attrs.num_date.confidence[1]
+                    )} and ${clade_description.mrca.node_attrs.num_date.confidence[1]
                     .toISOString()
                     .substring(0, 10)} (95% CI)`
-                : ` around ${data.mrca.node_attrs.num_date.value
+                : ` around ${clade_description.mrca.node_attrs.num_date.value
                     .toISOString()
                     .substring(0, 10)}`}
             </span>

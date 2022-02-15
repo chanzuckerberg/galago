@@ -14,8 +14,8 @@ _Most of the data and insights described in this report are strictly observation
       />
       We assume that the number of mutations that occurs with each transmission ranges
       between <span className="dataPoint">
-        {props.data.muts_per_trans_minmax[0]} -{" "}
-        {props.data.muts_per_trans_minmax[1]}
+        {props.clade_description.muts_per_trans_minmax[0]} -{" "}
+        {props.clade_description.muts_per_trans_minmax[1]}
       </span>.<sup fontSize="10">8</sup>
     </li>
     <br />
@@ -28,7 +28,7 @@ Higher values mean that we search more broadly for "cousins".`}
       When looking for samples that are outside your clade by closely related ("cousins"),
       we trace back to the most recent grand/parent that is separated from the primary
       case by at least <span className="dataPoint">
-        {props.data.min_muts_to_parent}
+        {props.clade_description.min_muts_to_parent}
       </span> mutation(s).<sup fontSize="10">9</sup>
     </li>
   </ul>
