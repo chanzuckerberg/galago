@@ -41,13 +41,6 @@ function App() {
     min_muts_to_parent: 1,
     muts_per_trans_minmax: [0, 2],
   };
-  const tmrca = clade_description.mrca.node_attrs.num_date.value;
-  console.log(
-    "MRCA DATE / TYPE / NAN IN APP",
-    tmrca,
-    typeof tmrca,
-    isNaN(tmrca)
-  );
 
   const initializeReport = (
     tree: Node,

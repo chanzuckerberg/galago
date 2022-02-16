@@ -50,16 +50,6 @@ export const NSNodeToNode = (node: NSNode, parent: Node | "root") => {
       )
     : [NaN, NaN];
 
-  if (isNaN(tmpNode.node_attrs.num_date.value)) {
-    console.log(rawNumDateData, tmpNode.node_attrs.num_date.value);
-  }
-  if (isNaN(tmpNode.node_attrs.num_date.value)) {
-    console.log("original numdate values", rawNumDateData);
-  }
-  if (!(tmpNode.node_attrs.num_date.value instanceof Date)) {
-    console.log(rawNumDateData);
-  }
-
   const newNode: Node = { ...tmpNode };
   return newNode;
 };
