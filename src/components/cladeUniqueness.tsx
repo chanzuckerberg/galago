@@ -8,12 +8,6 @@ type CladeProps = {
 function CladeUniqueness(props: CladeProps) {
   const { clade_description } = props;
   const tmrca = clade_description.mrca.node_attrs.num_date.value;
-  console.log(
-    "MRCA DATE / TYPE / NAN IN CLADE UNIQUENESS",
-    tmrca,
-    typeof tmrca,
-    isNaN(tmrca)
-  );
 
   const cousin_locations: Array<string> = [
     ...new Set(

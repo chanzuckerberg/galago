@@ -1,19 +1,3 @@
-import {
-  get_mrca,
-  get_leaves,
-  get_pairwise_distances,
-  get_root,
-  get_parent_for_cousins,
-  get_state_changes,
-} from "./utils/treeMethods";
-
-// export interface Introduction {
-//   source_loc: string;
-//   date_min: string;
-//   date_max: string;
-//   n_samples: string;
-// }
-
 export interface Node {
   name: string;
   parent: Node | null; // not in default nextstrain export; add later via traversal

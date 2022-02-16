@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import CladeUniqueness from "./components/cladeUniqueness";
 import TMRCA from "./components/tmrca";
-import PhyloUncertainty from "./components/phylo_uncertainty";
+// import PhyloUncertainty from "./components/phylo_uncertainty";
 // import MinIntroductions from "./components/PAUSED_min_introductions";
 import OnwardTransmission from "./components/onwardTransmission";
 // import DatasetGeoCompletion from "./components/dataset_geo_completion";
