@@ -13,8 +13,8 @@ import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
 import { get_root, get_leaves } from "./utils/treeMethods";
 import SamplingBias from "./components/sampleDistribTable";
-import Assumptions from "./components/assumptions.mdx";
-import CladeDefinition from "./components/CladeDefinition.mdx";
+import Assumptions from "./components/assumptions";
+import CladeDefinition from "./components/cladeDefinition";
 
 function App() {
   //@ts-ignore
@@ -59,8 +59,12 @@ function App() {
           rel="stylesheet"
         />
       </Helmet>
-      <h1>Galago</h1>
-      <h3>A little tree explorer by CZ Gen Epi</h3>
+      <h1>
+        Genomic Investigation of a Potential Outbreak
+        <br />
+        in {clade_description.home_geo.location}
+      </h1>
+      <h3>A Galago Report</h3>
       <SamplingBias
         gisaid_census={gisaid_census}
         all_samples={all_samples}

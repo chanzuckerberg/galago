@@ -176,10 +176,18 @@ export const get_parent_for_cousins = (node: Node, min_muts: number = 1) => {
   if (!node.parent) {
     return node;
   }
+  let children = node.children;
+  let n_cousins = 0;
   let accumulated_dist: number = node.branch_attrs.length;
   let parent_candidate: Node = node.parent;
-  while (parent_candidate.parent && accumulated_dist < min_muts) {
+  while (
+    parent_candidate.parent &&
+    (accumulated_dist < min_muts || n_cousins < 1)
+  ) {
     accumulated_dist = accumulated_dist + parent_candidate.branch_attrs.length;
+    n_cousins = get_leaves(parent_candidate).filter(
+      (n) => !children.includes(n)
+    ).length;
     parent_candidate = parent_candidate.parent;
   }
   return parent_candidate;
