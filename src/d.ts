@@ -53,7 +53,7 @@ export interface CladeDescription {
     location: string;
     division: string;
     country: string;
-    region: string;
+    region?: string;
   };
 
   subtrees: Node[];

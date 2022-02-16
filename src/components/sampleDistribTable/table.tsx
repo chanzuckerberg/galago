@@ -73,6 +73,7 @@ function SampleDistributionTable(props: SampleTableProps) {
       </div>
       {specificity_options.map((s, i) => (
         <TableRow
+          key={i}
           current_samples={all_samples}
           gisaid_records={gisaid_census}
           home_geo={clade_description.home_geo}

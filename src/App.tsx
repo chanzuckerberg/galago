@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import { Helmet } from "react-helmet";
 import CladeUniqueness from "./components/cladeUniqueness";
 import TMRCA from "./components/tmrca";
@@ -21,22 +23,24 @@ function App() {
   const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
   const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
 
-  //@ts-ignore
-  var tree: Node = ingestNextstrain(nextstrain_json);
-  var all_samples: Array<Node> = get_leaves(get_root(tree));
-  var selected_samples: Array<Node> = all_samples.slice(-10);
+  const [tree, setTree] = useState<null | Node>(null);
+  const [isFilePicked, setIsFilePicked] = useState<boolean>(false);
+  const [selectedSamples, setSelectedSamples] = useState<Node[] | null>(null);
+  // const [selectedSamples, setSelectedSamples] = useState<string | null>(null);
+  const [clade_description, setCladeDescription] =
+    useState<CladeDescription | null>(null);
 
-  var clade_description: CladeDescription = describe_clade(
-    selected_samples,
-    {
+  const futureUserInput = {
+    home_geo: {
       location: "Alameda County",
       division: "California",
       country: "USA",
       region: "North America",
     },
-    [0, 2],
-    1
-  );
+    selectedSamples: null,
+    min_muts_to_parent: 1,
+    muts_per_trans_minmax: [0, 2],
+  };
   const tmrca = clade_description.mrca.node_attrs.num_date.value;
   console.log(
     "MRCA DATE / TYPE / NAN IN APP",
@@ -44,6 +48,44 @@ function App() {
     typeof tmrca,
     isNaN(tmrca)
   );
+
+  const initializeReport = (
+    tree: Node,
+    home_geo: {
+      location: string;
+      division: string;
+      country: string;
+    } = futureUserInput["home_geo"],
+    min_muts_to_parent: number = futureUserInput["min_muts_to_parent"],
+    muts_per_trans_minmax: number[] = futureUserInput["muts_per_trans_minmax"],
+    event?: any
+  ) => {
+    // setSelectedSamples(event.target.result.split(",")); // For later - once we add the input box
+    // setSelectedSamples(get_leaves(get_root(tree)).slice(-10)); // HELP - why doesn't this work?
+    const selectedSamples = get_leaves(get_root(tree)).slice(-10); // HELP - how am I allowed to do this if I'm using useState?
+    setCladeDescription(
+      describe_clade(
+        selectedSamples,
+        home_geo,
+        muts_per_trans_minmax,
+        min_muts_to_parent
+      )
+    );
+  };
+
+  const handleTreeUpload = (event: any) => {
+    const fileReader = new FileReader();
+
+    setIsFilePicked(true);
+    fileReader.readAsText(event.target.files[0], "application/JSON");
+    fileReader.onload = (event) => {
+      if (event && event.target) {
+        var tree: Node = ingest_nextstrain(JSON.parse(event.target.result));
+        setTree(tree);
+        initializeReport(tree);
+      }
+    };
+  };
 
   return (
     <div>
@@ -59,24 +101,53 @@ function App() {
           rel="stylesheet"
         />
       </Helmet>
-      <h1>
-        Genomic Investigation of a Potential Outbreak
-        <br />
-        in {clade_description.home_geo.location}
-      </h1>
-      <h3>A Galago Report</h3>
-      <SamplingBias
-        gisaid_census={gisaid_census}
-        all_samples={all_samples}
-        clade_description={clade_description}
-      />
-      <CladeDefinition clade_description={clade_description} />
-      <CladeUniqueness clade_description={clade_description} />
-      <TMRCA clade_description={clade_description} />
-      <OnwardTransmission clade_description={clade_description} />
-      {/* <PhyloUncertainty clade_description={all_samples} /> */}
-      <Assumptions clade_description={clade_description} />
-      {/* <MinIntroductions clade_description={clade_description} /> */}
+      <p
+        style={{
+          position: "absolute",
+          left: 20,
+          top: 20,
+          fontSize: 24,
+          margin: 0,
+        }}
+      >
+        Galago
+      </p>
+      <input type="file" name="file" onChange={handleTreeUpload} />
+      {/* {isFilePicked && selectedFile ? (
+        <div>
+          <p>Filename: {selectedFile.name}</p>
+          <p>Filetype: {selectedFile.type}</p>
+          <p>Size in bytes: {selectedFile.size}</p>
+          <p>
+            lastModifiedDate:{" "}
+            {selectedFile.lastModifiedDate.toLocaleDateString()}
+          </p>
+        </div>
+      ) : (
+        <p>Select a file to show details</p>
+      )} */}
+      {clade_description && tree && (
+        <div>
+          <h1>
+            Genomic Investigation of a Potential Outbreak
+            <br />
+            in {clade_description.home_geo.location}
+          </h1>
+          <SamplingBias
+            gisaid_census={gisaid_census}
+            all_samples={get_leaves(get_root(tree))}
+            clade_description={clade_description}
+          />
+          <CladeDefinition clade_description={clade_description} />
+          <CladeUniqueness clade_description={clade_description} />
+          <TMRCA clade_description={clade_description} />
+          <OnwardTransmission clade_description={clade_description} />
+          {/* <PhyloUncertainty clade_description={all_samples} /> */}
+          <Assumptions clade_description={clade_description} />
+          {/* <MinIntroductions clade_description={clade_description} /> */}
+        </div>
+      )}
+      ;
     </div>
   );
 }
