@@ -6,11 +6,31 @@ import {
   get_root,
   get_parent_for_cousins,
   get_state_changes,
+  traverse_preorder,
 } from "./treeMethods";
 
-const catalog_subclades = (mrca: Node) => {
+const catalog_subclades = (
+  mrca: Node,
+  home_geo: {
+    location: string;
+    division: string;
+    country: string;
+    region?: string;
+  }
+) => {
   const geo_levels = ["location", "division", "country"];
+  const all_samples = traverse_preorder(mrca, (n: Node) => {
+    n.children.length === 0;
+  });
   for (let i = 0; i < geo_levels.length; i++) {
+    if (
+      all_samples.every((e) => {
+        e.node_attrs[geo_levels[i]] === home_geo[geo_levels[i]];
+      })
+    ) {
+      return [geo_levels[i], []];
+    }
+
     if (Object.keys(mrca.node_attrs[geo_levels[i]]).includes("confidence")) {
       const subclades = get_state_changes(mrca, geo_levels[i]);
       console.log(subclades);
@@ -38,7 +58,7 @@ export const describe_clade = (
     mrca,
     min_muts_to_parent
   );
-  const catalog_subclades_output = catalog_subclades(mrca);
+  const catalog_subclades_output = catalog_subclades(mrca, home_geo);
 
   let clade: CladeDescription = {
     selected_samples: selected_samples,
