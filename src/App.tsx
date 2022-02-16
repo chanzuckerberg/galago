@@ -53,8 +53,12 @@ function App() {
           rel="stylesheet"
         />
       </Helmet>
-      <h1>Galago</h1>
-      <h3>A little tree explorer by CZ Gen Epi</h3>
+      <h1>
+        Genomic Investigation of a Potential Outbreak
+        <br />
+        in {clade_description.home_geo.location}
+      </h1>
+      <h3>A Galago Report</h3>
       <SamplingBias
         gisaid_census={gisaid_census}
         all_samples={all_samples}
