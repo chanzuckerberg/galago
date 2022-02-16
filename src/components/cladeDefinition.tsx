@@ -30,10 +30,9 @@ function CladeDefinition(props: CladeDefinitionProps) {
       <div>
         <h5>Mutations:</h5>
         <p>
-          Because pathogens evolve and spread on similar timescales, the number
-          of mutations is proportionate to the amount of time separating two
-          samples. We can compare this to the average serial interval to get a
-          rough estimate of how many transmission events separates them.
+          We can use the average number of mutations per serial interval to get
+          a rough estimate of the number of transmission events separating two
+          samples.
         </p>
         <div className="results">
           <p>
@@ -103,19 +102,5 @@ function CladeDefinition(props: CladeDefinitionProps) {
       </div>
     </div>
   );
-}
-
-{
-  /* 
-{local_unselected_samples.length > 0 ? (The other samples in your clade include the following samples from ${clade_description.home_geo.location}: 
-
-) : ()}
-    
-    These other samples include 
-    
-     these location(s):{" "}
-    {clade_description.unselected_samples_in_cluster.map((a) => (
-      <span className="dataPoint">{a.node_attrs.location.value}</span>
-    ))} */
 }
 export default CladeDefinition;
