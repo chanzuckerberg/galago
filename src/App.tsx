@@ -81,7 +81,7 @@ function App() {
     fileReader.readAsText(event.target.files[0], "application/JSON");
     fileReader.onload = (event) => {
       if (event && event.target) {
-        var tree: Node = ingest_nextstrain(JSON.parse(event.target.result));
+        var tree: Node = ingestNextstrain(JSON.parse(event.target.result));
         setTree(tree);
         initializeReport(tree);
       }
