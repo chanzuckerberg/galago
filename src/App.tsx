@@ -14,7 +14,7 @@ import { describe_clade } from "./utils/describeClade";
 import { get_root, get_leaves } from "./utils/treeMethods";
 import SamplingBias from "./components/sampleDistribTable";
 import Assumptions from "./components/assumptions.mdx";
-import CladeDefinition from "./components/CladeDefinition.mdx";
+import CladeDefinition from "./components/CladeDefinition";
 
 function App() {
   //@ts-ignore
