@@ -53,27 +53,13 @@ function SamplingBias(props: SamplingBiasProps) {
       {/* BODY: SUMMARY OF SUPPORTING DATA AND DEFINITION OF TERMS */}
       <p>
         The phylogenetic tree underlying this report represents the most likely
-        genetic relationships between samples in this dataset.
-        <sup style={{ fontSize: 10 }}>1</sup>
+        genetic relationships between samples in this dataset. Importantly,
+        though, the tree does not take into account cases that are not sampled
+        (or not included in this dataset), which can lead to sampling bias that
+        influences our inferences
+        <sup style={{ fontSize: 10 }}>1</sup>.{" "}
         <Sidenote
           num={1}
-          text={
-            <span>
-              Because pathogens evolve and spread on similar timescales, we can
-              use this to learn about the transmission chain(s) that led to your
-              samples of interest.{" "}
-              <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#the-transmission-tree-does-not-equate-the-phylogenetic-tree">
-                Learn more.
-              </a>
-            </span>
-          }
-        />{" "}
-        Importantly, though, the tree does not take into account cases that are
-        not sampled (or not included in this dataset), which can lead to
-        sampling bias that influences our inferences
-        <sup style={{ fontSize: 10 }}>2</sup>.{" "}
-        <Sidenote
-          num={2}
           text={
             <span>
               Learn more about{" "}
