@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import { Helmet } from "react-helmet";
 import CladeUniqueness from "./components/cladeUniqueness";
 import TMRCA from "./components/tmrca";
@@ -18,26 +20,45 @@ import CladeDefinition from "./components/cladeDefinition";
 
 function App() {
   //@ts-ignore
-  var tree: Node = ingest_nextstrain(nextstrain_json);
-  //@ts-ignore
 
   const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
   const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
+  const [tree, setTree] = useState<null | Node>(null);
+  const [isFilePicked, setIsFilePicked] = useState<boolean>(false);
+  const [selectedSamples, setSelectedSamples] = useState<string | null>(null);
 
-  var all_samples: Array<Node> = get_leaves(get_root(tree));
-  var selected_samples: Array<Node> = all_samples.slice(-10);
+  const handleTreeUpload = (event: any) => {
+    const fileReader = new FileReader();
 
-  var clade_description: CladeDescription = describe_clade(
-    selected_samples,
-    {
-      location: "Alameda County",
-      division: "California",
-      country: "USA",
-      region: "North America",
-    },
-    [0, 2],
-    1
-  );
+    setIsFilePicked(true);
+
+    fileReader.readAsText(event.target.files[0], "application/JSON");
+
+    fileReader.onload = (event) => {
+      if (event && event.target) {
+        //@ts-ignore
+        var tree: Node = ingest_nextstrain(JSON.parse(event.target.result));
+        setTree(tree);
+      }
+    };
+  };
+
+  console.log("selected file", tree);
+
+  if (tree) {
+    var all_samples: Array<Node> = get_leaves(get_root(tree));
+    var clade_description: CladeDescription = describe_clade(
+      selectedSamples,
+      {
+        location: "Alameda County",
+        division: "California",
+        country: "USA",
+        region: "North America",
+      },
+      [0, 2],
+      1
+    );
+  }
 
   return (
     <div>
@@ -53,24 +74,53 @@ function App() {
           rel="stylesheet"
         />
       </Helmet>
+      <p
+        style={{
+          position: "absolute",
+          left: 20,
+          top: 20,
+          fontSize: 24,
+          margin: 0,
+        }}
+      >
+        Galago
+      </p>
       <h1>
         Genomic Investigation of a Potential Outbreak
         <br />
         in {clade_description.home_geo.location}
       </h1>
-      <h3>A Galago Report</h3>
-      <SamplingBias
-        gisaid_census={gisaid_census}
-        all_samples={all_samples}
-        clade_description={clade_description}
-      />
-      <CladeDefinition clade_description={clade_description} />
-      <CladeUniqueness clade_description={clade_description} />
-      <TMRCA clade_description={clade_description} />
-      <OnwardTransmission clade_description={clade_description} />
-      {/* <PhyloUncertainty clade_description={all_samples} /> */}
-      <Assumptions clade_description={clade_description} />
-      {/* <MinIntroductions clade_description={clade_description} /> */}
+      <input type="file" name="file" onChange={handleTreeUpload} />
+      {isFilePicked && selectedFile ? (
+        <div>
+          <p>Filename: {selectedFile.name}</p>
+          <p>Filetype: {selectedFile.type}</p>
+          <p>Size in bytes: {selectedFile.size}</p>
+          <p>
+            lastModifiedDate:{" "}
+            {selectedFile.lastModifiedDate.toLocaleDateString()}
+          </p>
+        </div>
+      ) : (
+        <p>Select a file to show details</p>
+      )}
+      {isFilePicked && (
+        <div>
+          <SamplingBias
+            gisaid_census={gisaid_census}
+            all_samples={all_samples}
+            clade_description={clade_description}
+          />
+          <CladeDefinition clade_description={clade_description} />
+          <CladeUniqueness clade_description={clade_description} />
+          <TMRCA clade_description={clade_description} />
+          <OnwardTransmission clade_description={clade_description} />
+          {/* <PhyloUncertainty clade_description={all_samples} /> */}
+          <Assumptions clade_description={clade_description} />
+          {/* <MinIntroductions clade_description={clade_description} /> */}
+        </div>
+      )}
+      ;
     </div>
   );
 }

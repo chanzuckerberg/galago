@@ -31,6 +31,7 @@ const TableRow = (props: {
       <TextCell text={label} />
       {recency_options.map((recency, i) => (
         <CountsCell
+          key={i}
           current_samples={current_samples}
           gisaid_records={gisaid_records}
           home_geo={home_geo}
