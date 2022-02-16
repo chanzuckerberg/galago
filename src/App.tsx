@@ -55,6 +55,7 @@ function App() {
       location: string;
       division: string;
       country: string;
+      region?: string;
     } = futureUserInput["home_geo"],
     min_muts_to_parent: number = futureUserInput["min_muts_to_parent"],
     muts_per_trans_minmax: number[] = futureUserInput["muts_per_trans_minmax"],

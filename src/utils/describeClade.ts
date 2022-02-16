@@ -14,7 +14,7 @@ export const describe_clade = (
     location: string;
     division: string;
     country: string;
-    region: string;
+    region?: string;
   },
   muts_per_trans_minmax: number[],
   min_muts_to_parent: number
