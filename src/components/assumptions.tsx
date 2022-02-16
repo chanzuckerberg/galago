@@ -2,7 +2,7 @@ import Sidenote from "./sidenote";
 import { CladeDescription } from "../d";
 
 type AssumptionsProps = {
-  clade_description: AssumptionsProps;
+  clade_description: CladeDescription;
 };
 
 function Assumptions(props: AssumptionsProps) {
@@ -29,7 +29,7 @@ function Assumptions(props: AssumptionsProps) {
               {clade_description.muts_per_trans_minmax[0]} -{" "}
               {clade_description.muts_per_trans_minmax[1]}
             </span>
-            .<sup fontSize="10">6</sup>
+            .<sup style={{ fontSize: "10" }}>6</sup>
           </li>
           <br />
           <li>
@@ -44,7 +44,7 @@ Higher values mean that we search more broadly for "cousins".`}
             <span className="dataPoint">
               {clade_description.min_muts_to_parent}
             </span>{" "}
-            mutation(s).<sup fontSize="10">7</sup>
+            mutation(s).<sup style={{ fontSize: "10" }}>7</sup>
           </li>
         </ul>
       </div>
