@@ -106,20 +106,14 @@ function App() {
       >
         Galago
       </p>
-      <input type="file" name="file" onChange={handleTreeUpload} />
-      {/* {isFilePicked && selectedFile ? (
+      {!isFilePicked ? (
         <div>
-          <p>Filename: {selectedFile.name}</p>
-          <p>Filetype: {selectedFile.type}</p>
-          <p>Size in bytes: {selectedFile.size}</p>
-          <p>
-            lastModifiedDate:{" "}
-            {selectedFile.lastModifiedDate.toLocaleDateString()}
-          </p>
+          <input type="file" name="file" onChange={handleTreeUpload} />
+          <p>Select a tree JSON file to get started</p>
         </div>
       ) : (
-        <p>Select a file to show details</p>
-      )} */}
+        <></>
+      )}
       {clade_description && tree && (
         <div>
           <h1>
@@ -141,7 +135,6 @@ function App() {
           {/* <MinIntroductions clade_description={clade_description} /> */}
         </div>
       )}
-      ;
     </div>
   );
 }
