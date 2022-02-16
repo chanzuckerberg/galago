@@ -43,7 +43,8 @@ export const NSNodeToNode = (node: NSNode, parent: Node | "root") => {
   tmpNode.node_attrs.num_date.value = tmpNode.node_attrs.num_date.value
     ? numericToDateObject(tmpNode.node_attrs.num_date.value)
     : NaN;
-  tmpNode.node_attrs.num_date.confidence
+  tmpNode.node_attrs.num_date.confidence = tmpNode.node_attrs.num_date
+    .confidence
     ? tmpNode.node_attrs.num_date.confidence.map((n: number) =>
         numericToDateObject(n)
       )
