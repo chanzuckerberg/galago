@@ -8,6 +8,22 @@ import {
   get_state_changes,
 } from "./treeMethods";
 
+const catalog_subclades = (selected_samples: Node[], mrca: Node) => {
+  const geo_levels = ["location", "division", "country"];
+  for (let i = 0; i < geo_levels.length; i++) {
+    if (
+      Object.keys(selected_samples[0].node_attrs[geo_levels[i]]).includes(
+        "confidence"
+      )
+    ) {
+      const subclades = get_state_changes(mrca, geo_levels[i]);
+      console.log(subclades);
+      return subclades;
+    }
+  }
+  return [];
+};
+
 export const describe_clade = (
   selected_samples: Array<Node>,
   home_geo: {
@@ -48,7 +64,7 @@ export const describe_clade = (
       Math.min(...muts_bn_selected.map((a) => a["dist"])),
       Math.max(...muts_bn_selected.map((a) => a["dist"])),
     ],
-    subtrees: [], //catalog_subclades(selected_samples, mrca), // subtrees,
+    subtrees: catalog_subclades(selected_samples, mrca), // subtrees,
   };
   console.log("clade description", clade);
   return clade;

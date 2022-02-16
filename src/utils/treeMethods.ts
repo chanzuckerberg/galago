@@ -3,19 +3,16 @@ import { Node } from "../d";
 
 export const traverse_preorder = (
   node: Node,
-  apply_fn?: Function,
+  // apply_fn?: Function,
   collect_condition?: Function,
   traverse_condition?: Function,
   collection: Node[] = []
 ) => {
-  // first visit the node, maybe do something
-  if (apply_fn) {
-    apply_fn(node);
+  // first visit this node and make a note that we've seen it
+  if (!collect_condition || collect_condition(node)) {
+    collection.push(node);
   }
 
-  if (!collect_condition || collect_condition(node)) {
-    collection.push(node); // make a note that we've seen this node
-  }
   // then visit children, left to right
   if (node.children.length > 0) {
     const children_to_visit = traverse_condition
@@ -24,14 +21,13 @@ export const traverse_preorder = (
     for (let i = 0; i < children_to_visit.length; i++) {
       collection = traverse_preorder(
         children_to_visit[i],
-        apply_fn,
+        // apply_fn,
         collect_condition,
         traverse_condition,
         collection
       );
     }
   }
-
   return collection;
 };
 
@@ -212,14 +208,15 @@ export const get_root = (node: Node) => {
   return node;
 };
 
-export const get_state_changes = (tree: Node, trait: string) => {
-  const all_nodes: Node[] = traverse_preorder(tree);
+export const get_state_changes = (startNode: Node, trait: string) => {
+  const all_nodes: Node[] = traverse_preorder(startNode);
+
   let subtrees: Array<Node[]> = [];
   const is_leaf = (node: Node) => {
     return node.children.length == 0;
   };
+
   const traits_match = (node: Node, trait_to_check: string = trait) => {
-    console.log(node);
     if (
       !node.parent ||
       !Object.keys(node.node_attrs).includes(trait_to_check) ||
@@ -228,33 +225,40 @@ export const get_state_changes = (tree: Node, trait: string) => {
       return false;
     }
 
-    const node_trait_value =
-      typeof node.node_attrs[trait_to_check] == "object" &&
-      node.node_attrs[trait_to_check]["value"]
-        ? node.node_attrs[trait_to_check]["value"]
-        : node.node_attrs.trait_to_check;
-    const parent_trait_value = node.parent.node_attrs.trait_to_check.value
+    const node_trait_value = node.node_attrs[trait_to_check]["value"]
+      ? node.node_attrs[trait_to_check]["value"]
+      : node.node_attrs[trait_to_check];
+
+    const parent_trait_value = node.parent.node_attrs[trait_to_check]["value"]
       ? node.parent.node_attrs[trait_to_check]["value"]
-      : node.parent.node_attrs["trait_to_check"];
-    console.log(node_trait_value, parent_trait_value);
-    return node_trait_value == parent_trait_value;
+      : node.parent.node_attrs[trait_to_check];
+
+    if (
+      !node_trait_value ||
+      !parent_trait_value ||
+      node_trait_value === "unknown" ||
+      parent_trait_value === "unknown" ||
+      node_trait_value !== parent_trait_value
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   };
 
-  all_nodes.forEach((n) => {
+  for (let i = 0; i < all_nodes.length; i++) {
+    let n = all_nodes[i];
     if (!traits_match(n)) {
       console.log(
         "traversing subtree, switch from ",
-        n.parent && n.parent.node_attrs && n.parent.node_attrs.trait
-          ? n.parent.node_attrs.trait
+        n.parent?.node_attrs[trait]
+          ? n.parent.node_attrs[trait]
           : "missing upstream data",
-        n.node_attrs && n.node_attrs.trait
-          ? n.node_attrs.trait
-          : "missing downstream data"
+        n.node_attrs[trait] ? n.node_attrs[trait] : "missing downstream data"
       );
-      subtrees.push(traverse_preorder(n, undefined, is_leaf, traits_match, []));
+      subtrees.push(traverse_preorder(n, is_leaf, traits_match));
     }
-  });
-
+  }
   return subtrees.filter((s) => s.length > 0).map((st) => get_mrca(st));
 };
 
@@ -262,7 +266,6 @@ export const describeTree = (node: Node, get_root_first: boolean = false) => {
   if (get_root_first) {
     node = get_root(node);
   }
-
   const all_objects = traverse_preorder(node);
   const leaves = all_objects.filter((o) => o.children.length == 0);
   const height = leaves
