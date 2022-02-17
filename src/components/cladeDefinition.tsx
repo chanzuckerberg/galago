@@ -14,11 +14,27 @@ function CladeDefinition(props: CladeDefinitionProps) {
 
   const other_locations: Array<string> = [
     ...new Set(
-      clade_description.unselected_samples_in_cluster.map(
-        (a) => a.node_attrs.location.value
-      )
+      clade_description.unselected_samples_in_cluster
+        .map((a) => a.node_attrs.location.value)
+        .sort()
     ),
   ].sort();
+
+  // let lineage_counts = {};
+  // clade_description.selected_samples.forEach((s) => {
+  //   let lin = s.node_attrs.pango_lineage?.value;
+  //   if (lin) {
+  //     lineage_counts[lin] = 1 + (lineage_counts[lin] || 0);
+  //   }
+  // });
+  let lineages = Array.from(
+    new Set(
+      clade_description.selected_samples
+        .concat(clade_description.unselected_samples_in_cluster)
+        .map((s) => s.node_attrs.pango_lineage?.value)
+    )
+  ).sort();
+
   return (
     <div>
       <h2>How closely related are your selected samples to each other?</h2>
@@ -71,7 +87,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
           }
         />
         A 'clade' is the smallest hierarchical cluster (or 'subtree') that
-        contains all of your selected samples.
+        contains all of your samples of interest.
         <sup style={{ fontSize: "10" }}>2</sup> This means that all of the
         samples within a clade are more closely related to each other than they
         are to anything else in the dataset.
@@ -92,6 +108,27 @@ function CladeDefinition(props: CladeDefinitionProps) {
                 clade_description.home_geo.location
               }: ${local_unselected_samples.map((s) => s.name)}`
         }`}
+      </p>
+      <h5>Lineages ("variants")</h5>
+      <p>
+        "Lineages" or "variants" are special clades that the scientific
+        community has decided to label for ease of discussion.{" "}
+        <Sidenote
+          num={3}
+          text={
+            <span>
+              <a href="https://cov-lineages.org/lineage_list.html">
+                Learn more about these lineages.
+              </a>
+            </span>
+          }
+        />
+      </p>
+      <p className="results">
+        This clade contains samples that are part of these lineage(s):{" "}
+        {lineages.map((l) => (
+          <span className="dataPoint">{l}</span>
+        ))}
       </p>
     </div>
   );
