@@ -29,21 +29,21 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
         transmits to multiple secondary cases) and onward transmission (here,
         defined as tertiary or further downstream cases), can be tricky.
       </p>
-      <Sidenote
-        num={5}
-        text={
-          <span>
-            <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#how-many-mutations-are-enough-to-rule-linkage-out">
-              Learn more about ruling out direct linkage
-            </a>{" "}
-            and{" "}
-            <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#assessing-linkage-between-cases">
-              more generally assessing linkage patterns between cases.
-            </a>
-          </span>
-        }
-      />
       <p>
+        <Sidenote
+          num={5}
+          text={
+            <span>
+              <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#how-many-mutations-are-enough-to-rule-linkage-out">
+                Learn more about ruling out direct linkage
+              </a>{" "}
+              and{" "}
+              <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#assessing-linkage-between-cases">
+                more generally assessing linkage patterns between cases.
+              </a>
+            </span>
+          }
+        />
         An infected case may have multiple pathogen genotypes present in their
         body, generated as the pathogen replicates. This means that sometimes
         you may observe a few different genotypes which vary by 1 -{" "}
@@ -67,11 +67,13 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
       </p>
       <div className="results">
         <p>
-          {/*TODO: show muts from parent? or shortest path from sample in cluster -> nearest cousin?*/}
           In this clade,{" "}
           <span className="dataPoint">{tertiary_cases.length}</span> sample(s)
           likely represent onward transmission
-          {`${tertiary_cases.length > 1 ? `: ${tertiary_cases}.` : "."}`}
+          {tertiary_cases.length > 1
+            ? tertiary_cases.map((c) => <span className="dataPoint">{c}</span>)
+            : ""}
+          .
         </p>
       </div>
     </div>

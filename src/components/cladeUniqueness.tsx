@@ -81,14 +81,26 @@ function CladeUniqueness(props: CladeProps) {
                 .toISOString()
                 .substring(0, 10)}: ${local_cousins.map((s) => s.name)}.`}
           </p>
-          <p>
+          {clade_description.cousins.length - local_cousins.length > 1 && (
+            <p>
+              There are also{" "}
+              <span className="dataPoint">
+                {clade_description.cousins.length - local_cousins.length}
+              </span>{" "}
+              closely related samples from these locations:{" "}
+              {cousin_locations.map((l) => (
+                <span className="dataPoint">{l}</span>
+              ))}
+            </p>
+          )}
+
+          {/* <p>
             {clade_description.cousins.length - local_cousins.length < 1
-              ? ``
-              : `There are also ${
-                  clade_description.cousins.length - local_cousins.length
-                } closely related samples from these locations:
-            ${cousin_locations}`}
-          </p>
+              ? ""
+              : cousin_locations.map((l) => (
+                  <span className="dataPoint">{l}</span>
+                ))}
+          </p> */}
         </div>
       </div>
     </div>
@@ -96,3 +108,16 @@ function CladeUniqueness(props: CladeProps) {
 }
 
 export default CladeUniqueness;
+// There are also
+{
+  /* <span className="dataPoint">{clade_description.cousins.length - local_cousins.length}</span> */
+}
+//   clade_description.cousins.length - local_cousins.length
+// } closely related samples from these locations:
+
+// In this clade,{" "}
+// <span className="dataPoint">{tertiary_cases.length}</span> sample(s)
+// likely represent onward transmission
+// {tertiary_cases.length > 1
+//   ? tertiary_cases.map((c) => <span className="dataPoint">{c}</span>)
+//   : ""}
