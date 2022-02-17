@@ -39,8 +39,8 @@ export interface CladeDescription {
     country: string;
     region?: string;
   };
-
-  subtrees: Node[];
+  subclade_geo: string | null;
+  subclades: Node[];
 
   // transmissions_across_demes: {
   //   location: Introduction[];
