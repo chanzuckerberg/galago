@@ -71,16 +71,30 @@ function CladeUniqueness(props: CladeProps) {
             interest include{" "}
             <span className="dataPoint">{local_cousins.length}</span> other
             samples from {clade_description.home_geo.location}
-            {local_cousins.length < 1
-              ? `.`
-              : `, dated between ${local_cousin_dates[0]
-                  .toISOString()
-                  .substring(0, 10)} and
-              ${local_cousin_dates
-                .slice(-1)[0]
-                .toISOString()
-                .substring(0, 10)}: ${local_cousins.map((s) => s.name)}.`}
+            {local_cousins.length > 0 ? (
+              <>
+                , dated between{" "}
+                <span className="dataPoint">
+                  {local_cousin_dates[0].toISOString().substring(0, 10)}
+                </span>{" "}
+                and{" "}
+                <span className="dataPoint">
+                  {local_cousin_dates
+                    .slice(-1)[0]
+                    .toISOString()
+                    .substring(0, 10)}
+                </span>
+                :{" "}
+                <span className="dataPoint">
+                  {local_cousins.map((s) => s.name)}
+                </span>
+                .
+              </>
+            ) : (
+              "."
+            )}
           </p>
+
           {clade_description.cousins.length - local_cousins.length > 1 && (
             <p>
               There are also{" "}
@@ -108,16 +122,3 @@ function CladeUniqueness(props: CladeProps) {
 }
 
 export default CladeUniqueness;
-// There are also
-{
-  /* <span className="dataPoint">{clade_description.cousins.length - local_cousins.length}</span> */
-}
-//   clade_description.cousins.length - local_cousins.length
-// } closely related samples from these locations:
-
-// In this clade,{" "}
-// <span className="dataPoint">{tertiary_cases.length}</span> sample(s)
-// likely represent onward transmission
-// {tertiary_cases.length > 1
-//   ? tertiary_cases.map((c) => <span className="dataPoint">{c}</span>)
-//   : ""}
