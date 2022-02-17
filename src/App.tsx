@@ -121,17 +121,19 @@ function App() {
             <br />
             in {clade_description.home_geo.location}
           </h1>
+          <h2>Results</h2>
+          <CladeDefinition clade_description={clade_description} />
+          <TMRCA clade_description={clade_description} />
+          <CladeUniqueness clade_description={clade_description} />
+          <GeoSubclades clade_description={clade_description} />
+          <OnwardTransmission clade_description={clade_description} />
+          {/* <PhyloUncertainty clade_description={all_samples} /> */}
+          <h2>Considerations & Caveats</h2>
           <SamplingBias
             gisaid_census={gisaid_census}
             all_samples={get_leaves(get_root(tree))}
             clade_description={clade_description}
           />
-          <CladeDefinition clade_description={clade_description} />
-          <CladeUniqueness clade_description={clade_description} />
-          <TMRCA clade_description={clade_description} />
-          <GeoSubclades clade_description={clade_description} />
-          <OnwardTransmission clade_description={clade_description} />
-          {/* <PhyloUncertainty clade_description={all_samples} /> */}
           <Assumptions clade_description={clade_description} />
           {/* <MinIntroductions clade_description={clade_description} /> */}
         </div>
