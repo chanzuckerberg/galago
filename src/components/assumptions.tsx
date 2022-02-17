@@ -15,14 +15,21 @@ function Assumptions(props: AssumptionsProps) {
         observational (meaning they don't depend on heuristics or "judgement
         calls"). However, there are a few exceptions:
       </p>
-      <div className="results">
+      <p>
+        <Sidenote
+          num={6}
+          text={`This determines which samples are mostly likely from tertiary cases
+      (onward transmission).`}
+        />
+        <Sidenote
+          num={7}
+          text={`
+Higher values mean that we search more broadly for "cousins".`}
+        />
+      </p>
+      <p className="results">
         <ul>
           <li>
-            <Sidenote
-              num={6}
-              text={`This determines which samples are mostly likely from tertiary cases
-      (onward transmission).`}
-            />
             We assume that the number of mutations that occurs with each
             transmission ranges between{" "}
             <span className="dataPoint">
@@ -33,11 +40,6 @@ function Assumptions(props: AssumptionsProps) {
           </li>
           <br />
           <li>
-            <Sidenote
-              num={7}
-              text={`
-Higher values mean that we search more broadly for "cousins".`}
-            />
             When looking for samples that are outside your clade by closely
             related ("cousins"), we trace back to the most recent grand/parent
             that is separated from the primary case by at least{" "}
@@ -47,7 +49,7 @@ Higher values mean that we search more broadly for "cousins".`}
             mutation(s).<sup style={{ fontSize: "10" }}>7</sup>
           </li>
         </ul>
-      </div>
+      </p>
     </div>
   );
 }

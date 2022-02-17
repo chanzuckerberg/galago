@@ -28,10 +28,12 @@ function TMRCA(props: CladeProps) {
         What was the date and genotype of the primary case upstream of this
         clade?
       </h2>
-      <Sidenote
-        num={3}
-        text="You  may also hear this referred to as the 'most recent common ancestor (MRCA)' of a clade."
-      />
+      <p>
+        <Sidenote
+          num={3}
+          text="You  may also hear this referred to as the 'most recent common ancestor (MRCA)' of a clade."
+        />
+      </p>
       <p style={{ fontStyle: "italic" }}>
         We can use the tree to make inferences about the timing and genotype of
         the primary case <sup style={{ fontSize: "10" }}>3</sup>
@@ -58,22 +60,22 @@ function TMRCA(props: CladeProps) {
           </span>
         </p>
       </div>
-      <Sidenote
-        num="4"
-        text={
-          <span>
-            Learn more about{" "}
-            <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#temporally-resolved-phylogenetic-trees.">
-              inferring dates using phylogenetic trees
-            </a>{" "}
-            and{" "}
-            <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#estimating-the-start-and-duration-of-an-outbreak.">
-              how sampling may effect these estimates.
-            </a>
-          </span>
-        }
-      />
       <p>
+        <Sidenote
+          num="4"
+          text={
+            <span>
+              Learn more about{" "}
+              <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#temporally-resolved-phylogenetic-trees.">
+                inferring dates using phylogenetic trees
+              </a>{" "}
+              and{" "}
+              <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#estimating-the-start-and-duration-of-an-outbreak.">
+                how sampling may effect these estimates.
+              </a>
+            </span>
+          }
+        />
         Because pathogens evolve and spread on similar timescales, the number of
         mutations is proportionate to the amount of time separating two samples
         <sup style={{ fontSize: "10" }}>4</sup>.

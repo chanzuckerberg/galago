@@ -1,3 +1,11 @@
+/*
+ NOTE: to get the correct alignment, place this within 
+ <div> // "top level" thing that is returned from an insight component
+ <p> // not className = "results", normal paragraphs only
+ <Sidenote/>
+ </p>
+ </div>
+*/
 const Sidenote = (props: { text: string | any; num: number }) => {
   const { text, num } = props;
   return (
