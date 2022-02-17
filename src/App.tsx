@@ -1,22 +1,20 @@
 import React, { useState } from "react";
-
 import { Helmet } from "react-helmet";
+
+import SamplingBias from "./components/sampleDistribTable";
+import CladeDefinition from "./components/cladeDefinition";
 import CladeUniqueness from "./components/cladeUniqueness";
 import TMRCA from "./components/tmrca";
-import PhyloUncertainty from "./components/phylo_uncertainty";
-// import MinIntroductions from "./components/PAUSED_min_introductions";
 import OnwardTransmission from "./components/onwardTransmission";
-// import DatasetGeoCompletion from "./components/dataset_geo_completion";
-//@ts-ignore -- we're intentionally not typing the tree json for now
-import { nextstrain_json } from "../stub_data/demo_tree";
+import GeoSubclades from "./components/geoSubclades";
+import Assumptions from "./components/assumptions";
+// import PhyloUncertainty from "./components/phylo_uncertainty";
+
 import { gisaid_counts_file } from "../stub_data/gisaid_counts";
 import { ingestNextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
 import { get_root, get_leaves } from "./utils/treeMethods";
-import SamplingBias from "./components/sampleDistribTable";
-import Assumptions from "./components/assumptions";
-import CladeDefinition from "./components/cladeDefinition";
 
 function App() {
   //@ts-ignore
@@ -135,6 +133,7 @@ function App() {
           <CladeDefinition clade_description={clade_description} />
           <CladeUniqueness clade_description={clade_description} />
           <TMRCA clade_description={clade_description} />
+          <GeoSubclades clade_description={clade_description} />
           <OnwardTransmission clade_description={clade_description} />
           {/* <PhyloUncertainty clade_description={all_samples} /> */}
           <Assumptions clade_description={clade_description} />
