@@ -208,6 +208,15 @@ export const get_root = (node: Node) => {
   return node;
 };
 
+export const find_leaf_by_name = (name: string, all_samples: Node[]) => {
+  for (let i = 0; i < all_samples.length; i++) {
+    if (all_samples[i].children.length === 0 && all_samples[i].name === name) {
+      return all_samples[i];
+    }
+  }
+  return null;
+};
+
 export const get_state_changes = (startNode: Node, trait: string) => {
   const all_nodes: Node[] = traverse_preorder(startNode);
 

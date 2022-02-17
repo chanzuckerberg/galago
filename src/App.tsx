@@ -14,7 +14,7 @@ import { gisaid_counts_file } from "../stub_data/gisaid_counts";
 import { ingestNextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
-import { get_root, get_leaves } from "./utils/treeMethods";
+import { get_root, get_leaves, find_leaf_by_name } from "./utils/treeMethods";
 
 function App() {
   //@ts-ignore
@@ -52,7 +52,9 @@ function App() {
     muts_per_trans_minmax: number[] = futureUserInput["muts_per_trans_minmax"],
     event?: any
   ) => {
-    // setSelectedSamples(event.target.result.split(",")); // For later - once we add the input box
+    // setSelectedSamples(
+    //   event.target.result.split(",").map((n) => find_leaf_by_name(n, tree))
+    // ); // For later - once we add the input box
     // setSelectedSamples(get_leaves(get_root(tree)).slice(-10)); // HELP - why doesn't this work?
     const selectedSamples = get_leaves(get_root(tree)).slice(-10); // HELP - how am I allowed to do this if I'm using useState?
     setCladeDescription(
