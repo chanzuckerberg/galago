@@ -8,6 +8,10 @@ function GeoSublades(props: geoSubcladesProps) {
   const { clade_description } = props;
 
   const no_data = clade_description.subclade_geo === null;
+  if (no_data) {
+    return <></>;
+  }
+
   const geo_monophyletic =
     clade_description.subclade_geo && clade_description.subclades.length === 0;
 
@@ -36,8 +40,8 @@ function GeoSublades(props: geoSubcladesProps) {
       </p>
 
       <p className="results">
-        {no_data &&
-          "While there are samples within your clade from other locations, we aren't able to report on specific transmissions between locations because this was not inferred by Nextstrain upstream."}
+        {/* {no_data &&
+          "While there are samples within your clade from other locations, we aren't able to report on specific transmissions between locations because this was not inferred by Nextstrain upstream."} */}
 
         {!no_data && geo_monophyletic && (
           <>
