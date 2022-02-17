@@ -15,6 +15,22 @@ import Sidenote from "../sidenote";
 
 function SamplingBias(props: SamplingBiasProps) {
   const { all_samples, gisaid_census, clade_description } = props;
+  const recent_from_division_num = get_current_counts(
+    all_samples,
+    clade_description.home_geo,
+    "division",
+    28
+  );
+  console.log(recent_from_division_num);
+
+  const recent_from_division_denom =
+    get_gisaid_counts(
+      gisaid_census,
+      clade_description.home_geo,
+      "division",
+      28
+    ) + recent_from_division_num;
+  console.log(recent_from_division_denom);
 
   return (
     <div>
@@ -29,18 +45,7 @@ function SamplingBias(props: SamplingBiasProps) {
             This dataset contains{" "}
             <span className="dataPoint">
               {(
-                (get_current_counts(
-                  all_samples,
-                  clade_description.home_geo,
-                  "division",
-                  28
-                ) /
-                  get_gisaid_counts(
-                    gisaid_census,
-                    clade_description.home_geo,
-                    "division",
-                    28
-                  )) *
+                (recent_from_division_num / recent_from_division_denom) *
                 100
               ).toFixed(0)}
               %
