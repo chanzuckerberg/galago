@@ -31,7 +31,11 @@ function CladeDefinition(props: CladeDefinitionProps) {
     new Set(
       clade_description.selected_samples
         .concat(clade_description.unselected_samples_in_cluster)
-        .map((s) => s.node_attrs.pango_lineage?.value || s.node_attrs.clade)
+        .map(
+          (s) =>
+            s.node_attrs.pango_lineage?.value ||
+            s.node_attrs.clade_membership?.value
+        )
     )
   ).sort();
 
