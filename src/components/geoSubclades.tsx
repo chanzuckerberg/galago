@@ -66,7 +66,7 @@ function GeoSublades(props: geoSubcladesProps) {
       </p>
       <p>
         As always, the strength of this evidence depends on how representative
-        your dataset is (see above).
+        your dataset is (see below).
       </p>
     </div>
   );

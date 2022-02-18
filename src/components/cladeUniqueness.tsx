@@ -62,7 +62,7 @@ function CladeUniqueness(props: CladeProps) {
       <div>
         <p>
           If there are many samples that are closely related genetically, have
-          overlapping temporal ranges, and are geographically proximal, you may
+          overlapping timeframes, and are geographically co-located, you may
           want to consider expanding the scope of your investigation.{" "}
         </p>
         <div className="results">
