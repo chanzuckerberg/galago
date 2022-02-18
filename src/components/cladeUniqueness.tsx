@@ -86,7 +86,9 @@ function CladeUniqueness(props: CladeProps) {
                 </span>
                 :{" "}
                 <span className="dataPoint">
-                  {local_cousins.map((s) => s.name)}
+                  {local_cousins.map((s) => (
+                    <span className="dataPoint">{s.name}</span>
+                  ))}
                 </span>
                 .
               </>

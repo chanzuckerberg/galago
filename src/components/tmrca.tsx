@@ -24,10 +24,7 @@ function TMRCA(props: CladeProps) {
   );
   return (
     <div>
-      <h2>
-        What was the date and genotype of the primary case upstream of this
-        clade?
-      </h2>
+      <h2>What was the date and genotype of the primary infection?</h2>
       <p>
         <Sidenote
           num={3}
@@ -88,7 +85,7 @@ function TMRCA(props: CladeProps) {
           ) : (
             <>
               {`was most likely identical to sample(s): `}
-              {mrca_matches.map((m, i) => (
+              {mrca_matches.sort().map((m, i) => (
                 <span key={i} className="dataPoint">
                   {m}
                 </span>

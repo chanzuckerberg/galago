@@ -31,7 +31,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
     new Set(
       clade_description.selected_samples
         .concat(clade_description.unselected_samples_in_cluster)
-        .map((s) => s.node_attrs.pango_lineage?.value)
+        .map((s) => s.node_attrs.pango_lineage?.value || s.node_attrs.clade)
     )
   ).sort();
 
@@ -94,20 +94,33 @@ function CladeDefinition(props: CladeDefinitionProps) {
       </p>
 
       <p className="results">
-        {clade_description.unselected_samples_in_cluster.length == 0
-          ? `Your selected samples form their own clade without any other samples from this dataset.`
-          : `The clade containing your samples also contains ${clade_description.unselected_samples_in_cluster.length} samples from these locations: ${other_locations}.`}
+        {clade_description.unselected_samples_in_cluster.length == 0 ? (
+          `Your selected samples form their own clade without any other samples from this dataset.`
+        ) : (
+          <>
+            In addition to your selected samples, the clade containing your
+            samples also contains{" "}
+            <span className="dataPoint">
+              {clade_description.unselected_samples_in_cluster.length}
+            </span>{" "}
+            other samples from these locations:{" "}
+            <span className="dataPoint">{other_locations}</span>.
+          </>
+        )}
       </p>
-      <p>
-        {`${
-          local_unselected_samples.length === 0
-            ? ``
-            : `This includes ${
-                local_unselected_samples.length
-              } other samples from ${
-                clade_description.home_geo.location
-              }: ${local_unselected_samples.map((s) => s.name)}`
-        }`}
+      <p className="results">
+        {local_unselected_samples.length === 0 ? (
+          ""
+        ) : (
+          <>
+            This includes{" "}
+            <span className="dataPoint">{local_unselected_samples.length}</span>{" "}
+            other samples from {clade_description.home_geo.location}:{" "}
+            {local_unselected_samples.map((s) => (
+              <span className="dataPoint">{s.name}</span>
+            ))}
+          </>
+        )}
       </p>
       <h5>Lineages ("variants")</h5>
       <p>

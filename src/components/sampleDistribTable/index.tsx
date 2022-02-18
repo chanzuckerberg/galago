@@ -21,7 +21,6 @@ function SamplingBias(props: SamplingBiasProps) {
     "division",
     28
   );
-  console.log(recent_from_division_num);
 
   const recent_from_division_denom =
     get_gisaid_counts(
@@ -30,7 +29,6 @@ function SamplingBias(props: SamplingBiasProps) {
       "division",
       28
     ) + recent_from_division_num;
-  console.log(recent_from_division_denom);
 
   return (
     <div>
