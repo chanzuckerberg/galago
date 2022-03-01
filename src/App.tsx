@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-
+import AboutGalago from "./components/aboutGalago";
+import ContactUs from "./components/ContactUs";
 import SamplingBias from "./components/sampleDistribTable";
 import CladeDefinition from "./components/cladeDefinition";
 import CladeUniqueness from "./components/cladeUniqueness";
@@ -8,8 +9,6 @@ import TMRCA from "./components/tmrca";
 import OnwardTransmission from "./components/onwardTransmission";
 import GeoSubclades from "./components/geoSubclades";
 import Assumptions from "./components/assumptions";
-// import PhyloUncertainty from "./components/phylo_uncertainty";
-
 import { gisaid_counts_file } from "../stub_data/gisaid_counts";
 import { ingestNextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
@@ -108,8 +107,21 @@ function App() {
       </p>
       {!isFilePicked ? (
         <div>
+          <AboutGalago />
+          <h2>Analyze a potential outbreak</h2>
+          <p>
+            <i>
+              Galago runs entirely in the browser. This means that your data
+              never leaves your computer and is never accessible to anyone else.
+            </i>
+          </p>
+          <p>
+            <b>First, please upload a tree file.</b>
+            <br />
+            <i>This must be in Nextstrain's JSON file format.</i>
           <input type="file" name="file" onChange={handleTreeUpload} />
-          <p>Select a tree JSON file to get started</p>
+          </p>
+          <ContactUs />
         </div>
       ) : (
         <></>
