@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-
+import AboutGalago from "./components/aboutGalago";
+import ContactUs from "./components/ContactUs";
 import SamplingBias from "./components/sampleDistribTable";
 import CladeDefinition from "./components/cladeDefinition";
 import CladeUniqueness from "./components/cladeUniqueness";
@@ -8,8 +9,6 @@ import TMRCA from "./components/tmrca";
 import OnwardTransmission from "./components/onwardTransmission";
 import GeoSubclades from "./components/geoSubclades";
 import Assumptions from "./components/assumptions";
-// import PhyloUncertainty from "./components/phylo_uncertainty";
-
 import { gisaid_counts_file } from "../stub_data/gisaid_counts";
 import { ingestNextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
@@ -67,7 +66,7 @@ function App() {
 
     fileReader.readAsText(event.target.files[0], "application/JSON");
     fileReader.onload = (event) => {
-      if (event && event.target) {
+      if (event?.target?.result && typeof event.target.result === "string") {
         const tree: Node = ingestNextstrain(JSON.parse(event.target.result));
         setTree(tree);
       }

@@ -13,14 +13,14 @@ function TMRCA(props: CladeProps) {
     clade_description.unselected_samples_in_cluster
   );
 
-  let mrca_distances: Object = Object.fromEntries(
+  let mrca_distances: { [key: string]: number } = Object.fromEntries(
     all_samples.map((x) => [
       x.name,
       clade_description.mrca ? get_dist([x, clade_description.mrca]) : NaN,
     ])
   );
   let mrca_matches: string[] = Object.keys(mrca_distances).filter(
-    (m: string) => mrca_distances[m] === 0
+    (m) => mrca_distances[m] === 0
   );
   return (
     <div>
@@ -59,7 +59,7 @@ function TMRCA(props: CladeProps) {
       </div>
       <p>
         <Sidenote
-          num="4"
+          num={4}
           text={
             <span>
               Learn more about{" "}
