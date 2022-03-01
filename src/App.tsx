@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import AboutGalago from "./components/aboutGalago";
-import ContactUs from "./components/ContactUs";
+import ContactUs from "./components/contactUs";
 import SamplingBias from "./components/sampleDistribTable";
 import CladeDefinition from "./components/cladeDefinition";
 import CladeUniqueness from "./components/cladeUniqueness";
