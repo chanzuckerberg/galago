@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 import SamplingBias from "./components/sampleDistribTable";
@@ -22,9 +22,10 @@ function App() {
   const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
 
   const [tree, setTree] = useState<null | Node>(null);
-  const [isFilePicked, setIsFilePicked] = useState<boolean>(false);
+  const [selectedSampleNames, setSelectedSampleNames] = useState<
+    string[] | null
+  >(null);
   const [selectedSamples, setSelectedSamples] = useState<Node[] | null>(null);
-  // const [selectedSamples, setSelectedSamples] = useState<string | null>(null);
   const [clade_description, setCladeDescription] =
     useState<CladeDescription | null>(null);
 
@@ -35,13 +36,11 @@ function App() {
       country: "USA",
       region: "North America",
     },
-    selectedSamples: null,
     min_muts_to_parent: 1,
     muts_per_trans_minmax: [0, 2],
   };
 
   const initializeReport = (
-    tree: Node,
     home_geo: {
       location: string;
       division: string;
@@ -49,36 +48,58 @@ function App() {
       region?: string;
     } = futureUserInput["home_geo"],
     min_muts_to_parent: number = futureUserInput["min_muts_to_parent"],
-    muts_per_trans_minmax: number[] = futureUserInput["muts_per_trans_minmax"],
-    event?: any
+    muts_per_trans_minmax: number[] = futureUserInput["muts_per_trans_minmax"]
   ) => {
-    // setSelectedSamples(
-    //   event.target.result.split(",").map((n) => find_leaf_by_name(n, tree))
-    // ); // For later - once we add the input box
-    // setSelectedSamples(get_leaves(get_root(tree)).slice(-10)); // HELP - why doesn't this work?
-    const selectedSamples = get_leaves(get_root(tree)).slice(-10); // HELP - how am I allowed to do this if I'm using useState?
-    setCladeDescription(
-      describe_clade(
-        selectedSamples,
-        home_geo,
-        muts_per_trans_minmax,
-        min_muts_to_parent
-      )
-    );
+    if (selectedSamples && tree) {
+      setCladeDescription(
+        describe_clade(
+          selectedSamples,
+          home_geo,
+          muts_per_trans_minmax,
+          min_muts_to_parent
+        )
+      );
+    }
   };
 
   const handleTreeUpload = (event: any) => {
     const fileReader = new FileReader();
 
-    setIsFilePicked(true);
     fileReader.readAsText(event.target.files[0], "application/JSON");
     fileReader.onload = (event) => {
       if (event && event.target) {
-        var tree: Node = ingestNextstrain(JSON.parse(event.target.result));
+        const tree: Node = ingestNextstrain(JSON.parse(event.target.result));
         setTree(tree);
-        initializeReport(tree);
       }
     };
+    initializeReport();
+  };
+
+  const handleSelectedSampleNames = (event: any) => {
+    if (event && event.target) {
+      let input_string: string = event.target.value;
+      let sample_names: string[] = input_string
+        .split(",")
+        .map((s: string) => s.trim());
+
+      setSelectedSampleNames(sample_names);
+    }
+  };
+
+  const handleSelectedSamples = (event: any) => {
+    if (selectedSampleNames && selectedSampleNames.length >= 2 && tree) {
+      let all_leaves = get_leaves(get_root(tree));
+      console.log("all leaves", all_leaves);
+      //@ts-ignore - we filter out any null values on the next line
+      let selected_sample_nodes: Array<Node> = selectedSampleNames
+        .map((n) => find_leaf_by_name(n, all_leaves))
+        .filter((n) => n !== null);
+
+      if (selected_sample_nodes.length >= 2) {
+        setSelectedSamples(selected_sample_nodes);
+      }
+    }
+    initializeReport();
   };
 
   return (
@@ -106,10 +127,47 @@ function App() {
       >
         Galago
       </p>
-      {!isFilePicked ? (
+      {!clade_description ? (
         <div>
-          <input type="file" name="file" onChange={handleTreeUpload} />
-          <p>Select a tree JSON file to get started</p>
+          <AboutGalago />
+          <h2>Analyze a potential outbreak</h2>
+          <p>
+            <i>
+              Galago runs entirely in the browser. This means that your data
+              never leaves your computer and is never accessible to anyone else.
+            </i>
+          </p>
+          <p>
+            <b>First, please upload a tree file.</b>
+            <br />
+            <i>This must be in Nextstrain's JSON file format.</i>
+            <input type="file" name="file" onChange={handleTreeUpload} />
+          </p>
+          <p>
+            <b>Next, please enter sample IDs, separated by a comma.</b> <br />
+            <i>
+              You should enter all the sample IDs in this tree that you believe
+              may be associated with your potential outbreak of interest.
+            </i>
+            <br />
+            <input
+              type="text"
+              name="selectedSamples"
+              onChange={(e) => {
+                handleSelectedSampleNames(e);
+              }}
+              style={{ width: "20em" }}
+              // value="SampleID1, SampleID2, ..."
+            />
+            <button
+              type="button"
+              name="submitInput"
+              onClick={(e) => handleSelectedSamples(e)}
+            >
+              Submit
+            </button>
+          </p>
+          <ContactUs />
         </div>
       ) : (
         <></>
