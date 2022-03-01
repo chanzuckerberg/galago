@@ -9,7 +9,7 @@ import TMRCA from "./components/tmrca";
 import OnwardTransmission from "./components/onwardTransmission";
 import GeoSubclades from "./components/geoSubclades";
 import Assumptions from "./components/assumptions";
-import { gisaid_counts_file } from "../stub_data/gisaid_counts";
+import { gisaid_counts_file } from "../data/gisaid_counts";
 import { ingestNextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
@@ -40,6 +40,8 @@ function App() {
   };
 
   const initializeReport = (
+    selectedSamples: Node[],
+    tree: Node,
     home_geo: {
       location: string;
       division: string;
@@ -49,16 +51,14 @@ function App() {
     min_muts_to_parent: number = futureUserInput["min_muts_to_parent"],
     muts_per_trans_minmax: number[] = futureUserInput["muts_per_trans_minmax"]
   ) => {
-    if (selectedSamples && tree) {
-      setCladeDescription(
-        describe_clade(
-          selectedSamples,
-          home_geo,
-          muts_per_trans_minmax,
-          min_muts_to_parent
-        )
-      );
-    }
+    setCladeDescription(
+      describe_clade(
+        selectedSamples,
+        home_geo,
+        muts_per_trans_minmax,
+        min_muts_to_parent
+      )
+    );
   };
 
   const handleTreeUpload = (event: any) => {
@@ -71,7 +71,6 @@ function App() {
         setTree(tree);
       }
     };
-    initializeReport();
   };
 
   const handleSelectedSampleNames = (event: any) => {
@@ -88,7 +87,6 @@ function App() {
   const handleSelectedSamples = (event: any) => {
     if (selectedSampleNames && selectedSampleNames.length >= 2 && tree) {
       let all_leaves = get_leaves(get_root(tree));
-      console.log("all leaves", all_leaves);
       //@ts-ignore - we filter out any null values on the next line
       let selected_sample_nodes: Array<Node> = selectedSampleNames
         .map((n) => find_leaf_by_name(n, all_leaves))
@@ -98,8 +96,11 @@ function App() {
         setSelectedSamples(selected_sample_nodes);
       }
     }
-    initializeReport();
   };
+
+  if (tree && selectedSamples && !clade_description) {
+    initializeReport(selectedSamples, tree);
+  }
 
   return (
     <div>
