@@ -16,10 +16,12 @@ function GeoSublades(props: geoSubcladesProps) {
     clade_description.subclade_geo && clade_description.subclades.length === 0;
 
   const subclade_locations =
-    clade_description.subclades.length > 0
+    clade_description.subclades.length > 0 &&
+    typeof clade_description.subclade_geo === "string"
       ? [
           ...new Set(
             clade_description.subclades.map(
+              //@ts-ignore - we've already excluded the case where subclade_geo is null on line 10
               (s) => s.node_attrs[clade_description.subclade_geo]["value"]
             )
           ),
@@ -48,6 +50,7 @@ function GeoSublades(props: geoSubcladesProps) {
             {`All of the samples in this clade are from the same ${
               clade_description.subclade_geo
             }; we do not see evidence of multiple introductions to ${
+              //@ts-ignore - we've already excluded the case where subclade_geo is null on line 10
               clade_description.home_geo[clade_description.subclade_geo]
             }.`}
             <br />
@@ -61,6 +64,7 @@ function GeoSublades(props: geoSubcladesProps) {
           `At least ${
             clade_description.subclades.length
           } transmission(s) between ${
+            //@ts-ignore - we've already excluded the case where subclade_geo is null on line 10
             clade_description["home_geo"][clade_description.subclade_geo]
           } and these locations have contributed to this clade: ${subclade_locations}`}
       </p>

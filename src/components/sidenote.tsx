@@ -6,7 +6,12 @@
  </p>
  </div>
 */
-const Sidenote = (props: { text: string | any; num: number }) => {
+type SidenoteProps = {
+  text: string | any;
+  num: number;
+};
+
+const Sidenote = (props: SidenoteProps) => {
   const { text, num } = props;
   return (
     <span

@@ -13,7 +13,6 @@ export type HomeGeo = {
 export type SpecificityLevels = "location" | "division" | "country" | "global";
 
 export type RecencyValues = 28 | 84 | 364 | 36400;
-
 export const filter_tally = (
   records: Array<FlattenedAttrs> | Array<GISAIDRecord>,
   home_geo: HomeGeo,
@@ -21,9 +20,10 @@ export const filter_tally = (
   recency: RecencyValues,
   recency_fn: Function
 ) => {
-  let matching_records: Array<Object> = [];
+  let matching_records: Array<FlattenedAttrs> | Array<GISAIDRecord> = [];
   if (specificity_level == "location") {
     // match all geo fields down to the location
+    //@ts-ignore - bizarre known typescript bug https://github.com/microsoft/TypeScript/issues/33591
     matching_records = records.filter(
       (r: any) =>
         r.location == home_geo["location"] &&
@@ -33,6 +33,7 @@ export const filter_tally = (
     );
   } else if (specificity_level == "division") {
     // match to state, exclude home locale
+    //@ts-ignore - bizarre known typescript bug https://github.com/microsoft/TypeScript/issues/33591
     matching_records = records.filter(
       (r: any) =>
         r.location != home_geo["location"] &&
@@ -42,6 +43,7 @@ export const filter_tally = (
     );
   } else if (specificity_level == "country") {
     // match to country, exclude home state
+    //@ts-ignore - bizarre known typescript bug https://github.com/microsoft/TypeScript/issues/33591
     matching_records = records.filter(
       (r: any) =>
         r.division !== home_geo["division"] &&
@@ -50,6 +52,7 @@ export const filter_tally = (
     );
   } else if (specificity_level == "global") {
     // exclude home country
+    //@ts-ignore - bizarre known typescript bug https://github.com/microsoft/TypeScript/issues/33591
     matching_records = records.filter(
       (r: any) => r.country !== home_geo["country"] && recency_fn(r, recency)
     );
@@ -123,6 +126,7 @@ export const get_gisaid_counts = (
     return matches_recency;
   };
 
+  //@ts-ignore - this is guaranteed to be of type GISAIDRecord, not FlattenedAttr, because we've typed `records` above
   const matching_records: Array<GISAIDRecord> = filter_tally(
     records,
     home_geo,
@@ -132,6 +136,6 @@ export const get_gisaid_counts = (
   );
 
   return matching_records
-    .map((r: GISAIDRecord) => r["strain"])
+    .map((r: GISAIDRecord) => r?.strain)
     .reduce((a: number, b: number) => a + b, 0);
 };
