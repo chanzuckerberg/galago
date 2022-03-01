@@ -72,7 +72,7 @@ function App() {
     setIsFilePicked(true);
     fileReader.readAsText(event.target.files[0], "application/JSON");
     fileReader.onload = (event) => {
-      if (event && event.target) {
+      if (event?.target?.result && typeof event.target.result === "string") {
         var tree: Node = ingestNextstrain(JSON.parse(event.target.result));
         setTree(tree);
         initializeReport(tree);
@@ -119,7 +119,7 @@ function App() {
             <b>First, please upload a tree file.</b>
             <br />
             <i>This must be in Nextstrain's JSON file format.</i>
-          <input type="file" name="file" onChange={handleTreeUpload} />
+            <input type="file" name="file" onChange={handleTreeUpload} />
           </p>
           <ContactUs />
         </div>
