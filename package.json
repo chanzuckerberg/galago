@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist -r https://github.com/chanzuckerberg/galago"
   },
   "dependencies": {
     "@mdx-js/mdx": "^1.6.22",
@@ -24,7 +24,7 @@
     "@types/react-helmet": "^6.1.5",
     "@vitejs/plugin-react": "^1.0.7",
     "gh-pages": "^3.2.3",
-    "typescript": "^4.2.4",
+    "typescript": "^4.6.2",
     "vite": "^2.8.5"
   }
 }
