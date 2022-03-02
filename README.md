@@ -1,5 +1,5 @@
 # Galago 
-## [Demo](https://chanzuckerberg.github.io/galago/) | Status: prototype
+## [Demo](https://chanzuckerberg.github.io/galago/) | [Rough roadmap](https://github.com/orgs/chanzuckerberg/projects/14/views/7) | Status: prototype
 This is a prototype repository for research related to making genomic epidemiology more accessible and interpretable through narrative and visual reports. Currently, galago is a serverless, standalone web application that ingests phylogenetic trees and renders responsive reports containing insights about clades or outbreaks of interest. Contact sidneymbell@chanzuckerberg.com with any questions or comments.
 
 ## Usage
