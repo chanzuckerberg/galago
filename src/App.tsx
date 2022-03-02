@@ -14,6 +14,10 @@ import { ingestNextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
 import { get_root, get_leaves, find_leaf_by_name } from "./utils/treeMethods";
+import {
+  get_location_input_options,
+  get_division_input_options,
+} from "./utils/geoInputOptions";
 
 function App() {
   //@ts-ignore
@@ -27,11 +31,17 @@ function App() {
   const [selectedSamples, setSelectedSamples] = useState<Node[] | null>(null);
   const [clade_description, setCladeDescription] =
     useState<CladeDescription | null>(null);
+  const [locationInputOptions, setLocationInputOptions] = useState<
+    string[] | null
+  >(null);
+  const [divisionInputOptions, setDivisionInputOptions] = useState<
+    string[] | null
+  >(null);
+  const [location, setLocation] = useState<string | null>(null);
+  const [division, setDivision] = useState<string | null>(null);
 
   const futureUserInput = {
     home_geo: {
-      location: "Alameda County",
-      division: "California",
       country: "USA",
       region: "North America",
     },
@@ -42,21 +52,23 @@ function App() {
   const initializeReport = (
     selectedSamples: Node[],
     tree: Node,
-    home_geo: {
-      location: string;
-      division: string;
-      country: string;
-      region?: string;
-    } = futureUserInput["home_geo"],
-    min_muts_to_parent: number = futureUserInput["min_muts_to_parent"],
-    muts_per_trans_minmax: number[] = futureUserInput["muts_per_trans_minmax"]
+    location: string,
+    division: string,
+    futureUserInput: any
   ) => {
+    const home_geo = {
+      location: location,
+      division: division,
+      country: futureUserInput.home_geo["country"],
+      region: futureUserInput.home_geo["region"],
+    };
+
     setCladeDescription(
       describe_clade(
         selectedSamples,
         home_geo,
-        muts_per_trans_minmax,
-        min_muts_to_parent
+        futureUserInput["muts_per_trans_minmax"],
+        futureUserInput["min_muts_to_parent"]
       )
     );
   };
@@ -69,6 +81,7 @@ function App() {
       if (event?.target?.result && typeof event.target.result === "string") {
         const tree: Node = ingestNextstrain(JSON.parse(event.target.result));
         setTree(tree);
+        setDivisionInputOptions(get_division_input_options(tree, "USA"));
       }
     };
   };
@@ -98,8 +111,28 @@ function App() {
     }
   };
 
-  if (tree && selectedSamples && !clade_description) {
-    initializeReport(selectedSamples, tree);
+  const handleDivisionSelection = (event: any) => {
+    if (event && event.target.value && tree) {
+      const division = event.target.value;
+      setDivision(division);
+      setLocationInputOptions(get_location_input_options(tree, division));
+    }
+  };
+
+  const handleLocationSelection = (event: any) => {
+    if (event && event.target.value) {
+      setLocation(event.target.value);
+    }
+  };
+
+  if (tree && selectedSamples && location && division && !clade_description) {
+    initializeReport(
+      selectedSamples,
+      tree,
+      location,
+      division,
+      futureUserInput
+    );
   }
 
   return (
@@ -122,9 +155,42 @@ function App() {
             <i>This must be in Nextstrain's JSON file format.</i>
             <input type="file" name="file" onChange={handleTreeUpload} />
           </p>
+          <b>Next, please choose your location.</b>
+          <br />
+          <p>
+            State:{" "}
+            <select
+              id="division-select"
+              name="State"
+              onChange={handleDivisionSelection}
+              disabled={divisionInputOptions === null}
+              style={{ width: "15em" }}
+            >
+              {divisionInputOptions &&
+                divisionInputOptions.map((division: string) => (
+                  <option value={division}>{division}</option>
+                ))}
+            </select>
+          </p>
+          <p>
+            County:{" "}
+            <select
+              id="location-select"
+              name="County"
+              onChange={handleLocationSelection}
+              disabled={locationInputOptions === null}
+              style={{ width: "15em" }}
+            >
+              {locationInputOptions &&
+                locationInputOptions.map((county: string) => (
+                  <option value={county}>{county}</option>
+                ))}
+            </select>
+          </p>
+
           <p>
             <b>
-              Next, please enter sample IDs, separated by spaces, tabs or
+              Finally, please enter sample IDs, separated by spaces, tabs or
               commas.
             </b>{" "}
             <br />
@@ -139,7 +205,7 @@ function App() {
               onChange={(e) => {
                 handleSelectedSampleNames(e);
               }}
-              style={{ width: "20em" }}
+              style={{ width: "35em" }}
               // value="SampleID1, SampleID2, ..."
             />
             <button
