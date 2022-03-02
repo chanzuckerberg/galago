@@ -77,7 +77,7 @@ function App() {
     if (event && event.target) {
       let input_string: string = event.target.value;
       let sample_names: string[] = input_string
-        .split(",")
+        .split(/[,\s]+/)
         .map((s: string) => s.trim());
 
       setSelectedSampleNames(sample_names);
@@ -144,7 +144,11 @@ function App() {
             <input type="file" name="file" onChange={handleTreeUpload} />
           </p>
           <p>
-            <b>Next, please enter sample IDs, separated by a comma.</b> <br />
+            <b>
+              Next, please enter sample IDs, separated by spaces, tabs or
+              commas.
+            </b>{" "}
+            <br />
             <i>
               You should enter all the sample IDs in this tree that you believe
               may be associated with your potential outbreak of interest.
