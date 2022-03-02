@@ -1,29 +1,27 @@
-# Galago
-
-## Status: unstable prototype
-
-#### [Demo](https://chanzuckerberg.github.io/galago/)
-
+# Galago 
+## [Demo](https://chanzuckerberg.github.io/galago/) | [Rough roadmap](https://github.com/orgs/chanzuckerberg/projects/14/views/7) | Status: prototype
 This is a prototype repository for research related to making genomic epidemiology more accessible and interpretable through narrative and visual reports. Currently, galago is a serverless, standalone web application that ingests phylogenetic trees and renders responsive reports containing insights about clades or outbreaks of interest. Contact sidneymbell@chanzuckerberg.com with any questions or comments.
 
 ## Usage
+```
+git clone https://github.com/chanzuckerberg/galago.git  
+cd galago 
+npm install --save  
+```
+Start up the development server:  
+```npm run dev```  
 
-`npm install`  
-`npm run dev`
+Build for [deployment](https://dev.to/imomaliev/creating-vite-vue-ts-template-deploy-to-github-pages-4c88):  
+```npm run build```  
 
-## Architecture
 
-#### Client
+## Data
 
-React, with vite  
-Typescript (see `src/d.ts` for types)
+Galago ingests the following data via user upload / input:  
+* A tree file, in Nextstrain JSON format. 
+* A list of sample IDs associated with a potential outbreak
 
-#### Data
-
-Galago currently ingests phylogenetic trees in the form of Nextstrain JSON files; we may extend to other formats in the future.
-We also ingest a file of count data for the number of publicly available sequences contained in GISAID.
-
-These files are currently stored locally for development. In the future, we will set up an API to enable user data ingestion (and possibly check in a demo dataset for development purposes).
+In the future, we will also enable URL-based API ingestion and provide a demo dataset.
 
 ## Security
 
