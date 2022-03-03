@@ -18,6 +18,8 @@ import {
   get_location_input_options,
   get_division_input_options,
 } from "./utils/geoInputOptions";
+import demo_sample_names from "../data/demo_sample_names";
+import { demo_tree } from "../data/demo_tree";
 
 function App() {
   //@ts-ignore
@@ -125,6 +127,24 @@ function App() {
     }
   };
 
+  const handleDemoLoad = (event: any) => {
+    // TODO: just call the respective handlers once I understand how to orchestrate timing of things
+    const tree = ingestNextstrain(demo_tree);
+    const selected_sample_names = demo_sample_names
+      .split(/[,\s]+/)
+      .map((s: string) => s.trim());
+    const all_leaves = get_leaves(tree);
+    const selected_sample_nodes = selected_sample_names
+      .map((n) => find_leaf_by_name(n, all_leaves))
+      .filter((n) => n !== null);
+    setTree(tree);
+    setSelectedSampleNames(selected_sample_names);
+    //@ts-ignore -- we've already filtered out all null values
+    setSelectedSamples(selected_sample_nodes);
+    setDivision("California");
+    setLocation("Humboldt County");
+  };
+
   if (tree && selectedSamples && location && division && !clade_description) {
     initializeReport(
       selectedSamples,
@@ -142,6 +162,26 @@ function App() {
       {!clade_description ? (
         <div>
           <AboutGalago />
+          <h2>Demo with real-world outbreak data</h2>
+          <p>
+            Genomic epidemiology helped public health officials understand a
+            real-world outbreak of SARS-CoV-2 at a farm in Humboldt County. This
+            demo report is automatically generated based on the same
+            phylogenetic tree that was used in this investigation.
+            <br />
+            <a href="https://www.medrxiv.org/content/10.1101/2021.09.21.21258385v1">
+              You can read more about this outbreak here.
+            </a>
+          </p>
+          <p>
+            <button
+              type="button"
+              name="loadDemo"
+              onClick={(e) => handleDemoLoad(e)}
+            >
+              Load Demo
+            </button>{" "}
+          </p>
           <h2>Analyze a potential outbreak</h2>
           <p>
             <i>
@@ -187,7 +227,6 @@ function App() {
                 ))}
             </select>
           </p>
-
           <p>
             <b>
               Finally, please enter sample IDs, separated by spaces, tabs or
