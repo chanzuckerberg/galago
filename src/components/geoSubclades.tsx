@@ -24,7 +24,7 @@ function GeoSublades(props: geoSubcladesProps) {
           //@ts-ignore - we've already excluded the case where subclade_geo is null on line 10
           (s) => s.node_attrs[clade_description.subclade_geo]["value"]
         )
-      : null;
+      : [];
 
   return (
     <div>
@@ -49,6 +49,7 @@ function GeoSublades(props: geoSubcladesProps) {
             <FormatDataPoint value={clade_description.subclade_geo} />; we do
             not see evidence of multiple introductions to{" "}
             <FormatDataPoint
+              //@ts-ignore
               value={clade_description.home_geo[clade_description.subclade_geo]}
             />
             <br />
@@ -65,6 +66,7 @@ function GeoSublades(props: geoSubcladesProps) {
             transmission(s) between{" "}
             <FormatDataPoint
               value={
+                //@ts-ignore
                 clade_description["home_geo"][clade_description.subclade_geo]
               }
             />{" "}
