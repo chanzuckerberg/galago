@@ -1,6 +1,9 @@
 import { CladeDescription, Node } from "../d";
 import { get_dist } from "../utils/treeMethods";
 import Sidenote from "./sidenote";
+import { FormatDataPoint } from "./formatters/dataPoint";
+import { FormatDate } from "./formatters/date";
+import { FormatStringArray } from "./formatters/stringArray";
 
 type CladeProps = {
   clade_description: CladeDescription;
@@ -39,22 +42,29 @@ function TMRCA(props: CladeProps) {
 
       <div className="results">
         <p>
-          This clade's primary case likely occurred{" "}
-          <span className="dataPoint">
-            {clade_description.mrca &&
-            clade_description.mrca.node_attrs.num_date.confidence.length === 2
-              ? `between ${clade_description.mrca.node_attrs.num_date.confidence[0]
-                  .toISOString()
-                  .substring(
-                    0,
-                    10
-                  )} and ${clade_description.mrca.node_attrs.num_date.confidence[1]
-                  .toISOString()
-                  .substring(0, 10)} (95% CI)`
-              : ` around ${clade_description.mrca.node_attrs.num_date.value
-                  .toISOString()
-                  .substring(0, 10)}`}
-          </span>
+          This clade's primary case likely occurred
+          {clade_description.mrca &&
+          clade_description.mrca.node_attrs.num_date.confidence.length === 2 ? (
+            <>
+              {" "}
+              between{" "}
+              <FormatDate
+                date={clade_description.mrca.node_attrs.num_date.confidence[0]}
+              />{" "}
+              and{" "}
+              <FormatDate
+                date={clade_description.mrca.node_attrs.num_date.confidence[1]}
+              />
+              (95% CI)
+            </>
+          ) : (
+            <>
+              around{" "}
+              <FormatDate
+                date={clade_description.mrca.node_attrs.num_date.value}
+              />
+            </>
+          )}
         </p>
       </div>
       <p>
@@ -79,20 +89,17 @@ function TMRCA(props: CladeProps) {
       </p>
       <div className="results">
         <p>
-          The primary case's pathogen genome sequence{" "}
+          The primary case's pathogen genome sequence
           {mrca_matches.length === 0 ? (
-            "does not match any samples in this dataset."
+            " does not match any samples in this dataset."
           ) : (
             <>
-              {`was most likely identical to sample(s): `}
-              {mrca_matches.sort().map((m, i) => (
-                <span key={i} className="dataPoint">
-                  {m}
-                </span>
-              ))}
-              . Importantly, it is also possible that the true primary case is
-              not be represented in this dataset (but has an identical sequence
-              to these sample(s)).
+              {" "}
+              was most likely identical to sample(s):
+              <FormatStringArray values={mrca_matches} />
+              Importantly, it is also possible that the true primary case is not
+              be represented in this dataset (but has an identical sequence to
+              these sample(s)).
             </>
           )}
         </p>

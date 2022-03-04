@@ -1,5 +1,8 @@
 import { CladeDescription, Node } from "../d";
 import Sidenote from "./sidenote";
+import { FormatStringArray } from "./formatters/stringArray";
+import { FormatDate } from "./formatters/date";
+import { FormatDataPoint } from "./formatters/dataPoint";
 
 interface CladeDefinitionProps {
   clade_description: CladeDescription;
@@ -12,14 +15,6 @@ function CladeDefinition(props: CladeDefinitionProps) {
       (n) => n.node_attrs.location.value == clade_description.home_geo.location
     );
 
-  const other_locations: Array<string> = [
-    ...new Set(
-      clade_description.unselected_samples_in_cluster
-        .map((a) => a.node_attrs.location.value)
-        .sort()
-    ),
-  ].sort();
-
   // let lineage_counts = {};
   // clade_description.selected_samples.forEach((s) => {
   //   let lin = s.node_attrs.pango_lineage?.value;
@@ -27,17 +22,6 @@ function CladeDefinition(props: CladeDefinitionProps) {
   //     lineage_counts[lin] = 1 + (lineage_counts[lin] || 0);
   //   }
   // });
-  let lineages = Array.from(
-    new Set(
-      clade_description.selected_samples
-        .concat(clade_description.unselected_samples_in_cluster)
-        .map(
-          (s) =>
-            s.node_attrs.pango_lineage?.value ||
-            s.node_attrs.clade_membership?.value
-        )
-    )
-  ).sort();
 
   return (
     <div>
@@ -54,23 +38,23 @@ function CladeDefinition(props: CladeDefinitionProps) {
         samples.
       </p>
       <p className="results">
-        Your
-        <span className="dataPoint">
-          {clade_description.selected_samples.length}
-        </span>{" "}
+        Your{" "}
+        <FormatDataPoint value={clade_description.selected_samples.length} />{" "}
         selected samples are separated from each other by{" "}
-        <span className="dataPoint">
-          {clade_description.muts_bn_selected_minmax[0]} -{" "}
-          {clade_description.muts_bn_selected_minmax[1]}
-        </span>{" "}
+        <FormatDataPoint
+          value={`${clade_description.muts_bn_selected_minmax[0]} - ${clade_description.muts_bn_selected_minmax[1]}`}
+        />
         mutations (or, on average, about{" "}
-        <span className="dataPoint">
-          {clade_description.muts_bn_selected_minmax[0] *
-            clade_description.muts_per_trans_minmax[0]}{" "}
-          -{" "}
-          {clade_description.muts_bn_selected_minmax[1] *
-            clade_description.muts_per_trans_minmax[1]}
-        </span>{" "}
+        <FormatDataPoint
+          value={`${
+            clade_description.muts_bn_selected_minmax[0] *
+            clade_description.muts_per_trans_minmax[0]
+          } - 
+          ${
+            clade_description.muts_bn_selected_minmax[1] *
+            clade_description.muts_per_trans_minmax[1]
+          } `}
+        />
         transmission events).
       </p>
 
@@ -103,12 +87,16 @@ function CladeDefinition(props: CladeDefinitionProps) {
         ) : (
           <>
             In addition to your selected samples, the clade containing your
-            samples also contains{" "}
-            <span className="dataPoint">
-              {clade_description.unselected_samples_in_cluster.length}
-            </span>{" "}
-            other samples from these locations:{" "}
-            <span className="dataPoint">{other_locations}</span>.
+            samples also contains
+            <FormatDataPoint
+              value={clade_description.unselected_samples_in_cluster.length}
+            />
+            other samples from these locations:
+            <FormatStringArray
+              values={clade_description.unselected_samples_in_cluster.map(
+                (a) => a.node_attrs.location.value
+              )}
+            />
           </>
         )}
       </p>
@@ -117,12 +105,13 @@ function CladeDefinition(props: CladeDefinitionProps) {
           ""
         ) : (
           <>
-            This includes{" "}
-            <span className="dataPoint">{local_unselected_samples.length}</span>{" "}
-            other samples from {clade_description.home_geo.location}:{" "}
-            {local_unselected_samples.map((s) => (
-              <span className="dataPoint">{s.name}</span>
-            ))}
+            This includes
+            <FormatDataPoint value={local_unselected_samples.length} />
+            other samples from{" "}
+            <FormatDataPoint value={clade_description.home_geo.location} />
+            <FormatStringArray
+              values={local_unselected_samples.map((s) => s.name)}
+            />
           </>
         )}
       </p>
@@ -142,10 +131,16 @@ function CladeDefinition(props: CladeDefinitionProps) {
         />
       </p>
       <p className="results">
-        This clade contains samples that are part of these lineage(s):{" "}
-        {lineages.map((l) => (
-          <span className="dataPoint">{l}</span>
-        ))}
+        This clade contains samples that are part of these lineage(s):
+        <FormatStringArray
+          values={clade_description.selected_samples
+            .concat(clade_description.unselected_samples_in_cluster)
+            .map(
+              (s) =>
+                s.node_attrs.pango_lineage?.value ||
+                s.node_attrs.clade_membership?.value
+            )}
+        />
       </p>
     </div>
   );

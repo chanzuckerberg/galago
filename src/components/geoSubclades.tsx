@@ -1,4 +1,6 @@
 import { CladeDescription } from "../d";
+import { FormatDataPoint } from "./formatters/dataPoint";
+import { FormatStringArray } from "./formatters/stringArray";
 
 type geoSubcladesProps = {
   clade_description: CladeDescription;
@@ -18,14 +20,10 @@ function GeoSublades(props: geoSubcladesProps) {
   const subclade_locations =
     clade_description.subclades.length > 0 &&
     typeof clade_description.subclade_geo === "string"
-      ? [
-          ...new Set(
-            clade_description.subclades.map(
-              //@ts-ignore - we've already excluded the case where subclade_geo is null on line 10
-              (s) => s.node_attrs[clade_description.subclade_geo]["value"]
-            )
-          ),
-        ].sort()
+      ? clade_description.subclades.map(
+          //@ts-ignore - we've already excluded the case where subclade_geo is null on line 10
+          (s) => s.node_attrs[clade_description.subclade_geo]["value"]
+        )
       : null;
 
   return (
@@ -47,26 +45,33 @@ function GeoSublades(props: geoSubcladesProps) {
 
         {!no_data && geo_monophyletic && (
           <>
-            {`All of the samples in this clade are from the same ${
-              clade_description.subclade_geo
-            }; we do not see evidence of multiple introductions to ${
-              //@ts-ignore - we've already excluded the case where subclade_geo is null on line 10
-              clade_description.home_geo[clade_description.subclade_geo]
-            }.`}
+            All of the samples in this clade are from the same{" "}
+            <FormatDataPoint value={clade_description.subclade_geo} />; we do
+            not see evidence of multiple introductions to{" "}
+            <FormatDataPoint
+              value={clade_description.home_geo[clade_description.subclade_geo]}
+            />
             <br />
             <br />
-            {`Thus, it is plausible that these samples were all the result of a single introduction, followed by local spread.`}
+            Thus, it is plausible that these samples were all the result of a
+            single introduction, followed by local spread.
           </>
         )}
 
-        {!no_data &&
-          !geo_monophyletic &&
-          `At least ${
-            clade_description.subclades.length
-          } transmission(s) between ${
-            //@ts-ignore - we've already excluded the case where subclade_geo is null on line 10
-            clade_description["home_geo"][clade_description.subclade_geo]
-          } and these locations have contributed to this clade: ${subclade_locations}`}
+        {!no_data && !geo_monophyletic && (
+          <>
+            At least{" "}
+            <FormatDataPoint value={clade_description.subclades.length} />{" "}
+            transmission(s) between{" "}
+            <FormatDataPoint
+              value={
+                clade_description["home_geo"][clade_description.subclade_geo]
+              }
+            />{" "}
+            and these locations have contributed to this clade:{" "}
+            <FormatStringArray values={subclade_locations} />
+          </>
+        )}
       </p>
       <p>
         As always, the strength of this evidence depends on how representative

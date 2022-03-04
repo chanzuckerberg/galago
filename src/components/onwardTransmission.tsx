@@ -1,6 +1,9 @@
 import { CladeDescription, Node } from "../d";
 import { get_dist } from "../utils/treeMethods";
 import Sidenote from "./sidenote";
+import { FormatDataPoint } from "./formatters/dataPoint";
+import { FormatDate } from "./formatters/date";
+import { FormatStringArray } from "./formatters/stringArray";
 
 type OnwardTransmissionProps = {
   clade_description: CladeDescription;
@@ -18,8 +21,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
         get_dist([x, clade_description.mrca]) >
         clade_description.muts_per_trans_minmax[1]
     )
-    .map((x) => x.name)
-    .sort();
+    .map((x) => x.name);
 
   return (
     <div>
@@ -46,34 +48,31 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
         />
         An infected case may have multiple pathogen genotypes present in their
         body, generated as the pathogen replicates. This means that sometimes
-        you may observe a few different genotypes which vary by 1 -{" "}
-        <span className="dataPoint">
-          {clade_description.muts_per_trans_minmax[1]}
-        </span>{" "}
+        you may observe a few different genotypes which vary by 1 -
+        <FormatDataPoint value={clade_description.muts_per_trans_minmax[1]} />
         mutations being transmitted during the same superspreader event.
       </p>
       <p>
-        Samples 0 -{" "}
-        <span className="dataPoint">
-          {clade_description.muts_per_trans_minmax[1]}
-        </span>{" "}
+        Samples 0 -
+        <FormatDataPoint value={clade_description.muts_per_trans_minmax[1]} />
         mutations from the reference may represent either primary or secondary
         cases. It's usually reasonable to assume that samples with
-        <span className="dataPoint">
-          {clade_description.muts_per_trans_minmax[1] + 1}
-        </span>
-        + mutations represent tertiary or further downstream transmission.{" "}
+        <FormatDataPoint
+          value={clade_description.muts_per_trans_minmax[1] + 1}
+        />
+        + mutations represent tertiary or further downstream transmission.
         <sup style={{ fontSize: 10 }}>5</sup>
       </p>
       <div className="results">
         <p>
-          In this clade,{" "}
-          <span className="dataPoint">{tertiary_cases.length}</span> sample(s)
-          likely represent onward transmission
-          {tertiary_cases.length > 1
-            ? tertiary_cases.map((c) => <span className="dataPoint">{c}</span>)
-            : ""}
-          .
+          In this clade,
+          <FormatDataPoint value={tertiary_cases.length} /> sample(s) likely
+          represent onward transmission:
+          {tertiary_cases.length > 1 ? (
+            <FormatStringArray values={tertiary_cases} />
+          ) : (
+            ""
+          )}
         </p>
       </div>
     </div>

@@ -1,5 +1,8 @@
 import { CladeDescription, Node } from "../d";
 import { get_dist } from "../utils/treeMethods";
+import { FormatStringArray } from "./formatters/stringArray";
+import { FormatDate } from "./formatters/date";
+import { FormatDataPoint } from "./formatters/dataPoint";
 
 type CladeProps = {
   clade_description: CladeDescription;
@@ -36,7 +39,7 @@ function CladeUniqueness(props: CladeProps) {
     <div>
       <h2>
         How similar or unique is this clade, relative to background community
-        transmission?{" "}
+        transmission?
       </h2>
       <p style={{ fontStyle: "italic" }}>
         Comparing the primary case for this clade with its closest relatives in
@@ -47,15 +50,19 @@ function CladeUniqueness(props: CladeProps) {
         <p>
           The primary case upstream of all the samples in this clade is
           separated from other samples in the dataset by{" "}
-          <span className="dataPoint">{Math.min(...cousin_distances)}</span> or
-          more mutation(s), or at least{" "}
-          <span className="dataPoint">
-            {Math.min(...cousin_distances) *
-              clade_description.muts_per_trans_minmax[0]}{" "}
-            -{" "}
-            {Math.min(...cousin_distances) *
-              clade_description.muts_per_trans_minmax[1]}
-          </span>{" "}
+          <FormatDataPoint value={Math.min(...cousin_distances)} /> or more
+          mutation(s), or at least{" "}
+          <FormatDataPoint
+            value={`
+            ${
+              Math.min(...cousin_distances) *
+              clade_description.muts_per_trans_minmax[0]
+            } 
+            - ${
+              Math.min(...cousin_distances) *
+              clade_description.muts_per_trans_minmax[1]
+            }`}
+          />{" "}
           transmission events.
         </p>
       </div>
@@ -68,55 +75,30 @@ function CladeUniqueness(props: CladeProps) {
         <div className="results">
           <p>
             In this dataset, the samples most closely related to your clade of
-            interest include{" "}
-            <span className="dataPoint">{local_cousins.length}</span> other
-            samples from {clade_description.home_geo.location}
+            interest include <FormatDataPoint value={local_cousins.length} />{" "}
+            other samples from{" "}
+            <FormatDataPoint value={clade_description.home_geo.location} />
             {local_cousins.length > 0 ? (
               <>
-                , dated between{" "}
-                <span className="dataPoint">
-                  {local_cousin_dates[0].toISOString().substring(0, 10)}
-                </span>{" "}
-                and{" "}
-                <span className="dataPoint">
-                  {local_cousin_dates
-                    .slice(-1)[0]
-                    .toISOString()
-                    .substring(0, 10)}
-                </span>
-                :{" "}
-                <span className="dataPoint">
-                  {local_cousins.map((s) => (
-                    <span className="dataPoint">{s.name}</span>
-                  ))}
-                </span>
-                .
+                , dated between <FormatDate date={local_cousin_dates[0]} /> and{" "}
+                <FormatDate date={local_cousin_dates.slice(-1)[0]} />
+                :
+                <FormatStringArray values={local_cousins.map((s) => s.name)} />
               </>
             ) : (
-              "."
+              <>.</>
             )}
           </p>
-
           {clade_description.cousins.length - local_cousins.length > 1 && (
             <p>
               There are also{" "}
-              <span className="dataPoint">
-                {clade_description.cousins.length - local_cousins.length}
-              </span>{" "}
-              closely related samples from these locations:{" "}
-              {cousin_locations.map((l) => (
-                <span className="dataPoint">{l}</span>
-              ))}
+              <FormatDataPoint
+                value={clade_description.cousins.length - local_cousins.length}
+              />{" "}
+              closely related samples from these locations:
+              <FormatStringArray values={cousin_locations} />
             </p>
           )}
-
-          {/* <p>
-            {clade_description.cousins.length - local_cousins.length < 1
-              ? ""
-              : cousin_locations.map((l) => (
-                  <span className="dataPoint">{l}</span>
-                ))}
-          </p> */}
         </div>
       </div>
     </div>
