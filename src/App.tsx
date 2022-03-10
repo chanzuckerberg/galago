@@ -268,20 +268,29 @@ function App() {
             in {clade_description.home_geo.location}
           </h1>
           {/* <h2>Results</h2> */}
-          <CladeDefinition clade_description={clade_description} />
-          <TMRCA clade_description={clade_description} />
+          <CladeDefinition
+            clade_description={clade_description}
+            sidenote_start={1}
+          />
+          <TMRCA clade_description={clade_description} sidenote_start={3} />
           <GeoSubclades clade_description={clade_description} />
           <CladeUniqueness clade_description={clade_description} />
-          <OnwardTransmission clade_description={clade_description} />
+          <OnwardTransmission
+            clade_description={clade_description}
+            sidenote_start={5}
+          />
           {/* <PhyloUncertainty clade_description={all_samples} /> */}
           {/* <h2>Considerations & Caveats</h2> */}
           <SamplingBias
             gisaid_census={gisaid_census}
             all_samples={get_leaves(get_root(tree))}
             clade_description={clade_description}
+            sidenote_start={6}
           />
-          <Assumptions clade_description={clade_description} />
-          {/* <MinIntroductions clade_description={clade_description} /> */}
+          <Assumptions
+            clade_description={clade_description}
+            sidenote_start={7}
+          />
         </div>
       )}
     </div>

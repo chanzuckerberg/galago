@@ -7,10 +7,11 @@ import { FormatStringArray } from "./formatters/stringArray";
 
 type CladeProps = {
   clade_description: CladeDescription;
+  sidenote_start: number;
 };
 
 function TMRCA(props: CladeProps) {
-  const { clade_description } = props;
+  const { clade_description, sidenote_start } = props;
 
   const all_samples: Node[] = clade_description.selected_samples.concat(
     clade_description.unselected_samples_in_cluster
@@ -30,13 +31,13 @@ function TMRCA(props: CladeProps) {
       <h2>What was the date and genotype of the primary infection?</h2>
       <p>
         <Sidenote
-          num={3}
-          text="You  may also hear this referred to as the 'most recent common ancestor (MRCA)' of a clade."
+          num={sidenote_start}
+          text="You may also hear this referred to as the 'most recent common ancestor (MRCA)' of a clade."
         />
       </p>
       <p style={{ fontStyle: "italic" }}>
         We can use the tree to make inferences about the timing and genotype of
-        the primary case <sup style={{ fontSize: "10" }}>3</sup>
+        the primary case <sup style={{ fontSize: "10" }}>{sidenote_start}</sup>
         upstream of all the samples in our clade of interest.
       </p>
 
@@ -69,7 +70,7 @@ function TMRCA(props: CladeProps) {
       </div>
       <p>
         <Sidenote
-          num={4}
+          num={sidenote_start + 1}
           text={
             <span>
               Learn more about{" "}
@@ -85,7 +86,7 @@ function TMRCA(props: CladeProps) {
         />
         Because pathogens evolve and spread on similar timescales, the number of
         mutations is proportionate to the amount of time separating two samples
-        <sup style={{ fontSize: "10" }}>4</sup>.
+        <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>. We can use
       </p>
       <div className="results">
         <p>

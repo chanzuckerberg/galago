@@ -7,10 +7,11 @@ import { FormatStringArray } from "./formatters/stringArray";
 
 type OnwardTransmissionProps = {
   clade_description: CladeDescription;
+  sidenote_start: number;
 };
 
 function OnwardTransmission(props: OnwardTransmissionProps) {
-  const { clade_description } = props;
+  const { clade_description, sidenote_start } = props;
   const all_clade_samples: Node[] = clade_description.selected_samples.concat(
     clade_description.unselected_samples_in_cluster
   );
@@ -33,7 +34,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
       </p>
       <p>
         <Sidenote
-          num={5}
+          num={sidenote_start}
           text={
             <span>
               <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#how-many-mutations-are-enough-to-rule-linkage-out">
@@ -61,7 +62,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
           value={clade_description.muts_per_trans_minmax[1] + 1}
         />
         + mutations represent tertiary or further downstream transmission.
-        <sup style={{ fontSize: 10 }}>5</sup>
+        <sup style={{ fontSize: 10 }}>{sidenote_start}</sup>
       </p>
       <div className="results">
         <p>

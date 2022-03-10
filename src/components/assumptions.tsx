@@ -3,10 +3,11 @@ import { CladeDescription } from "../d";
 
 type AssumptionsProps = {
   clade_description: CladeDescription;
+  sidenote_start: number;
 };
 
 function Assumptions(props: AssumptionsProps) {
-  const { clade_description } = props;
+  const { clade_description, sidenote_start } = props;
   return (
     <div>
       <h2> What assumptions influence this report?</h2>
@@ -17,12 +18,12 @@ function Assumptions(props: AssumptionsProps) {
       </p>
       <p>
         <Sidenote
-          num={6}
+          num={sidenote_start}
           text={`This determines which samples are mostly likely from tertiary cases
       (onward transmission).`}
         />
         <Sidenote
-          num={7}
+          num={sidenote_start + 1}
           text={`
 Higher values mean that we search more broadly for "cousins".`}
         />
@@ -36,7 +37,7 @@ Higher values mean that we search more broadly for "cousins".`}
               {clade_description.muts_per_trans_minmax[0]} -{" "}
               {clade_description.muts_per_trans_minmax[1]}
             </span>
-            .<sup style={{ fontSize: "10" }}>6</sup>
+            .<sup style={{ fontSize: "10" }}>{sidenote_start}</sup>
           </li>
           <br />
           <li>
@@ -46,7 +47,8 @@ Higher values mean that we search more broadly for "cousins".`}
             <span className="dataPoint">
               {clade_description.min_muts_to_parent}
             </span>{" "}
-            mutation(s).<sup style={{ fontSize: "10" }}>7</sup>
+            mutation(s).
+            <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>
           </li>
         </ul>
       </p>

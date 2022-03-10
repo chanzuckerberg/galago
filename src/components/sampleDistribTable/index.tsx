@@ -9,12 +9,14 @@ interface SamplingBiasProps {
   gisaid_census: GISAIDRecord[];
   all_samples: Array<Node>;
   clade_description: CladeDescription;
+  sidenote_start: number;
 }
 
 import Sidenote from "../sidenote";
 
 function SamplingBias(props: SamplingBiasProps) {
-  const { all_samples, gisaid_census, clade_description } = props;
+  const { all_samples, gisaid_census, clade_description, sidenote_start } =
+    props;
   const recent_from_division_num = get_current_counts(
     all_samples,
     clade_description.home_geo,
@@ -60,9 +62,9 @@ function SamplingBias(props: SamplingBiasProps) {
         though, the tree does not take into account cases that are not sampled
         (or not included in this dataset), which can lead to sampling bias that
         influences our inferences
-        <sup style={{ fontSize: 10 }}>1</sup>.{" "}
+        <sup style={{ fontSize: 10 }}>{sidenote_start}</sup>.{" "}
         <Sidenote
-          num={1}
+          num={sidenote_start}
           text={
             <span>
               Learn more about{" "}

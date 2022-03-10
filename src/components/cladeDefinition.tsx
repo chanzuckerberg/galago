@@ -6,10 +6,11 @@ import { FormatDataPoint } from "./formatters/dataPoint";
 
 interface CladeDefinitionProps {
   clade_description: CladeDescription;
+  sidenote_start: number;
 }
 
 function CladeDefinition(props: CladeDefinitionProps) {
-  const { clade_description } = props;
+  const { clade_description, sidenote_start } = props;
   const local_unselected_samples: Node[] =
     clade_description.unselected_samples_in_cluster.filter(
       (n) => n.node_attrs.location.value == clade_description.home_geo.location
@@ -61,7 +62,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
       <h5>Hierarchical clustering ("clades"):</h5>
       <p>
         <Sidenote
-          num={2}
+          num={sidenote_start}
           text={
             <span>
               This is conceptually similar to your family tree: the branching
@@ -76,9 +77,9 @@ function CladeDefinition(props: CladeDefinitionProps) {
         />
         A 'clade' is the smallest hierarchical cluster (or 'subtree') that
         contains all of your samples of interest.
-        <sup style={{ fontSize: "10" }}>2</sup> This means that all of the
-        samples within a clade are more closely related to each other than they
-        are to anything else in the dataset.
+        <sup style={{ fontSize: "10" }}>{sidenote_start}</sup> This means that
+        all of the samples within a clade are more closely related to each other
+        than they are to anything else in the dataset.
       </p>
 
       <p className="results">
@@ -120,7 +121,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
         "Lineages" or "variants" are special clades that the scientific
         community has decided to label for ease of discussion.{" "}
         <Sidenote
-          num={3}
+          num={sidenote_start + 1}
           text={
             <span>
               <a href="https://cov-lineages.org/lineage_list.html">
@@ -132,6 +133,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
       </p>
       <p className="results">
         This clade contains samples that are part of these lineage(s):
+        <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>
         <FormatStringArray
           values={clade_description.selected_samples
             .concat(clade_description.unselected_samples_in_cluster)
