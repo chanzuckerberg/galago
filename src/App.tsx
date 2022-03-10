@@ -270,8 +270,8 @@ function App() {
           {/* <h2>Results</h2> */}
           <CladeDefinition clade_description={clade_description} />
           <TMRCA clade_description={clade_description} />
-          <CladeUniqueness clade_description={clade_description} />
           <GeoSubclades clade_description={clade_description} />
+          <CladeUniqueness clade_description={clade_description} />
           <OnwardTransmission clade_description={clade_description} />
           {/* <PhyloUncertainty clade_description={all_samples} /> */}
           {/* <h2>Considerations & Caveats</h2> */}
