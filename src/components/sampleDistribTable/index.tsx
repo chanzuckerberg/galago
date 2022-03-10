@@ -61,7 +61,8 @@ function SamplingBias(props: SamplingBiasProps) {
         genetic relationships between samples in this dataset. Importantly,
         though, the tree does not take into account cases that are not sampled
         (or not included in this dataset), which can lead to sampling bias that
-        influences our inferences
+        influences our inferences -- both for surveillance and for outbreak
+        investigations
         <sup style={{ fontSize: 10 }}>{sidenote_start}</sup>.{" "}
         <Sidenote
           num={sidenote_start}
