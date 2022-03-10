@@ -277,7 +277,7 @@ function App() {
           <CladeUniqueness clade_description={clade_description} />
           <OnwardTransmission
             clade_description={clade_description}
-            sidenote_start={5}
+            sidenote_start={6}
           />
           {/* <PhyloUncertainty clade_description={all_samples} /> */}
           {/* <h2>Considerations & Caveats</h2> */}
@@ -285,11 +285,11 @@ function App() {
             gisaid_census={gisaid_census}
             all_samples={get_leaves(get_root(tree))}
             clade_description={clade_description}
-            sidenote_start={6}
+            sidenote_start={7}
           />
           <Assumptions
             clade_description={clade_description}
-            sidenote_start={7}
+            sidenote_start={8}
           />
         </div>
       )}

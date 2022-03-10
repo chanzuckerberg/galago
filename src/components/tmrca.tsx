@@ -36,11 +36,66 @@ function TMRCA(props: CladeProps) {
         />
       </p>
       <p style={{ fontStyle: "italic" }}>
-        We can use the tree to make inferences about the timing and genotype of
-        the primary case <sup style={{ fontSize: "10" }}>{sidenote_start}</sup>
+        We can use the tree to make inferences about the timing of the primary
+        case -- and the genotype of the pathogen
+        <sup style={{ fontSize: "10" }}>{sidenote_start}</sup> infecting them --
         upstream of all the samples in our clade of interest.
       </p>
-
+      {mrca_matches.length === 0 ? (
+        <p className="results">
+          The primary case's pathogen genome sequence does not match any samples
+          in this dataset.
+        </p>
+      ) : (
+        <>
+          <p className="results">
+            The primay case's pathogen genome sequence was most likely identical
+            to the pathogens found in sample(s):
+            <FormatStringArray values={mrca_matches} />
+          </p>
+          <p>
+            Importantly, it is also possible that the true primary case -- while
+            identical to any samples listed above -- may not be represented in
+            this dataset (e.g., if the primary case was not sampled, or if the
+            sample from the primary case happened to contain a different
+            within-host variant
+            <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>).
+            <Sidenote
+              num={sidenote_start + 1}
+              text={
+                <span>
+                  Learn more about{" "}
+                  <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#viral-diversity-accumulates-over-the-course-of-a-single-individuals-infection.">
+                    Within-host pathogen diversity
+                  </a>
+                  .
+                </span>
+              }
+            />
+          </p>
+        </>
+      )}
+      <p>
+        <Sidenote
+          num={sidenote_start + 2}
+          text={
+            <span>
+              Learn more about{" "}
+              <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#temporally-resolved-phylogenetic-trees.">
+                inferring dates using phylogenetic trees
+              </a>{" "}
+              and{" "}
+              <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#estimating-the-start-and-duration-of-an-outbreak.">
+                how sampling may effect these estimates.
+              </a>
+            </span>
+          }
+        />
+        Even if the true primary case is not represented by a sample in this
+        dataset, because pathogens accumulate mutations at a steady rate over
+        time, we can still infer the approximate date of the primary case
+        <sup style={{ fontSize: "10" }}>{sidenote_start + 2}</sup>.
+      </p>
       <div className="results">
         <p>
           This clade's primary case likely occurred
@@ -64,43 +119,6 @@ function TMRCA(props: CladeProps) {
               <FormatDate
                 date={clade_description.mrca.node_attrs.num_date.value}
               />
-            </>
-          )}
-        </p>
-      </div>
-      <p>
-        <Sidenote
-          num={sidenote_start + 1}
-          text={
-            <span>
-              Learn more about{" "}
-              <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#temporally-resolved-phylogenetic-trees.">
-                inferring dates using phylogenetic trees
-              </a>{" "}
-              and{" "}
-              <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#estimating-the-start-and-duration-of-an-outbreak.">
-                how sampling may effect these estimates.
-              </a>
-            </span>
-          }
-        />
-        Because pathogens evolve and spread on similar timescales, the number of
-        mutations is proportionate to the amount of time separating two samples
-        <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>. We can use
-      </p>
-      <div className="results">
-        <p>
-          The primary case's pathogen genome sequence
-          {mrca_matches.length === 0 ? (
-            " does not match any samples in this dataset."
-          ) : (
-            <>
-              {" "}
-              was most likely identical to sample(s):
-              <FormatStringArray values={mrca_matches} />
-              Importantly, it is also possible that the true primary case is not
-              be represented in this dataset (but has an identical sequence to
-              these sample(s)).
             </>
           )}
         </p>
