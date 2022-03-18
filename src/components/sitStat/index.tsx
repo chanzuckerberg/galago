@@ -48,7 +48,7 @@ export const SitStat = (props: SitStatProps) => {
     (m) => mrca_distances[m] > clade_description.muts_per_trans_minmax[1]
   ).length;
 
-  const dates: Array<[Date, string, number]> = [
+  const dates: [Date, string, number][] = [
     [
       clade_description.mrca.node_attrs.num_date.value,
       " - Primary case (upstream of all samples in this clade)",
@@ -75,9 +75,12 @@ export const SitStat = (props: SitStatProps) => {
       4,
     ],
   ].sort((a, b) =>
+    //@ts-ignore
     a[0].getTime() === b[0].getTime()
-      ? a[2] - b[2]
-      : a[0].getTime() - b[0].getTime()
+      ? //@ts-ignore
+        a[2] - b[2]
+      : //@ts-ignore
+        a[0].getTime() - b[0].getTime()
   );
 
   return (
