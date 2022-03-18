@@ -28,7 +28,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
     <div>
       <h2>How much onward transmission have we observed?</h2>
       <p style={{ fontStyle: "italic" }}>
-        Differentiating between a superspreader event (where one primary cases
+        Differentiating between a superspreader event (where one primary case
         transmits to multiple secondary cases) and onward transmission (here,
         defined as tertiary or further downstream cases), can be tricky.
       </p>
