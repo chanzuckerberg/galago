@@ -20,6 +20,7 @@ import {
 } from "./utils/geoInputOptions";
 import demo_sample_names from "../data/demo_sample_names";
 import { demo_tree } from "../data/demo_tree";
+import { SitStat } from "./components/sitStat";
 
 function App() {
   //@ts-ignore
@@ -268,6 +269,10 @@ function App() {
             in {clade_description.home_geo.location}
           </h1>
           {/* <h2>Results</h2> */}
+          <SitStat
+            clade_description={clade_description}
+            all_samples={get_leaves(tree)}
+          />
           <CladeDefinition
             clade_description={clade_description}
             sidenote_start={1}
