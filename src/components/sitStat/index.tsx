@@ -6,7 +6,7 @@ import { get_dist } from "../../utils/treeMethods";
 
 type SitStatProps = {
   clade_description: CladeDescription;
-  all_samples: string[];
+  all_samples: Node[];
 };
 
 export const SitStat = (props: SitStatProps) => {
@@ -47,7 +47,7 @@ export const SitStat = (props: SitStatProps) => {
   const n_tertiary_cases: number = Object.keys(mrca_distances).filter(
     (m) => mrca_distances[m] > clade_description.muts_per_trans_minmax[1]
   ).length;
-
+  //@ts-ignore
   const dates: [Date, string, number][] = [
     [
       clade_description.mrca.node_attrs.num_date.value,
