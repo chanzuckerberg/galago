@@ -28,7 +28,7 @@ function Assumptions(props: AssumptionsProps) {
 Higher values mean that we search more broadly for "cousins".`}
         />
       </p>
-      <p className="results">
+      <div className="results">
         <ul>
           <li>
             We assume that the number of mutations that occurs with each
@@ -51,7 +51,7 @@ Higher values mean that we search more broadly for "cousins".`}
             <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>
           </li>
         </ul>
-      </p>
+      </div>
     </div>
   );
 }

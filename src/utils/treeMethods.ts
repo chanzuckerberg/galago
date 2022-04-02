@@ -258,13 +258,13 @@ export const get_state_changes = (startNode: Node, trait: string) => {
   for (let i = 0; i < all_nodes.length; i++) {
     let n = all_nodes[i];
     if (!traits_match(n)) {
-      console.log(
-        "traversing subtree, switch from ",
-        n.parent?.node_attrs[trait]
-          ? n.parent.node_attrs[trait]
-          : "missing upstream data",
-        n.node_attrs[trait] ? n.node_attrs[trait] : "missing downstream data"
-      );
+      // console.log(
+      //   "traversing subtree, switch from ",
+      //   n.parent?.node_attrs[trait]
+      //     ? n.parent.node_attrs[trait]
+      //     : "missing upstream data",
+      //   n.node_attrs[trait] ? n.node_attrs[trait] : "missing downstream data"
+      // );
       subtrees.push(traverse_preorder(n, is_leaf, traits_match));
     }
   }
@@ -280,13 +280,13 @@ export const describeTree = (node: Node, get_root_first: boolean = false) => {
   const height = leaves
     .sort((a, b) => a.node_attrs.div - b.node_attrs.div)
     .slice(-1)[0].node_attrs.div;
-  console.log(
-    "loaded tree and found:",
-    "total nodes",
-    all_objects.length,
-    "total leaves",
-    leaves.length,
-    "max divergence",
-    height
-  );
+  // console.log(
+  //   "loaded tree and found:",
+  //   "total nodes",
+  //   all_objects.length,
+  //   "total leaves",
+  //   leaves.length,
+  //   "max divergence",
+  //   height
+  // );
 };

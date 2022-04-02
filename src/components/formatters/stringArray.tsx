@@ -8,7 +8,7 @@ export const FormatStringArray = (props: stringArrayProps) => {
   let { values, includeUnknown, makeUnique } = props;
   includeUnknown = includeUnknown === undefined ? true : includeUnknown;
   makeUnique = makeUnique === undefined ? true : makeUnique;
-  console.log(values, includeUnknown, makeUnique);
+  // console.log(values, includeUnknown, makeUnique);
   const unknownValues = [undefined, null, "unknown", "?", "", NaN];
   values = includeUnknown
     ? values
@@ -19,11 +19,11 @@ export const FormatStringArray = (props: stringArrayProps) => {
   values.sort();
 
   return (
-    <blockquote className="dataPoint">
-      {values.slice(0, -1).map((v) => (
-        <>{v}, </>
+    <span className="dataPoint">
+      {values.slice(0, -1).map((v, i) => (
+        <span key={`${i}-${v}`}>{v}, </span>
       ))}
       {values.slice(-1)[0]}
-    </blockquote>
+    </span>
   );
 };
