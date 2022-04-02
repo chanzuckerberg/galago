@@ -28,6 +28,8 @@ function App() {
   const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
 
   const [tree, setTree] = useState<null | Node>(null);
+
+  // @COLIN -- THIS IS WHERE TO PLUG IN SELECTED SAMPLES FROM THE SCATTERPLOT
   const [selectedSampleNames, setSelectedSampleNames] = useState<
     string[] | null
   >(null);
