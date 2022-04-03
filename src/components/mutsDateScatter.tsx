@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Node } from "../d";
 import {
   get_dist,
@@ -6,7 +7,7 @@ import {
   traverse_preorder,
 } from "../utils/treeMethods";
 
-import { scaleLinear, scaleBand, extent, scaleTime } from "d3";
+import { scaleLinear, scaleBand, extent, scaleTime, rgb } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 
 interface mutsDateScatterProps {
@@ -22,18 +23,22 @@ function MutsDateScatter(props: mutsDateScatterProps) {
   );
   const root = get_root(tree);
 
+  const [primaryCase, setPrimaryCase] = useState<string | null>(null);
+
   let sample_data_points: any = {}; // {sample name : [date, muts from root]}
+  let sample_data_points_ARR: any = []; // {sample name : [date, muts from root]}
 
   all_samples.forEach((sample: Node) => {
-    sample_data_points[sample.name] = [
-      sample.node_attrs.num_date.value,
-      get_dist([root, sample]),
-    ];
+    sample_data_points_ARR.push({
+      name: sample.name,
+      date: sample.node_attrs.num_date.value,
+      muts: get_dist([root, sample]),
+    });
   });
-  console.log("sample_data_points", sample_data_points);
 
   let internal_nodes_to_descendents: any = {}; // {internal node name: [sample names for all leaves descendent from this internal node]}
   all_internal_nodes.forEach((node: Node) => {
+    const foo = get_leaves(node);
     internal_nodes_to_descendents[node.name] = get_leaves(node).map(
       (l: Node) => {
         l.name;
@@ -46,40 +51,35 @@ function MutsDateScatter(props: mutsDateScatterProps) {
     internal_nodes_to_descendents[node.name] = node.node_attrs.num_date;
   });
 
+  const internal_node_dates_ARR: any = [];
+  all_internal_nodes.forEach((node: Node) => {
+    internal_node_dates_ARR.push({
+      name: node.name,
+      date: node.node_attrs.num_date.value,
+    });
+  });
+
   const chartSize = 560;
+  const chartWidth = 960;
   const margin = 30;
 
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "June",
-    "Jul",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const _TEST_ARR = [10, 20, 30, 40, 80, 140];
-
-  var _xScaleTime = scaleTime()
+  const _xScaleTime = scaleTime()
     .domain(
-      extent(sample_data_points, (sample: Node) => {
-        return new Date(d.date);
+      extent(
+        sample_data_points_ARR,
+        (sample: { name: string; date: string; muts: number }) => {
+          return sample.date;
+        }
+      )
+    )
+    .range([margin, chartWidth - margin]);
+
+  const _yMutsScale = scaleLinear()
+    .domain(
+      extent(sample_data_points_ARR, (sample: any) => {
+        return sample.muts;
       })
     )
-    .range([margin, chartSize - margin]);
-
-  const _scaleDate = scaleBand()
-    .domain(months)
-    .range([0, chartSize - margin - margin]);
-
-  const _scaleY = scaleLinear()
-    .domain(extent(_TEST_ARR))
     .range([chartSize - margin, margin]);
 
   return (
@@ -90,49 +90,71 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         descend from. Earlier primary cases usually result in broader
         selections.
       </p>
-      <svg
-        width={chartSize}
-        height={chartSize}
-        style={{ border: "1px solid black" }}
-      >
-        {all_samples.map((sample: Node, i: number) => {
-          if (i < 5) {
-            console.log(sample);
+      <svg width={chartWidth} height={chartSize}>
+        {sample_data_points_ARR.map(
+          (sample: { name: string; date: string; muts: number }, i: number) => {
+            return (
+              <circle
+                key={i}
+                cx={_xScaleTime(sample.date)}
+                cy={_yMutsScale(sample.muts)}
+                r={3}
+                style={{ fill: `none`, stroke: "steelblue" }}
+              />
+            );
           }
-
-          return (
-            <circle
-              key={i}
-              cx={i}
-              cy={i}
-              r={2}
-              style={{ fill: `rgba(255,0,0,.3)` }}
-            />
-          );
-        })}
-        <AxisLeft strokeWidth={0} left={margin} scale={_scaleY} />
+        )}
+        <AxisLeft strokeWidth={0} left={margin} scale={_yMutsScale} />
         <AxisBottom
           strokeWidth={0}
           top={chartSize - margin}
-          left={margin}
-          scale={_scaleDate}
-          tickValues={months}
+          scale={_xScaleTime}
+          numTicks={9}
         />
-        <text x="-90" y="45" transform="rotate(-90)" fontSize={10}>
+        <text x="-150" y="45" transform="rotate(-90)" fontSize={10}>
           Mutations
         </text>
       </svg>
-      <svg width={chartSize} height={100} style={{ border: "1px solid black" }}>
-        <AxisBottom
-          strokeWidth={0}
-          top={margin}
-          left={margin}
-          scale={_scaleDate}
-          tickValues={months}
-        />
-        <text x="-90" y="45" fontSize={10}>
-          Mutations
-        </text>
+      <svg width={chartWidth} height={100}>
+        {internal_node_dates_ARR.map(
+          (sample: { name: string; date: string }, i: number) => {
+            return (
+              <circle
+                key={i}
+                onMouseEnter={() => {
+                  setPrimaryCase(sample.name);
+                }}
+                cx={_xScaleTime(sample.date)}
+                cy={38}
+                r={primaryCase === sample.name ? 6 : 3}
+                style={{
+                  fill: primaryCase === sample.name ? `steelblue` : `none`,
+                  stroke:
+                    primaryCase === sample.name
+                      ? "steelblue"
+                      : `rgba(50,50,50,.1)`,
+                }}
+              />
+            );
+          }
+        )}
+        <g>
+          <text x={margin - 4} y={20} fontSize={10}>
+            Inferred 'primary cases' (hover to select a case).{" "}
+            {primaryCase && `Selected primary case: ${primaryCase}`}
+          </text>
+          <text x={margin - 4} y={60} fontSize={10} fontStyle="italic">
+            broader selection
+          </text>
+          <text
+            x={chartWidth - margin - 90}
+            y={60}
+            fontSize={10}
+            fontStyle="italic"
+          >
+            narrower selection
+          </text>
+        </g>
       </svg>
     </div>
   );
