@@ -85,9 +85,9 @@ function MutsDateScatter(props: mutsDateScatterProps) {
     <div>
       <h2>Interactive sample selection</h2>
       <p>
-        Select a cluster of samples based on the inferred primary case they
-        descend from. Earlier primary cases usually result in broader
-        selections.
+        To instantly generate a report for any set of samples, select a cluster
+        of samples based on the inferred primary case they descend from. Earlier
+        primary cases usually result in broader selections.
       </p>
       <svg width={chartWidth} height={chartSize}>
         {sample_data_points_ARR.map(
