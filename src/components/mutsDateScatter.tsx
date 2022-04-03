@@ -38,7 +38,6 @@ function MutsDateScatter(props: mutsDateScatterProps) {
 
   let internal_nodes_to_descendents: any = {}; // {internal node name: [sample names for all leaves descendent from this internal node]}
   all_internal_nodes.forEach((node: Node) => {
-    const foo = get_leaves(node);
     internal_nodes_to_descendents[node.name] = get_leaves(node).map(
       (l: Node) => {
         l.name;
