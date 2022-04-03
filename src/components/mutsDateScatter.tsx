@@ -26,10 +26,11 @@ function MutsDateScatter(props: mutsDateScatterProps) {
 
   all_samples.forEach((sample: Node) => {
     sample_data_points[sample.name] = [
-      sample.node_attrs.num_date,
+      sample.node_attrs.num_date.value,
       get_dist([root, sample]),
     ];
   });
+  console.log("sample_data_points", sample_data_points);
 
   let internal_nodes_to_descendents: any = {}; // {internal node name: [sample names for all leaves descendent from this internal node]}
   all_internal_nodes.forEach((node: Node) => {
