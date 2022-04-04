@@ -16,39 +16,36 @@ interface mutsDateScatterProps {
 
 function MutsDateScatter(props: mutsDateScatterProps) {
   const { tree } = props;
-  const all_samples: Array<Node> = get_leaves(tree);
-  const all_internal_nodes = traverse_preorder(
-    tree,
-    (node: Node) => node.children.length === 0
-  );
   const root = get_root(tree);
-
   const [primaryCase, setPrimaryCase] = useState<string | null>(null);
 
-  let sample_data_points: any = {}; // {sample name : [date, muts from root]}
-  let sample_data_points_ARR: any = []; // {sample name : [date, muts from root]}
-
+  // Catalog all samples in the tree
+  const all_samples: Array<Node> = get_leaves(tree);
+  let sample_data_points: any = []; // [{name, date, muts from root}]
   all_samples.forEach((sample: Node) => {
-    sample_data_points_ARR.push({
+    sample_data_points.push({
       name: sample.name,
       date: sample.node_attrs.num_date.value,
       muts: get_dist([root, sample]),
     });
   });
 
+  // Catalog all internal nodes (i.e., "primary cases" / MRCAs of 2+ samples) in tree
+  const all_internal_nodes = traverse_preorder(
+    tree,
+    (node: Node) => node.children.length >= 2
+  );
   let internal_nodes_to_descendents: any = {}; // {internal node name: [sample names for all leaves descendent from this internal node]}
   all_internal_nodes.forEach((node: Node) => {
     internal_nodes_to_descendents[node.name] = get_leaves(node).map(
-      (l: Node) => {
-        l.name;
-      }
+      (l: Node) => l.name
     );
   });
 
-  let internal_node_dates = {}; // {internal node name: date}
-  all_internal_nodes.forEach((node: Node) => {
-    internal_nodes_to_descendents[node.name] = node.node_attrs.num_date;
-  });
+  // let internal_node_dates = {}; // {internal node name: date}
+  // all_internal_nodes.forEach((node: Node) => {
+  //   internal_nodes_to_descendents[node.name] = node.node_attrs.num_date;
+  // });
 
   const internal_node_dates_ARR: any = [];
   all_internal_nodes.forEach((node: Node) => {
@@ -65,7 +62,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
   const _xScaleTime = scaleTime()
     .domain(
       extent(
-        sample_data_points_ARR,
+        sample_data_points,
         (sample: { name: string; date: string; muts: number }) => {
           return sample.date;
         }
@@ -75,7 +72,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
 
   const _yMutsScale = scaleLinear()
     .domain(
-      extent(sample_data_points_ARR, (sample: any) => {
+      extent(sample_data_points, (sample: any) => {
         return sample.muts;
       })
     )
@@ -90,7 +87,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         primary cases usually result in broader selections.
       </p>
       <svg width={chartWidth} height={chartSize}>
-        {sample_data_points_ARR.map(
+        {sample_data_points.map(
           (sample: { name: string; date: string; muts: number }, i: number) => {
             return (
               <circle
