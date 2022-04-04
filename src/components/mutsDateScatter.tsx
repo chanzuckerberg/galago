@@ -12,6 +12,7 @@ import { AxisLeft, AxisBottom } from "@visx/axis";
 
 interface mutsDateScatterProps {
   tree: Node;
+  setReportSamples: any;
 }
 
 function MutsDateScatter(props: mutsDateScatterProps) {
@@ -89,6 +90,11 @@ function MutsDateScatter(props: mutsDateScatterProps) {
       <svg width={chartWidth} height={chartSize}>
         {sample_data_points.map(
           (sample: { name: string; date: string; muts: number }, i: number) => {
+            const isSelected =
+              primaryCase &&
+              internal_nodes_to_descendents[primaryCase].indexOf(sample.name) >=
+                0;
+
             return (
               <circle
                 key={i}
@@ -96,16 +102,8 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                 cy={_yMutsScale(sample.muts)}
                 r={3}
                 style={{
-                  fill: `none`,
-                  stroke: primaryCase
-                    ? `rgba(70,130,180,${
-                        internal_nodes_to_descendents[primaryCase].indexOf(
-                          sample.name
-                        ) >= 0
-                          ? 1
-                          : 0.2
-                      })`
-                    : "steelblue",
+                  fill: isSelected ? "steelblue" : `none`,
+                  stroke: isSelected ? "steelblue" : "rgba(220,220,220,.5)",
                 }}
               />
             );
@@ -130,6 +128,13 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                 key={i}
                 onMouseEnter={() => {
                   setPrimaryCase(sample.name);
+                }}
+                onClick={() => {
+                  if (primaryCase) {
+                    setReportSamples(
+                      internal_nodes_to_descendents[primaryCase]
+                    );
+                  }
                 }}
                 cx={_xScaleTime(sample.date)}
                 cy={38}
