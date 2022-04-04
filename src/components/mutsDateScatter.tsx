@@ -95,7 +95,18 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                 cx={_xScaleTime(sample.date)}
                 cy={_yMutsScale(sample.muts)}
                 r={3}
-                style={{ fill: `none`, stroke: "steelblue" }}
+                style={{
+                  fill: `none`,
+                  stroke: primaryCase
+                    ? `rgba(70,130,180,${
+                        internal_nodes_to_descendents[primaryCase].indexOf(
+                          sample.name
+                        ) >= 0
+                          ? 1
+                          : 0.2
+                      })`
+                    : "steelblue",
+                }}
               />
             );
           }
@@ -127,7 +138,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                   fill: primaryCase === sample.name ? `steelblue` : `none`,
                   stroke:
                     primaryCase === sample.name
-                      ? "steelblue"
+                      ? `rgba(70,130,180)`
                       : `rgba(50,50,50,.1)`,
                 }}
               />
