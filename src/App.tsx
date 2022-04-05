@@ -276,6 +276,7 @@ function App() {
           <MutsDateScatter
             tree={tree}
             setSelectedSampleNames={setSelectedSampleNames}
+            handleSelectedSamples={handleSelectedSamples}
           />
           {/* <h2>Results</h2> */}
           <SitStat

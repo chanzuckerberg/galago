@@ -12,11 +12,12 @@ import { AxisLeft, AxisBottom } from "@visx/axis";
 
 interface mutsDateScatterProps {
   tree: Node;
-  setSelectedSampleNames: any;
+  setSelectedSampleNames: Function;
+  handleSelectedSamples: Function;
 }
 
 function MutsDateScatter(props: mutsDateScatterProps) {
-  const { tree, setSelectedSampleNames } = props;
+  const { tree, setSelectedSampleNames, handleSelectedSamples } = props;
   const root = get_root(tree);
   const [primaryCase, setPrimaryCase] = useState<string | null>(null);
 
@@ -135,6 +136,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                     setSelectedSampleNames(
                       internal_nodes_to_descendents[primaryCase]
                     );
+                    handleSelectedSamples();
                   }
                 }}
                 cx={_xScaleTime(sample.date)}
