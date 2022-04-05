@@ -9,7 +9,7 @@ type sampleSelectionProps = {
   setSelectedSamples: Function;
   selectedSampleNames: string[] | null;
   setSelectedSampleNames: Function;
-  mrca: Node;
+  mrca: Node | null;
   setMRCA: Function;
 };
 

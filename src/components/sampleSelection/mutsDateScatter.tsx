@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Node } from "../d";
+import { Node } from "../../d";
 import {
   get_dist,
   get_leaves,
   get_root,
   traverse_preorder,
-} from "../utils/treeMethods";
+} from "../../utils/treeMethods";
 
 import { scaleLinear, scaleBand, extent, scaleTime, rgb } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 
 interface mutsDateScatterProps {
   tree: Node;
-  selectedSampleNames: string[] | null;
-  setSelectedSampleNames: Function;
-  handleSelectedSamples: Function;
+  mrca: any;
+  setMRCA: Function;
+  selectedSamples: Node[];
 }
 
 type sampleDataType = { name: string; date: Date; muts: number };
@@ -22,16 +22,14 @@ type internalNodeDataType = {
   name: string;
   date: Date;
   samples: string[];
+  raw: Node;
 };
 
 function MutsDateScatter(props: mutsDateScatterProps) {
-  const {
-    tree,
-    setSelectedSampleNames,
-    handleSelectedSamples,
-    selectedSampleNames,
-  } = props;
-  const [mrca, setMRCA] = useState<internalNodeDataType | null>(null);
+  const { tree, setMRCA, mrca, selectedSamples } = props;
+  const [previewMRCA, setPreviewMRCA] = useState<internalNodeDataType | null>(
+    null
+  );
 
   const root = get_root(tree);
 
@@ -59,6 +57,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
       name: node.name,
       date: node.node_attrs.num_date.value,
       samples: get_leaves(node).map((l: Node) => l.name),
+      raw: node,
     });
   });
 
@@ -95,9 +94,9 @@ function MutsDateScatter(props: mutsDateScatterProps) {
       <svg width={chartWidth} height={chartSize}>
         {sample_data.map((sample, i: number) => {
           const isSelected =
-            mrca &&
+            previewMRCA &&
             internal_node_data
-              .find((n) => n.name === mrca.name)
+              .find((n) => n.name === previewMRCA.name)
               .samples.includes(sample.name);
           return (
             <circle
@@ -129,32 +128,26 @@ function MutsDateScatter(props: mutsDateScatterProps) {
             <circle
               key={i}
               onMouseEnter={() => {
-                setMRCA(node);
+                setPreviewMRCA(node);
               }}
               onMouseLeave={() => {
-                if (
-                  !selectedSampleNames ||
-                  node.samples.length !== selectedSampleNames.length ||
-                  !node.samples.every(function (value, index) {
-                    return value == selectedSampleNames[index];
-                  })
-                ) {
-                  setMRCA(null);
+                if (!previewMRCA || previewMRCA.name !== mrca.name) {
+                  setPreviewMRCA(null);
                 }
               }}
               onClick={() => {
-                setSelectedSampleNames(
-                  internal_node_data.find((n) => n.name === mrca.name).samples
-                );
-                handleSelectedSamples();
+                setMRCA(node.raw);
               }}
               cx={_xScaleTime(node.date)}
               cy={38}
-              r={mrca && mrca.name === node.name ? 6 : 3}
+              r={previewMRCA && previewMRCA.name === node.name ? 6 : 3}
               style={{
-                fill: mrca && mrca.name === node.name ? `steelblue` : `none`,
+                fill:
+                  previewMRCA && previewMRCA.name === node.name
+                    ? `steelblue`
+                    : `none`,
                 stroke:
-                  mrca && mrca.name === node.name
+                  previewMRCA && previewMRCA.name === node.name
                     ? `rgba(70,130,180)`
                     : "rgba(180,180,180,1)",
               }}
@@ -163,11 +156,11 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         })}
         <g>
           <text x={margin - 4} y={20} fontSize={10}>
-            {mrca
-              ? `Selected primary case date: ${mrca.date
+            {previewMRCA
+              ? `Selected primary case date: ${previewMRCA.date
                   .toISOString()
                   .substring(0, 10)}. ${
-                  mrca.samples.length
+                  previewMRCA.samples.length
                 } descendent samples.`
               : `Inferred 'primary cases' (hover to select a case).`}
           </text>

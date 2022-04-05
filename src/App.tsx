@@ -21,8 +21,7 @@ import {
 import demo_sample_names from "../data/demo_sample_names";
 import { demo_tree } from "../data/demo_tree";
 import { SitStat } from "./components/sitStat";
-
-import MutsDateScatter from "./components/mutsDateScatter";
+import SampleSelection from "./components/sampleSelection";
 
 function App() {
   //@ts-ignore
@@ -194,19 +193,26 @@ function App() {
       ) : (
         <></>
       )}
-      {clade_description && tree && (
+      {location && division && tree && (
         <div>
           <h1>
-            Genomic Investigation of a Potential Outbreak
+            Genomic Investigation of Potential Outbreaks
             <br />
-            in {clade_description.home_geo.location}
+            in {location}
           </h1>
-          <MutsDateScatter
+          <SampleSelection
             tree={tree}
-            setSelectedSampleNames={setSelectedSampleNames}
+            setSelectedSamples={setSelectedSamples}
             selectedSampleNames={selectedSampleNames}
-            handleSelectedSamples={handleSelectedSamples}
+            setSelectedSampleNames={setSelectedSampleNames}
+            mrca={mrca}
+            setMRCA={setMRCA}
           />
+        </div>
+      )}
+
+      {clade_description && tree && (
+        <div>
           {/* <h2>Results</h2> */}
           <SitStat
             clade_description={clade_description}
