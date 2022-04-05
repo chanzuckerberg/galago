@@ -13,7 +13,12 @@ import { gisaid_counts_file } from "../data/gisaid_counts";
 import { ingestNextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
-import { get_root, get_leaves, find_leaf_by_name } from "./utils/treeMethods";
+import {
+  get_root,
+  get_leaves,
+  find_leaf_by_name,
+  get_mrca,
+} from "./utils/treeMethods";
 import {
   get_location_input_options,
   get_division_input_options,
@@ -91,16 +96,17 @@ function App() {
       .filter((n) => n !== null);
     setTree(tree);
     setSelectedSampleNames(selected_sample_names);
-    //@ts-ignore -- we've already filtered out all null values
     setSelectedSamples(selected_sample_nodes);
+    setMRCA(get_mrca(selected_sample_nodes));
     setDivision("California");
     setLocation("Humboldt County");
   };
 
   useEffect(() => {
-    if (tree && (selectedSamples || mrca) && location && division) {
+    if (tree && mrca && location && division) {
       setCladeDescription(
         describe_clade(
+          mrca,
           {
             location: location,
             division: division,
@@ -109,12 +115,11 @@ function App() {
           },
           mutsPerTransMinMax,
           minMutsToParent,
-          mrca,
           selectedSamples
         )
       );
     }
-  }, [selectedSampleNames, mrca, location, division]);
+  }, [selectedSamples, mrca, location, division]);
 
   return (
     <div>

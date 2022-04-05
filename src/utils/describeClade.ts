@@ -50,6 +50,7 @@ const catalog_subclades = (
 };
 
 export const describe_clade = (
+  mrca: Node,
   home_geo: {
     location: string;
     division: string;
@@ -58,30 +59,11 @@ export const describe_clade = (
   },
   muts_per_trans_minmax: number[],
   min_muts_to_parent: number,
-  mrca?: Node | null,
-  selected_samples?: Array<Node>
+  selected_samples: Array<Node> = []
 ) => {
-  if (mrca && !selected_samples) {
-    selected_samples = [];
-  } else if (selected_samples && !mrca) {
-    mrca = get_mrca(selected_samples);
-  } else if (
-    mrca &&
-    selected_samples &&
-    get_mrca(selected_samples).name === mrca.name
-  ) {
-    console.warn(
-      "WARNING: only provide mrca OR selected samples, not both. mrca and selected samples are compatible, so allowing this time"
-    );
-  } else {
-    throw "must provide EITHER mrca or selected samples, but not both!";
-  }
-
   const muts_bn_selected: Array<{ nodes: Node[]; dist: number }> =
     get_pairwise_distances(selected_samples);
-  if (selected_samples) {
-    const mrca: Node = get_mrca(selected_samples);
-  }
+
   const parent_for_cousins: Node | undefined = get_parent_for_cousins(
     mrca,
     min_muts_to_parent
@@ -94,9 +76,9 @@ export const describe_clade = (
   let clade: CladeDescription = {
     selected_samples: selected_samples,
     mrca: mrca,
-    unselected_samples_in_cluster: mrca
-      ? get_leaves(mrca).filter((n) => !selected_samples.includes(n))
-      : [],
+    unselected_samples_in_cluster: get_leaves(mrca).filter(
+      (n) => !selected_samples.includes(n)
+    ),
     parent_for_cousins: parent_for_cousins,
     min_muts_to_parent: min_muts_to_parent,
     cousins:
@@ -114,6 +96,6 @@ export const describe_clade = (
     subclade_geo: returned_subclade_geo,
     subclades: returned_subclades,
   };
-  // console.log("clade description", clade);
+  console.log("clade description", clade);
   return clade;
 };
