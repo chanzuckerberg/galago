@@ -193,11 +193,7 @@ function App() {
       )}
       {location && division && tree && (
         <div>
-          <h1>
-            Genomic Investigation of Potential Outbreaks
-            <br />
-            in {location}
-          </h1>
+          <h1>Investigate potential outbreak clusters in {location}</h1>
           <SampleSelection
             tree={tree}
             setSelectedSamples={setSelectedSamples}
