@@ -4,6 +4,8 @@ import {
   get_leaves,
   get_root,
   find_leaf_by_name,
+  get_mrca,
+  get_path,
 } from "../../utils/treeMethods";
 
 type clusteringOptionsProps = {
@@ -30,6 +32,7 @@ function ClusteringOptions(props: clusteringOptionsProps) {
     setMrcaOptions,
   } = props;
 
+  const root = get_root(tree);
   const handleSelectedSampleNames = (event: any) => {
     if (event && event.target) {
       let input_string: string = event.target.value;
@@ -39,6 +42,15 @@ function ClusteringOptions(props: clusteringOptionsProps) {
 
       setSelectedSampleNames(sample_names);
     }
+  };
+
+  const nodeToNodeData = (node: Node) => {
+    return {
+      name: node.name,
+      date: node.node_attrs.num_date.value,
+      samples: get_leaves(node),
+      raw: node,
+    };
   };
 
   const handleSelectedSamples = (event: any) => {
@@ -51,6 +63,11 @@ function ClusteringOptions(props: clusteringOptionsProps) {
 
       if (selected_sample_nodes.length >= 2) {
         setSelectedSamples(selected_sample_nodes);
+        setMrcaOptions(
+          get_path([root, get_mrca(selected_sample_nodes)]).path.map(
+            (n: Node) => nodeToNodeData(n)
+          )
+        );
       }
     }
   };
