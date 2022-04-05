@@ -53,6 +53,13 @@ function ClusteringOptions(props: clusteringOptionsProps) {
     };
   };
 
+  const selectedSampleToRoot = (node: Node, root: Node) => {
+    const path = get_path([root, node]).path.filter(
+      (n) => n.children.length > 0
+    );
+    return path;
+  };
+
   const handleSelectedSamples = (event: any) => {
     if (selectedSampleNames && selectedSampleNames.length >= 2 && tree) {
       let all_leaves = get_leaves(get_root(tree));
@@ -63,11 +70,14 @@ function ClusteringOptions(props: clusteringOptionsProps) {
 
       if (selected_sample_nodes.length >= 2) {
         setSelectedSamples(selected_sample_nodes);
-        setMrcaOptions(
-          get_path([root, get_mrca(selected_sample_nodes)]).path.map(
-            (n: Node) => nodeToNodeData(n)
-          )
-        );
+        let all_paths: Array<Node | internalNodeDataType> = [];
+        selected_sample_nodes.forEach((n) => {
+          all_paths.push(...selectedSampleToRoot(n, root));
+          console.log(all_paths.length);
+        });
+        all_paths = [...new Set(all_paths.map((n) => nodeToNodeData(n)))];
+        console.log("final length", all_paths.length);
+        setMrcaOptions(all_paths);
       }
     }
   };
