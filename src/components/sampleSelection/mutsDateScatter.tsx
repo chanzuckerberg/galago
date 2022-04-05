@@ -14,7 +14,7 @@ interface mutsDateScatterProps {
   tree: Node;
   mrca: any;
   setMRCA: Function;
-  selectedSamples: Node[];
+  mrcaOptions: internalNodeDataType[];
 }
 
 type sampleDataType = { name: string; date: Date; muts: number };
@@ -26,7 +26,7 @@ type internalNodeDataType = {
 };
 
 function MutsDateScatter(props: mutsDateScatterProps) {
-  const { tree, setMRCA, mrca, selectedSamples } = props;
+  const { tree, setMRCA, mrca, mrcaOptions } = props;
   const [previewMRCA, setPreviewMRCA] = useState<internalNodeDataType | null>(
     null
   );
@@ -41,23 +41,6 @@ function MutsDateScatter(props: mutsDateScatterProps) {
       name: sample.name,
       date: sample.node_attrs.num_date.value,
       muts: get_dist([root, sample]),
-    });
-  });
-
-  // Catalog all internal nodes (i.e., "primary cases" / MRCAs of 2+ samples) in tree
-  const all_internal_nodes: Array<Node> = traverse_preorder(
-    tree,
-    (node: Node) => node.children.length >= 2
-  );
-
-  // Map internal nodes --> [{name, date, descendents_names}]
-  const internal_node_data: internalNodeDataType[] = [];
-  all_internal_nodes.forEach((node: Node) => {
-    internal_node_data.push({
-      name: node.name,
-      date: node.node_attrs.num_date.value,
-      samples: get_leaves(node).map((l: Node) => l.name),
-      raw: node,
     });
   });
 
@@ -88,14 +71,14 @@ function MutsDateScatter(props: mutsDateScatterProps) {
       <h2>Interactive sample selection</h2>
       <p>
         To instantly generate a report for any set of samples, select a cluster
-        of samples based on the inferred primary case they descend from. Earlier
-        primary cases usually result in broader selections.
+        of samples based on the inferred primary case they descend from.
       </p>
       <svg width={chartWidth} height={chartSize}>
         {sample_data.map((sample, i: number) => {
           const isSelected =
             previewMRCA &&
-            internal_node_data
+            //@ts-ignore
+            mrcaOptions
               .find((n) => n.name === previewMRCA.name)
               .samples.includes(sample.name);
           return (
@@ -123,18 +106,18 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         </text>
       </svg>
       <svg width={chartWidth} height={100}>
-        {internal_node_data.map((node, i) => {
+        {mrcaOptions.map((node, i) => {
           return (
             <circle
               key={i}
               onMouseEnter={() => {
                 setPreviewMRCA(node);
               }}
-              onMouseLeave={() => {
-                if (!previewMRCA || previewMRCA.name !== mrca.name) {
-                  setPreviewMRCA(null);
-                }
-              }}
+              // onMouseLeave={() => {
+              //   if (!previewMRCA || previewMRCA.name !== mrca.name) {
+              //     setPreviewMRCA(null);
+              //   }
+              // }}
               onClick={() => {
                 setMRCA(node.raw);
               }}

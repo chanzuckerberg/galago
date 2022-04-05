@@ -1,4 +1,5 @@
 import MutsDateScatter from "./mutsDateScatter";
+import ClusteringOptions from "./clusteringOptions";
 import { CladeDescription, Node } from "../../d";
 import React, { useState } from "react";
 import { describe_clade } from "../../utils/describeClade";
@@ -6,6 +7,7 @@ import {
   get_leaves,
   get_root,
   find_leaf_by_name,
+  traverse_preorder,
 } from "../../utils/treeMethods";
 
 type sampleSelectionProps = {
@@ -34,63 +36,41 @@ function SampleSelection(props: sampleSelectionProps) {
     setMRCA,
   } = props;
 
-  const handleSelectedSampleNames = (event: any) => {
-    if (event && event.target) {
-      let input_string: string = event.target.value;
-      let sample_names: string[] = input_string
-        .split(/[,\s]+/)
-        .map((s: string) => s.trim());
+  // Catalog all internal nodes (i.e., "primary cases" / MRCAs of 2+ samples) in tree
+  const all_internal_nodes: Array<Node> = traverse_preorder(
+    tree,
+    (node: Node) => node.children.length >= 2
+  );
 
-      setSelectedSampleNames(sample_names);
-    }
-  };
+  // Map internal nodes --> [{name, date, descendents_names}]
+  const internal_node_data: internalNodeDataType[] = [];
+  all_internal_nodes.forEach((node: Node) => {
+    internal_node_data.push({
+      name: node.name,
+      date: node.node_attrs.num_date.value,
+      samples: get_leaves(node).map((l: Node) => l.name),
+      raw: node,
+    });
+  });
 
-  const handleSelectedSamples = (event: any) => {
-    if (selectedSampleNames && selectedSampleNames.length >= 2 && tree) {
-      let all_leaves = get_leaves(get_root(tree));
-      //@ts-ignore - we filter out any null values on the next line
-      let selected_sample_nodes: Array<Node> = selectedSampleNames
-        .map((n) => find_leaf_by_name(n, all_leaves))
-        .filter((n) => n !== null);
-
-      if (selected_sample_nodes.length >= 2) {
-        setSelectedSamples(selected_sample_nodes);
-      }
-    }
-  };
+  const [mrcaOptions, setMrcaOptions] =
+    useState<internalNodeDataType[]>(internal_node_data);
 
   return (
     <div>
-      <p>
-        <b>
-          Finally, please enter sample IDs, separated by spaces, tabs or commas.
-        </b>{" "}
-        <br />
-        <i>
-          You should enter all the sample IDs in this tree that you believe may
-          be associated with your potential outbreak of interest.
-        </i>
-        <br />
-        <input
-          type="text"
-          name="selectedSamples"
-          onChange={(e) => {
-            handleSelectedSampleNames(e);
-          }}
-          style={{ width: "35em" }}
-          // value="SampleID1, SampleID2, ..."
-        />
-        <button
-          type="button"
-          name="submitInput"
-          onClick={(e) => handleSelectedSamples(e)}
-        >
-          Submit
-        </button>
-      </p>
-      <p>
-        <MutsDateScatter tree={tree} mrca={mrca} setMRCA={setMRCA} />
-      </p>
+      <MutsDateScatter
+        tree={tree}
+        mrca={mrca}
+        setMRCA={setMRCA}
+        mrcaOptions={mrcaOptions}
+      />
+      <ClusteringOptions
+        tree={tree}
+        selectedSampleNames={selectedSampleNames}
+        setSelectedSamples={setSelectedSamples}
+        setSelectedSampleNames={setSelectedSampleNames}
+        setMrcaOptions={setMrcaOptions}
+      />
     </div>
   );
 }
