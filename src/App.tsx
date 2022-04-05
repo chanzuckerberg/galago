@@ -22,12 +22,15 @@ import demo_sample_names from "../data/demo_sample_names";
 import { demo_tree } from "../data/demo_tree";
 import { SitStat } from "./components/sitStat";
 
+import MutsDateScatter from "./components/mutsDateScatter";
+
 function App() {
   //@ts-ignore
   const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
   const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
 
   const [tree, setTree] = useState<null | Node>(null);
+
   const [selectedSampleNames, setSelectedSampleNames] = useState<
     string[] | null
   >(null);
@@ -146,15 +149,17 @@ function App() {
     setLocation("Humboldt County");
   };
 
-  if (tree && selectedSamples && location && division && !clade_description) {
-    initializeReport(
-      selectedSamples,
-      tree,
-      location,
-      division,
-      futureUserInput
-    );
-  }
+  useEffect(() => {
+    if (tree && selectedSamples && location && division) {
+      initializeReport(
+        selectedSamples,
+        tree,
+        location,
+        division,
+        futureUserInput
+      );
+    }
+  }, [selectedSampleNames]); // Only re-run the effect if count changes
 
   return (
     <div>
@@ -268,6 +273,12 @@ function App() {
             <br />
             in {clade_description.home_geo.location}
           </h1>
+          <MutsDateScatter
+            tree={tree}
+            setSelectedSampleNames={setSelectedSampleNames}
+            selectedSampleNames={selectedSampleNames}
+            handleSelectedSamples={handleSelectedSamples}
+          />
           {/* <h2>Results</h2> */}
           <SitStat
             clade_description={clade_description}

@@ -133,20 +133,22 @@ export const get_path = (target_nodes: Node[]) => {
     path2.push(current_node);
     current_node = current_node.parent;
   }
-
   return { mrca: mrca, path: path1.concat(path2.reverse()) };
 };
 
 export const get_dist = (target_nodes: Node[]) => {
   console.assert(target_nodes.length === 2, target_nodes);
 
-  const mp = get_path(target_nodes); // HELP: review of how to unpack things in js....
+  const mp = get_path(target_nodes);
   const mrca = mp["mrca"];
   const path = mp["path"];
   let dist = 0;
 
   for (let i = 0; i < path.length; i++) {
-    if (path[i] === mrca) {
+    if (
+      path[i] === mrca || // TODO: FIX THIX PROPERLY -- ROOT *SHOULD* BE RETURNED AS MRCA AND THEREFORE SKIPPED
+      [NaN, null, undefined].includes(path[i].branch_attrs.length)
+    ) {
       continue; // the branch_length attribute is always the branch leading *into* the node. the mrca's distance to parent is not relevant.
     }
     dist = dist + path[i].branch_attrs.length;
@@ -258,13 +260,13 @@ export const get_state_changes = (startNode: Node, trait: string) => {
   for (let i = 0; i < all_nodes.length; i++) {
     let n = all_nodes[i];
     if (!traits_match(n)) {
-      console.log(
-        "traversing subtree, switch from ",
-        n.parent?.node_attrs[trait]
-          ? n.parent.node_attrs[trait]
-          : "missing upstream data",
-        n.node_attrs[trait] ? n.node_attrs[trait] : "missing downstream data"
-      );
+      // console.log(
+      //   "traversing subtree, switch from ",
+      //   n.parent?.node_attrs[trait]
+      //     ? n.parent.node_attrs[trait]
+      //     : "missing upstream data",
+      //   n.node_attrs[trait] ? n.node_attrs[trait] : "missing downstream data"
+      // );
       subtrees.push(traverse_preorder(n, is_leaf, traits_match));
     }
   }
@@ -280,13 +282,13 @@ export const describeTree = (node: Node, get_root_first: boolean = false) => {
   const height = leaves
     .sort((a, b) => a.node_attrs.div - b.node_attrs.div)
     .slice(-1)[0].node_attrs.div;
-  console.log(
-    "loaded tree and found:",
-    "total nodes",
-    all_objects.length,
-    "total leaves",
-    leaves.length,
-    "max divergence",
-    height
-  );
+  // console.log(
+  //   "loaded tree and found:",
+  //   "total nodes",
+  //   all_objects.length,
+  //   "total leaves",
+  //   leaves.length,
+  //   "max divergence",
+  //   height
+  // );
 };
