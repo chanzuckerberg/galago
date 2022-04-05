@@ -16,7 +16,7 @@ interface mutsDateScatterProps {
 }
 
 function MutsDateScatter(props: mutsDateScatterProps) {
-  const { tree } = props;
+  const { tree, setReportSamples } = props;
   const root = get_root(tree);
   const [primaryCase, setPrimaryCase] = useState<string | null>(null);
 
@@ -103,7 +103,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                 r={3}
                 style={{
                   fill: isSelected ? "steelblue" : `none`,
-                  stroke: isSelected ? "steelblue" : "rgba(220,220,220,.5)",
+                  stroke: isSelected ? "steelblue" : "rgba(180,180,180,1)",
                 }}
               />
             );
@@ -130,6 +130,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                   setPrimaryCase(sample.name);
                 }}
                 onClick={() => {
+                  console.log(props);
                   if (primaryCase) {
                     setReportSamples(
                       internal_nodes_to_descendents[primaryCase]
@@ -144,7 +145,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                   stroke:
                     primaryCase === sample.name
                       ? `rgba(70,130,180)`
-                      : `rgba(50,50,50,.1)`,
+                      : "rgba(180,180,180,1)",
                 }}
               />
             );

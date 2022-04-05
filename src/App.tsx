@@ -31,7 +31,6 @@ function App() {
 
   const [tree, setTree] = useState<null | Node>(null);
 
-  // @COLIN -- THIS IS WHERE TO PLUG IN SELECTED SAMPLES FROM THE SCATTERPLOT
   const [selectedSampleNames, setSelectedSampleNames] = useState<
     string[] | null
   >(null);
@@ -160,6 +159,8 @@ function App() {
     );
   }
 
+  console.log("selectedSamples", selectedSampleNames);
+
   return (
     <div>
       <Header />
@@ -272,7 +273,10 @@ function App() {
             <br />
             in {clade_description.home_geo.location}
           </h1>
-          <MutsDateScatter tree={tree} />
+          <MutsDateScatter
+            tree={tree}
+            setReportSamples={setSelectedSampleNames}
+          />
           {/* <h2>Results</h2> */}
           <SitStat
             clade_description={clade_description}
