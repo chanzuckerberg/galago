@@ -45,15 +45,13 @@ function App() {
   >(null);
   const [location, setLocation] = useState<string | null>(null);
   const [division, setDivision] = useState<string | null>(null);
-
-  const futureUserInput = {
-    home_geo: {
-      country: "USA",
-      region: "North America",
-    },
-    min_muts_to_parent: 1,
-    muts_per_trans_minmax: [0, 2],
-  };
+  const [country, setCountry] = useState<string>("USA");
+  const [region, setRegion] = useState<string>("North America");
+  const [minMutsToParent, setMinMutsToParent] = useState<number>(1);
+  const [mutsPerTransMinMax, setMutsPerTransMinMax] = useState<number[]>([
+    0, 2,
+  ]);
+  const [mrca, setMRCA] = useState<Node | null>(null);
 
   const initializeReport = (
     selectedSamples: Node[],
