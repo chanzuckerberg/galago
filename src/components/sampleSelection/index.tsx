@@ -2,7 +2,11 @@ import MutsDateScatter from "./mutsDateScatter";
 import { CladeDescription, Node } from "../../d";
 import React, { useState } from "react";
 import { describe_clade } from "../../utils/describeClade";
-import { get_leaves, get_root } from "../../utils/treeMethods";
+import {
+  get_leaves,
+  get_root,
+  find_leaf_by_name,
+} from "../../utils/treeMethods";
 
 type sampleSelectionProps = {
   tree: Node;
@@ -56,33 +60,38 @@ function SampleSelection(props: sampleSelectionProps) {
   };
 
   return (
-    <p>
-      <b>
-        Finally, please enter sample IDs, separated by spaces, tabs or commas.
-      </b>{" "}
-      <br />
-      <i>
-        You should enter all the sample IDs in this tree that you believe may be
-        associated with your potential outbreak of interest.
-      </i>
-      <br />
-      <input
-        type="text"
-        name="selectedSamples"
-        onChange={(e) => {
-          handleSelectedSampleNames(e);
-        }}
-        style={{ width: "35em" }}
-        // value="SampleID1, SampleID2, ..."
-      />
-      <button
-        type="button"
-        name="submitInput"
-        onClick={(e) => handleSelectedSamples(e)}
-      >
-        Submit
-      </button>
-    </p>
+    <div>
+      <p>
+        <b>
+          Finally, please enter sample IDs, separated by spaces, tabs or commas.
+        </b>{" "}
+        <br />
+        <i>
+          You should enter all the sample IDs in this tree that you believe may
+          be associated with your potential outbreak of interest.
+        </i>
+        <br />
+        <input
+          type="text"
+          name="selectedSamples"
+          onChange={(e) => {
+            handleSelectedSampleNames(e);
+          }}
+          style={{ width: "35em" }}
+          // value="SampleID1, SampleID2, ..."
+        />
+        <button
+          type="button"
+          name="submitInput"
+          onClick={(e) => handleSelectedSamples(e)}
+        >
+          Submit
+        </button>
+      </p>
+      <p>
+        <MutsDateScatter tree={tree} mrca={mrca} setMRCA={setMRCA} />
+      </p>
+    </div>
   );
 }
 export default SampleSelection;
