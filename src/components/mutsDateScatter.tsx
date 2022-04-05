@@ -16,16 +16,24 @@ interface mutsDateScatterProps {
   handleSelectedSamples: Function;
 }
 
+type sampleDataType = { name: string; date: Date; muts: number };
+type internalNodeDataType = {
+  name: string;
+  date: Date;
+  samples: string[];
+};
+
 function MutsDateScatter(props: mutsDateScatterProps) {
   const { tree, setSelectedSampleNames, handleSelectedSamples } = props;
-  const root = get_root(tree);
-  const [primaryCase, setPrimaryCase] = useState<string | null>(null);
+  const [mrca, setMRCA] = useState<internalNodeDataType | null>(null);
 
-  // Catalog all samples in the tree
+  const root = get_root(tree);
+
+  // Catalog all samples in the tree --> // [{name, date, muts from root}]
   const all_samples: Array<Node> = get_leaves(tree);
-  let sample_data_points: any = []; // [{name, date, muts from root}]
+  let sample_data: sampleDataType[] = [];
   all_samples.forEach((sample: Node) => {
-    sample_data_points.push({
+    sample_data.push({
       name: sample.name,
       date: sample.node_attrs.num_date.value,
       muts: get_dist([root, sample]),
@@ -33,27 +41,18 @@ function MutsDateScatter(props: mutsDateScatterProps) {
   });
 
   // Catalog all internal nodes (i.e., "primary cases" / MRCAs of 2+ samples) in tree
-  const all_internal_nodes = traverse_preorder(
+  const all_internal_nodes: Array<Node> = traverse_preorder(
     tree,
     (node: Node) => node.children.length >= 2
   );
-  let internal_nodes_to_descendents: any = {}; // {internal node name: [sample names for all leaves descendent from this internal node]}
-  all_internal_nodes.forEach((node: Node) => {
-    internal_nodes_to_descendents[node.name] = get_leaves(node).map(
-      (l: Node) => l.name
-    );
-  });
 
-  // let internal_node_dates = {}; // {internal node name: date}
-  // all_internal_nodes.forEach((node: Node) => {
-  //   internal_nodes_to_descendents[node.name] = node.node_attrs.num_date;
-  // });
-
-  const internal_node_dates_ARR: any = [];
+  // Map internal nodes --> [{name, date, descendents_names}]
+  const internal_node_data: internalNodeDataType[] = [];
   all_internal_nodes.forEach((node: Node) => {
-    internal_node_dates_ARR.push({
+    internal_node_data.push({
       name: node.name,
       date: node.node_attrs.num_date.value,
+      samples: get_leaves(node).map((l: Node) => l.name),
     });
   });
 
@@ -63,18 +62,17 @@ function MutsDateScatter(props: mutsDateScatterProps) {
 
   const _xScaleTime = scaleTime()
     .domain(
-      extent(
-        sample_data_points,
-        (sample: { name: string; date: string; muts: number }) => {
-          return sample.date;
-        }
-      )
+      //@ts-ignore
+      extent(sample_data, (sample) => {
+        return sample.date;
+      })
     )
     .range([margin, chartWidth - margin]);
 
   const _yMutsScale = scaleLinear()
     .domain(
-      extent(sample_data_points, (sample: any) => {
+      //@ts-ignore
+      extent(sample_data, (sample) => {
         return sample.muts;
       })
     )
@@ -89,27 +87,25 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         primary cases usually result in broader selections.
       </p>
       <svg width={chartWidth} height={chartSize}>
-        {sample_data_points.map(
-          (sample: { name: string; date: string; muts: number }, i: number) => {
-            const isSelected =
-              primaryCase &&
-              internal_nodes_to_descendents[primaryCase].indexOf(sample.name) >=
-                0;
-
-            return (
-              <circle
-                key={i}
-                cx={_xScaleTime(sample.date)}
-                cy={_yMutsScale(sample.muts)}
-                r={3}
-                style={{
-                  fill: isSelected ? "steelblue" : `none`,
-                  stroke: isSelected ? "steelblue" : "rgba(180,180,180,1)",
-                }}
-              />
-            );
-          }
-        )}
+        {sample_data.map((sample, i: number) => {
+          const isSelected =
+            mrca &&
+            internal_node_data
+              .find((n) => n.name === mrca.name)
+              .samples.includes(sample.name);
+          return (
+            <circle
+              key={i}
+              cx={_xScaleTime(sample.date)}
+              cy={_yMutsScale(sample.muts)}
+              r={3}
+              style={{
+                fill: isSelected ? "steelblue" : `none`,
+                stroke: isSelected ? "steelblue" : "rgba(180,180,180,1)",
+              }}
+            />
+          );
+        })}
         <AxisLeft strokeWidth={0} left={margin} scale={_yMutsScale} />
         <AxisBottom
           strokeWidth={0}
@@ -122,37 +118,35 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         </text>
       </svg>
       <svg width={chartWidth} height={100}>
-        {internal_node_dates_ARR.map(
-          (sample: { name: string; date: string }, i: number) => {
-            return (
-              <circle
-                key={i}
-                onMouseEnter={() => {
-                  setPrimaryCase(sample.name);
-                }}
-                onClick={() => {
-                  console.log(props);
-                  if (primaryCase) {
-                    setSelectedSampleNames(
-                      internal_nodes_to_descendents[primaryCase]
-                    );
-                    handleSelectedSamples();
-                  }
-                }}
-                cx={_xScaleTime(sample.date)}
-                cy={38}
-                r={primaryCase === sample.name ? 6 : 3}
-                style={{
-                  fill: primaryCase === sample.name ? `steelblue` : `none`,
-                  stroke:
-                    primaryCase === sample.name
-                      ? `rgba(70,130,180)`
-                      : "rgba(180,180,180,1)",
-                }}
-              />
-            );
-          }
-        )}
+        {internal_node_data.map((node, i) => {
+          return (
+            <circle
+              key={i}
+              onMouseEnter={() => {
+                setMRCA(node);
+              }}
+              onClick={() => {
+                console.log(props);
+                if (mrca) {
+                  setSelectedSampleNames(
+                    internal_node_data.find((n) => n.name === mrca.name).samples
+                  );
+                  handleSelectedSamples();
+                }
+              }}
+              cx={_xScaleTime(node.date)}
+              cy={38}
+              r={mrca && mrca.name === node.name ? 6 : 3}
+              style={{
+                fill: mrca && mrca.name === node.name ? `steelblue` : `none`,
+                stroke:
+                  mrca && mrca.name === node.name
+                    ? `rgba(70,130,180)`
+                    : "rgba(180,180,180,1)",
+              }}
+            />
+          );
+        })}
         <g>
           <text x={margin - 4} y={20} fontSize={10}>
             Inferred 'primary cases' (hover to select a case).{" "}
