@@ -120,7 +120,7 @@ function App() {
     <div>
       <Header />
 
-      {!clade_description ? (
+      {(!tree || !location || !division) && (
         <div>
           <AboutGalago />
           <h2>Demo with real-world outbreak data</h2>
@@ -190,8 +190,6 @@ function App() {
           </p>
           <ContactUs />
         </div>
-      ) : (
-        <></>
       )}
       {location && division && tree && (
         <div>
