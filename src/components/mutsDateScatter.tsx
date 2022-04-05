@@ -149,8 +149,13 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         })}
         <g>
           <text x={margin - 4} y={20} fontSize={10}>
-            Inferred 'primary cases' (hover to select a case).{" "}
-            {primaryCase && `Selected primary case: ${primaryCase}`}
+            {mrca
+              ? `Selected primary case date: ${mrca.date
+                  .toISOString()
+                  .substring(0, 10)}. ${
+                  mrca.samples.length
+                } descendent samples.`
+              : `Inferred 'primary cases' (hover to select a case).`}
           </text>
           <text x={margin - 4} y={60} fontSize={10} fontStyle="italic">
             broader selection
