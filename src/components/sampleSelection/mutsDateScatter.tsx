@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Node } from "../../d";
-import {
-  get_dist,
-  get_leaves,
-  get_root,
-  traverse_preorder,
-} from "../../utils/treeMethods";
+import { get_dist, get_leaves, get_root } from "../../utils/treeMethods";
 
 import { scaleLinear, scaleBand, extent, scaleTime, rgb } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
@@ -15,9 +10,10 @@ interface mutsDateScatterProps {
   mrca: any;
   setMRCA: Function;
   mrcaOptions: internalNodeDataType[];
+  selectedSampleNames: string[];
 }
 
-type sampleDataType = { name: string; date: Date; muts: number };
+type sampleDataType = { name: string; date: Date; muts: number; raw: Node };
 type internalNodeDataType = {
   name: string;
   date: Date;
@@ -26,10 +22,8 @@ type internalNodeDataType = {
 };
 
 function MutsDateScatter(props: mutsDateScatterProps) {
-  const { tree, setMRCA, mrca, mrcaOptions } = props;
-  const [previewMRCA, setPreviewMRCA] = useState<internalNodeDataType | null>(
-    null
-  );
+  const { tree, setMRCA, mrca, mrcaOptions, selectedSampleNames } = props;
+  const [hoverMRCA, sethoverMRCA] = useState<internalNodeDataType | null>(null);
 
   const root = get_root(tree);
 
@@ -41,6 +35,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
       name: sample.name,
       date: sample.node_attrs.num_date.value,
       muts: get_dist([root, sample]),
+      raw: sample, // location data is in raw > node_attrs > location/division > value
     });
   });
 
@@ -70,12 +65,15 @@ function MutsDateScatter(props: mutsDateScatterProps) {
     <div>
       <svg width={chartWidth} height={chartSize}>
         {sample_data.map((sample, i: number) => {
-          const isSelected =
-            previewMRCA &&
+          const isHoverMrcaDescendent =
+            hoverMRCA &&
             //@ts-ignore
             mrcaOptions
-              .find((n) => n.name === previewMRCA.name)
+              .find((n) => n.name === hoverMRCA.name)
               .samples.includes(sample.name);
+
+          // "selected" here means typed into input (will rename all this state at some rate)
+          const isSelected = selectedSampleNames.includes(sample.name);
           return (
             <circle
               key={i}
@@ -83,8 +81,10 @@ function MutsDateScatter(props: mutsDateScatterProps) {
               cy={_yMutsScale(sample.muts)}
               r={3}
               style={{
-                fill: isSelected ? "steelblue" : `none`,
-                stroke: isSelected ? "steelblue" : "rgba(180,180,180,1)",
+                fill: isHoverMrcaDescendent ? "steelblue" : `none`,
+                stroke: isHoverMrcaDescendent
+                  ? "steelblue"
+                  : "rgba(180,180,180,1)",
               }}
             />
           );
@@ -106,15 +106,15 @@ function MutsDateScatter(props: mutsDateScatterProps) {
             <circle
               key={i}
               onMouseEnter={() => {
-                setPreviewMRCA(node);
+                sethoverMRCA(node);
               }}
               onMouseLeave={() => {
                 if (
-                  !previewMRCA ||
-                  previewMRCA.name !== mrca.name ||
-                  !mrcaOptions.includes(previewMRCA)
+                  !hoverMRCA ||
+                  hoverMRCA.name !== mrca.name ||
+                  !mrcaOptions.includes(hoverMRCA)
                 ) {
-                  setPreviewMRCA(null);
+                  sethoverMRCA(null);
                 }
               }}
               onClick={() => {
@@ -122,14 +122,14 @@ function MutsDateScatter(props: mutsDateScatterProps) {
               }}
               cx={_xScaleTime(node.date)}
               cy={38}
-              r={previewMRCA && previewMRCA.name === node.name ? 6 : 3}
+              r={hoverMRCA && hoverMRCA.name === node.name ? 6 : 3}
               style={{
                 fill:
-                  previewMRCA && previewMRCA.name === node.name
+                  hoverMRCA && hoverMRCA.name === node.name
                     ? `steelblue`
                     : `none`,
                 stroke:
-                  previewMRCA && previewMRCA.name === node.name
+                  hoverMRCA && hoverMRCA.name === node.name
                     ? `rgba(70,130,180)`
                     : "rgba(180,180,180,1)",
               }}
@@ -138,11 +138,11 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         })}
         <g>
           <text x={margin - 4} y={20} fontSize={10}>
-            {previewMRCA
-              ? `Selected primary case date: ${previewMRCA.date
+            {hoverMRCA
+              ? `Selected primary case date: ${hoverMRCA.date
                   .toISOString()
                   .substring(0, 10)}. ${
-                  previewMRCA.samples.length
+                  hoverMRCA.samples.length
                 } descendent samples.`
               : `Inferred 'primary cases' (hover to select a case).`}
           </text>
