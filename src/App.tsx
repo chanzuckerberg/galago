@@ -90,31 +90,6 @@ function App() {
     };
   };
 
-  const handleSelectedSampleNames = (event: any) => {
-    if (event && event.target) {
-      let input_string: string = event.target.value;
-      let sample_names: string[] = input_string
-        .split(/[,\s]+/)
-        .map((s: string) => s.trim());
-
-      setSelectedSampleNames(sample_names);
-    }
-  };
-
-  const handleSelectedSamples = (event: any) => {
-    if (selectedSampleNames && selectedSampleNames.length >= 2 && tree) {
-      let all_leaves = get_leaves(get_root(tree));
-      //@ts-ignore - we filter out any null values on the next line
-      let selected_sample_nodes: Array<Node> = selectedSampleNames
-        .map((n) => find_leaf_by_name(n, all_leaves))
-        .filter((n) => n !== null);
-
-      if (selected_sample_nodes.length >= 2) {
-        setSelectedSamples(selected_sample_nodes);
-      }
-    }
-  };
-
   const handleDivisionSelection = (event: any) => {
     if (event && event.target.value && tree) {
       const division = event.target.value;
@@ -230,34 +205,6 @@ function App() {
                   <option value={county}>{county}</option>
                 ))}
             </select>
-          </p>
-          <p>
-            <b>
-              Finally, please enter sample IDs, separated by spaces, tabs or
-              commas.
-            </b>{" "}
-            <br />
-            <i>
-              You should enter all the sample IDs in this tree that you believe
-              may be associated with your potential outbreak of interest.
-            </i>
-            <br />
-            <input
-              type="text"
-              name="selectedSamples"
-              onChange={(e) => {
-                handleSelectedSampleNames(e);
-              }}
-              style={{ width: "35em" }}
-              // value="SampleID1, SampleID2, ..."
-            />
-            <button
-              type="button"
-              name="submitInput"
-              onClick={(e) => handleSelectedSamples(e)}
-            >
-              Submit
-            </button>
           </p>
           <ContactUs />
         </div>
