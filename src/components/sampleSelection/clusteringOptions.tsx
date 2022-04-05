@@ -84,9 +84,10 @@ function ClusteringOptions(props: clusteringOptionsProps) {
 
   return (
     <div>
-      <h3>Suggest relevant primary cases (and corresponding samples)</h3>
+      {/* <h3>Suggest relevant primary cases (and corresponding samples)</h3> */}
       <p>
-        <h4>Show clusters that contain all of my samples of interest:</h4>
+        Optionally, input samples of interest to highlight them in the graph and
+        eliminate inferred primary cases that are unrelated.
         <input
           type="text"
           name="selectedSamples"

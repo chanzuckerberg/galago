@@ -58,18 +58,23 @@ function SampleSelection(props: sampleSelectionProps) {
 
   return (
     <div>
-      <MutsDateScatter
-        tree={tree}
-        mrca={mrca}
-        setMRCA={setMRCA}
-        mrcaOptions={mrcaOptions}
-      />
+      <h2>Interactive sample selection</h2>
+      <p>
+        To instantly generate a report for any set of samples, select a cluster
+        of samples based on the inferred primary case they descend from.
+      </p>
       <ClusteringOptions
         tree={tree}
         selectedSampleNames={selectedSampleNames}
         setSelectedSamples={setSelectedSamples}
         setSelectedSampleNames={setSelectedSampleNames}
         setMrcaOptions={setMrcaOptions}
+      />
+      <MutsDateScatter
+        tree={tree}
+        mrca={mrca}
+        setMRCA={setMRCA}
+        mrcaOptions={mrcaOptions}
       />
     </div>
   );
