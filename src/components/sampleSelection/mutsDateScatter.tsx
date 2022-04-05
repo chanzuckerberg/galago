@@ -68,11 +68,6 @@ function MutsDateScatter(props: mutsDateScatterProps) {
 
   return (
     <div>
-      <h2>Interactive sample selection</h2>
-      <p>
-        To instantly generate a report for any set of samples, select a cluster
-        of samples based on the inferred primary case they descend from.
-      </p>
       <svg width={chartWidth} height={chartSize}>
         {sample_data.map((sample, i: number) => {
           const isSelected =
@@ -113,11 +108,15 @@ function MutsDateScatter(props: mutsDateScatterProps) {
               onMouseEnter={() => {
                 setPreviewMRCA(node);
               }}
-              // onMouseLeave={() => {
-              //   if (!previewMRCA || previewMRCA.name !== mrca.name) {
-              //     setPreviewMRCA(null);
-              //   }
-              // }}
+              onMouseLeave={() => {
+                if (
+                  !previewMRCA ||
+                  previewMRCA.name !== mrca.name ||
+                  !mrcaOptions.includes(previewMRCA)
+                ) {
+                  setPreviewMRCA(null);
+                }
+              }}
               onClick={() => {
                 setMRCA(node.raw);
               }}
