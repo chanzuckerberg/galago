@@ -12,6 +12,7 @@ import { AxisLeft, AxisBottom } from "@visx/axis";
 
 interface mutsDateScatterProps {
   tree: Node;
+  selectedSampleNames: string[] | null;
   setSelectedSampleNames: Function;
   handleSelectedSamples: Function;
 }
@@ -24,7 +25,12 @@ type internalNodeDataType = {
 };
 
 function MutsDateScatter(props: mutsDateScatterProps) {
-  const { tree, setSelectedSampleNames, handleSelectedSamples } = props;
+  const {
+    tree,
+    setSelectedSampleNames,
+    handleSelectedSamples,
+    selectedSampleNames,
+  } = props;
   const [mrca, setMRCA] = useState<internalNodeDataType | null>(null);
 
   const root = get_root(tree);
@@ -125,14 +131,22 @@ function MutsDateScatter(props: mutsDateScatterProps) {
               onMouseEnter={() => {
                 setMRCA(node);
               }}
-              onClick={() => {
-                console.log(props);
-                if (mrca) {
-                  setSelectedSampleNames(
-                    internal_node_data.find((n) => n.name === mrca.name).samples
-                  );
-                  handleSelectedSamples();
+              onMouseLeave={() => {
+                if (
+                  !selectedSampleNames ||
+                  node.samples.length !== selectedSampleNames.length ||
+                  !node.samples.every(function (value, index) {
+                    return value == selectedSampleNames[index];
+                  })
+                ) {
+                  setMRCA(null);
                 }
+              }}
+              onClick={() => {
+                setSelectedSampleNames(
+                  internal_node_data.find((n) => n.name === mrca.name).samples
+                );
+                handleSelectedSamples();
               }}
               cx={_xScaleTime(node.date)}
               cy={38}
