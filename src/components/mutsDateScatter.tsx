@@ -12,11 +12,11 @@ import { AxisLeft, AxisBottom } from "@visx/axis";
 
 interface mutsDateScatterProps {
   tree: Node;
-  setReportSamples: any;
+  setSelectedSampleNames: any;
 }
 
 function MutsDateScatter(props: mutsDateScatterProps) {
-  const { tree, setReportSamples } = props;
+  const { tree, setSelectedSampleNames } = props;
   const root = get_root(tree);
   const [primaryCase, setPrimaryCase] = useState<string | null>(null);
 
@@ -132,7 +132,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                 onClick={() => {
                   console.log(props);
                   if (primaryCase) {
-                    setReportSamples(
+                    setSelectedSampleNames(
                       internal_nodes_to_descendents[primaryCase]
                     );
                   }

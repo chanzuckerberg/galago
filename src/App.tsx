@@ -149,17 +149,17 @@ function App() {
     setLocation("Humboldt County");
   };
 
-  if (tree && selectedSamples && location && division && !clade_description) {
-    initializeReport(
-      selectedSamples,
-      tree,
-      location,
-      division,
-      futureUserInput
-    );
-  }
-
-  console.log("selectedSamples", selectedSampleNames);
+  useEffect(() => {
+    if (tree && selectedSamples && location && division) {
+      initializeReport(
+        selectedSamples,
+        tree,
+        location,
+        division,
+        futureUserInput
+      );
+    }
+  }, [selectedSampleNames]); // Only re-run the effect if count changes
 
   return (
     <div>
@@ -275,7 +275,7 @@ function App() {
           </h1>
           <MutsDateScatter
             tree={tree}
-            setReportSamples={setSelectedSampleNames}
+            setSelectedSampleNames={setSelectedSampleNames}
           />
           {/* <h2>Results</h2> */}
           <SitStat
