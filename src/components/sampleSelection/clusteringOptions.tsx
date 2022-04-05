@@ -53,11 +53,24 @@ function ClusteringOptions(props: clusteringOptionsProps) {
     };
   };
 
-  const selectedSampleToRoot = (node: Node, root: Node) => {
-    const path = get_path([root, node]).path.filter(
-      (n) => n.children.length > 0
-    );
-    return path;
+  const selectedSamplesToRoot = (nodes: Node[], root: Node) => {
+    let all_mrca_options: Array<Node> = [];
+    let seen_node_names: string[] = [];
+
+    for (let i = 0; i < nodes.length; i++) {
+      let this_path = get_path([root, nodes[i]]).path.filter(
+        (n) => n.children.length > 0
+      );
+
+      this_path.forEach((n: Node) => {
+        if (!seen_node_names.includes(n.name)) {
+          seen_node_names.push(n.name);
+          all_mrca_options.push(n);
+        }
+      });
+    }
+
+    return all_mrca_options.map((n: Node) => nodeToNodeData(n));
   };
 
   const handleSelectedSamples = (event: any) => {
@@ -70,14 +83,7 @@ function ClusteringOptions(props: clusteringOptionsProps) {
 
       if (selected_sample_nodes.length >= 2) {
         setSelectedSamples(selected_sample_nodes);
-        let all_paths: Array<Node | internalNodeDataType> = [];
-        selected_sample_nodes.forEach((n) => {
-          all_paths.push(...selectedSampleToRoot(n, root));
-          console.log(all_paths.length);
-        });
-        all_paths = [...new Set(all_paths.map((n) => nodeToNodeData(n)))];
-        console.log("final length", all_paths.length);
-        setMrcaOptions(all_paths);
+        setMrcaOptions(selectedSamplesToRoot(selected_sample_nodes, root));
       }
     }
   };
