@@ -53,30 +53,6 @@ function App() {
   ]);
   const [mrca, setMRCA] = useState<Node | null>(null);
 
-  const initializeReport = (
-    selectedSamples: Node[],
-    tree: Node,
-    location: string,
-    division: string,
-    futureUserInput: any
-  ) => {
-    const home_geo = {
-      location: location,
-      division: division,
-      country: futureUserInput.home_geo["country"],
-      region: futureUserInput.home_geo["region"],
-    };
-
-    setCladeDescription(
-      describe_clade(
-        selectedSamples,
-        home_geo,
-        futureUserInput["muts_per_trans_minmax"],
-        futureUserInput["min_muts_to_parent"]
-      )
-    );
-  };
-
   const handleTreeUpload = (event: any) => {
     const fileReader = new FileReader();
 
@@ -123,16 +99,23 @@ function App() {
   };
 
   useEffect(() => {
-    if (tree && selectedSamples && location && division) {
-      initializeReport(
-        selectedSamples,
-        tree,
-        location,
-        division,
-        futureUserInput
+    if (tree && (selectedSamples || mrca) && location && division) {
+      setCladeDescription(
+        describe_clade(
+          {
+            location: location,
+            division: division,
+            country: country,
+            region: region,
+          },
+          mutsPerTransMinMax,
+          minMutsToParent,
+          mrca,
+          selectedSamples
+        )
       );
     }
-  }, [selectedSampleNames]); // Only re-run the effect if count changes
+  }, [selectedSampleNames, mrca, location, division]);
 
   return (
     <div>
