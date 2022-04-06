@@ -42,6 +42,8 @@ function MutsDateScatter(props: mutsDateScatterProps) {
   const chartSize = 560;
   const chartWidth = 960;
   const margin = 30;
+  const sampleCircleRadius = 3;
+  const deemphasis = 0.4;
 
   const _xScaleTime = scaleTime()
     .domain(
@@ -65,12 +67,38 @@ function MutsDateScatter(props: mutsDateScatterProps) {
     <div>
       <svg width={chartWidth} height={chartSize}>
         {sample_data.map((sample, i: number) => {
+          // "selected" here means typed into input (will rename all this state at some rate)
+          const isSelected = selectedSampleNames.includes(sample.name);
+          return (
+            <circle
+              key={i}
+              cx={_xScaleTime(sample.date)}
+              cy={_yMutsScale(sample.muts)}
+              r={sampleCircleRadius}
+              style={{
+                fill: `none`,
+                stroke: "rgba(180,180,180,1)",
+              }}
+            />
+          );
+        })}
+        {/* opacity layer to fade back all unselected nodes */}
+        {hoverMRCA && (
+          <rect
+            width={chartWidth}
+            height={chartSize}
+            fill={`rgba(255,255,255,${deemphasis})`}
+          />
+        )}
+        {sample_data.map((sample, i: number) => {
           const isHoverMrcaDescendent =
             hoverMRCA &&
             //@ts-ignore
             mrcaOptions
               .find((n) => n.name === hoverMRCA.name)
               .samples.includes(sample.name);
+
+          if (!isHoverMrcaDescendent) return;
 
           // "selected" here means typed into input (will rename all this state at some rate)
           const isSelected = selectedSampleNames.includes(sample.name);
@@ -79,12 +107,10 @@ function MutsDateScatter(props: mutsDateScatterProps) {
               key={i}
               cx={_xScaleTime(sample.date)}
               cy={_yMutsScale(sample.muts)}
-              r={3}
+              r={sampleCircleRadius}
               style={{
-                fill: isHoverMrcaDescendent ? "steelblue" : `none`,
-                stroke: isHoverMrcaDescendent
-                  ? "steelblue"
-                  : "rgba(180,180,180,1)",
+                fill: "rgba(80,80,80,1)",
+                stroke: "rgba(80,80,80,1)",
               }}
             />
           );
@@ -101,7 +127,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         </text>
       </svg>
       <svg width={chartWidth} height={100}>
-        {mrcaOptions.map((node, i) => {
+        {mrcaOptions.map((node: any, i: number) => {
           return (
             <circle
               key={i}
