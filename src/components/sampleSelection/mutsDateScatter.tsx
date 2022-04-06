@@ -77,7 +77,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
               r={sampleCircleRadius}
               style={{
                 fill: `none`,
-                stroke: "rgba(180,180,180,1)",
+                stroke: isSelected ? "black" : "rgba(200,200,200,1)",
               }}
             />
           );
