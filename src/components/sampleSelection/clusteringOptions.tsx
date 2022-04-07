@@ -7,6 +7,7 @@ import {
   get_mrca,
   get_path,
 } from "../../utils/treeMethods";
+import { setIntersection } from "../../utils/misc";
 import { nodeToNodeData, trimDeepNodes } from "../../utils/clusterMethods";
 
 type clusteringOptionsProps = {
@@ -26,25 +27,28 @@ export type internalNodeDataType = {
 function ClusteringOptions(props: clusteringOptionsProps) {
   const { tree, selectedSamples, mrcaOptions, setMrcaOptions } = props;
 
-  const root = get_root(tree);
-  const handleSelectedSampleNames = (event: any) => {
-    if (event && event.target) {
-      let input_string: string = event.target.value;
-      let sample_names: string[] = input_string
-        .split(/[,\s]+/)
+  const handleSamplesOfInterestAndClusteringIntersection = (
+    selectedSamples: Node[],
+    clusteringResults: internalNodeDataType[]
+  ) => {
+    let newMrcaOptions: internalNodeDataType[] = [];
+    const selectedSamplesSet = new Set(selectedSamples.map((s) => s.name));
 
-      setSelectedSampleNames(sample_names);
+    clusteringResults.forEach((n: internalNodeDataType) => {
+      let leaves = get_leaves(n.raw).map((n) => n.name);
+      if (setIntersection(new Set(leaves), selectedSamplesSet).size > 0) {
+        newMrcaOptions.push(n);
       }
-  };
+    });
 
-  const nodeToNodeData = (node: Node) => {
-    return {
-      name: node.name,
+    console.assert(
+      newMrcaOptions.length > 0,
+      "NO CLUSTERS CONTAIN ANY SAMPLES OF INTEREST!?"
     );
 
-      this_path.forEach((n: Node) => {
+    setMrcaOptions(newMrcaOptions);
   };
 
-  const handleSelectedSamples = (event: any) => {
+  return <div>"choose a clustering method"</div>;
 }
 export default ClusteringOptions;
