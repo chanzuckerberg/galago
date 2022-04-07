@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Node } from "../../d";
 import { get_dist, get_leaves, get_root } from "../../utils/treeMethods";
 
-import { scaleLinear, scaleBand, extent, scaleTime, rgb } from "d3";
+import { scaleLinear, extent, scaleTime, symbolCross } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 
 interface mutsDateScatterProps {
@@ -186,10 +186,37 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         <text x="-150" y="45" transform="rotate(-90)" fontSize={10}>
           Mutations
         </text>
+        <g
+          id="interactive-sample-selection-legend"
+          transform="translate(150,85)"
+        >
+          <circle cx="0" cy="7" r={radiusSampleDeemphasis} fill={mediumGray} />
+          <text x="10" y="10" fontSize={10}>
+            Sample
+          </text>
+          <circle cx="0" cy="27" r={3} fill={maximumEmphasisColor} />
+          <text x="10" y="30" fontSize={10}>
+            Manually entered samples of interest
+          </text>
+          <circle
+            cx="0"
+            cy="47"
+            r={3}
+            fill={"rgb(240,240,240)"}
+            stroke={darkGray}
+          />
+          <text x="10" y="50" fontSize={10}>
+            Samples descended from currently hovered MRCA
+          </text>
+          <circle cx="0" cy="67" r={6} fill={maximumEmphasisColor} />
+          <text x="10" y="70" fontSize={10}>
+            Manually entered samples of interest descended from hovered MRCA
+          </text>
+        </g>
       </svg>
       <svg
         width={chartWidth}
-        height={100}
+        height={45}
         onMouseLeave={() => {
           if (
             !hoverMRCA ||
