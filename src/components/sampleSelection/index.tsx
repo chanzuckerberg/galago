@@ -75,6 +75,7 @@ function SampleSelection(props: sampleSelectionProps) {
         mrca={mrca}
         setMRCA={setMRCA}
         mrcaOptions={mrcaOptions}
+        selectedSampleNames={selectedSampleNames}
       />
     </div>
   );
