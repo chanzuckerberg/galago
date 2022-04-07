@@ -9,6 +9,7 @@ import {
   find_leaf_by_name,
   traverse_preorder,
 } from "../../utils/treeMethods";
+import SamplesOfInterest from "./samplesOfInterest";
 
 type sampleSelectionProps = {
   tree: Node;
@@ -63,7 +64,15 @@ function SampleSelection(props: sampleSelectionProps) {
         To instantly generate a report for any set of samples, select a cluster
         of samples based on the inferred primary case they descend from.
       </p>
+      <SamplesOfInterest
+        tree={tree}
+        setSelectedSampleNames={setSelectedSampleNames}
+        setSelectedSamples={setSelectedSamples}
+        setMrcaOptions={setMrcaOptions}
+        selectedSampleNames={selectedSampleNames}
+      />
       <ClusteringOptions
+        mrcaOptions={mrcaOptions}
         tree={tree}
         selectedSampleNames={selectedSampleNames}
         setSelectedSamples={setSelectedSamples}
