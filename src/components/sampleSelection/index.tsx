@@ -1,7 +1,7 @@
 import MutsDateScatter from "./mutsDateScatter";
 import ClusteringOptions from "./clusteringOptions";
 import { CladeDescription, Node } from "../../d";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { describe_clade } from "../../utils/describeClade";
 import {
   get_leaves,
@@ -9,9 +9,12 @@ import {
   find_leaf_by_name,
   traverse_preorder,
 } from "../../utils/treeMethods";
+import SamplesOfInterest from "./samplesOfInterest";
+import { setIntersection } from "../../utils/misc";
 
 type sampleSelectionProps = {
   tree: Node;
+  selectedSamples: Node[];
   setSelectedSamples: Function;
   selectedSampleNames: string[] | null;
   setSelectedSampleNames: Function;
@@ -29,6 +32,7 @@ export type internalNodeDataType = {
 function SampleSelection(props: sampleSelectionProps) {
   const {
     tree,
+    selectedSamples,
     setSelectedSamples,
     selectedSampleNames,
     setSelectedSampleNames,
@@ -53,8 +57,45 @@ function SampleSelection(props: sampleSelectionProps) {
     });
   });
 
+  const [clusterMrcaOptions, setClusterMrcaOptions] =
+    useState<internalNodeDataType[]>(internal_node_data);
+
   const [mrcaOptions, setMrcaOptions] =
     useState<internalNodeDataType[]>(internal_node_data);
+
+  const handleSamplesOfInterestAndClusteringIntersection = (
+    selectedSamples: Node[],
+    clusterMrcaOptions: internalNodeDataType[]
+  ) => {
+    let newMrcaOptions: internalNodeDataType[] = [];
+    const selectedSamplesSet = new Set(selectedSamples.map((s) => s.name));
+
+    clusterMrcaOptions.forEach((n: internalNodeDataType) => {
+      let leaves = get_leaves(n.raw).map((n) => n.name);
+      if (setIntersection(new Set(leaves), selectedSamplesSet).size > 0) {
+        newMrcaOptions.push(n);
+      }
+    });
+
+    console.assert(
+      newMrcaOptions.length > 0,
+      "NO CLUSTERS CONTAIN ANY SAMPLES OF INTEREST!?"
+    );
+    return newMrcaOptions;
+  };
+
+  useEffect(() => {
+    if (setSelectedSamples && clusterMrcaOptions) {
+      setMrcaOptions(
+        handleSamplesOfInterestAndClusteringIntersection(
+          selectedSamples,
+          clusterMrcaOptions
+        )
+      );
+    } else {
+      setMrcaOptions(internal_node_data);
+    }
+  }, [selectedSamples, clusterMrcaOptions]);
 
   return (
     <div>
@@ -63,12 +104,20 @@ function SampleSelection(props: sampleSelectionProps) {
         To instantly generate a report for any set of samples, select a cluster
         of samples based on the inferred primary case they descend from.
       </p>
-      <ClusteringOptions
+      <SamplesOfInterest
         tree={tree}
-        selectedSampleNames={selectedSampleNames}
-        setSelectedSamples={setSelectedSamples}
         setSelectedSampleNames={setSelectedSampleNames}
-        setMrcaOptions={setMrcaOptions}
+        setSelectedSamples={setSelectedSamples}
+        // setMrcaOptions={setMrcaOptions}
+        selectedSampleNames={selectedSampleNames}
+      />
+      <ClusteringOptions
+        // mrcaOptions={mrcaOptions}
+        tree={tree}
+        // selectedSampleNames={selectedSampleNames}
+        // setSelectedSamples={setSelectedSamples}
+        // setSelectedSampleNames={setSelectedSampleNames}
+        setClusterMrcaOptions={setClusterMrcaOptions}
       />
       <MutsDateScatter
         tree={tree}

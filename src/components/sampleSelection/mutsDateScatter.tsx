@@ -10,7 +10,7 @@ interface mutsDateScatterProps {
   mrca: any;
   setMRCA: Function;
   mrcaOptions: internalNodeDataType[];
-  selectedSampleNames: string[];
+  selectedSampleNames: string[] | null;
 }
 
 type sampleDataType = { name: string; date: Date; muts: number; raw: Node };
@@ -159,7 +159,9 @@ function MutsDateScatter(props: mutsDateScatterProps) {
       <svg width={chartWidth} height={chartSize}>
         {sample_data.map((sample, i: number) => {
           // "selected" here means typed into input (will rename all this state at some rate)
-          const isSelected = selectedSampleNames.includes(sample.name);
+          const isSelected = selectedSampleNames
+            ? selectedSampleNames.includes(sample.name)
+            : false;
           const isBaseLayer = true;
           const selectedLocation = "Humboldt County";
           return isSelected ? (
@@ -217,7 +219,9 @@ function MutsDateScatter(props: mutsDateScatterProps) {
           if (!isHoverMrcaDescendent) return;
 
           // "selected" here means typed into input (will rename all this state at some rate)
-          const isSelected = selectedSampleNames.includes(sample.name);
+          const isSelected = selectedSampleNames
+            ? selectedSampleNames.includes(sample.name)
+            : false;
           return (
             <circle
               key={i}
