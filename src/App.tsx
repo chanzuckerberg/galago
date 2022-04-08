@@ -28,6 +28,8 @@ import { demo_tree } from "../data/demo_tree";
 import { SitStat } from "./components/sitStat";
 import SampleSelection from "./components/sampleSelection";
 
+import { useSelector, useDispatch } from "react-redux";
+
 function App() {
   //@ts-ignore
   const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
@@ -121,8 +123,19 @@ function App() {
     }
   }, [selectedSamples, mrca, location, division]);
 
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
+
   return (
     <div>
+      <button
+        onClick={() => {
+          dispatch({ type: "user submit samples of interest", data: 10 });
+        }}
+      >
+        redux install
+      </button>
+      <p>hello world {state.report}</p>
       <Header />
 
       {(!tree || !location || !division) && (
