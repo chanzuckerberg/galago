@@ -1,7 +1,7 @@
 import MutsDateScatter from "./mutsDateScatter";
 import ClusteringOptions from "./clusteringOptions";
 import { CladeDescription, Node } from "../../d";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { describe_clade } from "../../utils/describeClade";
 import {
   get_leaves,
@@ -10,6 +10,7 @@ import {
   traverse_preorder,
 } from "../../utils/treeMethods";
 import SamplesOfInterest from "./samplesOfInterest";
+import { setIntersection } from "../../utils/misc";
 
 type sampleSelectionProps = {
   tree: Node;
@@ -56,8 +57,45 @@ function SampleSelection(props: sampleSelectionProps) {
     });
   });
 
+  const [clusterMrcaOptions, setClusterMrcaOptions] =
+    useState<internalNodeDataType[]>(internal_node_data);
+
   const [mrcaOptions, setMrcaOptions] =
     useState<internalNodeDataType[]>(internal_node_data);
+
+  const handleSamplesOfInterestAndClusteringIntersection = (
+    selectedSamples: Node[],
+    clusterMrcaOptions: internalNodeDataType[]
+  ) => {
+    let newMrcaOptions: internalNodeDataType[] = [];
+    const selectedSamplesSet = new Set(selectedSamples.map((s) => s.name));
+
+    clusterMrcaOptions.forEach((n: internalNodeDataType) => {
+      let leaves = get_leaves(n.raw).map((n) => n.name);
+      if (setIntersection(new Set(leaves), selectedSamplesSet).size > 0) {
+        newMrcaOptions.push(n);
+      }
+    });
+
+    console.assert(
+      newMrcaOptions.length > 0,
+      "NO CLUSTERS CONTAIN ANY SAMPLES OF INTEREST!?"
+    );
+    return newMrcaOptions;
+  };
+
+  useEffect(() => {
+    if (setSelectedSamples && clusterMrcaOptions) {
+      setMrcaOptions(
+        handleSamplesOfInterestAndClusteringIntersection(
+          selectedSamples,
+          clusterMrcaOptions
+        )
+      );
+    } else {
+      setMrcaOptions(internal_node_data);
+    }
+  }, [selectedSamples, clusterMrcaOptions]);
 
   return (
     <div>
@@ -70,16 +108,16 @@ function SampleSelection(props: sampleSelectionProps) {
         tree={tree}
         setSelectedSampleNames={setSelectedSampleNames}
         setSelectedSamples={setSelectedSamples}
-        setMrcaOptions={setMrcaOptions}
+        // setMrcaOptions={setMrcaOptions}
         selectedSampleNames={selectedSampleNames}
       />
       <ClusteringOptions
-        mrcaOptions={mrcaOptions}
+        // mrcaOptions={mrcaOptions}
         tree={tree}
-        selectedSampleNames={selectedSampleNames}
-        setSelectedSamples={setSelectedSamples}
-        setSelectedSampleNames={setSelectedSampleNames}
-        setMrcaOptions={setMrcaOptions}
+        // selectedSampleNames={selectedSampleNames}
+        // setSelectedSamples={setSelectedSamples}
+        // setSelectedSampleNames={setSelectedSampleNames}
+        setClusterMrcaOptions={setClusterMrcaOptions}
       />
       <MutsDateScatter
         tree={tree}

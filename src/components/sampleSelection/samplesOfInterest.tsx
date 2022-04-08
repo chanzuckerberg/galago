@@ -12,8 +12,8 @@ interface samplesOfInterestProps {
   tree: Node;
   setSelectedSampleNames: Function;
   setSelectedSamples: Function;
-  setMrcaOptions: Function;
-  selectedSampleNames: string[];
+  // setMrcaOptions: Function;
+  selectedSampleNames: string[] | null;
 }
 
 export const SamplesOfInterest = (props: samplesOfInterestProps) => {
@@ -21,11 +21,11 @@ export const SamplesOfInterest = (props: samplesOfInterestProps) => {
     tree,
     setSelectedSampleNames,
     setSelectedSamples,
-    setMrcaOptions,
+    // setMrcaOptions,
     selectedSampleNames,
   } = props;
 
-  const root = get_root(tree);
+  // const root = get_root(tree);
 
   const handleSelectedSampleNames = (event: any) => {
     if (event && event.target) {
@@ -48,30 +48,30 @@ export const SamplesOfInterest = (props: samplesOfInterestProps) => {
 
       if (selected_sample_nodes.length >= 2) {
         setSelectedSamples(selected_sample_nodes);
-        setMrcaOptions(selectedSamplesToRoot(selected_sample_nodes, root));
+        // setMrcaOptions(selectedSamplesToRoot(selected_sample_nodes, root));
       }
     }
   };
 
-  const selectedSamplesToRoot = (nodes: Node[], root: Node) => {
-    let all_mrca_options: Array<Node> = [];
-    let seen_node_names: string[] = [];
+  // const selectedSamplesToRoot = (nodes: Node[], root: Node) => {
+  //   let all_mrca_options: Array<Node> = [];
+  //   let seen_node_names: string[] = [];
 
-    for (let i = 0; i < nodes.length; i++) {
-      let this_path = get_path([root, nodes[i]]).path.filter(
-        (n) => n.children.length > 0
-      );
+  //   for (let i = 0; i < nodes.length; i++) {
+  //     let this_path = get_path([root, nodes[i]]).path.filter(
+  //       (n) => n.children.length > 0
+  //     );
 
-      this_path.forEach((n: Node) => {
-        if (!seen_node_names.includes(n.name)) {
-          seen_node_names.push(n.name);
-          all_mrca_options.push(n);
-        }
-      });
-    }
+  //     this_path.forEach((n: Node) => {
+  //       if (!seen_node_names.includes(n.name)) {
+  //         seen_node_names.push(n.name);
+  //         all_mrca_options.push(n);
+  //       }
+  //     });
+  //   }
 
-    return all_mrca_options.map((n: Node) => nodeToNodeData(n));
-  };
+  //   return all_mrca_options.map((n: Node) => nodeToNodeData(n));
+  // };
 
   return (
     <p>

@@ -8,13 +8,17 @@ import {
   get_path,
 } from "../../utils/treeMethods";
 import { setIntersection } from "../../utils/misc";
-import { nodeToNodeData, trimDeepNodes } from "../../utils/clusterMethods";
+import {
+  nextstrainGeo,
+  nodeToNodeData,
+  trimDeepNodes,
+} from "../../utils/clusterMethods";
 
 type clusteringOptionsProps = {
   tree: Node;
-  selectedSamples: Node[];
-  mrcaOptions: internalNodeDataType[];
-  setMrcaOptions: Function;
+  // selectedSamples: Node[];
+  // mrcaOptions: internalNodeDataType[];
+  setClusterMrcaOptions: Function;
 };
 
 export type internalNodeDataType = {
@@ -25,30 +29,25 @@ export type internalNodeDataType = {
 };
 
 function ClusteringOptions(props: clusteringOptionsProps) {
-  const { tree, selectedSamples, mrcaOptions, setMrcaOptions } = props;
+  const { tree, setClusterMrcaOptions } = props;
 
-  const handleSamplesOfInterestAndClusteringIntersection = (
-    selectedSamples: Node[],
-    clusteringResults: internalNodeDataType[]
-  ) => {
-    let newMrcaOptions: internalNodeDataType[] = [];
-    const selectedSamplesSet = new Set(selectedSamples.map((s) => s.name));
-
-    clusteringResults.forEach((n: internalNodeDataType) => {
-      let leaves = get_leaves(n.raw).map((n) => n.name);
-      if (setIntersection(new Set(leaves), selectedSamplesSet).size > 0) {
-        newMrcaOptions.push(n);
-      }
-    });
-
-    console.assert(
-      newMrcaOptions.length > 0,
-      "NO CLUSTERS CONTAIN ANY SAMPLES OF INTEREST!?"
+  return (
+    <div>
+      <p>Choose a clustering method:</p>
+      <p>
+        <input
+          type="radio"
+          id="noClustering"
+          name="clusteringOptionsRadio"
+          value="none"
+          defaultChecked
+          onClick={setClusterMrcaOptions([])}
+        />
+        <label htmlFor="trimDeepNodes">None (show all primary cases)</label>
+      </p>
+      <p>
+        <input
+          type="radio"
     );
-
-    setMrcaOptions(newMrcaOptions);
-  };
-
-  return <div>"choose a clustering method"</div>;
 }
 export default ClusteringOptions;
