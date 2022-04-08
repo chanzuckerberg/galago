@@ -39,6 +39,10 @@ function MutsDateScatter(props: mutsDateScatterProps) {
     });
   });
 
+  // all_samples.sort((sample1: string, sample2: string) => {
+  //   return selectedSampleNames.includes(sample1.name) ? 1 : -1
+  // }
+
   const chartSize = 560;
   const chartWidth = 960;
   const margin = 30;
@@ -58,7 +62,7 @@ function MutsDateScatter(props: mutsDateScatterProps) {
   /* deemphasis */
   const deemphasis = 0.4;
   const deemphasisLayer = `rgba(255,255,255,${deemphasis})`;
-  const radiusSampleDeemphasis = 2;
+  const radiusSampleDeemphasis = 3;
 
   /* samples, mrcaHovered */
 
@@ -131,6 +135,25 @@ function MutsDateScatter(props: mutsDateScatterProps) {
     };
   };
 
+  const getBaseLayerSampleColor = (
+    isSelected: boolean,
+    selectedLocation: string,
+    sampleLocation: string
+  ) => {
+    let _sampleColor = baseLayerGrayColor;
+
+    if (isSelected) {
+      _sampleColor = isSampleOfInterestColor;
+    }
+
+    /* if it's a sample of interest AND your selected location ... */
+    if (selectedLocation === sampleLocation && isSelected) {
+      _sampleColor = steelblue;
+    }
+
+    return _sampleColor;
+  };
+
   return (
     <div>
       <svg width={chartWidth} height={chartSize}>
@@ -138,14 +161,43 @@ function MutsDateScatter(props: mutsDateScatterProps) {
           // "selected" here means typed into input (will rename all this state at some rate)
           const isSelected = selectedSampleNames.includes(sample.name);
           const isBaseLayer = true;
-          return (
+          const selectedLocation = "Humboldt County";
+          return isSelected ? (
+            <g
+              transform={`translate(
+                ${_xScaleTime(sample.date)},
+                ${_yMutsScale(sample.muts)}
+              )`}
+            >
+              <line
+                x1="-4"
+                y1="0"
+                x2="4"
+                y2="0"
+                stroke="black"
+                strokeWidth={1}
+              />
+              <line
+                x1="0"
+                y1="-4"
+                x2="0"
+                y2="4"
+                stroke="black"
+                strokeWidth={1}
+              />
+            </g>
+          ) : (
             <circle
               key={i}
               cx={_xScaleTime(sample.date)}
               cy={_yMutsScale(sample.muts)}
               r={getSampleCircleRadius(isSelected, isBaseLayer)}
               style={{
-                fill: isSelected ? isSampleOfInterestColor : baseLayerGrayColor,
+                fill: getBaseLayerSampleColor(
+                  isSelected,
+                  selectedLocation,
+                  sample.raw.node_attrs.location.value
+                ),
               }}
             />
           );
@@ -194,7 +246,10 @@ function MutsDateScatter(props: mutsDateScatterProps) {
           <text x="10" y="10" fontSize={10}>
             Sample
           </text>
-          <circle cx="0" cy="27" r={3} fill={maximumEmphasisColor} />
+          <g transform={`translate(0,26.5)`}>
+            <line x1="-4" y1="0" x2="4" y2="0" stroke="black" strokeWidth={1} />
+            <line x1="0" y1="-4" x2="0" y2="4" stroke="black" strokeWidth={1} />
+          </g>
           <text x="10" y="30" fontSize={10}>
             Manually entered samples of interest
           </text>
@@ -208,7 +263,10 @@ function MutsDateScatter(props: mutsDateScatterProps) {
           <text x="10" y="50" fontSize={10}>
             Samples descended from currently hovered MRCA
           </text>
-          <circle cx="0" cy="67" r={6} fill={maximumEmphasisColor} />
+          <g transform={`translate(0,66.5)`}>
+            <line x1="-4" y1="0" x2="4" y2="0" stroke="black" strokeWidth={2} />
+            <line x1="0" y1="-4" x2="0" y2="4" stroke="black" strokeWidth={2} />
+          </g>
           <text x="10" y="70" fontSize={10}>
             Manually entered samples of interest descended from hovered MRCA
           </text>
