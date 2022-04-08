@@ -48,6 +48,25 @@ function ClusteringOptions(props: clusteringOptionsProps) {
       <p>
         <input
           type="radio"
-    );
+          id="trimDeepNodes"
+          name="clusteringOptionsRadio"
+          onClick={setClusterMrcaOptions(trimDeepNodes(tree))}
+        />
+        <label htmlFor="trimDeepNodes">Tree pruning (most basic)</label>
+      </p>
+      <p>
+        <input
+          type="radio"
+          id="nextstrainGeo"
+          name="clusteringOptionsRadio"
+          value="phone"
+          onClick={setClusterMrcaOptions(nextstrainGeo(tree))}
+        />
+        <label htmlFor="nextstrainGeo">
+          Geographic movement (Nextstrain inference)
+        </label>
+      </p>
+    </div>
+  );
 }
 export default ClusteringOptions;
