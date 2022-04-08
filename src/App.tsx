@@ -201,6 +201,7 @@ function App() {
           <h1>Investigate potential outbreak clusters in {location}</h1>
           <SampleSelection
             tree={tree}
+            selectedSamples={selectedSamples}
             setSelectedSamples={setSelectedSamples}
             selectedSampleNames={selectedSampleNames}
             setSelectedSampleNames={setSelectedSampleNames}

@@ -13,6 +13,7 @@ import SamplesOfInterest from "./samplesOfInterest";
 
 type sampleSelectionProps = {
   tree: Node;
+  selectedSamples: Node[];
   setSelectedSamples: Function;
   selectedSampleNames: string[] | null;
   setSelectedSampleNames: Function;
@@ -30,6 +31,7 @@ export type internalNodeDataType = {
 function SampleSelection(props: sampleSelectionProps) {
   const {
     tree,
+    selectedSamples,
     setSelectedSamples,
     selectedSampleNames,
     setSelectedSampleNames,
