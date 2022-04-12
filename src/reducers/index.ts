@@ -1,9 +1,11 @@
 import { combineReducers } from "redux";
-import report from "./report";
+import location from "./location";
+import division from "./division";
 import tree from "./tree";
 
 const reducers: any = combineReducers({
-  report,
+  location,
+  division,
   tree,
 });
 

@@ -52,8 +52,6 @@ function App() {
   const [divisionInputOptions, setDivisionInputOptions] = useState<
     string[] | null
   >(null);
-  const [location, setLocation] = useState<string | null>(null);
-  const [division, setDivision] = useState<string | null>(null);
   const [country, setCountry] = useState<string>("USA");
   const [region, setRegion] = useState<string>("North America");
   const [minMutsToParent, setMinMutsToParent] = useState<number>(1);
@@ -67,14 +65,8 @@ function App() {
   const handleDivisionSelection = (event: any) => {
     if (event && event.target.value && tree) {
       const division = event.target.value;
-      setDivision(division);
+      dispatch({ type: "division set", data: division });
       setLocationInputOptions(get_location_input_options(tree, division));
-    }
-  };
-
-  const handleLocationSelection = (event: any) => {
-    if (event && event.target.value) {
-      setLocation(event.target.value);
     }
   };
 
@@ -90,8 +82,8 @@ function App() {
     setSelectedSampleNames(selected_sample_names);
     setSelectedSamples(selected_sample_nodes);
     setMRCA(get_mrca(selected_sample_nodes));
-    setDivision("California");
-    setLocation("Humboldt County");
+    dispatch({ type: "division set", data: "California" });
+    dispatch({ type: "location set", data: "Humboldt County" });
   };
 
   useEffect(() => {
@@ -195,7 +187,12 @@ function App() {
             <select
               id="location-select"
               name="County"
-              onChange={handleLocationSelection}
+              onChange={(event) =>
+                dispatch({
+                  type: "location set",
+                  data: event.target.value,
+                })
+              }
               disabled={locationInputOptions === null}
               style={{ width: "15em" }}
             >
@@ -210,7 +207,7 @@ function App() {
       )}
       {state.location && state.division && state.tree && (
         <div>
-          <h1>Investigate potential outbreak clusters in {location}</h1>
+          <h1>Investigate potential outbreak clusters in {state.location}</h1>
           <SampleSelection tree={state.tree} />
             selectedSamples={selectedSamples}
             setSelectedSamples={setSelectedSamples}
