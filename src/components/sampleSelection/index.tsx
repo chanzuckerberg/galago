@@ -14,8 +14,8 @@ import { setIntersection } from "../../utils/misc";
 
 type sampleSelectionProps = {
   tree: Node;
-  selectedSamples: Node[];
-  setSelectedSamples: Function;
+  // selectedSamples: Node[];
+  // setSelectedSamples: Function;
   // selectedSampleNames: string[] | null;
   // setSelectedSampleNames: Function;
   mrca: Node | null;
@@ -83,18 +83,18 @@ function SampleSelection(props: sampleSelectionProps) {
     return newMrcaOptions;
   };
 
-  useEffect(() => {
-    if (setSelectedSamples && clusterMrcaOptions) {
-      setMrcaOptions(
-        handleSamplesOfInterestAndClusteringIntersection(
-          selectedSamples,
-          clusterMrcaOptions
-        )
-      );
-    } else {
-      setMrcaOptions(internal_node_data);
-    }
-  }, [selectedSamples, clusterMrcaOptions]);
+  // useEffect(() => {
+  //   if (setSelectedSamples && clusterMrcaOptions) {
+  //     setMrcaOptions(
+  //       handleSamplesOfInterestAndClusteringIntersection(
+  //         selectedSamples,
+  //         clusterMrcaOptions
+  //       )
+  //     );
+  //   } else {
+  //     setMrcaOptions(internal_node_data);
+  //   }
+  // }, [selectedSamples, clusterMrcaOptions]);
 
   return (
     <div>
@@ -103,9 +103,8 @@ function SampleSelection(props: sampleSelectionProps) {
         To instantly generate a report for any set of samples, select a cluster
         of samples based on the inferred primary case they descend from.
       </p>
-      <SamplesOfInterest
-        tree={tree}
-        setSelectedSamples={setSelectedSamples}
+      <SamplesOfInterest />
+      {/* <ClusteringOptions
         // setMrcaOptions={setMrcaOptions}
       />
       <ClusteringOptions

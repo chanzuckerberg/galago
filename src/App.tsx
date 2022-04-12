@@ -13,6 +13,8 @@ import { gisaid_counts_file } from "../data/gisaid_counts";
 import { ingestNextstrain } from "./utils/nextstrainAdapter";
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
 import { describe_clade } from "./utils/describeClade";
+import { samplesOfInterestAC } from "./actions/samplesOfInterestAC";
+
 import {
   get_root,
   get_leaves,
@@ -43,7 +45,7 @@ function App() {
   // const [selectedSampleNames, setSelectedSampleNames] = useState<
   //   string[] | null
   // >(null);
-  const [selectedSamples, setSelectedSamples] = useState<Node[] | null>(null);
+  // const [selectedSamples, setSelectedSamples] = useState<Node[] | null>(null);
   const [clade_description, setCladeDescription] =
     useState<CladeDescription | null>(null);
   const [locationInputOptions, setLocationInputOptions] = useState<
@@ -80,7 +82,7 @@ function App() {
       .filter((n) => n !== null);
     dispatch({ type: "load demo tree", data: demo_tree });
     dispatch({ type: "input string changed", data: demo_sample_names });
-    setSelectedSamples(selected_sample_nodes);
+    dispatch(samplesOfInterestAC());
     setMRCA(get_mrca(selected_sample_nodes));
     dispatch({ type: "division set", data: "California" });
     dispatch({ type: "location set", data: "Humboldt County" });
@@ -209,8 +211,6 @@ function App() {
         <div>
           <h1>Investigate potential outbreak clusters in {state.location}</h1>
           <SampleSelection tree={state.tree} />
-            selectedSamples={selectedSamples}
-            setSelectedSamples={setSelectedSamples}
             mrca={mrca}
             setMRCA={setMRCA}
           />
