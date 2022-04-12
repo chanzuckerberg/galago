@@ -16,8 +16,8 @@ type sampleSelectionProps = {
   tree: Node;
   selectedSamples: Node[];
   setSelectedSamples: Function;
-  selectedSampleNames: string[] | null;
-  setSelectedSampleNames: Function;
+  // selectedSampleNames: string[] | null;
+  // setSelectedSampleNames: Function;
   mrca: Node | null;
   setMRCA: Function;
 };
@@ -30,15 +30,14 @@ export type internalNodeDataType = {
 };
 
 function SampleSelection(props: sampleSelectionProps) {
-  const {
-    tree,
-    selectedSamples,
-    setSelectedSamples,
-    selectedSampleNames,
-    setSelectedSampleNames,
-    mrca,
-    setMRCA,
-  } = props;
+  const { tree } = props;
+  //   // selectedSamples,
+  //   // setSelectedSamples,
+  //   // selectedSampleNames,
+  //   // setSelectedSampleNames,
+  //   mrca,
+  //   setMRCA,
+  // } = props;
 
   // Catalog all internal nodes (i.e., "primary cases" / MRCAs of 2+ samples) in tree
   const all_internal_nodes: Array<Node> = traverse_preorder(
@@ -106,10 +105,8 @@ function SampleSelection(props: sampleSelectionProps) {
       </p>
       <SamplesOfInterest
         tree={tree}
-        setSelectedSampleNames={setSelectedSampleNames}
         setSelectedSamples={setSelectedSamples}
         // setMrcaOptions={setMrcaOptions}
-        selectedSampleNames={selectedSampleNames}
       />
       <ClusteringOptions
         // mrcaOptions={mrcaOptions}

@@ -40,9 +40,9 @@ function App() {
 
   // const [tree, setTree] = useState<null | Node>(null);
 
-  const [selectedSampleNames, setSelectedSampleNames] = useState<
-    string[] | null
-  >(null);
+  // const [selectedSampleNames, setSelectedSampleNames] = useState<
+  //   string[] | null
+  // >(null);
   const [selectedSamples, setSelectedSamples] = useState<Node[] | null>(null);
   const [clade_description, setCladeDescription] =
     useState<CladeDescription | null>(null);
@@ -79,7 +79,7 @@ function App() {
       .map((n) => find_leaf_by_name(n, all_leaves))
       .filter((n) => n !== null);
     dispatch({ type: "load demo tree", data: demo_tree });
-    setSelectedSampleNames(selected_sample_names);
+    dispatch({ type: "input string changed", data: demo_sample_names });
     setSelectedSamples(selected_sample_nodes);
     setMRCA(get_mrca(selected_sample_nodes));
     dispatch({ type: "division set", data: "California" });
@@ -211,8 +211,6 @@ function App() {
           <SampleSelection tree={state.tree} />
             selectedSamples={selectedSamples}
             setSelectedSamples={setSelectedSamples}
-            selectedSampleNames={selectedSampleNames}
-            setSelectedSampleNames={setSelectedSampleNames}
             mrca={mrca}
             setMRCA={setMRCA}
           />

@@ -83,15 +83,14 @@ export const SamplesOfInterest = (props: samplesOfInterestProps) => {
         type="text"
         name="selectedSamples"
         onChange={(e) => {
-          handleSelectedSampleNames(e);
+          dispatch({ type: "input string changed", data: e.target.value });
         }}
         style={{ width: "35em" }}
         value={
-          selectedSampleNames
-            ? selectedSampleNames.join(", ")
+          state.samplesOfInterestNames
+            ? state.samplesOfInterestNames.join(", ")
             : "SampleID1, SampleID2, ..."
         }
-        // value="SampleID1, SampleID2, ..."
       />
       <button
         type="button"
