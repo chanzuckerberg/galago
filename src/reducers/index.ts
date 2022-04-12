@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import location from "./location";
 import division from "./division";
-import samplesOfInterest from "../components/sampleSelection/samplesOfInterest";
+import samplesOfInterest from "./samplesOfInterest";
 import samplesOfInterestNames from "./samplesOfInterestNames";
 import tree from "./tree";
 
