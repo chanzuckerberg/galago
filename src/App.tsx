@@ -31,11 +31,14 @@ import SampleSelection from "./components/sampleSelection";
 import { useSelector, useDispatch } from "react-redux";
 
 function App() {
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
+
   //@ts-ignore
   const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
   const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
 
-  const [tree, setTree] = useState<null | Node>(null);
+  // const [tree, setTree] = useState<null | Node>(null);
 
   const [selectedSampleNames, setSelectedSampleNames] = useState<
     string[] | null
@@ -59,18 +62,7 @@ function App() {
   ]);
   const [mrca, setMRCA] = useState<Node | null>(null);
 
-  const handleTreeUpload = (event: any) => {
-    const fileReader = new FileReader();
-
-    fileReader.readAsText(event.target.files[0], "application/JSON");
-    fileReader.onload = (event) => {
-      if (event?.target?.result && typeof event.target.result === "string") {
-        const tree: Node = ingestNextstrain(JSON.parse(event.target.result));
-        setTree(tree);
-        setDivisionInputOptions(get_division_input_options(tree, "USA"));
-      }
-    };
-  };
+  // setDivisionInputOptions(get_division_input_options(tree, "USA"));
 
   const handleDivisionSelection = (event: any) => {
     if (event && event.target.value && tree) {
@@ -87,8 +79,6 @@ function App() {
   };
 
   const handleDemoLoad = (event: any) => {
-    // TODO: just call the respective handlers once I understand how to orchestrate timing of things
-    const tree = ingestNextstrain(demo_tree);
     const selected_sample_names = demo_sample_names
       .split(/[,\s]+/)
       .map((s: string) => s.trim());
@@ -96,7 +86,7 @@ function App() {
     const selected_sample_nodes = selected_sample_names
       .map((n) => find_leaf_by_name(n, all_leaves))
       .filter((n) => n !== null);
-    setTree(tree);
+    dispatch({ type: "load demo tree", data: demo_tree });
     setSelectedSampleNames(selected_sample_names);
     setSelectedSamples(selected_sample_nodes);
     setMRCA(get_mrca(selected_sample_nodes));
@@ -138,7 +128,7 @@ function App() {
       <p>hello world {state.report}</p>
       <Header />
 
-      {(!tree || !location || !division) && (
+      {(!state.tree || !state.location || !state.division) && (
         <div>
           <AboutGalago />
           <h2>Demo with real-world outbreak data</h2>
@@ -172,7 +162,16 @@ function App() {
             <b>First, please upload a tree file.</b>
             <br />
             <i>This must be in Nextstrain's JSON file format.</i>
-            <input type="file" name="file" onChange={handleTreeUpload} />
+            <input
+              type="file"
+              name="file"
+              onChange={(event: any) =>
+                dispatch({
+                  type: "tree file uploaded",
+                  data: event.target.files[0],
+                })
+              }
+            />
           </p>
           <b>Next, please choose your location.</b>
           <br />
@@ -209,11 +208,10 @@ function App() {
           <ContactUs />
         </div>
       )}
-      {location && division && tree && (
+      {state.location && state.division && state.tree && (
         <div>
           <h1>Investigate potential outbreak clusters in {location}</h1>
-          <SampleSelection
-            tree={tree}
+          <SampleSelection tree={state.tree} />
             selectedSamples={selectedSamples}
             setSelectedSamples={setSelectedSamples}
             selectedSampleNames={selectedSampleNames}
@@ -224,12 +222,12 @@ function App() {
         </div>
       )}
 
-      {clade_description && tree && (
+      {clade_description && state.tree && (
         <div>
           {/* <h2>Results</h2> */}
           <SitStat
             clade_description={clade_description}
-            all_samples={get_leaves(tree)}
+            all_samples={get_leaves(state.tree)}
           />
           <CladeDefinition
             clade_description={clade_description}
@@ -246,7 +244,7 @@ function App() {
           {/* <h2>Considerations & Caveats</h2> */}
           <SamplingBias
             gisaid_census={gisaid_census}
-            all_samples={get_leaves(get_root(tree))}
+            all_samples={get_leaves(get_root(state.tree))}
             clade_description={clade_description}
             sidenote_start={7}
           />
