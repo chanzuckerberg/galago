@@ -14,7 +14,7 @@ function SampleSelection() {
         of samples based on the inferred primary case they descend from.
       </p>
       <SamplesOfInterest />
-      {/* <ClusteringOptions /> */}
+      <ClusteringOptions />
       {/* <MutsDateScatter/> */}
     </div>
   );
