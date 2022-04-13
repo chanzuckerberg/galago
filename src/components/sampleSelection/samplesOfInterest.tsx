@@ -1,9 +1,9 @@
 import { useDispatch } from "react-redux";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export const SamplesOfInterest = () => {
   const dispatch = useDispatch();
-  // const state = useSelector((state) => state.global);
+  const state = useSelector((state) => state.global);
 
   return (
     <p>
@@ -21,11 +21,11 @@ export const SamplesOfInterest = () => {
           });
         }}
         style={{ width: "35em" }}
-        // value={
-        //   state.samplesOfInterestNames
-        //     ? state.samplesOfInterestNames.join(", ")
-        //     : "SampleID1, SampleID2, ..."
-        // }
+        value={
+          state.samplesOfInterestNames
+            ? state.samplesOfInterestNames.join(", ")
+            : "SampleID1, SampleID2, ..."
+        }
       />
       <button
         type="button"
