@@ -1,46 +1,20 @@
 import React, { useState } from "react";
 import { Node } from "../../d";
 import { get_dist, get_leaves, get_root } from "../../utils/treeMethods";
-
 import { scaleLinear, extent, scaleTime, symbolCross } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
+import { useSelector, useDispatch } from "react-redux";
 
-interface mutsDateScatterProps {
-  tree: Node;
-  mrca: any;
-  setMRCA: Function;
-  mrcaOptions: internalNodeDataType[];
-  selectedSampleNames: string[] | null;
-}
-
-type sampleDataType = { name: string; date: Date; muts: number; raw: Node };
-type internalNodeDataType = {
-  name: string;
-  date: Date;
-  samples: string[];
-  raw: Node;
-};
-
-function MutsDateScatter(props: mutsDateScatterProps) {
-  const { tree, setMRCA, mrca, mrcaOptions, selectedSampleNames } = props;
-  const [hoverMRCA, sethoverMRCA] = useState<internalNodeDataType | null>(null);
-
-  const root = get_root(tree);
+function MutsDateScatter() {
+  const [hoverMRCA, sethoverMRCA] = useState<Node | null>(null);
+  const state = useSelector((state) => state.global);
+  const dispatch = useDispatch();
 
   // Catalog all samples in the tree --> // [{name, date, muts from root}]
-  const all_samples: Array<Node> = get_leaves(tree);
-  let sample_data: sampleDataType[] = [];
-  all_samples.forEach((sample: Node) => {
-    sample_data.push({
-      name: sample.name,
-      date: sample.node_attrs.num_date.value,
-      muts: get_dist([root, sample]),
-      raw: sample, // location data is in raw > node_attrs > location/division > value
-    });
-  });
+  const all_samples: Array<Node> = get_leaves(state.tree);
 
   // all_samples.sort((sample1: string, sample2: string) => {
-  //   return selectedSampleNames.includes(sample1.name) ? 1 : -1
+  //   return state.samplesOfInterestNames.includes(sample1.name) ? 1 : -1
   // }
 
   const chartSize = 560;
@@ -88,8 +62,8 @@ function MutsDateScatter(props: mutsDateScatterProps) {
   const _xScaleTime = scaleTime()
     .domain(
       //@ts-ignore
-      extent(sample_data, (sample) => {
-        return sample.date;
+      extent(all_samples, (sample) => {
+        return sample.node_attrs.num_date.value;
       })
     )
     .range([margin, chartWidth - margin]);
@@ -97,8 +71,8 @@ function MutsDateScatter(props: mutsDateScatterProps) {
   const _yMutsScale = scaleLinear()
     .domain(
       //@ts-ignore
-      extent(sample_data, (sample) => {
-        return sample.muts;
+      extent(all_samples, (sample) => {
+        return sample.node_attrs.div;
       })
     )
     .range([chartSize - margin, margin]);
@@ -157,18 +131,18 @@ function MutsDateScatter(props: mutsDateScatterProps) {
   return (
     <div>
       <svg width={chartWidth} height={chartSize}>
-        {sample_data.map((sample, i: number) => {
+        {all_samples.map((sample, i: number) => {
           // "selected" here means typed into input (will rename all this state at some rate)
-          const isSelected = selectedSampleNames
-            ? selectedSampleNames.includes(sample.name)
+          const isSelected = state.samplesOfInterestNames
+            ? state.samplesOfInterestNames.includes(sample.name)
             : false;
           const isBaseLayer = true;
           const selectedLocation = "Humboldt County";
           return isSelected ? (
             <g
               transform={`translate(
-                ${_xScaleTime(sample.date)},
-                ${_yMutsScale(sample.muts)}
+                ${_xScaleTime(sample.node_attrs.num_date.value)},
+                ${_yMutsScale(sample.node_attrs.div)}
               )`}
             >
               <line
@@ -191,14 +165,14 @@ function MutsDateScatter(props: mutsDateScatterProps) {
           ) : (
             <circle
               key={i}
-              cx={_xScaleTime(sample.date)}
-              cy={_yMutsScale(sample.muts)}
+              cx={_xScaleTime(sample.node_attrs.num_date.value)}
+              cy={_yMutsScale(sample.node_attrs.div)}
               r={getSampleCircleRadius(isSelected, isBaseLayer)}
               style={{
                 fill: getBaseLayerSampleColor(
                   isSelected,
                   selectedLocation,
-                  sample.raw.node_attrs.location.value
+                  sample.node_attrs.location.value
                 ),
               }}
             />
@@ -208,25 +182,27 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         {hoverMRCA && (
           <rect width={chartWidth} height={chartSize} fill={deemphasisLayer} />
         )}
-        {sample_data.map((sample, i: number) => {
+        {all_samples.map((sample, i: number) => {
           const isHoverMrcaDescendent =
             hoverMRCA &&
-            //@ts-ignore
-            mrcaOptions
-              .find((n) => n.name === hoverMRCA.name)
-              .samples.includes(sample.name);
+            state.mrca &&
+            get_leaves(
+              state.mrcaOptions.find((n: Node) => n.name === hoverMRCA.name)
+            )
+              .map((n: Node) => n.name)
+              .includes(sample.name);
 
           if (!isHoverMrcaDescendent) return;
 
           // "selected" here means typed into input (will rename all this state at some rate)
-          const isSelected = selectedSampleNames
-            ? selectedSampleNames.includes(sample.name)
+          const isSelected = state.samplesOfInterestNames
+            ? state.samplesOfInterestNames.includes(sample.name)
             : false;
           return (
             <circle
               key={i}
-              cx={_xScaleTime(sample.date)}
-              cy={_yMutsScale(sample.muts)}
+              cx={_xScaleTime(sample.node_attrs.num_date.value)}
+              cy={_yMutsScale(sample.node_attrs.div)}
               r={getSampleCircleRadius(isSelected)}
               style={getHoverMrcaStyle(isSelected)}
             />
@@ -282,14 +258,14 @@ function MutsDateScatter(props: mutsDateScatterProps) {
         onMouseLeave={() => {
           if (
             !hoverMRCA ||
-            hoverMRCA.name !== mrca.name ||
-            !mrcaOptions.includes(hoverMRCA)
+            hoverMRCA.name !== state.mrca.name ||
+            !state.mrcaOptions.includes(hoverMRCA)
           ) {
             sethoverMRCA(null);
           }
         }}
       >
-        {mrcaOptions.map((node: any, i: number) => {
+        {state.mrcaOptions.map((node: any, i: number) => {
           return (
             <circle
               key={i}
@@ -297,9 +273,9 @@ function MutsDateScatter(props: mutsDateScatterProps) {
                 sethoverMRCA(node);
               }}
               onClick={() => {
-                setMRCA(node.raw);
+                setMRCA(node);
               }}
-              cx={_xScaleTime(node.date)}
+              cx={_xScaleTime(node.node_attrs.num_date.value)}
               cy={10}
               r={hoverMRCA && hoverMRCA.name === node.name ? 6 : 3}
               style={{
@@ -319,10 +295,10 @@ function MutsDateScatter(props: mutsDateScatterProps) {
           {/* <text x={margin - 4} y={20} fontSize={10}> */}
           <text x={chartWidth / 2 - 110} y={40} fontSize={10}>
             {hoverMRCA
-              ? `Selected primary case date: ${hoverMRCA.date
+              ? `Selected primary case date: ${hoverMRCA.node_attrs.num_date.value
                   .toISOString()
                   .substring(0, 10)}. ${
-                  hoverMRCA.samples.length
+                  get_leaves(hoverMRCA).length
                 } descendent samples.`
               : `Inferred 'primary cases' (hover to select a case).`}
           </text>

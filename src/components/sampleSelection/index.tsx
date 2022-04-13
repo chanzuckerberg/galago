@@ -15,7 +15,7 @@ function SampleSelection() {
       </p>
       <SamplesOfInterest />
       <ClusteringOptions />
-      {/* <MutsDateScatter/> */}
+      <MutsDateScatter />
     </div>
   );
 }
