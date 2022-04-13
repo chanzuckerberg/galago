@@ -1,20 +1,8 @@
-import React, { useState, useEffect } from "react";
-import Header from "./components/header";
-import AboutGalago from "./components/aboutGalago";
-import ContactUs from "./components/contactUs";
-import SamplingBias from "./components/sampleDistribTable";
-import CladeDefinition from "./components/cladeDefinition";
-import CladeUniqueness from "./components/cladeUniqueness";
-import TMRCA from "./components/tmrca";
-import OnwardTransmission from "./components/onwardTransmission";
-import GeoSubclades from "./components/geoSubclades";
-import Assumptions from "./components/assumptions";
-import { gisaid_counts_file } from "../data/gisaid_counts";
-import { ingestNextstrain } from "./utils/nextstrainAdapter";
+// TYPES
 import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "./d";
-import { describe_clade } from "./utils/describeClade";
-import { samplesOfInterestAC } from "./actions/samplesOfInterestAC";
-
+// HOOKS AND UTIL FUNCTIONS
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   get_root,
   get_leaves,
@@ -25,101 +13,89 @@ import {
   get_location_input_options,
   get_division_input_options,
 } from "./utils/geoInputOptions";
-import demo_sample_names from "../data/demo_sample_names";
-import { demo_tree } from "../data/demo_tree";
+import { describe_clade } from "./utils/describeClade";
+// DATA
+import { gisaid_counts_file } from "../data/gisaid_counts";
+// COMPONENTS
+import Header from "./components/header";
+import AboutGalago from "./components/aboutGalago";
+import ContactUs from "./components/contactUs";
+import SamplingBias from "./components/sampleDistribTable";
+import CladeDefinition from "./components/cladeDefinition";
+import CladeUniqueness from "./components/cladeUniqueness";
+import TMRCA from "./components/tmrca";
+import OnwardTransmission from "./components/onwardTransmission";
+import GeoSubclades from "./components/geoSubclades";
+import Assumptions from "./components/assumptions";
 import { SitStat } from "./components/sitStat";
 import SampleSelection from "./components/sampleSelection";
 
-import { useSelector, useDispatch } from "react-redux";
-
 function App() {
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
 
-  //@ts-ignore
-  const gisaid_raw_counts: GISAIDRawCounts = gisaid_counts_file;
-  const gisaid_census: GISAIDRecord[] = gisaid_raw_counts.data;
-
-  // const [tree, setTree] = useState<null | Node>(null);
-
-  // const [selectedSampleNames, setSelectedSampleNames] = useState<
-  //   string[] | null
-  // >(null);
-  // const [selectedSamples, setSelectedSamples] = useState<Node[] | null>(null);
+  // LOCAL STATE
   const [clade_description, setCladeDescription] =
     useState<CladeDescription | null>(null);
+  const [minMutsToParent, setMinMutsToParent] = useState<number>(1);
+  const [mutsPerTransMinMax, setMutsPerTransMinMax] = useState<number[]>([
+    0, 2,
+  ]);
+
   const [locationInputOptions, setLocationInputOptions] = useState<
     string[] | null
   >(null);
   const [divisionInputOptions, setDivisionInputOptions] = useState<
     string[] | null
   >(null);
-  const [country, setCountry] = useState<string>("USA");
-  const [region, setRegion] = useState<string>("North America");
-  const [minMutsToParent, setMinMutsToParent] = useState<number>(1);
-  const [mutsPerTransMinMax, setMutsPerTransMinMax] = useState<number[]>([
-    0, 2,
-  ]);
-  const [mrca, setMRCA] = useState<Node | null>(null);
-
-  // setDivisionInputOptions(get_division_input_options(tree, "USA"));
 
   const handleDivisionSelection = (event: any) => {
-    if (event && event.target.value && tree) {
+    if (event && event.target.value && state.tree) {
       const division = event.target.value;
       dispatch({ type: "division set", data: division });
-      setLocationInputOptions(get_location_input_options(tree, division));
+      setLocationInputOptions(
+        get_location_input_options(state.tree, state.division)
+      );
     }
   };
 
-  const handleDemoLoad = (event: any) => {
-    const selected_sample_names = demo_sample_names
-      .split(/[,\s]+/)
-      .map((s: string) => s.trim());
-    const all_leaves = get_leaves(tree);
-    const selected_sample_nodes = selected_sample_names
-      .map((n) => find_leaf_by_name(n, all_leaves))
-      .filter((n) => n !== null);
-    dispatch({ type: "load demo tree", data: demo_tree });
-    dispatch({ type: "input string changed", data: demo_sample_names });
-    dispatch(samplesOfInterestAC());
-    setMRCA(get_mrca(selected_sample_nodes));
-    dispatch({ type: "division set", data: "California" });
-    dispatch({ type: "location set", data: "Humboldt County" });
+  const handleTreeUpload = (event: any) => {
+    dispatch({
+      type: "tree file uploaded",
+      data: event.target.files[0],
+    });
+    setDivisionInputOptions(
+      get_division_input_options(state.tree, state.country)
+    );
   };
 
+  // DATA
+  //@ts-ignore
+  const gisaid_raw_counts = gisaid_counts_file;
+  const gisaid_census = gisaid_raw_counts.data;
+
+  // LOAD NARRATIVE
   useEffect(() => {
-    if (tree && mrca && location && division) {
+    if (state.tree && state.mrca && state.location && state.division) {
       setCladeDescription(
         describe_clade(
-          mrca,
+          state.mrca,
           {
-            location: location,
-            division: division,
-            country: country,
-            region: region,
+            location: state.location,
+            division: state.division,
+            country: state.country,
+            region: state.region,
           },
           mutsPerTransMinMax,
           minMutsToParent,
-          selectedSamples
+          state.samplesOfInterest
         )
       );
     }
-  }, [selectedSamples, mrca, location, division]);
-
-  const state = useSelector((state) => state);
-  const dispatch = useDispatch();
+  }, [state.tree, state.mrca, state.location, state.division]);
 
   return (
     <div>
-      <button
-        onClick={() => {
-          dispatch({ type: "user submit samples of interest", data: 10 });
-        }}
-      >
-        redux install
-      </button>
-      <p>hello world {state.report}</p>
       <Header />
 
       {(!state.tree || !state.location || !state.division) && (
@@ -140,7 +116,7 @@ function App() {
             <button
               type="button"
               name="loadDemo"
-              onClick={(e) => handleDemoLoad(e)}
+              onClick={() => dispatch({ type: "load demo" })}
             >
               Load Demo
             </button>{" "}
@@ -159,12 +135,7 @@ function App() {
             <input
               type="file"
               name="file"
-              onChange={(event: any) =>
-                dispatch({
-                  type: "tree file uploaded",
-                  data: event.target.files[0],
-                })
-              }
+              onChange={(event: any) => handleTreeUpload(event)}
             />
           </p>
           <b>Next, please choose your location.</b>
@@ -189,12 +160,12 @@ function App() {
             <select
               id="location-select"
               name="County"
-              onChange={(event) =>
+              onChange={(event) => {
                 dispatch({
                   type: "location set",
                   data: event.target.value,
-                })
-              }
+                });
+              }}
               disabled={locationInputOptions === null}
               style={{ width: "15em" }}
             >
@@ -211,9 +182,6 @@ function App() {
         <div>
           <h1>Investigate potential outbreak clusters in {state.location}</h1>
           <SampleSelection tree={state.tree} />
-            mrca={mrca}
-            setMRCA={setMRCA}
-          />
         </div>
       )}
 

@@ -1,10 +1,9 @@
 import { useDispatch } from "react-redux";
-import { samplesOfInterestAC } from "../../actions/samplesOfInterestAC";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export const SamplesOfInterest = () => {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state);
+  // const state = useSelector((state) => state.global);
 
   return (
     <p>
@@ -16,19 +15,22 @@ export const SamplesOfInterest = () => {
         type="text"
         name="selectedSamples"
         onChange={(e) => {
-          dispatch({ type: "input string changed", data: e.target.value });
+          dispatch({
+            type: "sample names string changed",
+            data: e.target.value,
+          });
         }}
         style={{ width: "35em" }}
-        value={
-          state.samplesOfInterestNames
-            ? state.samplesOfInterestNames.join(", ")
-            : "SampleID1, SampleID2, ..."
-        }
+        // value={
+        //   state.samplesOfInterestNames
+        //     ? state.samplesOfInterestNames.join(", ")
+        //     : "SampleID1, SampleID2, ..."
+        // }
       />
       <button
         type="button"
         name="submitInput"
-        onClick={(e) => dispatch(samplesOfInterestAC)}
+        onClick={(e) => dispatch({ type: "sample submit button clicked" })}
       >
         Highlight and subset
       </button>

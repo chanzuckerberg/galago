@@ -1,16 +1,8 @@
 import { combineReducers } from "redux";
-import location from "./location";
-import division from "./division";
-import samplesOfInterest from "./samplesOfInterest";
-import samplesOfInterestNames from "./samplesOfInterestNames";
-import tree from "./tree";
+import { global } from "./global";
 
 const reducers: any = combineReducers({
-  location,
-  division,
-  samplesOfInterest,
-  tree,
-  samplesOfInterestNames,
+  global,
 });
 
 export default reducers;
