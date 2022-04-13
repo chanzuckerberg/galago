@@ -48,7 +48,6 @@ export const handleSamplesOfInterestAndClusteringIntersection = (
   clusterMrcaOptions: Node[],
   tree: Node
 ) => {
-  const state = useSelector((state) => state.global);
   const samplesOfInterestMrcas = getSamplesOfInterestMrcas(
     samplesOfInterest,
     tree
@@ -64,7 +63,7 @@ export const handleSamplesOfInterestAndClusteringIntersection = (
 
   let newMrcaOptions: Node[] = [];
   const samplesOfInterestNamesSet = new Set(
-    state.samplesOfInterest.map((n: Node) => n.name)
+    samplesOfInterest.map((n: Node) => n.name)
   );
 
   clusterMrcaOptions.forEach((n: Node) => {
