@@ -15,12 +15,13 @@ const defaultState = {
   samplesOfInterest: [],
   mrca: null,
   mrcaOptions: [],
+  clusteringMrcas: [],
   tree: null,
   location: "",
   division: "",
   country: "USA",
   region: "North America",
-  cladeDescription: null,
+  // cladeDescription: null,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -40,7 +41,7 @@ export const global = (state = defaultState, action: any) => {
         tree: tree,
         samplesOfInterestNames: samplesOfInterestNames,
         samplesOfInterest: samplesOfInterest,
-        // mrca: mrca,
+        mrca: mrca,
         mrcaOptions: getMrcaOptions(tree, samplesOfInterest),
         location: "Humboldt County",
         division: "California",
@@ -49,9 +50,9 @@ export const global = (state = defaultState, action: any) => {
 
     case "clustering results updated": {
       if (state.samplesOfInterest && state.tree) {
-        console.log("clustering mrcas length", action.data.length);
         return {
           ...state,
+          clusteringMrcas: action.data,
           mrcaOptions: getMrcaOptions(
             state.tree,
             state.samplesOfInterest,
@@ -72,7 +73,6 @@ export const global = (state = defaultState, action: any) => {
       const sample_names: string[] = input_string
         .split(/[,\s]+/)
         .map((s: string) => s.trim());
-      console.log("setting sample names to ", sample_names);
       return { ...state, samplesOfInterestNames: sample_names };
     }
 
@@ -85,6 +85,11 @@ export const global = (state = defaultState, action: any) => {
         return {
           ...state,
           samplesOfInterest: newSamplesOfInterest,
+          mrcaOptions: getMrcaOptions(
+            state.tree,
+            newSamplesOfInterest,
+            state.clusteringMrcas
+          ),
         };
       } else {
         return state;
