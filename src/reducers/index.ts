@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import report from "./report";
+import { global } from "./global";
 
 const reducers: any = combineReducers({
-  report,
+  global,
 });
 
 export default reducers;

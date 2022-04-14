@@ -1,35 +1,16 @@
-import { CladeDescription, Node } from "../../d";
-import React, { useState } from "react";
-import {
-  get_leaves,
-  get_root,
-  find_leaf_by_name,
-  get_mrca,
-  get_path,
-} from "../../utils/treeMethods";
-import { setIntersection } from "../../utils/misc";
-import {
-  nextstrainGeo,
-  nodeToNodeData,
-  trimDeepNodes,
-} from "../../utils/clusterMethods";
+import { Node } from "../../d";
+import { nextstrainGeo, trimDeepNodes } from "../../utils/clusterMethods";
+import { useSelector, useDispatch } from "react-redux";
+import { traverse_preorder } from "../../utils/treeMethods";
 
-type clusteringOptionsProps = {
-  tree: Node;
-  // selectedSamples: Node[];
-  // mrcaOptions: internalNodeDataType[];
-  setClusterMrcaOptions: Function;
-};
+function ClusteringOptions() {
+  const state = useSelector((state) => state.global);
+  const dispatch = useDispatch();
 
-export type internalNodeDataType = {
-  name: string;
-  date: Date;
-  samples: string[];
-  raw: Node;
-};
-
-function ClusteringOptions(props: clusteringOptionsProps) {
-  const { tree, setClusterMrcaOptions } = props;
+  const all_internal_nodes: Array<Node> = traverse_preorder(
+    state.tree,
+    (node: Node) => node.children.length >= 2
+  );
 
   return (
     <div>
@@ -41,7 +22,13 @@ function ClusteringOptions(props: clusteringOptionsProps) {
           name="clusteringOptionsRadio"
           value="none"
           defaultChecked
-          onClick={setClusterMrcaOptions([])}
+          onClick={() => {
+            dispatch({
+              type: "clustering results updated",
+              data: all_internal_nodes,
+            });
+          }}
+          disabled
         />
         <label htmlFor="trimDeepNodes">None (show all primary cases)</label>
       </p>
@@ -50,7 +37,13 @@ function ClusteringOptions(props: clusteringOptionsProps) {
           type="radio"
           id="trimDeepNodes"
           name="clusteringOptionsRadio"
-          onClick={setClusterMrcaOptions(trimDeepNodes(tree))}
+          onClick={() => {
+            dispatch({
+              type: "clustering results updated",
+              data: trimDeepNodes(state.tree),
+            });
+          }}
+          disabled
         />
         <label htmlFor="trimDeepNodes">Tree pruning (most basic)</label>
       </p>
@@ -60,7 +53,13 @@ function ClusteringOptions(props: clusteringOptionsProps) {
           id="nextstrainGeo"
           name="clusteringOptionsRadio"
           value="phone"
-          onClick={setClusterMrcaOptions(nextstrainGeo(tree))}
+          onClick={() => {
+            dispatch({
+              type: "clustering results updated",
+              data: nextstrainGeo(state.tree, "location"),
+            });
+          }}
+          disabled
         />
         <label htmlFor="nextstrainGeo">
           Geographic movement (Nextstrain inference)
