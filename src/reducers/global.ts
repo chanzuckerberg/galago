@@ -8,10 +8,7 @@ import { ingestNextstrain } from "../utils/nextstrainAdapter";
 import { Node } from "../d";
 import demo_sample_names from "../../data/demo_sample_names";
 import { demo_tree } from "../../data/demo_tree";
-import {
-  handleSamplesOfInterestAndClusteringIntersection,
-  getSamplesOfInterestMrcas,
-} from "../utils/clusterMethods";
+import { getMrcaOptions } from "../utils/clusterMethods";
 
 const defaultState = {
   samplesOfInterestNames: [],
@@ -43,8 +40,8 @@ export const global = (state = defaultState, action: any) => {
         tree: tree,
         samplesOfInterestNames: samplesOfInterestNames,
         samplesOfInterest: samplesOfInterest,
-        mrca: mrca,
-        mrcaOptions: getSamplesOfInterestMrcas(samplesOfInterest, tree),
+        // mrca: mrca,
+        mrcaOptions: getMrcaOptions(tree, samplesOfInterest),
         location: "Humboldt County",
         division: "California",
       };
@@ -52,12 +49,13 @@ export const global = (state = defaultState, action: any) => {
 
     case "clustering results updated": {
       if (state.samplesOfInterest && state.tree) {
+        console.log("clustering mrcas length", action.data.length);
         return {
           ...state,
-          mrcaOptions: handleSamplesOfInterestAndClusteringIntersection(
+          mrcaOptions: getMrcaOptions(
+            state.tree,
             state.samplesOfInterest,
-            action.data,
-            state.tree
+            action.data
           ),
         };
       } else {
