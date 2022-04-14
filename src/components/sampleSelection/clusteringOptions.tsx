@@ -28,6 +28,7 @@ function ClusteringOptions() {
               data: all_internal_nodes,
             });
           }}
+          disabled
         />
         <label htmlFor="trimDeepNodes">None (show all primary cases)</label>
       </p>
@@ -42,6 +43,7 @@ function ClusteringOptions() {
               data: trimDeepNodes(state.tree),
             });
           }}
+          disabled
         />
         <label htmlFor="trimDeepNodes">Tree pruning (most basic)</label>
       </p>
@@ -57,6 +59,7 @@ function ClusteringOptions() {
               data: nextstrainGeo(state.tree, "location"),
             });
           }}
+          disabled
         />
         <label htmlFor="nextstrainGeo">
           Geographic movement (Nextstrain inference)
