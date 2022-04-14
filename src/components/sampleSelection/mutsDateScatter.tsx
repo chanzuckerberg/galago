@@ -61,8 +61,8 @@ function MutsDateScatter() {
   const _xScaleTime = scaleTime()
     .domain(
       //@ts-ignore
-      extent(allSamples, (sample) => {
-        return sample.node_attrs.num_date.value;
+      extent(allNodes, (node) => {
+        return node.node_attrs.num_date.value;
       })
     )
     .range([margin, chartWidth - margin]);
