@@ -65,6 +65,10 @@ export const global = (state = defaultState, action: any) => {
       }
     }
 
+    case "mrca clicked": {
+      return { ...state, mrca: action.data };
+    }
+
     case "sample names string changed": {
       const input_string: string = action.data;
       const sample_names: string[] = input_string
