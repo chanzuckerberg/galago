@@ -59,16 +59,6 @@ function App() {
     }
   };
 
-  const handleTreeUpload = (event: any) => {
-    dispatch({
-      type: "tree file uploaded",
-      data: event.target.files[0],
-    });
-    setDivisionInputOptions(
-      get_division_input_options(state.tree, state.country)
-    );
-  };
-
   // DATA
   //@ts-ignore
   const gisaid_raw_counts = gisaid_counts_file;
@@ -93,6 +83,16 @@ function App() {
       );
     }
   }, [state.tree, state.mrca, state.location, state.division]);
+
+  // useEffect(() => {
+  //   console.log("in new use effect", state);
+  //   if (state.tree && state.country) {
+  //     console.log("have all req state");
+  //     setDivisionInputOptions(
+  //       get_division_input_options(state.tree, state.country)
+  //     );
+  //   }
+  // }, [state.tree]);
 
   return (
     <div>
@@ -121,7 +121,7 @@ function App() {
               Load Demo
             </button>{" "}
           </p>
-          <h2>Analyze a potential outbreak</h2>
+          {/* <h2>Analyze a potential outbreak</h2>
           <p>
             <i>
               Galago runs entirely in the browser. This means that your data
@@ -135,7 +135,12 @@ function App() {
             <input
               type="file"
               name="file"
-              onChange={(event: any) => handleTreeUpload(event)}
+              onChange={(event: any) =>
+                dispatch({
+                  type: "tree file uploaded",
+                  data: event.target.files[0],
+                })
+              }
             />
           </p>
           <b>Next, please choose your location.</b>
@@ -174,7 +179,7 @@ function App() {
                   <option value={county}>{county}</option>
                 ))}
             </select>
-          </p>
+          </p> */}
           <ContactUs />
         </div>
       )}
