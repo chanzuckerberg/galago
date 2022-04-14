@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { Node } from "../../d";
-import {
-  get_dist,
-  get_leaves,
-  get_root,
-  traverse_preorder,
-} from "../../utils/treeMethods";
+import { get_leaves, traverse_preorder } from "../../utils/treeMethods";
 import { scaleLinear, extent, scaleTime, symbolCross } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { useSelector, useDispatch } from "react-redux";
@@ -17,12 +12,13 @@ function MutsDateScatter() {
   const dispatch = useDispatch();
 
   // DATA SETUP
+  const _samplesOfInterestNames = state.samplesOfInterest.map((n) => n.name);
   const allNodes = traverse_preorder(state.tree);
   const allSamples: Array<Node> = allNodes.filter(
     (n) => n.children.length === 0
   );
   allSamples.sort((sample1: Node, sample2: Node) => {
-    return state.samplesOfInterestNames.includes(sample1.name) ? 1 : -1;
+    return _samplesOfInterestNames.includes(sample1.name) ? 1 : -1;
   });
   const mrcaNameToSampleNames = {};
   const allInternalNodes = allNodes.filter((n) => n.children.length >= 2);
@@ -183,8 +179,8 @@ function MutsDateScatter() {
     <div>
       <svg width={chartWidth} height={chartSize}>
         {allSamples.map((sample, i: number) => {
-          const isSampleOfInterest = state.samplesOfInterestNames
-            ? state.samplesOfInterestNames.includes(sample.name)
+          const isSampleOfInterest = _samplesOfInterestNames
+            ? _samplesOfInterestNames.includes(sample.name)
             : false;
           return isSampleOfInterest ? (
             <g
@@ -216,8 +212,8 @@ function MutsDateScatter() {
 
           if (!isHoverMrcaDescendent) return;
 
-          const isSampleOfInterest = state.samplesOfInterestNames
-            ? state.samplesOfInterestNames.includes(sample.name)
+          const isSampleOfInterest = _samplesOfInterestNames
+            ? _samplesOfInterestNames.includes(sample.name)
             : false;
           return isSampleOfInterest ? (
             <g
