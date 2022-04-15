@@ -7,3 +7,4 @@ stub_data
 .ipynb_checkpoints
 *.ipynb
 .vscode
+./data/*.json
