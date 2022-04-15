@@ -7,8 +7,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 function MutsDateScatter() {
   // LOCAL AND GLOBAL STATE
-  const [hoverMRCA, sethoverMRCA] = useState<Node | null>(null);
   const state = useSelector((state) => state.global);
+
+  const [hoverMRCA, sethoverMRCA] = useState<Node | null>(
+    state.mrca ? state.mrca : null
+  );
   const dispatch = useDispatch();
 
   // DATA SETUP
@@ -186,14 +189,14 @@ function MutsDateScatter() {
     let fill = "none";
     let stroke = mediumGray;
 
-    if (isHoverMrca) {
+    if (isPinnedMrca) {
       radius = 6;
       fill = steelblue;
       stroke = steelblue;
-    } else if (isPinnedMrca) {
+    } else if (isHoverMrca) {
       radius = 6;
-      fill = "darkGray";
-      stroke = "darkGray";
+      fill = darkGray;
+      stroke = darkGray;
     } //else if (isHoverSampleAncestor) {
     //   fill = "mediumGray";
     // }
@@ -319,11 +322,9 @@ function MutsDateScatter() {
         width={chartWidth}
         height={45}
         onMouseLeave={() => {
-          if (
-            !hoverMRCA ||
-            hoverMRCA.name !== state.mrca.name ||
-            !state.mrcaOptions.includes(hoverMRCA)
-          ) {
+          if (state.mrca) {
+            sethoverMRCA(state.mrca);
+          } else {
             sethoverMRCA(null);
           }
         }}
