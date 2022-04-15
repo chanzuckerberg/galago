@@ -175,6 +175,49 @@ function MutsDateScatter() {
     );
   };
 
+  const plotMrca = (node: Node, i: number) => {
+    const isHoverMrca = hoverMRCA && hoverMRCA.name === node.name;
+    const isPinnedMrca = state.mrca && state.mrca.name === node.name;
+    // const isHoverSampleAncestor =
+    //   hoverSampleName &&
+    //   mrcaNameToSampleNames[node.name].includes(hoverSampleName);
+
+    let radius = 3;
+    let fill = "none";
+    let stroke = mediumGray;
+
+    if (isHoverMrca) {
+      radius = 6;
+      fill = steelblue;
+      stroke = steelblue;
+    } else if (isPinnedMrca) {
+      radius = 6;
+      fill = "darkGray";
+      stroke = "darkGray";
+    } //else if (isHoverSampleAncestor) {
+    //   fill = "mediumGray";
+    // }
+
+    return (
+      <circle
+        key={i}
+        onMouseEnter={() => {
+          sethoverMRCA(node);
+        }}
+        onClick={() => {
+          dispatch({ type: "mrca clicked", data: node });
+        }}
+        cx={_xScaleTime(node.node_attrs.num_date.value)}
+        cy={10}
+        r={radius}
+        style={{
+          fill: fill,
+          stroke: stroke,
+        }}
+      />
+    );
+  };
+
   return (
     <div>
       <svg width={chartWidth} height={chartSize}>
@@ -285,32 +328,7 @@ function MutsDateScatter() {
           }
         }}
       >
-        {state.mrcaOptions.map((node: any, i: number) => {
-          return (
-            <circle
-              key={i}
-              onMouseEnter={() => {
-                sethoverMRCA(node);
-              }}
-              onClick={() => {
-                dispatch({ type: "mrca clicked", data: node });
-              }}
-              cx={_xScaleTime(node.node_attrs.num_date.value)}
-              cy={10}
-              r={hoverMRCA && hoverMRCA.name === node.name ? 6 : 3}
-              style={{
-                fill:
-                  hoverMRCA && hoverMRCA.name === node.name
-                    ? steelblue
-                    : `none`,
-                stroke:
-                  hoverMRCA && hoverMRCA.name === node.name
-                    ? steelblue
-                    : mediumGray,
-              }}
-            />
-          );
-        })}
+        {state.mrcaOptions.map((node: any, i: number) => plotMrca(node, i))}
         <g>
           {/* <text x={margin - 4} y={20} fontSize={10}> */}
           <text x={chartWidth / 2 - 180} y={40} fontSize={10}>
