@@ -2,14 +2,30 @@ import { Node } from "../../d";
 import { nextstrainGeo, trimDeepNodes } from "../../utils/clusterMethods";
 import { useSelector, useDispatch } from "react-redux";
 import { traverse_preorder } from "../../utils/treeMethods";
+import { useState } from "react";
 
 function ClusteringOptions() {
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
 
+  const [nextstrainTrait, setNextstrainTrait] = useState<string | undefined>(
+    undefined
+  );
+
   const all_internal_nodes: Array<Node> = traverse_preorder(
     state.tree,
     (node: Node) => node.children.length >= 2
+  );
+  const nextstraintTraitOptions = Object.keys(
+    all_internal_nodes[5].node_attrs
+  ).filter(
+    (attr: string) =>
+      !["num_date", "div"].includes(attr) &&
+      typeof all_internal_nodes[5] === "object" &&
+      Object.keys(all_internal_nodes[5].node_attrs[attr]).includes(
+        "confidence"
+      ) &&
+      nextstrainGeo(state.tree, attr).length > 5
   );
 
   return (
@@ -29,7 +45,7 @@ function ClusteringOptions() {
             });
           }}
         />
-        <label htmlFor="trimDeepNodes">None (show all primary cases)</label>
+        <label htmlFor="trimDeepNodes">None</label>
       </p>
       <p>
         <input
@@ -54,13 +70,33 @@ function ClusteringOptions() {
           onClick={() => {
             dispatch({
               type: "clustering results updated",
-              data: nextstrainGeo(state.tree, "location"),
+              data: nextstrainGeo(state.tree, nextstrainTrait),
             });
           }}
-          disabled
+          disabled={nextstrainTrait === undefined}
         />
         <label htmlFor="nextstrainGeo">
-          Geographic movement (Nextstrain inference)
+          Changes in / movement between{" "}
+          <select
+            id="nextstrain-trait-select"
+            name="select"
+            onChange={(e) => {
+              setNextstrainTrait(e.target.value);
+            }}
+            disabled={nextstraintTraitOptions.length === 0}
+            style={{ width: "12em" }}
+          >
+            <option value={undefined}>choose metadata field</option>
+            {nextstraintTraitOptions.map((trait: string) => (
+              <option value={trait}>{trait}</option>
+            ))}
+          </select>
+          <br />
+          <span style={{ fontSize: "0.8em", fontStyle: "italic" }}>
+            Best for tracking movement between facilities, locations, etc.{" "}
+            <br />
+            Must be pre-computed upstream by Nextstrain.
+          </span>
         </label>
       </p>
     </div>
