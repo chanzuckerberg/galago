@@ -219,58 +219,49 @@ export const find_leaf_by_name = (name: string, all_samples: Node[]) => {
   return null;
 };
 
-export const get_state_changes = (startNode: Node, trait: string) => {
-  const all_nodes: Node[] = traverse_preorder(startNode);
-
-  let subtrees: Array<Node[]> = [];
-  const is_leaf = (node: Node) => {
-    return node.children.length == 0;
-  };
-
-  const traits_match = (node: Node, trait_to_check: string = trait) => {
-    if (
-      !node.parent ||
-      !Object.keys(node.node_attrs).includes(trait_to_check) ||
-      !Object.keys(node.parent.node_attrs).includes(trait_to_check)
-    ) {
-      return false;
-    }
-
-    const node_trait_value = node.node_attrs[trait_to_check]["value"]
-      ? node.node_attrs[trait_to_check]["value"]
-      : node.node_attrs[trait_to_check];
-
-    const parent_trait_value = node.parent.node_attrs[trait_to_check]["value"]
-      ? node.parent.node_attrs[trait_to_check]["value"]
-      : node.parent.node_attrs[trait_to_check];
-
-    if (
-      !node_trait_value ||
-      !parent_trait_value ||
-      node_trait_value === "unknown" ||
-      parent_trait_value === "unknown" ||
-      node_trait_value !== parent_trait_value
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  for (let i = 0; i < all_nodes.length; i++) {
-    let n = all_nodes[i];
-    if (!traits_match(n)) {
-      // console.log(
-      //   "traversing subtree, switch from ",
-      //   n.parent?.node_attrs[trait]
-      //     ? n.parent.node_attrs[trait]
-      //     : "missing upstream data",
-      //   n.node_attrs[trait] ? n.node_attrs[trait] : "missing downstream data"
-      // );
-      subtrees.push(traverse_preorder(n, is_leaf, traits_match));
-    }
+const doesTraitMatchParent = (node: Node, trait_to_check: string) => {
+  // deal with root
+  if (!node.parent) {
+    // root is not a breakpoint
+    return true;
   }
-  return subtrees.filter((s) => s.length > 0).map((st) => get_mrca(st));
+
+  const getAttr = (n: Node, attr: string = trait_to_check) => {
+    // treat all missing values as the same
+    if (Object.keys(n.node_attrs).includes(attr)) {
+      const attrValue: any = n.node_attrs[attr]["value"]
+        ? n.node_attrs[attr]["value"]
+        : n.node_attrs[attr];
+
+      if ([NaN, null, undefined, "unknown", ""].includes(attrValue)) {
+        return null;
+      } else {
+        return attrValue;
+      }
+    } else {
+      return null;
+    }
+  };
+
+  const node_trait_value = getAttr(node, trait_to_check);
+  const parent_trait_value = getAttr(node.parent, trait_to_check);
+  // console.log(
+  //   node.name,
+  //   node_trait_value,
+  //   parent_trait_value,
+  //   node_trait_value === parent_trait_value
+  // );
+  return node_trait_value === parent_trait_value;
+};
+
+export const get_trait_changes = (startNode: Node, trait: string) => {
+  const allNodes: Array<Node> = traverse_preorder(startNode);
+
+  const breakPoints = allNodes.filter(
+    (n) => !doesTraitMatchParent(n, trait) && n.children.length >= 2
+  );
+
+  return breakPoints;
 };
 
 export const describeTree = (node: Node, get_root_first: boolean = false) => {
@@ -282,13 +273,13 @@ export const describeTree = (node: Node, get_root_first: boolean = false) => {
   const height = leaves
     .sort((a, b) => a.node_attrs.div - b.node_attrs.div)
     .slice(-1)[0].node_attrs.div;
-  // console.log(
-  //   "loaded tree and found:",
-  //   "total nodes",
-  //   all_objects.length,
-  //   "total leaves",
-  //   leaves.length,
-  //   "max divergence",
-  //   height
-  // );
+  console.log(
+    "loaded tree and found:",
+    "total nodes",
+    all_objects.length,
+    "total leaves",
+    leaves.length,
+    "max divergence",
+    height
+  );
 };

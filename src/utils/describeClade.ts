@@ -5,7 +5,7 @@ import {
   get_pairwise_distances,
   get_root,
   get_parent_for_cousins,
-  get_state_changes,
+  get_trait_changes,
   traverse_preorder,
 } from "./treeMethods";
 
@@ -19,9 +19,7 @@ const catalog_subclades = (
   }
 ) => {
   const geo_levels: string[] = ["location", "division", "country"];
-  const all_samples = traverse_preorder(mrca, (n: Node) => {
-    n.children.length === 0;
-  });
+  const all_samples = get_leaves(mrca);
   for (let i = 0; i < geo_levels.length; i++) {
     if (
       all_samples.every((e) => {
@@ -36,7 +34,7 @@ const catalog_subclades = (
     }
 
     if (Object.keys(mrca.node_attrs[geo_levels[i]]).includes("confidence")) {
-      const subclades = get_state_changes(mrca, geo_levels[i]);
+      const subclades = get_trait_changes(mrca, geo_levels[i]);
       return {
         returned_subclade_geo: geo_levels[i],
         returned_subclades: subclades,

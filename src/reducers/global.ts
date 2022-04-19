@@ -49,7 +49,7 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "clustering results updated": {
-      if (state.samplesOfInterest && state.tree) {
+      if (state.tree) {
         console.log("clustering mrcas length", action.data.length);
         return {
           ...state,

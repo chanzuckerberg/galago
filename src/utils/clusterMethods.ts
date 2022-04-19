@@ -1,7 +1,7 @@
 import { Node } from "../d";
 import {
   get_leaves,
-  get_state_changes,
+  get_trait_changes,
   traverse_preorder,
   get_path,
 } from "./treeMethods";
@@ -28,7 +28,7 @@ export const trimDeepNodes = (tree: Node, maxDescendents?: number) => {
 };
 
 export const nextstrainGeo = (tree: Node, trait: string = "location") => {
-  return get_state_changes(tree, trait);
+  return get_trait_changes(tree, trait);
 };
 
 export const getMrcaOptions = (
