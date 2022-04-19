@@ -30,7 +30,8 @@ function ClusteringOptions() {
 
   return (
     <div>
-      <p>Choose a clustering method:</p>
+      <h3>Choose a clustering method:</h3>
+      <p>Select a method to suggest clusters of interest.</p>
       <p>
         <input
           type="radio"
@@ -59,7 +60,13 @@ function ClusteringOptions() {
             });
           }}
         />
-        <label htmlFor="trimDeepNodes">Tree pruning (most basic)</label>
+        <label htmlFor="trimDeepNodes">
+          Tree pruning
+          <br />
+          <span style={{ fontSize: "0.8em", fontStyle: "italic" }}>
+            Least opinionated method. Removes large and deeply-nested clusters.
+          </span>
+        </label>
       </p>
       <p>
         <input

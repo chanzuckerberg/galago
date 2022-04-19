@@ -13,9 +13,27 @@ function SampleSelection() {
         To instantly generate a report for any set of samples, select a cluster
         of samples based on the inferred primary case they descend from.
       </p>
-      <SamplesOfInterest />
-      <ClusteringOptions />
       <MutsDateScatter />
+      <div // actual table container
+        style={{
+          position: "relative",
+          // borderBottom: "1px solid black",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "space-between",
+          width: 960,
+          marginTop: "3em",
+          marginBottom: "3em",
+        }}
+      >
+        <p style={{ width: 450 }}>
+          <SamplesOfInterest />
+        </p>
+        <p style={{ width: 450 }}>
+          <ClusteringOptions />
+        </p>
+      </div>
     </div>
   );
 }

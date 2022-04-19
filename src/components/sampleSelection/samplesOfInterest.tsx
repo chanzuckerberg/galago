@@ -6,35 +6,40 @@ export const SamplesOfInterest = () => {
   const state = useSelector((state) => state.global);
 
   return (
-    <p>
-      Optionally, input samples of interest to highlight them in the graph and
-      eliminate inferred primary cases (and corresponding clusters) that are
-      unrelated.
-      <br />
-      <input
-        type="text"
-        name="selectedSamples"
-        onChange={(e) => {
-          dispatch({
-            type: "sample names string changed",
-            data: e.target.value,
-          });
-        }}
-        style={{ width: "35em" }}
-        value={
-          state.samplesOfInterestNames
-            ? state.samplesOfInterestNames.join(", ")
-            : "SampleID1, SampleID2, ..."
-        }
-      />
-      <button
-        type="button"
-        name="submitInput"
-        onClick={(e) => dispatch({ type: "sample submit button clicked" })}
-      >
-        Highlight and subset
-      </button>
-    </p>
+    <div>
+      <h3>Highlight samples of interest</h3>
+      <p>
+        Input samples of interest to highlight them in the graph and suggest
+        only clusters that contain at least one of your input sample(s).
+        <br />
+        <span style={{ fontSize: "0.8em", fontStyle: "italic" }}>
+          Must match sample names in your tree file
+        </span>
+        <input
+          type="text"
+          name="selectedSamples"
+          onChange={(e) => {
+            dispatch({
+              type: "sample names string changed",
+              data: e.target.value,
+            });
+          }}
+          style={{ width: "30em" }}
+          value={
+            state.samplesOfInterestNames
+              ? state.samplesOfInterestNames.join(", ")
+              : "SampleID1, SampleID2, ..."
+          }
+        />
+        <button
+          type="button"
+          name="submitInput"
+          onClick={(e) => dispatch({ type: "sample submit button clicked" })}
+        >
+          Highlight and subset
+        </button>
+      </p>
+    </div>
   );
 };
 

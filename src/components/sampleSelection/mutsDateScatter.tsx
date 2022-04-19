@@ -332,16 +332,10 @@ function MutsDateScatter() {
         {state.mrcaOptions.map((node: any, i: number) => plotMrca(node, i))}
         <g>
           {/* <text x={margin - 4} y={20} fontSize={10}> */}
-          <text x={chartWidth / 2 - 180} y={40} fontSize={10}>
-            {hoverMRCA
-              ? `Selected cluster's primary case date: ${hoverMRCA.node_attrs.num_date.value
-                  .toISOString()
-                  .substring(0, 10)}. ${
-                  get_leaves(hoverMRCA).length
-                } total samples.`
-              : `Clusters, sorted by the date of the inferred primary case (hover to select a cluster).`}
+          <text x={chartWidth / 2 - 275} y={40} fontSize={16} font-style="bold">
+            {`Clusters, sorted by the date of their inferred primary case. Click to select.`}
           </text>
-          <text x={margin} y={40} fontSize={10} fontStyle="italic">
+          <text x={margin} y={40} fontSize={10} font-style="italic">
             broader selection
           </text>
           <text
