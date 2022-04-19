@@ -34,6 +34,7 @@ export const global = (state = defaultState, action: any) => {
       const samplesOfInterest = samplesOfInterestNames
         .map((n: string) => find_leaf_by_name(n, get_leaves(tree)))
         .filter((n: Node | null) => n !== null);
+      //@ts-ignore -- we already check for null samples on the line above
       const mrca = get_mrca(samplesOfInterest);
 
       return {
@@ -42,7 +43,8 @@ export const global = (state = defaultState, action: any) => {
         samplesOfInterestNames: samplesOfInterestNames,
         samplesOfInterest: samplesOfInterest,
         mrca: mrca,
-        mrcaOptions: getMrcaOptions(tree, samplesOfInterest),
+        //@ts-ignore -- we already check for null samples on the line above
+        mrcaOptions: getMrcaOptions(tree, samplesOfInterest, []),
         location: "Humboldt County",
         division: "California",
       };
@@ -88,6 +90,7 @@ export const global = (state = defaultState, action: any) => {
           samplesOfInterest: newSamplesOfInterest,
           mrcaOptions: getMrcaOptions(
             state.tree,
+            //@ts-ignore - we already filter out null values above
             newSamplesOfInterest,
             state.clusteringMrcas
           ),

@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 function MutsDateScatter() {
   // LOCAL AND GLOBAL STATE
+  // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
 
   const [hoverMRCA, sethoverMRCA] = useState<Node | null>(
@@ -15,7 +16,9 @@ function MutsDateScatter() {
   const dispatch = useDispatch();
 
   // DATA SETUP
-  const _samplesOfInterestNames = state.samplesOfInterest.map((n) => n.name);
+  const _samplesOfInterestNames = state.samplesOfInterest.map(
+    (n: Node) => n.name
+  );
   const allNodes = traverse_preorder(state.tree);
   const allSamples: Array<Node> = allNodes.filter(
     (n) => n.children.length === 0

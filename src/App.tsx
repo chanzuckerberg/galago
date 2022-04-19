@@ -31,6 +31,7 @@ import { SitStat } from "./components/sitStat";
 import SampleSelection from "./components/sampleSelection";
 
 function App() {
+  // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
 
@@ -186,7 +187,7 @@ function App() {
       {state.location && state.division && state.tree && (
         <div>
           <h1>Investigate potential outbreak clusters in {state.location}</h1>
-          <SampleSelection tree={state.tree} />
+          <SampleSelection />
         </div>
       )}
 
@@ -211,6 +212,7 @@ function App() {
           {/* <PhyloUncertainty clade_description={all_samples} /> */}
           {/* <h2>Considerations & Caveats</h2> */}
           <SamplingBias
+            // @ts-ignore
             gisaid_census={gisaid_census}
             all_samples={get_leaves(get_root(state.tree))}
             clade_description={clade_description}

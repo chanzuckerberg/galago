@@ -5,6 +5,7 @@ import { traverse_preorder } from "../../utils/treeMethods";
 import { useState } from "react";
 
 function ClusteringOptions() {
+  // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
 

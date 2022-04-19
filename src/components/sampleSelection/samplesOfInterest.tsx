@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 export const SamplesOfInterest = () => {
   const dispatch = useDispatch();
+  // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
 
   return (
