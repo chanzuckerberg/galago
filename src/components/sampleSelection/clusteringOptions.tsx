@@ -1,7 +1,7 @@
 import { Node } from "../../d";
-import { nextstrainGeo, trimDeepNodes } from "../../utils/clusterMethods";
+import { nextstrainGeo, matutilsIntroduce } from "../../utils/clusterMethods";
 import { useSelector, useDispatch } from "react-redux";
-import { traverse_preorder } from "../../utils/treeMethods";
+import { traverse_preorder, getNodeAttr } from "../../utils/treeMethods";
 import { useState } from "react";
 
 function ClusteringOptions() {
@@ -9,7 +9,10 @@ function ClusteringOptions() {
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
 
-  const [nextstrainTrait, setNextstrainTrait] = useState<string | undefined>(
+  const [nextstrainAttr, setNextstrainAttr] = useState<string | undefined>(
+    undefined
+  );
+  const [matutilsAttr, setMatutilsAttr] = useState<string | undefined>(
     undefined
   );
 
@@ -17,7 +20,7 @@ function ClusteringOptions() {
     state.tree,
     (node: Node) => node.children.length >= 2
   );
-  const nextstraintTraitOptions = Object.keys(
+  const nextstrainAttrOptions = Object.keys(
     all_internal_nodes[5].node_attrs
   ).filter(
     (attr: string) =>
@@ -27,6 +30,14 @@ function ClusteringOptions() {
         "confidence"
       ) &&
       nextstrainGeo(state.tree, attr).length > 5
+  );
+
+  // TODO: Put in proper logic for detecting categorical variables with 2 < n < 100 (whatever) unique values
+  const matutilsAttrOptions = Object.keys(
+    all_internal_nodes[5].node_attrs
+  ).filter(
+    (attr: string) =>
+      typeof getNodeAttr(all_internal_nodes[5], attr) === "string"
   );
 
   return (
@@ -52,20 +63,37 @@ function ClusteringOptions() {
       <p>
         <input
           type="radio"
-          id="trimDeepNodes"
+          id="matutilsIntroduce"
           name="clusteringOptionsRadio"
           onClick={() => {
             dispatch({
               type: "clustering results updated",
-              data: trimDeepNodes(state.tree),
+              data: matutilsIntroduce(state.tree, matutilsAttr),
             });
           }}
+          disabled={matutilsAttr === undefined}
         />
-        <label htmlFor="trimDeepNodes">
-          Tree pruning
+        <label htmlFor="matutilsIntroduce">
+          Changes in / movement between{" "}
+          <select
+            id="matutils-attr-select"
+            name="select"
+            onChange={(e) => {
+              setMatutilsAttr(e.target.value);
+            }}
+            disabled={matutilsAttrOptions.length === 0}
+            style={{ width: "12em" }}
+          >
+            <option value={undefined}>choose metadata field</option>
+            {matutilsAttrOptions.map((attr: string) => (
+              <option value={attr}>{attr}</option>
+            ))}
+          </select>
           <br />
           <span style={{ fontSize: "0.8em", fontStyle: "italic" }}>
-            Least opinionated method. Removes large and deeply-nested clusters.
+            Good for tracking movement between facilities, locations, etc.{" "}
+            <br />
+            Computed on demand; please be patient.
           </span>
         </label>
       </p>
@@ -74,29 +102,28 @@ function ClusteringOptions() {
           type="radio"
           id="nextstrainGeo"
           name="clusteringOptionsRadio"
-          value="phone"
           onClick={() => {
             dispatch({
               type: "clustering results updated",
-              data: nextstrainGeo(state.tree, nextstrainTrait),
+              data: nextstrainGeo(state.tree, nextstrainAttr),
             });
           }}
-          disabled={nextstrainTrait === undefined}
+          disabled={nextstrainAttr === undefined}
         />
         <label htmlFor="nextstrainGeo">
           Changes in / movement between{" "}
           <select
-            id="nextstrain-trait-select"
+            id="nextstrain-attr-select"
             name="select"
             onChange={(e) => {
-              setNextstrainTrait(e.target.value);
+              setNextstrainAttr(e.target.value);
             }}
-            disabled={nextstraintTraitOptions.length === 0}
+            disabled={nextstrainAttrOptions.length === 0}
             style={{ width: "12em" }}
           >
             <option value={undefined}>choose metadata field</option>
-            {nextstraintTraitOptions.map((trait: string) => (
-              <option value={trait}>{trait}</option>
+            {nextstrainAttrOptions.map((attr: string) => (
+              <option value={attr}>{attr}</option>
             ))}
           </select>
           <br />

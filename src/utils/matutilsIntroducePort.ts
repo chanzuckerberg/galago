@@ -254,7 +254,7 @@ const calcHeuristic = (
   };
 };
 
-const assignInternalNodeTraits = (tree: Node, attr: string) => {
+export const assignInternalNodeTraits = (tree: Node, attr: string) => {
   /* WARNING: IMPURE FUNCTION - infers ancestral states for any arbitrary attribute and records this in the tree object in-place for memory and performance considerations */
 
   const allNodes = traverse_preorder(tree).reverse();
