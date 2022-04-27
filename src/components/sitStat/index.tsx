@@ -11,7 +11,6 @@ type SitStatProps = {
 
 export const SitStat = (props: SitStatProps) => {
   const { clade_description, all_samples } = props;
-  // console.log("all samples", all_samples);
 
   const all_clade_samples: Node[] =
     clade_description.unselected_samples_in_cluster

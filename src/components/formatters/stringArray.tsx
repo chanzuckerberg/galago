@@ -8,7 +8,6 @@ export const FormatStringArray = (props: stringArrayProps) => {
   let { values, includeUnknown, makeUnique } = props;
   includeUnknown = includeUnknown === undefined ? true : includeUnknown;
   makeUnique = makeUnique === undefined ? true : makeUnique;
-  // console.log(values, includeUnknown, makeUnique);
   const unknownValues = [undefined, null, "unknown", "?", "", NaN];
   values = includeUnknown
     ? values

@@ -106,7 +106,6 @@ export const get_current_counts = (
     recency,
     node_attrs_recency_match
   );
-  // console.log("matching_records", matching_records);
   return matching_records.length; // if looking at the present dataset / tree / clade, we can just count the N samples
 };
 

@@ -52,7 +52,6 @@ export const global = (state = defaultState, action: any) => {
 
     case "clustering results updated": {
       if (state.tree) {
-        console.log("clustering mrcas length", action.data.length);
         return {
           ...state,
           clusteringMrcas: action.data,
@@ -109,19 +108,19 @@ export const global = (state = defaultState, action: any) => {
           const newTree: Node = ingestNextstrain(
             JSON.parse(event.target.result)
           );
-          console.log("setting tree from file upload", newTree);
+          // console.log("setting tree from file upload", newTree);
           return { ...state, tree: newTree };
         }
       };
     }
 
     case "location set": {
-      console.log("setting location to", action.data);
+      // console.log("setting location to", action.data);
       return { ...state, location: action.data };
     }
 
     case "division set": {
-      console.log("setting division to", action.data);
+      // console.log("setting division to", action.data);
       return { ...state, division: action.data };
     }
 

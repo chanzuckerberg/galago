@@ -27,12 +27,8 @@ function SampleSelection() {
           marginBottom: "3em",
         }}
       >
-        <p style={{ width: 450 }}>
-          <SamplesOfInterest />
-        </p>
-        <p style={{ width: 450 }}>
-          <ClusteringOptions />
-        </p>
+        <SamplesOfInterest />
+        <ClusteringOptions />
       </div>
     </div>
   );

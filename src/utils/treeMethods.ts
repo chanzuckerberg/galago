@@ -245,11 +245,11 @@ export const getNodeAttr = (
       typeof n.node_attrs[attr] === "object" &&
       Object.keys(n.node_attrs[attr]).includes(type)
     ) {
-      let attrValue = n.node_attrs[attr][type];
+      attrValue = n.node_attrs[attr][type];
     }
     // only nextstrain attribute `values` come in as non-dictionaries
     else if (typeof n.node_attrs[attr] !== "object") {
-      let attrValue = n.node_attrs[attr];
+      attrValue = n.node_attrs[attr];
     }
   }
 
@@ -261,29 +261,39 @@ export const getNodeAttr = (
   }
 };
 
-const doesTraitMatchParent = (node: Node, trait_to_check: string) => {
+const doesTraitMatchParent = (
+  node: Node,
+  trait_to_check: string,
+  method: "nextstrain" | "matutils" = "nextstrain"
+) => {
   // deal with root
   if (!node.parent) {
     // root is not a breakpoint
     return true;
   }
 
-  const node_trait_value = getNodeAttr(node, trait_to_check);
-  const parent_trait_value = getNodeAttr(node.parent, trait_to_check);
-  // console.log(
-  //   node.name,
-  //   node_trait_value,
-  //   parent_trait_value,
-  //   node_trait_value === parent_trait_value
-  // );
+  const node_trait_value = getNodeAttr(
+    node,
+    trait_to_check,
+    method === "nextstrain" ? "value" : "matutils_value"
+  );
+  const parent_trait_value = getNodeAttr(
+    node.parent,
+    trait_to_check,
+    method === "nextstrain" ? "value" : "matutils_value"
+  );
   return node_trait_value === parent_trait_value;
 };
 
-export const get_trait_changes = (startNode: Node, trait: string) => {
+export const getAttrChanges = (
+  startNode: Node,
+  attr: string,
+  method: "nextstrain" | "matutils" = "nextstrain"
+) => {
   const allNodes: Array<Node> = traverse_preorder(startNode);
 
   const breakPoints = allNodes.filter(
-    (n) => !doesTraitMatchParent(n, trait) && n.children.length >= 2
+    (n) => !doesTraitMatchParent(n, attr, method) && n.children.length >= 2
   );
 
   return breakPoints;
