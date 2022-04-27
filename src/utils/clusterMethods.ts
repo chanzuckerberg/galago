@@ -41,7 +41,6 @@ export const getMrcaOptions = (
     (!clusteringMrcas || clusteringMrcas.length === 0) &&
     (!samplesOfInterest || samplesOfInterest?.length === 0)
   ) {
-    console.log("setting mrca options to all internal nodes");
     return traverse_preorder(tree).filter((n: Node) => n.children.length >= 2);
     // clustering results but no samples of interest? just return clustering results
   } else if (!samplesOfInterest || samplesOfInterest.length === 0) {
