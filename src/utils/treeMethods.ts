@@ -227,6 +227,40 @@ export const find_leaf_by_name = (name: string, all_samples: Node[]) => {
   return null;
 };
 
+export const getNodeAttr = (
+  n: Node,
+  attr: string,
+  type:
+    | "value"
+    | "confidence"
+    | "matutils_confidence"
+    | "matutils_value" = "value"
+) => {
+  let attrValue: any = undefined;
+
+  // attribute present
+  if (Object.keys(n.node_attrs).includes(attr)) {
+    // if attribute is a dictionary, require the `type` key
+    if (
+      typeof n.node_attrs[attr] === "object" &&
+      Object.keys(n.node_attrs[attr]).includes(type)
+    ) {
+      let attrValue = n.node_attrs[attr][type];
+    }
+    // only nextstrain attribute `values` come in as non-dictionaries
+    else if (typeof n.node_attrs[attr] !== "object") {
+      let attrValue = n.node_attrs[attr];
+    }
+  }
+
+  // if attrValue we found was falsey or a filler, return undefined for uniformity
+  if ([NaN, null, undefined, "unknown", ""].includes(attrValue)) {
+    return undefined;
+  } else {
+    return attrValue;
+  }
+};
+
 const doesTraitMatchParent = (node: Node, trait_to_check: string) => {
   // deal with root
   if (!node.parent) {
@@ -234,25 +268,8 @@ const doesTraitMatchParent = (node: Node, trait_to_check: string) => {
     return true;
   }
 
-  const getAttr = (n: Node, attr: string = trait_to_check) => {
-    // treat all missing values as the same
-    if (Object.keys(n.node_attrs).includes(attr)) {
-      const attrValue: any = n.node_attrs[attr]["value"]
-        ? n.node_attrs[attr]["value"]
-        : n.node_attrs[attr];
-
-      if ([NaN, null, undefined, "unknown", ""].includes(attrValue)) {
-        return null;
-      } else {
-        return attrValue;
-      }
-    } else {
-      return null;
-    }
-  };
-
-  const node_trait_value = getAttr(node, trait_to_check);
-  const parent_trait_value = getAttr(node.parent, trait_to_check);
+  const node_trait_value = getNodeAttr(node, trait_to_check);
+  const parent_trait_value = getNodeAttr(node.parent, trait_to_check);
   // console.log(
   //   node.name,
   //   node_trait_value,
