@@ -3,7 +3,6 @@ import { Node } from "../d";
 
 export const traverse_preorder = (
   node: Node,
-  // apply_fn?: Function,
   collect_condition?: Function,
   traverse_condition?: Function,
   collection: Node[] = []
@@ -31,25 +30,34 @@ export const traverse_preorder = (
   return collection;
 };
 
-// export const traverse_postorder = (
-//   node: Node,
-//   node_fn?: Function,
-//   collection: Node[] = []
-// ) => {
-//   // visit children first, left to rigt
-//   if (node.children.length > 0) {
-//     for (var i = 0; i < node.children.length; i++) {
-//       collection = traverse_postorder(node.children[i], node_fn, collection);
-//     }
-//   }
+export const traverse_postorder = (
+  node: Node,
+  collect_condition?: Function,
+  traverse_condition?: Function,
+  collection: Node[] = []
+) => {
+  // first visit children, left to right
+  if (node.children.length > 0) {
+    const children_to_visit = traverse_condition
+      ? node.children.filter((n) => traverse_condition(n))
+      : node.children;
+    for (let i = 0; i < children_to_visit.length; i++) {
+      collection = traverse_preorder(
+        children_to_visit[i],
+        collect_condition,
+        traverse_condition,
+        collection
+      );
+    }
+  }
 
-//   if (node_fn) {
-//     // then visit current node and do something
-//     node_fn(node);
-//   }
-//   collection.push(node);
-//   return collection;
-// };
+  // then visit this node and make a note that we've seen it
+  if (!collect_condition || collect_condition(node)) {
+    collection.push(node);
+  }
+
+  return collection;
+};
 
 export const get_mrca = (target_nodes: Node[]) => {
   // if only one node given, return itself
