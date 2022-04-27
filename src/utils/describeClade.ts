@@ -5,7 +5,7 @@ import {
   get_pairwise_distances,
   get_root,
   get_parent_for_cousins,
-  get_trait_changes,
+  getAttrChanges,
   traverse_preorder,
 } from "./treeMethods";
 
@@ -34,7 +34,7 @@ const catalog_subclades = (
     }
 
     if (Object.keys(mrca.node_attrs[geo_levels[i]]).includes("confidence")) {
-      const subclades = get_trait_changes(mrca, geo_levels[i]);
+      const subclades = getAttrChanges(mrca, geo_levels[i], "nextstrain");
       return {
         returned_subclade_geo: geo_levels[i],
         returned_subclades: subclades,
@@ -94,6 +94,6 @@ export const describe_clade = (
     subclade_geo: returned_subclade_geo,
     subclades: returned_subclades,
   };
-  // console.log("clade description", clade);
+  console.log("clade description", clade);
   return clade;
 };
