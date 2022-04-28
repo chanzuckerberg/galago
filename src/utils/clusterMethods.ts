@@ -1,10 +1,12 @@
 import { Node } from "../d";
 import {
   get_leaves,
-  get_trait_changes,
   traverse_preorder,
   get_path,
+  getNodeAttr,
+  getAttrChanges,
 } from "./treeMethods";
+import { assignInternalNodeTraits } from "./matutilsIntroducePort";
 
 export const trimDeepNodes = (tree: Node, maxDescendents?: number) => {
   maxDescendents ??= get_leaves(tree).length / 10;
@@ -28,7 +30,14 @@ export const trimDeepNodes = (tree: Node, maxDescendents?: number) => {
 };
 
 export const nextstrainGeo = (tree: Node, trait: string = "location") => {
-  return get_trait_changes(tree, trait);
+  return getAttrChanges(tree, trait, "nextstrain");
+};
+
+export const matutilsIntroduce = (tree: Node, trait: string = "location") => {
+  if (!getNodeAttr(tree, trait, "matutils_confidence")) {
+    assignInternalNodeTraits(tree, trait);
+  }
+  return getAttrChanges(tree, trait, "matutils");
 };
 
 export const getMrcaOptions = (

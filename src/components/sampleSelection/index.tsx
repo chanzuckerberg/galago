@@ -1,5 +1,5 @@
 import MutsDateScatter from "./mutsDateScatter";
-import ClusteringOptions from "./clusteringOptions";
+import ClusteringOptions from "./clusteringMethodSelect";
 import SamplesOfInterest from "./samplesOfInterest";
 
 function SampleSelection() {
