@@ -100,6 +100,9 @@ const recordAssignments = (
   /* WARNING: IMPURE FUNCTION */
   /* Updates node object IN PLACE with newly calculated confidence metric */
 
+  if (confidence === 0) {
+    return; // don't assign anything if we have no confidence
+  }
   if (Object.keys(n.node_attrs).includes(attr)) {
     // has attribute
     if (typeof n.node_attrs[attr] === "object") {
@@ -258,12 +261,12 @@ export const assignInternalNodeTraits = (tree: Node, attr: string) => {
   /* WARNING: IMPURE FUNCTION - infers ancestral states for any arbitrary attribute and records this in the tree object in-place for memory and performance considerations */
 
   const allNodes = traverse_preorder(tree).reverse();
-  const allValidAttrValues = allNodes
-    .map((n: Node) => getNodeAttr(n, attr))
-    .filter((value: any) => {
-      ["string", "number"].includes(typeof value);
+  const allValidAttrValues = allNodes.map((n: Node) => getNodeAttr(n, attr));
+  // .filter((value: any) => {
+  //   ["string", "number"].includes(typeof value);
+  // });
     });
-  const uniqueAttrValues = new Set(...allValidAttrValues);
+  const uniqueAttrValues = new Set(allValidAttrValues);
   if (uniqueAttrValues.size < 2 || uniqueAttrValues.size > 100) {
     // poor man's error management - at least don't fall over
     console.log(
