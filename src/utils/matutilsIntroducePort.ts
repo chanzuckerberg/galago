@@ -265,7 +265,7 @@ export const assignInternalNodeTraits = (tree: Node, attr: string) => {
   // .filter((value: any) => {
   //   ["string", "number"].includes(typeof value);
   // });
-    });
+  // });
   const uniqueAttrValues = new Set(allValidAttrValues);
   if (uniqueAttrValues.size < 2 || uniqueAttrValues.size > 100) {
     // poor man's error management - at least don't fall over
