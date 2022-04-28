@@ -119,8 +119,8 @@ function ClusteringOptions() {
           </select>
           <br />
           <span style={{ fontSize: "0.8em", fontStyle: "italic" }}>
-            Heuristic-based tracking movement between facilities, locations,
-            etc. <br />
+            Heuristic-based method for tracking movement between facilities,
+            states, etc. <br />
             Computed on demand; please be patient (1-15 seconds).
           </span>
         </label>
@@ -156,7 +156,7 @@ function ClusteringOptions() {
           </select>
           <br />
           <span style={{ fontSize: "0.8em", fontStyle: "italic" }}>
-            Model-based for tracking movement between facilities, locations,
+            Model-based method for tracking movement between facilities, states,
             etc. <br />
             Must be pre-computed upstream by Nextstrain.
           </span>
