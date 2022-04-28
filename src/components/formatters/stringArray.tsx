@@ -18,11 +18,11 @@ export const FormatStringArray = (props: stringArrayProps) => {
   values.sort();
 
   return (
-    <span className="dataPoint">
+    <blockquote className="dataPoint">
       {values.slice(0, -1).map((v, i) => (
         <span key={`${i}-${v}`}>{v}, </span>
       ))}
       {values.slice(-1)[0]}
-    </span>
+    </blockquote>
   );
 };
