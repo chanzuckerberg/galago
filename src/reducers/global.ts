@@ -22,16 +22,19 @@ const defaultState = {
   clusteringMrcas: [],
   tree: null,
   location: "",
-  locationOptions: null,
   division: "",
-  divisionOptions: null,
   country: "USA",
   region: "North America",
+  testValue: 0,
   // cladeDescription: null,
 };
 
 export const global = (state = defaultState, action: any) => {
   switch (action.type) {
+    case "call home": {
+      return { ...state, testValue: state.testValue + 1 };
+    }
+
     case "load demo": {
       const tree = ingestNextstrain(demo_tree);
       const samplesOfInterestNames = demo_sample_names
@@ -106,33 +109,20 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "tree file uploaded": {
-      const fileReader = new FileReader();
-      fileReader.readAsText(action.data, "application/JSON");
-      fileReader.onload = (event) => {
-        if (event?.target?.result && typeof event.target.result === "string") {
-          const newTree: Node = ingestNextstrain(
-            JSON.parse(event.target.result)
-          );
-
-          const newDivisionOptions = get_division_input_options(newTree, "USA");
-          console.log(state.divisionOptions, newDivisionOptions);
-          // console.log("setting tree from file upload", newTree);
-          return {
-            ...state,
-            tree: newTree,
-            divisionOptions: newDivisionOptions,
-          };
-        }
+      // console.log("setting tree to", action.data);
+      return {
+        ...state,
+        tree: action.data,
       };
     }
 
     case "location set": {
-      // console.log("setting location to", action.data);
+      console.log("setting location to", action.data);
       return { ...state, location: action.data };
     }
 
     case "division set": {
-      // console.log("setting division to", action.data);
+      console.log("setting division to", action.data);
       if (state.tree) {
         const newLocationOptions = get_location_input_options(
           state.tree,

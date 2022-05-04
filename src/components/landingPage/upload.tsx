@@ -1,14 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  get_division_input_options,
+  get_location_input_options,
+} from "../../utils/geoInputOptions";
+import { store } from "../../reducers/store";
+import { ingestNextstrain } from "../../utils/nextstrainAdapter";
+import { Node } from "../../d";
 
 export const Upload = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
+  const [divisionOptions, setDivisionOptions] = useState<null | Array<string>>(
+    null
+  );
+  const [locationOptions, setLocationOptions] = useState<null | Array<string>>(
+    null
+  );
 
-  useEffect(() => {
-    console.log(state.locationOptions, state.divisionOptions);
-  }, [state.divisionOptions, state.locationOptions]);
+  const handleTreeFileUpload = (file: any) => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(file, "application/JSON");
+    fileReader.onload = (event) => {
+      if (event?.target?.result && typeof event.target.result === "string") {
+        const newTree: Node = ingestNextstrain(JSON.parse(event.target.result));
+        dispatch({ type: "tree file uploaded", data: newTree });
+        setDivisionOptions(get_division_input_options(newTree, state.country));
+      }
+    };
+  };
+
+  const handleDivisionSelection = (division: string) => {
+    dispatch({ type: "division set", data: division });
+    setLocationOptions(get_location_input_options(state.tree, division));
+    console.log(state.tree, state.country, locationOptions);
+  };
 
   return (
     <div>
@@ -47,10 +74,7 @@ export const Upload = () => {
           type="file"
           name="file"
           onChange={(event: any) => {
-            dispatch({
-              type: "tree file uploaded",
-              data: event.target.files[0],
-            });
+            handleTreeFileUpload(event.target.files[0]);
           }}
         />
       </p>
@@ -61,14 +85,13 @@ export const Upload = () => {
         <select
           id="division-select"
           name="State"
-          onChange={(e) =>
-            dispatch({ type: "division set", data: e.target.value })
-          }
-          disabled={!state.divisionOptions}
+          onChange={(e) => handleDivisionSelection(e.target.value)}
+          disabled={!divisionOptions}
           style={{ width: "15em" }}
+          defaultValue={""}
         >
-          {state.divisionOptions &&
-            state.divisionOptions.map((division: string) => (
+          {divisionOptions &&
+            divisionOptions.map((division: string) => (
               <option value={division}>{division}</option>
             ))}
         </select>
@@ -84,11 +107,11 @@ export const Upload = () => {
               data: event.target.value,
             });
           }}
-          disabled={!state.locationOptions}
+          disabled={!locationOptions}
           style={{ width: "15em" }}
         >
-          {state.locationOptions &&
-            state.locationOptions.map((county: string) => (
+          {locationOptions &&
+            locationOptions.map((county: string) => (
               <option value={county}>{county}</option>
             ))}
         </select>
