@@ -39,27 +39,7 @@ export const Upload = () => {
 
   return (
     <div>
-      <h2>Demo with real-world outbreak data</h2>
-      <p>
-        Genomic epidemiology helped public health officials understand a
-        real-world outbreak of SARS-CoV-2 at a farm in Humboldt County. This
-        demo report is automatically generated based on the same phylogenetic
-        tree that was used in this investigation.
-        <br />
-        <a href="https://www.medrxiv.org/content/10.1101/2021.09.21.21258385v1">
-          You can read more about this outbreak here.
-        </a>
-      </p>
-      <p>
-        <button
-          type="button"
-          name="loadDemo"
-          onClick={() => dispatch({ type: "load demo" })}
-        >
-          Load Demo
-        </button>{" "}
-      </p>
-      <h2>Analyze a potential outbreak</h2>
+      <h2>Analyze your data</h2>
       <p>
         <i>
           Galago runs entirely in the browser. This means that your data never
