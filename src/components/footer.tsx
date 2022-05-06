@@ -11,17 +11,15 @@ const Footer = () => {
         paddingBottom: "0em",
       }}
     >
-      Methods &#183; <a href="https://github.com/chanzuckerberg/galago">Code</a>{" "}
-      &#183;{" "}
-      <a href="https://github.com/chanzuckerberg/galago/discussions">
-        Discussion
-      </a>
-      &#183; <a href="mailto:sbell@chanzuckerberg.com">Email</a>
-      <br /> Galago: a little tree explorer made with &hearts; by Sidney Bell,
-      PhD & Colin Megill
-      <br /> with many thanks to the CZ Gen Epi team
-      <br />
-      &copy; 2017 - 2022 CZI &#183; MIT licensed
+      <p style={{ maxWidth: "65em" }}>
+        Galago: a little tree explorer made with &hearts; by Sidney Bell, PhD &
+        Colin Megill
+        <br /> with many thanks to the CZ Gen Epi team
+      </p>
+      <p style={{ maxWidth: "65em" }}>
+        &copy; 2017 - 2022 CZI &#183; MIT licensed &#183;
+        <a href="https://github.com/chanzuckerberg/galago"> Source code</a>
+      </p>
     </div>
   );
 };
