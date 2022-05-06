@@ -18,6 +18,29 @@ export const Upload = () => {
   const [locationOptions, setLocationOptions] = useState<null | Array<string>>(
     null
   );
+  const [metadataKeyOptions, setMetadataKeyOptions] = useState<null | string[]>(
+    null
+  );
+  const [metadataDict, setMetadataDict] = useState<null | object>(null);
+
+  const handleMetadataUpload = (file: any) => {
+    const csvConfig = {
+      header: true,
+      dynamicTyping: true, // convert numbers and dates
+      preview: 10000, // limit of n rows to parse
+      worker: false, // keeps page responsive, might slow down process overall - disabled for now
+      comments: "#",
+      complete: (results) => {
+        setMetadataDict(results.data);
+        setMetadataKeyOptions(results.meta.fields);
+      },
+      error: undefined, // callback if encounters error
+      skipEmptyLines: "greedy", // skip lines that are empty or evaluate to only whitespace
+      transform: undefined, //A function to apply on each value. The function receives the value as its first argument and the column number or header name when enabled as its second argument. The return value of the function will replace the value it received. The transform function is applied before dynamicTyping.
+    };
+
+    parse(file, csvConfig);
+  };
 
   const handleTreeFileUpload = (file: any) => {
     const fileReader = new FileReader();
@@ -93,6 +116,38 @@ export const Upload = () => {
           {locationOptions &&
             locationOptions.map((county: string) => (
               <option value={county}>{county}</option>
+            ))}
+        </select>
+      </p>
+      <p>
+        <b>Optionally, upload sample metadata (e.g., a line list)</b>
+        <br />
+        <i>
+          Helps you identify meaningful clusters and integrate genomic and
+          epidemiological insights.
+        </i>
+        <br />
+        <input
+          type="file"
+          name="file"
+          onChange={(event: any) => {
+            handleMetadataUpload(event.target.files[0]);
+          }}
+        />
+        <br />
+        Field to match metadata to sample names:
+        <br />
+        <select
+          id="metadata-key-select"
+          name="metadataKey"
+          onChange={(e) => console.log(e.target.value)}
+          disabled={!metadataKeyOptions}
+          style={{ width: "15em" }}
+          defaultValue={""}
+        >
+          {metadataKeyOptions &&
+            metadataKeyOptions.map((field: string) => (
+              <option value={field}>{field}</option>
             ))}
         </select>
       </p>
