@@ -19,6 +19,7 @@ import GeoSubclades from "./components/geoSubclades";
 import Assumptions from "./components/assumptions";
 import { SitStat } from "./components/sitStat";
 import SampleSelection from "./components/sampleSelection";
+import Footer from "./components/footer";
 
 function App() {
   // @ts-ignore -- TODO: figure out how to add types to state
@@ -101,6 +102,7 @@ function App() {
             clade_description={clade_description}
             sidenote_start={8}
           />
+          <Footer />
         </div>
       )}
     </div>

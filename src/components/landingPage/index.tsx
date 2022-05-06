@@ -1,6 +1,7 @@
 import AboutGalago from "./aboutGalago";
 import ContactUs from "./contactUs";
 import Upload from "./upload";
+import Footer from "../footer";
 
 export const LandingPage = () => {
   return (
@@ -8,6 +9,7 @@ export const LandingPage = () => {
       <AboutGalago />
       <Upload />
       <ContactUs />
+      <Footer />
     </div>
   );
 };
