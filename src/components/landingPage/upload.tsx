@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   get_division_input_options,
   get_location_input_options,
 } from "../../utils/geoInputOptions";
-import { store } from "../../reducers/store";
 import { ingestNextstrain } from "../../utils/nextstrainAdapter";
 import { Node } from "../../d";
+import { parse } from "papaparse";
 
 export const Upload = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
