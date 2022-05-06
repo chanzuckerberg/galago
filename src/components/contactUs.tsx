@@ -4,9 +4,9 @@ const ContactUs = () => {
       <h2>Feedback?</h2>
       <p>
         We are continually working to improve Galago, and we want to hear from
-        you! You can reach us either by{" "}
-        <a href="https://github.com/chanzuckerberg/galago/issues/new">
-          opening a new issue on Github
+        you! You can reach us either{" "}
+        <a href="https://github.com/chanzuckerberg/galago/discussions">
+          on our discussion board
         </a>{" "}
         or <a href="mailto:sidneymbell@chanzuckerberg.com">via email.</a>
       </p>
