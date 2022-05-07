@@ -7,6 +7,7 @@ import {
 import { ingestNextstrain } from "../../utils/nextstrainAdapter";
 import { Node } from "../../d";
 import { parse } from "papaparse";
+import { ingestMetadata } from "../../utils/metadataUtils";
 
 export const Upload = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
@@ -21,19 +22,31 @@ export const Upload = () => {
   const [metadataKeyOptions, setMetadataKeyOptions] = useState<null | string[]>(
     null
   );
-  const [metadataDict, setMetadataDict] = useState<null | object>(null);
 
   const handleMetadataUpload = (file: any) => {
+    const runOnUpload = (results: any, file: any) => {
+      const { tidyMetadata, metadataCensus } = ingestMetadata(results.data);
+      dispatch({
+        type: "metadata uploaded and parsed",
+        data: { metadataCensus: metadataCensus, tidyMetadata: tidyMetadata },
+      });
+      setMetadataKeyOptions(
+        Object.keys(
+          metadataCensus.filter(
+            (field: string) =>
+              metadataCensus[field]["dataType"] === "categorical"
+          )
+        )
+      );
+    };
+
     const csvConfig = {
       header: true,
       dynamicTyping: true, // convert numbers and dates
       preview: 10000, // limit of n rows to parse
       worker: false, // keeps page responsive, might slow down process overall - disabled for now
       comments: "#",
-      complete: (results) => {
-        setMetadataDict(results.data);
-        setMetadataKeyOptions(results.meta.fields);
-      },
+      complete: runOnUpload,
       error: undefined, // callback if encounters error
       skipEmptyLines: "greedy", // skip lines that are empty or evaluate to only whitespace
       transform: undefined, //A function to apply on each value. The function receives the value as its first argument and the column number or header name when enabled as its second argument. The return value of the function will replace the value it received. The transform function is applied before dynamicTyping.
@@ -140,7 +153,9 @@ export const Upload = () => {
         <select
           id="metadata-key-select"
           name="metadataKey"
-          onChange={(e) => console.log(e.target.value)}
+          onChange={(e) =>
+            dispatch({ type: "metadata field selected", data: e.target.value })
+          }
           disabled={!metadataKeyOptions}
           style={{ width: "15em" }}
           defaultValue={""}
@@ -150,6 +165,11 @@ export const Upload = () => {
               <option value={field}>{field}</option>
             ))}
         </select>
+      </p>
+      <p>
+        <button onClick={(e) => dispatch({ type: "submit button clicked" })}>
+          Submit
+        </button>
       </p>
     </div>
   );

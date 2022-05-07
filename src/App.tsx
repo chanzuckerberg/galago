@@ -40,7 +40,7 @@ function App() {
   const gisaid_raw_counts = gisaid_counts_file;
   const gisaid_census = gisaid_raw_counts.data;
 
-  // LOAD NARRATIVE
+  // MAKE CLADE OBSERVATIONS
   useEffect(() => {
     if (state.tree && state.mrca && state.location && state.division) {
       setCladeDescription(
@@ -64,8 +64,11 @@ function App() {
     <div>
       <Header />
 
-      {(!state.tree || !state.location || !state.division) && <LandingPage />}
-      {state.location && state.division && state.tree && (
+      {(!state.tree ||
+        !state.location ||
+        !state.division ||
+        !state.loadReport) && <LandingPage />}
+      {state.location && state.division && state.tree && state.loadReport && (
         <div>
           <h1>Investigate potential outbreak clusters in {state.location}</h1>
           <SampleSelection />

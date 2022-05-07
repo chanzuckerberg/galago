@@ -9,10 +9,8 @@ import { Node } from "../d";
 import demo_sample_names from "../../data/demo_sample_names";
 import { demo_tree } from "../../data/demo_tree";
 import { getMrcaOptions } from "../utils/clusterMethods";
-import {
-  get_location_input_options,
-  get_division_input_options,
-} from "../utils/geoInputOptions";
+import { get_location_input_options } from "../utils/geoInputOptions";
+import { zipMetadataToTree } from "../utils/metadataUtils";
 
 const defaultState = {
   samplesOfInterestNames: [],
@@ -26,6 +24,10 @@ const defaultState = {
   country: "USA",
   region: "North America",
   testValue: 0,
+  metadataCensus: {},
+  metadataEntries: [],
+  metadataFieldToMatch: "",
+  loadReport: false,
   // cladeDescription: null,
 };
 
@@ -56,6 +58,7 @@ export const global = (state = defaultState, action: any) => {
         mrcaOptions: getMrcaOptions(tree, samplesOfInterest, []),
         location: "Humboldt County",
         division: "California",
+        loadReport: true,
       };
     }
 
@@ -133,6 +136,47 @@ export const global = (state = defaultState, action: any) => {
           division: action.data,
           locationOptions: newLocationOptions,
         };
+      }
+    }
+
+    case "metadata uploaded and parsed": {
+      const { tidyMetadata, metadataCensus } = action.data;
+
+      return {
+        ...state,
+        metadataEntries: tidyMetadata,
+        metadataCensus: { ...state.metadataCensus, ...metadataCensus },
+      };
+    }
+
+    case "metadata field selected": {
+      if (action.data) {
+        return {
+          ...state,
+          metadataFieldToMatch: action.data,
+        };
+      }
+    }
+
+    case "submit button clicked": {
+      if (state.tree && state.division && state.location) {
+        if (state.metadataEntries && state.metadataFieldToMatch && state.tree) {
+          const updatedTree = zipMetadataToTree(
+            state.tree,
+            state.metadataEntries,
+            state.metadataFieldToMatch
+          );
+          return {
+            ...state,
+            tree: updatedTree,
+            loadReport: true,
+          };
+        } else {
+          return {
+            ...state,
+            loadReport: true,
+          };
+        }
       }
     }
 
