@@ -33,7 +33,6 @@ export const inspectMetadataField = (
 
     If a field has mixed data types, or some type that is not date, numeric or string, return false
     */
-
   let seenValueType = "";
   let seenUniqueValues: string[] = [];
   let seenMinValue: number | object = NaN;
@@ -49,6 +48,10 @@ export const inspectMetadataField = (
       let thisValueType = Object.prototype.toString.call(m[field]); // use this to differentiate dates from other objects
 
       // check for invalid types
+      if (!seenValueType) {
+        seenValueType = thisValueType;
+      }
+
       if (
         (seenValueType && seenValueType !== thisValueType) || // column has multiple data types - chuck it
         !acceptedMetadataTypes.includes(thisValueType) // this is not a number, date or string - chuck it
@@ -66,10 +69,6 @@ export const inspectMetadataField = (
       if (thisValueType === "[object String]") {
         if (!seenUniqueValues.includes(thisValue)) {
           seenUniqueValues.push(thisValue);
-          if (seenUniqueValues.length > 100) {
-            console.log("Field has too many unique values!", field);
-            return false;
-          }
         }
       } else {
         // record range for continuous data
@@ -127,7 +126,7 @@ const replaceMissingValues = (
 
 export const ingestMetadata = (metadata: papaParseMetadataEntry[]) => {
   /* Catalog the kind of data we received, chuck invalid fields, and tidy up missing values */
-  const fields = Object.keys(metadata);
+  const fields = Object.keys(metadata[0]);
   let metadataCensus: { [keys: string]: any } = {};
 
   fields.forEach((field: string) => {
@@ -137,6 +136,7 @@ export const ingestMetadata = (metadata: papaParseMetadataEntry[]) => {
     }
   });
 
+  console.log("metadatacensus", metadataCensus);
   const tidyMetadata = metadata.map((entry: { [key: string]: any }) =>
     replaceMissingValues(entry, metadataCensus)
   );

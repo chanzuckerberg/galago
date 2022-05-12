@@ -26,16 +26,14 @@ export const Upload = () => {
   const handleMetadataUpload = (file: any) => {
     const runOnUpload = (results: any, file: any) => {
       const { tidyMetadata, metadataCensus } = ingestMetadata(results.data);
+      console.log(metadataCensus);
       dispatch({
         type: "metadata uploaded and parsed",
         data: { metadataCensus: metadataCensus, tidyMetadata: tidyMetadata },
       });
       setMetadataKeyOptions(
-        Object.keys(
-          metadataCensus.filter(
-            (field: string) =>
-              metadataCensus[field]["dataType"] === "categorical"
-          )
+        Object.keys(metadataCensus).filter(
+          (field: string) => metadataCensus[field]["dataType"] === "categorical"
         )
       );
     };
