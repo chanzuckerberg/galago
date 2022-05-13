@@ -7,12 +7,11 @@ import {
 import { ingestNextstrain } from "../utils/nextstrainAdapter";
 import { Node } from "../d";
 import demo_sample_names from "../../data/demo_sample_names";
+import { demoMetadata } from "../../data/demo_fake_metadata";
 import { demo_tree } from "../../data/demo_tree";
 import { getMrcaOptions } from "../utils/clusterMethods";
-import {
-  get_location_input_options,
-  get_division_input_options,
-} from "../utils/geoInputOptions";
+import { get_location_input_options } from "../utils/geoInputOptions";
+import { ingestMetadata, zipMetadataToTree } from "../utils/metadataUtils";
 
 const defaultState = {
   samplesOfInterestNames: [],
@@ -26,6 +25,10 @@ const defaultState = {
   country: "USA",
   region: "North America",
   testValue: 0,
+  metadataCensus: {},
+  metadataEntries: [],
+  metadataFieldToMatch: "",
+  loadReport: false,
   // cladeDescription: null,
 };
 
@@ -36,6 +39,7 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "load demo": {
+      // TODO: this should all probably live in an thunk + action constructor instead of duplicating code from a bunch of individual reducers. But, they're all short and this gets us off the ground for now.
       const tree = ingestNextstrain(demo_tree);
       const samplesOfInterestNames = demo_sample_names
         .split(/[,\s]+/)
@@ -46,9 +50,15 @@ export const global = (state = defaultState, action: any) => {
       //@ts-ignore -- we already check for null samples on the line above
       const mrca = get_mrca(samplesOfInterest);
 
+      const { tidyMetadata, metadataCensus } = ingestMetadata(demoMetadata);
+      zipMetadataToTree(tree, tidyMetadata, "sample id");
+      console.log(tree);
       return {
         ...defaultState,
         tree: tree,
+        metadataEntries: tidyMetadata,
+        metadataCensus: { ...state.metadataCensus, ...metadataCensus },
+        metadataFieldToMatch: "sample id",
         samplesOfInterestNames: samplesOfInterestNames,
         samplesOfInterest: samplesOfInterest,
         mrca: mrca,
@@ -56,6 +66,7 @@ export const global = (state = defaultState, action: any) => {
         mrcaOptions: getMrcaOptions(tree, samplesOfInterest, []),
         location: "Humboldt County",
         division: "California",
+        loadReport: true,
       };
     }
 
@@ -133,6 +144,47 @@ export const global = (state = defaultState, action: any) => {
           division: action.data,
           locationOptions: newLocationOptions,
         };
+      }
+    }
+
+    case "metadata uploaded and parsed": {
+      const { tidyMetadata, metadataCensus } = action.data;
+
+      return {
+        ...state,
+        metadataEntries: tidyMetadata,
+        metadataCensus: { ...state.metadataCensus, ...metadataCensus },
+      };
+    }
+
+    case "metadata field selected": {
+      if (action.data) {
+        return {
+          ...state,
+          metadataFieldToMatch: action.data,
+        };
+      }
+    }
+
+    case "submit button clicked": {
+      if (state.tree && state.division && state.location) {
+        if (state.metadataEntries && state.metadataFieldToMatch && state.tree) {
+          const updatedTree = zipMetadataToTree(
+            state.tree,
+            state.metadataEntries,
+            state.metadataFieldToMatch
+          );
+          return {
+            ...state,
+            tree: updatedTree,
+            loadReport: true,
+          };
+        } else {
+          return {
+            ...state,
+            loadReport: true,
+          };
+        }
       }
     }
 

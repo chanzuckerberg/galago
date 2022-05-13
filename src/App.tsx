@@ -19,6 +19,8 @@ import GeoSubclades from "./components/geoSubclades";
 import Assumptions from "./components/assumptions";
 import { SitStat } from "./components/sitStat";
 import SampleSelection from "./components/sampleSelection";
+import Footer from "./components/footer";
+import ContactUs from "./components/contactUs";
 
 function App() {
   // @ts-ignore -- TODO: figure out how to add types to state
@@ -38,7 +40,7 @@ function App() {
   const gisaid_raw_counts = gisaid_counts_file;
   const gisaid_census = gisaid_raw_counts.data;
 
-  // LOAD NARRATIVE
+  // MAKE CLADE OBSERVATIONS
   useEffect(() => {
     if (state.tree && state.mrca && state.location && state.division) {
       setCladeDescription(
@@ -62,8 +64,11 @@ function App() {
     <div>
       <Header />
 
-      {(!state.tree || !state.location || !state.division) && <LandingPage />}
-      {state.location && state.division && state.tree && (
+      {(!state.tree ||
+        !state.location ||
+        !state.division ||
+        !state.loadReport) && <LandingPage />}
+      {state.location && state.division && state.tree && state.loadReport && (
         <div>
           <h1>Investigate potential outbreak clusters in {state.location}</h1>
           <SampleSelection />
@@ -101,6 +106,8 @@ function App() {
             clade_description={clade_description}
             sidenote_start={8}
           />
+          <ContactUs />
+          <Footer />
         </div>
       )}
     </div>

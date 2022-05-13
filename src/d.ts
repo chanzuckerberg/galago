@@ -63,3 +63,16 @@ export interface GISAIDRawCounts {
   schema: any; // we don't care about this block
   data: GISAIDRecord[];
 }
+
+export interface metadataCensus {
+  [key: string]: {
+    type: string;
+    min?: number | object;
+    max?: number | object;
+    values?: [];
+  };
+}
+
+export interface papaParseMetadataEntry {
+  [key: string]: any;
+}

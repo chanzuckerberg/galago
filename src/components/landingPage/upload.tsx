@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   get_division_input_options,
   get_location_input_options,
 } from "../../utils/geoInputOptions";
-import { store } from "../../reducers/store";
 import { ingestNextstrain } from "../../utils/nextstrainAdapter";
 import { Node } from "../../d";
+import { parse } from "papaparse";
+import { ingestMetadata } from "../../utils/metadataUtils";
 
 export const Upload = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
@@ -18,6 +19,39 @@ export const Upload = () => {
   const [locationOptions, setLocationOptions] = useState<null | Array<string>>(
     null
   );
+  const [metadataKeyOptions, setMetadataKeyOptions] = useState<null | string[]>(
+    null
+  );
+
+  const handleMetadataUpload = (file: any) => {
+    const runOnUpload = (results: any, file: any) => {
+      const { tidyMetadata, metadataCensus } = ingestMetadata(results.data);
+      console.log(metadataCensus);
+      dispatch({
+        type: "metadata uploaded and parsed",
+        data: { metadataCensus: metadataCensus, tidyMetadata: tidyMetadata },
+      });
+      setMetadataKeyOptions(
+        Object.keys(metadataCensus).filter(
+          (field: string) => metadataCensus[field]["dataType"] === "categorical"
+        )
+      );
+    };
+
+    const csvConfig = {
+      header: true,
+      dynamicTyping: true, // convert numbers and dates
+      preview: 10000, // limit of n rows to parse
+      worker: false, // keeps page responsive, might slow down process overall - disabled for now
+      comments: "#",
+      complete: runOnUpload,
+      error: undefined, // callback if encounters error
+      skipEmptyLines: "greedy", // skip lines that are empty or evaluate to only whitespace
+      transform: undefined, //A function to apply on each value. The function receives the value as its first argument and the column number or header name when enabled as its second argument. The return value of the function will replace the value it received. The transform function is applied before dynamicTyping.
+    };
+
+    parse(file, csvConfig);
+  };
 
   const handleTreeFileUpload = (file: any) => {
     const fileReader = new FileReader();
@@ -39,27 +73,7 @@ export const Upload = () => {
 
   return (
     <div>
-      <h2>Demo with real-world outbreak data</h2>
-      <p>
-        Genomic epidemiology helped public health officials understand a
-        real-world outbreak of SARS-CoV-2 at a farm in Humboldt County. This
-        demo report is automatically generated based on the same phylogenetic
-        tree that was used in this investigation.
-        <br />
-        <a href="https://www.medrxiv.org/content/10.1101/2021.09.21.21258385v1">
-          You can read more about this outbreak here.
-        </a>
-      </p>
-      <p>
-        <button
-          type="button"
-          name="loadDemo"
-          onClick={() => dispatch({ type: "load demo" })}
-        >
-          Load Demo
-        </button>{" "}
-      </p>
-      <h2>Analyze a potential outbreak</h2>
+      <h2>Analyze your data</h2>
       <p>
         <i>
           Galago runs entirely in the browser. This means that your data never
@@ -115,6 +129,45 @@ export const Upload = () => {
               <option value={county}>{county}</option>
             ))}
         </select>
+      </p>
+      <p>
+        <b>Optionally, upload sample metadata (e.g., a line list)</b>
+        <br />
+        <i>
+          Helps you identify meaningful clusters and integrate genomic and
+          epidemiological insights.
+        </i>
+        <br />
+        <input
+          type="file"
+          name="file"
+          onChange={(event: any) => {
+            handleMetadataUpload(event.target.files[0]);
+          }}
+        />
+        <br />
+        Field to match metadata to sample names:
+        <br />
+        <select
+          id="metadata-key-select"
+          name="metadataKey"
+          onChange={(e) =>
+            dispatch({ type: "metadata field selected", data: e.target.value })
+          }
+          disabled={!metadataKeyOptions}
+          style={{ width: "15em" }}
+          defaultValue={""}
+        >
+          {metadataKeyOptions &&
+            metadataKeyOptions.map((field: string) => (
+              <option value={field}>{field}</option>
+            ))}
+        </select>
+      </p>
+      <p>
+        <button onClick={(e) => dispatch({ type: "submit button clicked" })}>
+          Submit
+        </button>
       </p>
     </div>
   );
