@@ -101,13 +101,14 @@ export const inspectMetadataField = (
 const replaceMissingValues = (
   /* Replace all null-ish values in a single metadata row with a uniform missing data representation per data type */
   metadataEntry: papaParseMetadataEntry,
-  metadataCensus: metadataCensus,
+  metadataCensus: { [key: string]: metadataCensus },
   fields?: string[]
 ) => {
   const defaultBackfillValues: { [key: string]: any } = {
     "[object String]": "unknown",
     "[object Number]": NaN,
-    "[object Date]": NaN,
+    "[object Date]": null,
+    "[object Boolean]": null,
   };
 
   fields ??= Object.keys(metadataCensus);

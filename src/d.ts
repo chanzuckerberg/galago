@@ -65,12 +65,15 @@ export interface GISAIDRawCounts {
 }
 
 export interface metadataCensus {
-  [key: string]: {
-    type: string;
-    min?: number | object;
-    max?: number | object;
-    values?: [];
-  };
+  type:
+    | "[object String]"
+    | "[object Number]"
+    | "[object Date]"
+    | "[object Boolean]";
+  dataType: "continuous" | "categorical";
+  min?: number | object;
+  max?: number | object;
+  uniqueValues?: [];
 }
 
 export interface papaParseMetadataEntry {
