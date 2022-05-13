@@ -21,6 +21,7 @@ export const acceptedMetadataTypes = [
   "[object String]",
   "[object Number]",
   "[object Date]",
+  "[object Boolean]",
 ];
 
 export const inspectMetadataField = (
@@ -66,7 +67,7 @@ export const inspectMetadataField = (
       }
 
       // record unique values for categorical data
-      if (thisValueType === "[object String]") {
+      if (["[object String]", "[object Boolean]"].includes(thisValueType)) {
         if (!seenUniqueValues.includes(thisValue)) {
           seenUniqueValues.push(thisValue);
         }
@@ -84,6 +85,9 @@ export const inspectMetadataField = (
 
   let summary: { [key: string]: any } = { type: seenValueType };
   if (seenValueType === "[object String]") {
+    summary["dataType"] = "categorical";
+    summary["uniqueValues"] = seenUniqueValues;
+  } else if (seenValueType === "[object Boolean]") {
     summary["dataType"] = "categorical";
     summary["uniqueValues"] = seenUniqueValues;
   } else {
