@@ -7,10 +7,11 @@ import {
 import { ingestNextstrain } from "../utils/nextstrainAdapter";
 import { Node } from "../d";
 import demo_sample_names from "../../data/demo_sample_names";
+import { demoMetadata } from "../../data/demo_fake_metadata";
 import { demo_tree } from "../../data/demo_tree";
 import { getMrcaOptions } from "../utils/clusterMethods";
 import { get_location_input_options } from "../utils/geoInputOptions";
-import { zipMetadataToTree } from "../utils/metadataUtils";
+import { ingestMetadata, zipMetadataToTree } from "../utils/metadataUtils";
 
 const defaultState = {
   samplesOfInterestNames: [],
@@ -38,6 +39,7 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "load demo": {
+      // TODO: this should all probably live in an thunk + action constructor instead of duplicating code from a bunch of individual reducers. But, they're all short and this gets us off the ground for now.
       const tree = ingestNextstrain(demo_tree);
       const samplesOfInterestNames = demo_sample_names
         .split(/[,\s]+/)
@@ -48,9 +50,15 @@ export const global = (state = defaultState, action: any) => {
       //@ts-ignore -- we already check for null samples on the line above
       const mrca = get_mrca(samplesOfInterest);
 
+      const { tidyMetadata, metadataCensus } = ingestMetadata(demoMetadata);
+      zipMetadataToTree(tree, tidyMetadata, "sample id");
+      console.log(tree);
       return {
         ...defaultState,
         tree: tree,
+        metadataEntries: tidyMetadata,
+        metadataCensus: { ...state.metadataCensus, ...metadataCensus },
+        metadataFieldToMatch: "sample id",
         samplesOfInterestNames: samplesOfInterestNames,
         samplesOfInterest: samplesOfInterest,
         mrca: mrca,
