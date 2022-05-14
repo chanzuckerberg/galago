@@ -107,8 +107,8 @@ const replaceMissingValues = (
   const defaultBackfillValues: { [key: string]: any } = {
     "[object String]": "unknown",
     "[object Number]": NaN,
-    "[object Date]": null,
-    "[object Boolean]": null,
+    "[object Date]": undefined,
+    "[object Boolean]": undefined,
   };
 
   fields ??= Object.keys(metadataCensus);

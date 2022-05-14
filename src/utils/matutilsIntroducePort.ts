@@ -240,7 +240,7 @@ const calcHeuristic = (
       const ratio = numerator / denominator;
       confidence = 1 / (1 + ratio);
     }
-    if (confidence === NaN) {
+    if (isNaN(confidence)) {
       console.error(
         "ERROR: Invalid introduction assignment calculation. Debug information follows.\n",
         "min_to_in, min_to_out, in_leaves, out_leaves\n",
