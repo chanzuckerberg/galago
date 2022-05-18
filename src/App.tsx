@@ -21,6 +21,7 @@ import { SitStat } from "./components/sitStat";
 import SampleSelection from "./components/sampleSelection";
 import Footer from "./components/footer";
 import ContactUs from "./components/contactUs";
+import CaseDefinitionConstructor from "./components/caseDefinitionConstructor";
 
 function App() {
   // @ts-ignore -- TODO: figure out how to add types to state
@@ -50,6 +51,7 @@ function App() {
         <div>
           <h1>Investigate potential outbreak clusters in {state.location}</h1>
           <SampleSelection />
+          <CaseDefinitionConstructor />
         </div>
       )}
 

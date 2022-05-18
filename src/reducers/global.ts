@@ -3,10 +3,11 @@ import {
   get_root,
   find_leaf_by_name,
   get_mrca,
+  getNodeAttr,
   traverse_preorder,
 } from "../utils/treeMethods";
 import { ingestNextstrain } from "../utils/nextstrainAdapter";
-import { CladeDescription, Node } from "../d";
+import { CladeDescription, caseDefFilter, Node } from "../d";
 import demo_sample_names from "../../data/demo_sample_names";
 import { demoMetadata } from "../../data/demo_fake_metadata";
 import { demo_tree } from "../../data/demo_tree";
@@ -31,6 +32,8 @@ const defaultState = {
   metadataCensus: {},
   metadataEntries: [],
   metadataFieldToMatch: "",
+  caseDefFilters: {},
+  samplesMatchingCaseDef: [],
   loadReport: false,
   cladeDescription: null,
 };
@@ -201,12 +204,82 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
-    case "metadata field selected": {
+    case "metadata match field selected": {
       if (action.data) {
         return {
           ...state,
           metadataFieldToMatch: action.data,
         };
+      }
+    }
+
+    case "case definition filters updated": {
+      const newFilter = action.data;
+      const field = newFilter.field;
+      let newState: { [key: string]: caseDefFilter } = {
+        ...state.caseDefFilters,
+      };
+
+      if (newFilter.dataType === "continuous") {
+        if (
+          //@ts-ignore
+          state.metadataCensus[field]["min"] === newFilter["max"] &&
+          //@ts-ignore
+          state.metadataCensus[field]["max"] === newFilter["max"]
+        ) {
+          delete newState[field]; // range is no longer restricted? remove filter
+        } else {
+          delete newFilter["field"];
+          newState[field] = newFilter;
+        }
+      } else if (newFilter.dataType === "categorical") {
+        //@ts-ignore
+        if (
+          newFilter.acceptedValues.length ===
+            state.metadataCensus[field]["uniqueValues"].length ||
+          newFilter.acceptedValues.length === 0
+        ) {
+          delete newState[field];
+        } else {
+          delete newFilter["field"];
+          newState[field] = newFilter;
+        }
+      }
+      return { ...state, caseDefFilters: newState };
+    }
+
+    case "case definition submitted": {
+      if (state.tree && state.caseDefFilters) {
+        console.log("in case def reducer", state.caseDefFilters);
+
+        let matchingSamples = get_leaves(state.tree);
+
+        for (let i = 0; i < Object.entries(state.caseDefFilters).length; i++) {
+          let thisFilter = Object.entries(state.caseDefFilters)[i];
+
+          //@ts-ignore
+          if (thisFilter[1]["dataType"] === "categorical") {
+            //@ts-ignore
+            matchingSamples = matchingSamples.filter((n: Node) =>
+              thisFilter[1]["acceptedValues"].includes(
+                getNodeAttr(n, thisFilter[0])
+              )
+            );
+          } else {
+            //@ts-ignore
+            matchingSamples = matchingSamples.filter(
+              (n: Node) =>
+                getNodeAttr(n, thisFilter[0]) <= thisFilter[1]["max"] &&
+                getNodeAttr(
+                  n,
+                  //@ts-ignore
+                  thisFilter[0]
+                ) >= thisFilter[1]["min"]
+            );
+          }
+          console.log(thisFilter, matchingSamples);
+        }
+        return { ...state, samplesMatchingCaseDef: matchingSamples };
       }
     }
 

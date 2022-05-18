@@ -1,5 +1,5 @@
 import { get_leaves } from "./treeMethods";
-import { Node, metadataCensus, papaParseMetadataEntry } from "../d";
+import { Node, metadataFieldSummary, papaParseMetadataEntry } from "../d";
 
 export const nullishMetadataValues = [
   undefined,
@@ -83,7 +83,10 @@ export const inspectMetadataField = (
     }
   });
 
-  let summary: { [key: string]: any } = { type: seenValueType };
+  let summary: metadataFieldSummary = {
+    //@ts-ignore - guaranteed to be one of the accepted values above
+    type: seenValueType,
+  };
   if (seenValueType === "[object String]") {
     summary["dataType"] = "categorical";
     summary["uniqueValues"] = seenUniqueValues;
@@ -101,7 +104,7 @@ export const inspectMetadataField = (
 const replaceMissingValues = (
   /* Replace all null-ish values in a single metadata row with a uniform missing data representation per data type */
   metadataEntry: papaParseMetadataEntry,
-  metadataCensus: { [key: string]: metadataCensus },
+  metadataCensus: { [key: string]: metadataFieldSummary },
   fields?: string[]
 ) => {
   const defaultBackfillValues: { [key: string]: any } = {
@@ -132,7 +135,7 @@ const replaceMissingValues = (
 export const ingestMetadata = (metadata: papaParseMetadataEntry[]) => {
   /* Catalog the kind of data we received, chuck invalid fields, and tidy up missing values */
   const fields = Object.keys(metadata[0]);
-  let metadataCensus: { [keys: string]: any } = {};
+  let metadataCensus: { [keys: string]: metadataFieldSummary } = {};
 
   fields.forEach((field: string) => {
     const summary = inspectMetadataField(metadata, field);
