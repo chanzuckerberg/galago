@@ -152,7 +152,10 @@ export const Upload = () => {
           id="metadata-key-select"
           name="metadataKey"
           onChange={(e) =>
-            dispatch({ type: "metadata field selected", data: e.target.value })
+            dispatch({
+              type: "metadata match field selected",
+              data: e.target.value,
+            })
           }
           disabled={!metadataKeyOptions}
           style={{ width: "15em" }}
@@ -165,7 +168,10 @@ export const Upload = () => {
         </select>
       </p>
       <p>
-        <button onClick={(e) => dispatch({ type: "submit button clicked" })}>
+        <button
+          onClick={(e) => dispatch({ type: "upload submit button clicked" })}
+          disabled={!state.division || !state.location || !state.tree}
+        >
           Submit
         </button>
       </p>

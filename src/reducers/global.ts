@@ -3,15 +3,19 @@ import {
   get_root,
   find_leaf_by_name,
   get_mrca,
+  getNodeAttr,
+  traverse_preorder,
 } from "../utils/treeMethods";
 import { ingestNextstrain } from "../utils/nextstrainAdapter";
-import { Node } from "../d";
+import { CladeDescription, caseDefFilter, Node } from "../d";
 import demo_sample_names from "../../data/demo_sample_names";
 import { demoMetadata } from "../../data/demo_fake_metadata";
 import { demo_tree } from "../../data/demo_tree";
 import { getMrcaOptions } from "../utils/clusterMethods";
 import { get_location_input_options } from "../utils/geoInputOptions";
 import { ingestMetadata, zipMetadataToTree } from "../utils/metadataUtils";
+import { describe_clade } from "../utils/describeClade";
+import { tree } from "d3";
 
 const defaultState = {
   samplesOfInterestNames: [],
@@ -28,8 +32,10 @@ const defaultState = {
   metadataCensus: {},
   metadataEntries: [],
   metadataFieldToMatch: "",
+  caseDefFilters: {},
+  samplesMatchingCaseDef: [],
   loadReport: false,
-  // cladeDescription: null,
+  cladeDescription: null,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -52,7 +58,21 @@ export const global = (state = defaultState, action: any) => {
 
       const { tidyMetadata, metadataCensus } = ingestMetadata(demoMetadata);
       zipMetadataToTree(tree, tidyMetadata, "sample id");
-      console.log(tree);
+      // console.log(tree);
+
+      const cladeDescription = describe_clade(
+        mrca,
+        {
+          location: "Humboldt County",
+          division: "California",
+          country: "USA",
+          region: "North America",
+        },
+        [0, 2],
+        1,
+        samplesOfInterest
+      );
+
       return {
         ...defaultState,
         tree: tree,
@@ -67,6 +87,7 @@ export const global = (state = defaultState, action: any) => {
         location: "Humboldt County",
         division: "California",
         loadReport: true,
+        cladeDescription: cladeDescription,
       };
     }
 
@@ -87,7 +108,29 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "mrca clicked": {
-      return { ...state, mrca: action.data };
+      const mrca = action.data;
+      let cladeDescription: null | CladeDescription = state.cladeDescription;
+      if (state.tree && state.location && state.division) {
+        cladeDescription = describe_clade(
+          mrca,
+          {
+            location: state.location,
+            division: state.division,
+            country: state.country,
+            region: state.region,
+          },
+          [0, 2],
+          1,
+          state.samplesOfInterest
+        );
+        // console.log("new clade description", cladeDescription);
+      }
+
+      return {
+        ...state,
+        mrca: action.data,
+        cladeDescription: cladeDescription,
+      };
     }
 
     case "sample names string changed": {
@@ -121,19 +164,23 @@ export const global = (state = defaultState, action: any) => {
 
     case "tree file uploaded": {
       // console.log("setting tree to", action.data);
+      const tree = action.data;
       return {
         ...state,
-        tree: action.data,
+        tree: tree,
+        mrcaOptions: traverse_preorder(tree).filter(
+          (node: Node) => node.children.length >= 2
+        ),
       };
     }
 
     case "location set": {
-      console.log("setting location to", action.data);
+      // console.log("setting location to", action.data);
       return { ...state, location: action.data };
     }
 
     case "division set": {
-      console.log("setting division to", action.data);
+      // console.log("setting division to", action.data);
       if (state.tree) {
         const newLocationOptions = get_location_input_options(
           state.tree,
@@ -157,7 +204,7 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
-    case "metadata field selected": {
+    case "metadata match field selected": {
       if (action.data) {
         return {
           ...state,
@@ -166,7 +213,80 @@ export const global = (state = defaultState, action: any) => {
       }
     }
 
-    case "submit button clicked": {
+    case "case definition filters updated": {
+      const newFilter = action.data;
+      const field = newFilter.field;
+      let newState: { [key: string]: caseDefFilter } = {
+        ...state.caseDefFilters,
+      };
+
+      if (newFilter.dataType === "continuous") {
+        if (
+          //@ts-ignore
+          state.metadataCensus[field]["min"] === newFilter["max"] &&
+          //@ts-ignore
+          state.metadataCensus[field]["max"] === newFilter["max"]
+        ) {
+          delete newState[field]; // range is no longer restricted? remove filter
+        } else {
+          delete newFilter["field"];
+          newState[field] = newFilter;
+        }
+      } else if (newFilter.dataType === "categorical") {
+        //@ts-ignore
+        if (
+          newFilter.acceptedValues.length ===
+            state.metadataCensus[field]["uniqueValues"].length ||
+          newFilter.acceptedValues.length === 0
+        ) {
+          delete newState[field];
+        } else {
+          delete newFilter["field"];
+          newState[field] = newFilter;
+        }
+      }
+      return { ...state, caseDefFilters: newState };
+    }
+
+    case "case definition submitted": {
+      if (state.tree && state.caseDefFilters) {
+        console.log("in case def reducer", state.caseDefFilters);
+
+        let matchingSamples = get_leaves(state.tree);
+        if (Object.keys(state.caseDefFilters).length === 0) {
+          return { ...state, samplesMatchingCaseDef: matchingSamples };
+        }
+
+        for (let i = 0; i < Object.entries(state.caseDefFilters).length; i++) {
+          let thisFilter = Object.entries(state.caseDefFilters)[i];
+
+          //@ts-ignore
+          if (thisFilter[1]["dataType"] === "categorical") {
+            //@ts-ignore
+            matchingSamples = matchingSamples.filter((n: Node) =>
+              thisFilter[1]["acceptedValues"].includes(
+                getNodeAttr(n, thisFilter[0])
+              )
+            );
+          } else {
+            //@ts-ignore
+            matchingSamples = matchingSamples.filter(
+              (n: Node) =>
+                getNodeAttr(n, thisFilter[0]) <= thisFilter[1]["max"] &&
+                getNodeAttr(
+                  n,
+                  //@ts-ignore
+                  thisFilter[0]
+                ) >= thisFilter[1]["min"]
+            );
+          }
+          console.log(thisFilter, matchingSamples);
+        }
+        return { ...state, samplesMatchingCaseDef: matchingSamples };
+      }
+    }
+
+    case "upload submit button clicked": {
       if (state.tree && state.division && state.location) {
         if (state.metadataEntries && state.metadataFieldToMatch && state.tree) {
           const updatedTree = zipMetadataToTree(

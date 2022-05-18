@@ -242,13 +242,16 @@ export const getNodeAttr = (
   if (Object.keys(n.node_attrs).includes(attr)) {
     // if attribute is a dictionary, require the `type` key
     if (
-      typeof n.node_attrs[attr] === "object" &&
+      Object.prototype.toString.call(n.node_attrs[attr]) ===
+        "[object Object]" &&
       Object.keys(n.node_attrs[attr]).includes(type)
     ) {
       attrValue = n.node_attrs[attr][type];
     }
     // only nextstrain attribute `values` come in as non-dictionaries
-    else if (typeof n.node_attrs[attr] !== "object") {
+    else if (
+      Object.prototype.toString.call(n.node_attrs[attr]) !== "[object Object]"
+    ) {
       attrValue = n.node_attrs[attr];
     }
   }

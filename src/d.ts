@@ -64,7 +64,7 @@ export interface GISAIDRawCounts {
   data: GISAIDRecord[];
 }
 
-export interface metadataCensus {
+export interface metadataFieldSummary {
   type:
     | "[object String]"
     | "[object Number]"
@@ -73,7 +73,15 @@ export interface metadataCensus {
   dataType: "continuous" | "categorical";
   min?: number | object;
   max?: number | object;
-  uniqueValues?: [];
+  uniqueValues?: Array<string>;
+}
+
+export interface caseDefFilter {
+  field: string;
+  dataType: "continuous" | "categorical";
+  min?: number | object;
+  max?: number | object;
+  acceptedValues?: Array<string>;
 }
 
 export interface papaParseMetadataEntry {
