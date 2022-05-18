@@ -28,8 +28,6 @@ function App() {
   const dispatch = useDispatch();
 
   // LOCAL STATE
-  const [clade_description, setCladeDescription] =
-    useState<CladeDescription | null>(null);
   const [minMutsToParent, setMinMutsToParent] = useState<number>(1);
   const [mutsPerTransMinMax, setMutsPerTransMinMax] = useState<number[]>([
     0, 2,
@@ -39,26 +37,6 @@ function App() {
   //@ts-ignore
   const gisaid_raw_counts = gisaid_counts_file;
   const gisaid_census = gisaid_raw_counts.data;
-
-  // MAKE CLADE OBSERVATIONS
-  useEffect(() => {
-    if (state.tree && state.mrca && state.location && state.division) {
-      setCladeDescription(
-        describe_clade(
-          state.mrca,
-          {
-            location: state.location,
-            division: state.division,
-            country: state.country,
-            region: state.region,
-          },
-          mutsPerTransMinMax,
-          minMutsToParent,
-          state.samplesOfInterest
-        )
-      );
-    }
-  }, [state.tree, state.mrca, state.location, state.division]);
 
   return (
     <div>
@@ -75,22 +53,25 @@ function App() {
         </div>
       )}
 
-      {clade_description && state.tree && (
+      {state.cladeDescription && state.tree && (
         <div>
           {/* <h2>Results</h2> */}
           <SitStat
-            clade_description={clade_description}
+            clade_description={state.cladeDescription}
             all_samples={get_leaves(state.tree)}
           />
           <CladeDefinition
-            clade_description={clade_description}
+            clade_description={state.cladeDescription}
             sidenote_start={1}
           />
-          <TMRCA clade_description={clade_description} sidenote_start={3} />
-          <GeoSubclades clade_description={clade_description} />
-          <CladeUniqueness clade_description={clade_description} />
+          <TMRCA
+            clade_description={state.cladeDescription}
+            sidenote_start={3}
+          />
+          <GeoSubclades clade_description={state.cladeDescription} />
+          <CladeUniqueness clade_description={state.cladeDescription} />
           <OnwardTransmission
-            clade_description={clade_description}
+            clade_description={state.cladeDescription}
             sidenote_start={6}
           />
           {/* <PhyloUncertainty clade_description={all_samples} /> */}
@@ -99,11 +80,11 @@ function App() {
             // @ts-ignore
             gisaid_census={gisaid_census}
             all_samples={get_leaves(get_root(state.tree))}
-            clade_description={clade_description}
+            clade_description={state.cladeDescription}
             sidenote_start={7}
           />
           <Assumptions
-            clade_description={clade_description}
+            clade_description={state.cladeDescription}
             sidenote_start={8}
           />
           <ContactUs />

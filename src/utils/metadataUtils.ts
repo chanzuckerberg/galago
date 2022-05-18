@@ -141,7 +141,7 @@ export const ingestMetadata = (metadata: papaParseMetadataEntry[]) => {
     }
   });
 
-  console.log("metadatacensus", metadataCensus);
+  // console.log("metadatacensus", metadataCensus);
   const tidyMetadata = metadata.map((entry: { [key: string]: any }) =>
     replaceMissingValues(entry, metadataCensus)
   );

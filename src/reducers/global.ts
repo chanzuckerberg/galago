@@ -3,15 +3,18 @@ import {
   get_root,
   find_leaf_by_name,
   get_mrca,
+  traverse_preorder,
 } from "../utils/treeMethods";
 import { ingestNextstrain } from "../utils/nextstrainAdapter";
-import { Node } from "../d";
+import { CladeDescription, Node } from "../d";
 import demo_sample_names from "../../data/demo_sample_names";
 import { demoMetadata } from "../../data/demo_fake_metadata";
 import { demo_tree } from "../../data/demo_tree";
 import { getMrcaOptions } from "../utils/clusterMethods";
 import { get_location_input_options } from "../utils/geoInputOptions";
 import { ingestMetadata, zipMetadataToTree } from "../utils/metadataUtils";
+import { describe_clade } from "../utils/describeClade";
+import { tree } from "d3";
 
 const defaultState = {
   samplesOfInterestNames: [],
@@ -29,7 +32,7 @@ const defaultState = {
   metadataEntries: [],
   metadataFieldToMatch: "",
   loadReport: false,
-  // cladeDescription: null,
+  cladeDescription: null,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -52,7 +55,21 @@ export const global = (state = defaultState, action: any) => {
 
       const { tidyMetadata, metadataCensus } = ingestMetadata(demoMetadata);
       zipMetadataToTree(tree, tidyMetadata, "sample id");
-      console.log(tree);
+      // console.log(tree);
+
+      const cladeDescription = describe_clade(
+        mrca,
+        {
+          location: "Humboldt County",
+          division: "California",
+          country: "USA",
+          region: "North America",
+        },
+        [0, 2],
+        1,
+        samplesOfInterest
+      );
+
       return {
         ...defaultState,
         tree: tree,
@@ -67,6 +84,7 @@ export const global = (state = defaultState, action: any) => {
         location: "Humboldt County",
         division: "California",
         loadReport: true,
+        cladeDescription: cladeDescription,
       };
     }
 
@@ -87,7 +105,29 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "mrca clicked": {
-      return { ...state, mrca: action.data };
+      const mrca = action.data;
+      let cladeDescription: null | CladeDescription = state.cladeDescription;
+      if (state.tree && state.location && state.division) {
+        cladeDescription = describe_clade(
+          mrca,
+          {
+            location: state.location,
+            division: state.division,
+            country: state.country,
+            region: state.region,
+          },
+          [0, 2],
+          1,
+          state.samplesOfInterest
+        );
+        // console.log("new clade description", cladeDescription);
+      }
+
+      return {
+        ...state,
+        mrca: action.data,
+        cladeDescription: cladeDescription,
+      };
     }
 
     case "sample names string changed": {
@@ -121,19 +161,23 @@ export const global = (state = defaultState, action: any) => {
 
     case "tree file uploaded": {
       // console.log("setting tree to", action.data);
+      const tree = action.data;
       return {
         ...state,
-        tree: action.data,
+        tree: tree,
+        mrcaOptions: traverse_preorder(tree).filter(
+          (node: Node) => node.children.length >= 2
+        ),
       };
     }
 
     case "location set": {
-      console.log("setting location to", action.data);
+      // console.log("setting location to", action.data);
       return { ...state, location: action.data };
     }
 
     case "division set": {
-      console.log("setting division to", action.data);
+      // console.log("setting division to", action.data);
       if (state.tree) {
         const newLocationOptions = get_location_input_options(
           state.tree,
@@ -166,7 +210,7 @@ export const global = (state = defaultState, action: any) => {
       }
     }
 
-    case "submit button clicked": {
+    case "upload submit button clicked": {
       if (state.tree && state.division && state.location) {
         if (state.metadataEntries && state.metadataFieldToMatch && state.tree) {
           const updatedTree = zipMetadataToTree(
