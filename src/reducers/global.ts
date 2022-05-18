@@ -253,6 +253,9 @@ export const global = (state = defaultState, action: any) => {
         console.log("in case def reducer", state.caseDefFilters);
 
         let matchingSamples = get_leaves(state.tree);
+        if (Object.keys(state.caseDefFilters).length === 0) {
+          return { ...state, samplesMatchingCaseDef: matchingSamples };
+        }
 
         for (let i = 0; i < Object.entries(state.caseDefFilters).length; i++) {
           let thisFilter = Object.entries(state.caseDefFilters)[i];
