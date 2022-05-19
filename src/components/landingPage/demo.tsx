@@ -1,7 +1,9 @@
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const Demo = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   return (
     <div>
       <h2>Demo with real-world outbreak data</h2>
@@ -9,7 +11,10 @@ export const Demo = () => {
         <button
           type="button"
           name="loadDemo"
-          onClick={() => dispatch({ type: "load demo" })}
+          onClick={() => {
+            dispatch({ type: "load demo" });
+            navigate("/galago/clustering");
+          }}
         >
           Load Demo
         </button>{" "}

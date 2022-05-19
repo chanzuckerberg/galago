@@ -8,11 +8,13 @@ import { ingestNextstrain } from "../../utils/nextstrainAdapter";
 import { Node } from "../../d";
 import { parse } from "papaparse";
 import { ingestMetadata } from "../../utils/metadataUtils";
+import { useNavigate } from "react-router-dom";
 
 export const Upload = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [divisionOptions, setDivisionOptions] = useState<null | Array<string>>(
     null
   );
@@ -169,7 +171,10 @@ export const Upload = () => {
       </p>
       <p>
         <button
-          onClick={(e) => dispatch({ type: "upload submit button clicked" })}
+          onClick={(e) => {
+            dispatch({ type: "upload submit button clicked" });
+            navigate("/galago/clustering");
+          }}
           disabled={!state.division || !state.location || !state.tree}
         >
           Submit
