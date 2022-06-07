@@ -11,6 +11,7 @@
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.8.0",
     "@visx/axis": "^2.6.0",
+    "@visx/visx": "^2.10.0",
     "d3": "^7.4.0",
     "papaparse": "^5.3.2",
     "rc-slider": "^10.0.0",
