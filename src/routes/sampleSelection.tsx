@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SitStat } from "../components/sitStat";
 import { get_leaves } from "../utils/treeMethods";
+import EpiCurve from "../components/epiCurve";
 
 export default function SampleSelectionRoute() {
   //@ts-ignore
@@ -23,6 +24,7 @@ export default function SampleSelectionRoute() {
       {allDataPresent && (
         <div>
           <h1>Investigate potential outbreak clusters in {state.location}</h1>
+          <EpiCurve />
           <SampleSelection />
           <CaseDefinitionConstructor />
           <ContactUs />
