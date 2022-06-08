@@ -22,8 +22,8 @@ export const EpiCurve = () => {
   );
 
   const chartSize = {
-    width: 560,
-    height: 960,
+    height: 560,
+    width: 960,
     margin: 30,
   };
   const purple1 = "#6c5efb";
@@ -87,7 +87,7 @@ export const EpiCurve = () => {
     }; //
   } else {
     formatDate = (date: Date) => {
-      return timeFormat("%U %Y")(date);
+      return timeFormat("%b %Y")(date);
     }; // < 3 months - use Sunday-based week of the year per CDC calendar
   }
 
@@ -99,7 +99,7 @@ export const EpiCurve = () => {
   let maxCount = 0;
   const dataPoints: { [key: string]: any } = {};
   nodes.forEach((n: Node) => {
-    const nodeDate = getDateBin(n);
+    const nodeDate = getDateBin(n); //getNodeAttr(n, "num_date");
     if (!Object.keys(dataPoints).includes(nodeDate)) {
       dataPoints[nodeDate] = { dateBin: nodeDate };
       keys.forEach((k: string) => {
@@ -118,7 +118,7 @@ export const EpiCurve = () => {
 
   // scales
   const dateScale = scaleBand<string>({
-    domain: allDates.map(formatDate),
+    domain: allDates,
     padding: 0.2,
   });
 
@@ -155,7 +155,7 @@ export const EpiCurve = () => {
         />
         <Group top={chartSize.margin}>
           <BarStack
-            data={Object.keys(dataPoints)}
+            data={Object.values(dataPoints)}
             keys={keys}
             x={(dp: any) => dp.dateBin}
             xScale={dateScale}
