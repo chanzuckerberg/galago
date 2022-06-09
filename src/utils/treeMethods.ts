@@ -117,7 +117,7 @@ export const get_mrca = (target_nodes: Node[]) => {
 };
 
 export const get_path = (target_nodes: Node[]) => {
-  console.assert(new Set(target_nodes).size === 2);
+  console.assert(new Set(target_nodes).size === 2, target_nodes);
 
   const mrca: Node = get_mrca(target_nodes);
   if (!mrca) {

@@ -2,6 +2,7 @@ import { CladeDescription, Node } from "../../d";
 import { FormatDate } from "../formatters/date";
 import { FormatDataPoint } from "../formatters/dataPoint";
 import { MiniCladeDescription } from "./miniCladeDescription";
+import { EpiCurve } from "./epiCurve";
 import { get_dist } from "../../utils/treeMethods";
 
 type SitStatProps = {
@@ -133,14 +134,16 @@ export const SitStat = (props: SitStatProps) => {
         represent onward transmission (at least tertiary cases).
       </p>
       <h5>Timeline</h5>
-      <ul>
+      <EpiCurve />
+
+      {/* <ul>
         {dates.map((d) => (
           <li key={d[1]}>
             <FormatDate date={d[0]} />
             {d[1]}{" "}
           </li>
-        ))}
-      </ul>
+        ))} 
+      </ul> */}
     </div>
   );
 };
