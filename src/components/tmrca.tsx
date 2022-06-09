@@ -48,17 +48,24 @@ function TMRCA(props: CladeProps) {
         </p>
       ) : (
         <>
+          {mrca_matches.length >= all_samples.length * 0.2 && (
+            <p>
+              Observing many identical samples is consistent with rapid
+              transmission in high-incidence settings.
+            </p>
+          )}
           <p className="results">
             The primay case's pathogen genome sequence was most likely identical
             to the pathogens found in sample(s):
             <FormatStringArray values={mrca_matches} />
           </p>
+
           <p>
-            Importantly, it is also possible that the true primary case -- while
-            identical to any samples listed above -- may not be represented in
-            this dataset (e.g., if the primary case was not sampled, or if the
-            sample from the primary case happened to contain a different
-            within-host variant
+            Importantly, it is also <b>possible that the true primary case</b>{" "}
+            -- while identical to any samples listed above --{" "}
+            <b>may not be represented in this dataset</b> (e.g., if the primary
+            case was not sampled, or if the sample from the primary case
+            happened to contain a different within-host variant
             <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>).
             <Sidenote
               num={sidenote_start + 1}
