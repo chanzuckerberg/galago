@@ -57,10 +57,10 @@ function CladeUniqueness(props: CladeProps) {
               clade_description.muts_per_trans_minmax[1]
             }`}
         />{" "}
-        transmission events.
+        transmissions.
       </p>
       <p>
-        If there are many inferred transmission events separating your clade of
+        If there are many inferred transmissions separating your clade of
         interest from its nearest relatives, this is a good indication that
         there are missing intermediate cases that have not been sampled and/or
         included in this dataset, and you may be looking at a partial picture.

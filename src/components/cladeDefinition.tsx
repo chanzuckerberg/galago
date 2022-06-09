@@ -35,8 +35,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
       <h5>Mutations:</h5>
       <p>
         We can use the average number of mutations per serial interval to get a
-        rough estimate of the number of transmission events separating two
-        samples.
+        rough estimate of the number of transmissions separating two samples.
       </p>
       <p className="results">
         Your{" "}
@@ -47,16 +46,13 @@ function CladeDefinition(props: CladeDefinitionProps) {
         />
         mutations (or, on average, about{" "}
         <FormatDataPoint
-          value={`${
-            clade_description.muts_bn_selected_minmax[0] *
-            clade_description.muts_per_trans_minmax[0]
-          } - 
+          value={`${clade_description.muts_bn_selected_minmax[0] * 1} - 
           ${
             clade_description.muts_bn_selected_minmax[1] *
             clade_description.muts_per_trans_minmax[1]
           } `}
         />
-        transmission events).
+        transmissions).
       </p>
 
       <h5>Hierarchical clustering ("clades"):</h5>
