@@ -49,15 +49,15 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
         />
         An infected case may have multiple pathogen genotypes present in their
         body, generated as the pathogen replicates. This means that sometimes
-        you may observe a few different genotypes which vary by 1 -
-        <FormatDataPoint value={clade_description.muts_per_trans_minmax[1]} />
-        mutations being transmitted during the same superspreader event.
+        you may observe a few different genotypes which vary by
+        <FormatDataPoint
+          value={`0 - ${clade_description.muts_per_trans_minmax[1]}`}
+        />
+        mutations being transmitted to secondary cases during the same
+        superspreader event.
       </p>
       <p>
-        Samples 0 -
-        <FormatDataPoint value={clade_description.muts_per_trans_minmax[1]} />
-        mutations from the reference may represent either primary or secondary
-        cases. It's usually reasonable to assume that samples with
+        It's usually reasonable to assume that samples with
         <FormatDataPoint
           value={clade_description.muts_per_trans_minmax[1] + 1}
         />

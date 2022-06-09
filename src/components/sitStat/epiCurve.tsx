@@ -38,9 +38,15 @@ export const EpiCurve = () => {
   const steelblue = `rgba(70,130,180, 1)`;
 
   // DATES
-  const nodes = traverse_preorder(state.mrca);
+  const samples = traverse_preorder(state.mrca)
+    .filter((n: Node) => n.children.length === 0)
+    .sort(
+      (a, b) =>
+        getNodeAttr(a, "num_date").getTime() -
+        getNodeAttr(b, "num_date").getTime()
+    );
 
-  const allDates: Date[] = nodes
+  const allDates: Date[] = samples
     .map((n: Node) => getNodeAttr(n, "num_date"))
     .sort((a, b) => a.getTime() - b.getTime());
 
@@ -54,9 +60,14 @@ export const EpiCurve = () => {
       return timeFormat("%b %Y")(date);
     };
   } else {
-    xLabel = "Epi week of sample collection";
+    xLabel = "Epi week of sample collection (Saturday end date)";
     formatDate = (date: Date) => {
-      return timeFormat("%U %Y")(date);
+      const offsetToNextSaturday = 6 - date.getDay(); // "epi weeks" end on Saturdays per CDC
+      const nextSaturdayDate = new Date(date);
+      nextSaturdayDate.setDate(
+        nextSaturdayDate.getDate() + offsetToNextSaturday
+      );
+      return timeFormat("%b %d %Y")(nextSaturdayDate);
     }; // < 3 months - use Sunday-based week of the year per CDC calendar
   }
 
@@ -70,9 +81,11 @@ export const EpiCurve = () => {
   const keys =
     colorBy === "transmissions"
       ? [
-          "Plausible primary case",
-          "Primary or secondary case",
-          "Likely tertiary+ case",
+          "Identical to primary case",
+          `Secondary / tertiary case (+1 - ${state.cladeDescription.muts_per_trans_minmax[1]} muts)`,
+          `Tertiary+ case (${
+            state.cladeDescription.muts_per_trans_minmax[1] + 1
+          }+ muts)`,
         ]
       : [
           state.location,
@@ -85,11 +98,11 @@ export const EpiCurve = () => {
     const nMuts = get_dist([node, state.mrca]);
     const [lower, upper] = state.cladeDescription?.muts_per_trans_minmax;
     if (nMuts === 0) {
-      return "Plausible primary case";
+      return keys[0];
     } else if (nMuts <= upper) {
-      return "Primary or secondary case";
+      return keys[1];
     } else {
-      return "Likely tertiary+ case";
+      return keys[2];
     }
   };
 
@@ -111,7 +124,7 @@ export const EpiCurve = () => {
 
   // DATA WRANGLING
   const dataPoints: { [key: string]: any } = {};
-  nodes.forEach((n: Node) => {
+  samples.forEach((n: Node) => {
     const nodeDateBin = getDateBin(n); //getNodeAttr(n, "num_date");
     if (!Object.keys(dataPoints).includes(nodeDateBin)) {
       dataPoints[nodeDateBin] = { dateBin: nodeDateBin };
