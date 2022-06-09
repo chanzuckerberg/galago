@@ -1,26 +1,28 @@
 import { CladeDescription, Node } from "../d";
 import { get_dist } from "../utils/treeMethods";
 import Sidenote from "./sidenote";
-import { FormatDataPoint } from "./formatters/dataPoint";
 import { FormatDate } from "./formatters/date";
 import { FormatStringArray } from "./formatters/stringArray";
+import { useSelector } from "react-redux";
 
 type CladeProps = {
-  clade_description: CladeDescription;
   sidenote_start: number;
 };
 
 function TMRCA(props: CladeProps) {
-  const { clade_description, sidenote_start } = props;
+  const state = useSelector((state) => state.global);
+  const cladeDescription = state.cladeDescription;
 
-  const all_samples: Node[] = clade_description.selected_samples.concat(
-    clade_description.unselected_samples_in_cluster
+  const { sidenote_start } = props;
+
+  const all_samples: Node[] = cladeDescription.selected_samples.concat(
+    cladeDescription.unselected_samples_in_cluster
   );
 
   let mrca_distances: { [key: string]: number } = Object.fromEntries(
     all_samples.map((x) => [
       x.name,
-      clade_description.mrca ? get_dist([x, clade_description.mrca]) : NaN,
+      cladeDescription.mrca ? get_dist([x, cladeDescription.mrca]) : NaN,
     ])
   );
   let mrca_matches: string[] = Object.keys(mrca_distances).filter(
@@ -106,17 +108,17 @@ function TMRCA(props: CladeProps) {
       <div className="results">
         <p>
           This clade's primary case likely occurred
-          {clade_description.mrca &&
-          clade_description.mrca.node_attrs.num_date.confidence.length === 2 ? (
+          {cladeDescription.mrca &&
+          cladeDescription.mrca.node_attrs.num_date.confidence.length === 2 ? (
             <>
               {" "}
               between{" "}
               <FormatDate
-                date={clade_description.mrca.node_attrs.num_date.confidence[0]}
+                date={cladeDescription.mrca.node_attrs.num_date.confidence[0]}
               />{" "}
               and{" "}
               <FormatDate
-                date={clade_description.mrca.node_attrs.num_date.confidence[1]}
+                date={cladeDescription.mrca.node_attrs.num_date.confidence[1]}
               />
               (95% CI)
             </>
@@ -124,7 +126,7 @@ function TMRCA(props: CladeProps) {
             <>
               around{" "}
               <FormatDate
-                date={clade_description.mrca.node_attrs.num_date.value}
+                date={cladeDescription.mrca.node_attrs.num_date.value}
               />
             </>
           )}

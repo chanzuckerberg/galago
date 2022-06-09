@@ -1,28 +1,27 @@
 import { CladeDescription } from "../d";
 import { FormatDataPoint } from "./formatters/dataPoint";
 import { FormatStringArray } from "./formatters/stringArray";
+import { useSelector } from "react-redux";
 
-type geoSubcladesProps = {
-  clade_description: CladeDescription;
-};
+function GeoSublades() {
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
+  const cladeDescription = state.cladeDescription;
 
-function GeoSublades(props: geoSubcladesProps) {
-  const { clade_description } = props;
-
-  const no_data = clade_description.subclade_geo === null;
+  const no_data = cladeDescription.subclade_geo === null;
   if (no_data) {
     return <></>;
   }
 
   const geo_monophyletic =
-    clade_description.subclade_geo && clade_description.subclades.length === 0;
+    cladeDescription.subclade_geo && cladeDescription.subclades.length === 0;
 
   const subclade_locations =
-    clade_description.subclades.length > 0 &&
-    typeof clade_description.subclade_geo === "string"
-      ? clade_description.subclades.map(
+    cladeDescription.subclades.length > 0 &&
+    typeof cladeDescription.subclade_geo === "string"
+      ? cladeDescription.subclades.map(
           //@ts-ignore - we've already excluded the case where subclade_geo is null on line 10
-          (s) => s.node_attrs[clade_description.subclade_geo]["value"]
+          (s) => s.node_attrs[cladeDescription.subclade_geo]["value"]
         )
       : [];
 
@@ -46,11 +45,11 @@ function GeoSublades(props: geoSubcladesProps) {
         {!no_data && geo_monophyletic && (
           <>
             All of the samples in this clade are from the same{" "}
-            <FormatDataPoint value={clade_description.subclade_geo} />; we do
-            not see evidence of multiple introductions to{" "}
+            <FormatDataPoint value={cladeDescription.subclade_geo} />; we do not
+            see evidence of multiple introductions to{" "}
             <FormatDataPoint
               //@ts-ignore
-              value={clade_description.home_geo[clade_description.subclade_geo]}
+              value={cladeDescription.home_geo[cladeDescription.subclade_geo]}
             />
             <br />
             <br />
@@ -62,12 +61,12 @@ function GeoSublades(props: geoSubcladesProps) {
         {!no_data && !geo_monophyletic && (
           <>
             At least{" "}
-            <FormatDataPoint value={clade_description.subclades.length} />{" "}
+            <FormatDataPoint value={cladeDescription.subclades.length} />{" "}
             transmission(s) between{" "}
             <FormatDataPoint
               value={
                 //@ts-ignore
-                clade_description["home_geo"][clade_description.subclade_geo]
+                cladeDescription["home_geo"][cladeDescription.subclade_geo]
               }
             />{" "}
             and these locations have contributed to this clade:{" "}

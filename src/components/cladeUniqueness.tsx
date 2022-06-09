@@ -1,29 +1,30 @@
 import { CladeDescription, Node } from "../d";
-import { get_dist } from "../utils/treeMethods";
+import { getNodeAttr, get_dist } from "../utils/treeMethods";
 import { FormatStringArray } from "./formatters/stringArray";
 import { FormatDate } from "./formatters/date";
 import { FormatDataPoint } from "./formatters/dataPoint";
+import { useSelector } from "react-redux";
 
-type CladeProps = {
-  clade_description: CladeDescription;
-};
+function CladeUniqueness() {
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
+  const cladeDescription = state.cladeDescription;
+  const tmrca = cladeDescription.mrca.node_attrs.num_date.value;
 
-function CladeUniqueness(props: CladeProps) {
-  const { clade_description } = props;
-  const tmrca = clade_description.mrca.node_attrs.num_date.value;
-
+  //@ts-ignore
   const cousin_locations: Array<string> = [
     ...new Set(
-      clade_description.cousins.map((a) => a.node_attrs.location.value)
+      cladeDescription.cousins.map((a: Node) => getNodeAttr(a, "location"))
     ),
   ].sort();
 
-  const cousin_distances: number[] = clade_description.cousins.map((c: Node) =>
-    get_dist([c, clade_description.mrca])
+  const cousin_distances: number[] = cladeDescription.cousins.map((c: Node) =>
+    get_dist([c, cladeDescription.mrca])
   );
 
-  const local_cousins: Node[] = clade_description.cousins.filter(
-    (c) => c.node_attrs.location.value === clade_description.home_geo.location
+  const local_cousins: Node[] = cladeDescription.cousins.filter(
+    (c: Node) =>
+      c.node_attrs.location.value === cladeDescription.home_geo.location
   );
 
   const local_cousin_dates: Array<Date> = local_cousins
@@ -50,11 +51,11 @@ function CladeUniqueness(props: CladeProps) {
           value={`
             ${
               Math.min(...cousin_distances) *
-              clade_description.muts_per_trans_minmax[0]
+              cladeDescription.muts_per_trans_minmax[0]
             } 
             - ${
               Math.min(...cousin_distances) *
-              clade_description.muts_per_trans_minmax[1]
+              cladeDescription.muts_per_trans_minmax[1]
             }`}
         />{" "}
         transmissions.
@@ -75,7 +76,7 @@ function CladeUniqueness(props: CladeProps) {
         In this dataset, the samples most closely related to your clade of
         interest include <FormatDataPoint value={local_cousins.length} /> other
         samples from{" "}
-        <FormatDataPoint value={clade_description.home_geo.location} />
+        <FormatDataPoint value={cladeDescription.home_geo.location} />
         {local_cousins.length > 0 ? (
           <>
             , dated between <FormatDate date={local_cousin_dates[0]} /> and{" "}
@@ -87,11 +88,11 @@ function CladeUniqueness(props: CladeProps) {
           <>.</>
         )}
       </p>
-      {clade_description.cousins.length - local_cousins.length > 1 && (
+      {cladeDescription.cousins.length - local_cousins.length > 1 && (
         <p>
           There are also{" "}
           <FormatDataPoint
-            value={clade_description.cousins.length - local_cousins.length}
+            value={cladeDescription.cousins.length - local_cousins.length}
           />{" "}
           closely related samples from these locations:
           <FormatStringArray values={cousin_locations} />

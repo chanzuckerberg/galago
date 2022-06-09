@@ -47,25 +47,12 @@ export default function ReportRoute() {
           >
             Choose a different cluster
           </button>
-          <SitStat
-            clade_description={state.cladeDescription}
-            all_samples={get_leaves(state.tree)}
-          />
-          <CladeDefinition
-            clade_description={state.cladeDescription}
-            sidenote_start={1}
-          />
-          <TMRCA
-            clade_description={state.cladeDescription}
-            sidenote_start={3}
-          />
-          <GeoSubclades clade_description={state.cladeDescription} />
-          <CladeUniqueness clade_description={state.cladeDescription} />
-          <OnwardTransmission
-            clade_description={state.cladeDescription}
-            sidenote_start={6}
-          />
-          {/* <PhyloUncertainty clade_description={all_samples} /> */}
+          <SitStat />
+          <CladeDefinition sidenote_start={1} />
+          <CladeUniqueness />
+          <TMRCA sidenote_start={3} />
+          <OnwardTransmission sidenote_start={6} />
+          <GeoSubclades />
           <SamplingBias
             // @ts-ignore
             gisaid_census={gisaid_census}

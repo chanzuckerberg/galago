@@ -4,23 +4,27 @@ import Sidenote from "./sidenote";
 import { FormatDataPoint } from "./formatters/dataPoint";
 import { FormatDate } from "./formatters/date";
 import { FormatStringArray } from "./formatters/stringArray";
+import { useSelector } from "react-redux";
 
 type OnwardTransmissionProps = {
-  clade_description: CladeDescription;
   sidenote_start: number;
 };
 
 function OnwardTransmission(props: OnwardTransmissionProps) {
-  const { clade_description, sidenote_start } = props;
-  const all_clade_samples: Node[] = clade_description.selected_samples.concat(
-    clade_description.unselected_samples_in_cluster
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
+
+  const { sidenote_start } = props;
+  const cladeDescription = state.cladeDescription;
+  const all_clade_samples: Node[] = cladeDescription.selected_samples.concat(
+    cladeDescription.unselected_samples_in_cluster
   );
 
   const tertiary_cases: string[] = all_clade_samples
     .filter(
       (x) =>
-        get_dist([x, clade_description.mrca]) >
-        clade_description.muts_per_trans_minmax[1]
+        get_dist([x, cladeDescription.mrca]) >
+        cladeDescription.muts_per_trans_minmax[1]
     )
     .map((x) => x.name);
 
@@ -51,7 +55,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
         body, generated as the pathogen replicates. This means that sometimes
         you may observe a few different genotypes which vary by
         <FormatDataPoint
-          value={`0 - ${clade_description.muts_per_trans_minmax[1]}`}
+          value={`0 - ${cladeDescription.muts_per_trans_minmax[1]}`}
         />
         mutations being transmitted to secondary cases during the same
         superspreader event.
@@ -59,7 +63,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
       <p>
         It's usually reasonable to assume that samples with
         <FormatDataPoint
-          value={clade_description.muts_per_trans_minmax[1] + 1}
+          value={cladeDescription.muts_per_trans_minmax[1] + 1}
         />
         + mutations represent tertiary or further downstream transmission.
         <sup style={{ fontSize: 10 }}>{sidenote_start}</sup>
