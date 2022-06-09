@@ -3,21 +3,26 @@ import Sidenote from "./sidenote";
 import { FormatStringArray } from "./formatters/stringArray";
 import { FormatDate } from "./formatters/date";
 import { FormatDataPoint } from "./formatters/dataPoint";
+import { useSelector } from "react-redux";
 
 interface CladeDefinitionProps {
-  clade_description: CladeDescription;
   sidenote_start: number;
 }
 
 function CladeDefinition(props: CladeDefinitionProps) {
-  const { clade_description, sidenote_start } = props;
+  const { sidenote_start } = props;
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
+  const cladeDescription = state.cladeDescription;
+
   const local_unselected_samples: Node[] =
-    clade_description.unselected_samples_in_cluster.filter(
-      (n) => n.node_attrs.location.value == clade_description.home_geo.location
+    cladeDescription.unselected_samples_in_cluster.filter(
+      (n: Node) =>
+        n.node_attrs.location.value == cladeDescription.home_geo.location
     );
 
   // let lineage_counts = {};
-  // clade_description.selected_samples.forEach((s) => {
+  // cladeDescription.selected_samples.forEach((s) => {
   //   let lin = s.node_attrs.pango_lineage?.value;
   //   if (lin) {
   //     lineage_counts[lin] = 1 + (lineage_counts[lin] || 0);
@@ -34,26 +39,16 @@ function CladeDefinition(props: CladeDefinitionProps) {
       </p>
       <h5>Mutations:</h5>
       <p>
-        We can use the average number of mutations per serial interval to get a
-        rough estimate of the number of transmissions separating two samples.
+        We can use the average number of mutations per serial interval (
+        {
+          <FormatDataPoint
+            value={`${state.cladeDescription.muts_per_trans_minmax[0]} - ${state.cladeDescription.muts_per_trans_minmax[1]}`}
+          />
+        }
+        ) to get a rough estimate of the number of transmissions separating two
+        samples.
       </p>
-      <p className="results">
-        Your{" "}
-        <FormatDataPoint value={clade_description.selected_samples.length} />{" "}
-        selected samples are separated from each other by{" "}
-        <FormatDataPoint
-          value={`${clade_description.muts_bn_selected_minmax[0]} - ${clade_description.muts_bn_selected_minmax[1]}`}
-        />
-        mutations (or, on average, about{" "}
-        <FormatDataPoint
-          value={`${clade_description.muts_bn_selected_minmax[0] * 1} - 
-          ${
-            clade_description.muts_bn_selected_minmax[1] *
-            clade_description.muts_per_trans_minmax[1]
-          } `}
-        />
-        transmissions).
-      </p>
+      <p className="results">{/* Put heatmap here */}</p>
 
       <h5>Hierarchical clustering ("clades"):</h5>
       <p>
@@ -71,27 +66,27 @@ function CladeDefinition(props: CladeDefinitionProps) {
             </span>
           }
         />
-        A 'clade' is the smallest hierarchical cluster (or 'subtree') that
-        contains all of your samples of interest.
-        <sup style={{ fontSize: "10" }}>{sidenote_start}</sup> This means that
+        A 'clade' is a hierarchical cluster (or 'subtree') in a phylogenetic
+        tree.
+        <sup style={{ fontSize: "10" }}>{sidenote_start}</sup> By definition,
         all of the samples within a clade are more closely related to each other
         than they are to anything else in the dataset.
       </p>
 
       <p className="results">
-        {clade_description.unselected_samples_in_cluster.length == 0 ? (
+        {cladeDescription.unselected_samples_in_cluster.length == 0 ? (
           `Your selected samples form their own clade without any other samples from this dataset.`
         ) : (
           <>
             In addition to your selected samples, the clade containing your
             samples also contains
             <FormatDataPoint
-              value={clade_description.unselected_samples_in_cluster.length}
+              value={cladeDescription.unselected_samples_in_cluster.length}
             />
             other samples from these locations:
             <FormatStringArray
-              values={clade_description.unselected_samples_in_cluster.map(
-                (a) => a.node_attrs.location.value
+              values={cladeDescription.unselected_samples_in_cluster.map(
+                (a: Node) => a.node_attrs.location.value
               )}
             />
           </>
@@ -105,7 +100,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
             This includes
             <FormatDataPoint value={local_unselected_samples.length} />
             other samples from{" "}
-            <FormatDataPoint value={clade_description.home_geo.location} />
+            <FormatDataPoint value={cladeDescription.home_geo.location} />
             <FormatStringArray
               values={local_unselected_samples.map((s) => s.name)}
             />
@@ -131,10 +126,10 @@ function CladeDefinition(props: CladeDefinitionProps) {
         This clade contains samples that are part of these lineage(s):
         <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>
         <FormatStringArray
-          values={clade_description.selected_samples
-            .concat(clade_description.unselected_samples_in_cluster)
+          values={cladeDescription.selected_samples
+            .concat(cladeDescription.unselected_samples_in_cluster)
             .map(
-              (s) =>
+              (s: Node) =>
                 s.node_attrs.pango_lineage?.value ||
                 s.node_attrs.clade_membership?.value
             )}
