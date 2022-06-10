@@ -9,7 +9,6 @@ function CladeUniqueness() {
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const cladeDescription = state.cladeDescription;
-  const tmrca = cladeDescription.mrca.node_attrs.num_date.value;
 
   //@ts-ignore
   const cousin_locations: Array<string> = [
@@ -31,6 +30,11 @@ function CladeUniqueness() {
     .map((a) => a.node_attrs.num_date.value)
     .sort((a, b) => a.getTime() - b.getTime());
 
+  const parentGrandparentDist = get_dist([
+    cladeDescription.mrca,
+    cladeDescription.parent_for_cousins,
+  ]);
+
   return (
     <div>
       <h2>
@@ -45,17 +49,15 @@ function CladeUniqueness() {
       <p className="results">
         The primary case upstream of all the samples in this clade is separated
         from other samples in the dataset by{" "}
-        <FormatDataPoint value={Math.min(...cousin_distances)} /> or more
-        mutation(s), or at least{" "}
+        <FormatDataPoint value={parentGrandparentDist} /> or more mutation(s),
+        or at least{" "}
         <FormatDataPoint
           value={`
             ${
-              Math.min(...cousin_distances) *
-              cladeDescription.muts_per_trans_minmax[0]
+              parentGrandparentDist * cladeDescription.muts_per_trans_minmax[0]
             } 
             - ${
-              Math.min(...cousin_distances) *
-              cladeDescription.muts_per_trans_minmax[1]
+              parentGrandparentDist * cladeDescription.muts_per_trans_minmax[1]
             }`}
         />{" "}
         transmissions.

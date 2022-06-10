@@ -10,23 +10,26 @@ export const MiniCladeDescription = () => {
   const monophyleticSamplesOfInterest =
     state.samplesOfInterest.length > 0 &&
     clade_description.unselected_samples_in_cluster.length == 0;
+  const parentGrandparentDist = get_dist([
+    clade_description.mrca,
+    clade_description.parent_for_cousins,
+  ]);
   const clade_unique =
-    get_dist([clade_description.mrca, clade_description.parent_for_cousins]) >=
-    clade_description.muts_per_trans_minmax[1] + 1;
-  const closest_cousin_dist: number = Math.min(
-    ...clade_description.cousins.map((c: Node) =>
-      get_dist([c, clade_description.mrca])
-    )
-  );
+    parentGrandparentDist > clade_description.muts_per_trans_minmax[1];
+  // const closest_cousin_dist: number = Math.min(
+  //   ...clade_description.cousins.map((c: Node) =>
+  //     get_dist([c, clade_description.mrca])
+  //   )
+  // );
 
   return (
     // If they have samples of interest, describe the degree of overlap with their selected clade
     <div className="results">
       {monophyleticSamplesOfInterest && (
-        <p className="results">
-          Your selected samples are more closely related to each other than to
-          anything else, and form their own clade without any other samples from
-          this dataset.
+        <p>
+          Your samples of interest are more closely related to each other than
+          to anything else, and form their own clade without any other samples
+          from this dataset.
         </p>
       )}
       {!monophyleticSamplesOfInterest && state.samplesOfInterest.length > 0 && (
@@ -47,11 +50,11 @@ export const MiniCladeDescription = () => {
         <p>
           This clade is distinct from background circulation, and is separated
           from its nearest neighbors by at least{" "}
-          <FormatDataPoint value={closest_cousin_dist} />
+          <FormatDataPoint value={parentGrandparentDist} />
           mutations (~
           <FormatDataPoint
-            value={`${closest_cousin_dist * 1} - ${
-              closest_cousin_dist *
+            value={`${1} - ${
+              parentGrandparentDist *
               state.cladeDescription.muts_per_trans_minmax[1]
             }`}
           />
@@ -61,10 +64,10 @@ export const MiniCladeDescription = () => {
         <p>
           This clade is quite similar to background circulation, and is only
           separated from its nearest neighbors by
-          <FormatDataPoint value={closest_cousin_dist} /> mutations (~
+          <FormatDataPoint value={parentGrandparentDist} /> mutations (~
           <FormatDataPoint
-            value={`${closest_cousin_dist * 1} - ${
-              closest_cousin_dist *
+            value={`${parentGrandparentDist * 1} - ${
+              parentGrandparentDist *
               state.cladeDescription.muts_per_trans_minmax[1]
             }`}
           />
