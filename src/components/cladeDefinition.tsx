@@ -4,6 +4,7 @@ import { FormatStringArray } from "./formatters/stringArray";
 import { FormatDate } from "./formatters/date";
 import { FormatDataPoint } from "./formatters/dataPoint";
 import { useSelector } from "react-redux";
+import { getNodeAttr } from "../utils/treeMethods";
 
 interface CladeDefinitionProps {
   sidenote_start: number;
@@ -15,11 +16,13 @@ function CladeDefinition(props: CladeDefinitionProps) {
   const state = useSelector((state) => state.global);
   const cladeDescription = state.cladeDescription;
 
-  const local_unselected_samples: Node[] =
-    cladeDescription.unselected_samples_in_cluster.filter(
-      (n: Node) =>
-        n.node_attrs.location.value == cladeDescription.home_geo.location
-    );
+  const all_samples = cladeDescription.selected_samples.concat(
+    cladeDescription.unselected_samples_in_cluster
+  );
+  const all_local_samples = all_samples.filter(
+    (n: Node) =>
+      getNodeAttr(n, "location") == cladeDescription.home_geo.location
+  );
 
   // let lineage_counts = {};
   // cladeDescription.selected_samples.forEach((s) => {
@@ -74,36 +77,45 @@ function CladeDefinition(props: CladeDefinitionProps) {
       </p>
 
       <p className="results">
-        {cladeDescription.unselected_samples_in_cluster.length == 0 ? (
-          `Your selected samples form their own clade without any other samples from this dataset.`
-        ) : (
-          <>
-            In addition to your selected samples, the clade containing your
-            samples also contains
+        This clade contains{" "}
+        {
+          <FormatDataPoint
+            value={
+              cladeDescription.selected_samples.length +
+              cladeDescription.unselected_samples_in_cluster.length
+            }
+          />
+        }{" "}
+        total samples.
+        {/* if the user has specified samples of interest, give the makeup of 'interesting' vs 'other' samples in this clade */}
+        {cladeDescription.selected_samples && // we have samples of interest -- and no other samples -- in this clade
+          !cladeDescription.unselected_samples_in_cluster &&
+          ` Your selected samples form their own clade without any other samples from this dataset.`}
+        {cladeDescription.selected_samples && // mix of both samples of interest and other samples in this clade
+          cladeDescription.unselected_samples_in_cluster &&
+          ` This includes ${(
             <FormatDataPoint
-              value={cladeDescription.unselected_samples_in_cluster.length}
+              value={`${cladeDescription.selected_samples.length}`}
             />
-            other samples from these locations:
-            <FormatStringArray
-              values={cladeDescription.unselected_samples_in_cluster.map(
-                (a: Node) => a.node_attrs.location.value
-              )}
+          )} of your samples of interest and ${(
+            <FormatDataPoint
+              value={`${cladeDescription.unselected_samples_in_cluster.length}`}
             />
-          </>
-        )}
+          )} other samples.`}
       </p>
+
       <p className="results">
-        {local_unselected_samples.length === 0 ? (
-          ""
-        ) : (
+        The samples in this clade are from these locations:
+        <FormatStringArray
+          values={cladeDescription.unselected_samples_in_cluster
+            .concat(cladeDescription.selected_samples)
+            .map((n: Node) => getNodeAttr(n, "location"))}
+        />
+        {all_local_samples && (
           <>
-            This includes
-            <FormatDataPoint value={local_unselected_samples.length} />
-            other samples from{" "}
-            <FormatDataPoint value={cladeDescription.home_geo.location} />
-            <FormatStringArray
-              values={local_unselected_samples.map((s) => s.name)}
-            />
+            The <FormatDataPoint value={all_local_samples.length} />
+            samples from {cladeDescription.home_geo.location} are:
+            <FormatStringArray values={all_local_samples.map((s) => s.name)} />
           </>
         )}
       </p>
