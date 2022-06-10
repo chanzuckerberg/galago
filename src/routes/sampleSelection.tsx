@@ -32,10 +32,7 @@ export default function SampleSelectionRoute() {
 
       {reportReady && (
         <>
-          <SitStat
-            clade_description={state.cladeDescription}
-            all_samples={get_leaves(state.tree)}
-          />
+          <SitStat />
           <button
             onClick={(e) => {
               navigate("/galago/report");
