@@ -44,6 +44,10 @@ export const global = (state = defaultState, action: any) => {
       return { ...state, testValue: state.testValue + 1 };
     }
 
+    case "reset to default": {
+      return defaultState;
+    }
+
     case "load demo": {
       // TODO: this should all probably live in an thunk + action constructor instead of duplicating code from a bunch of individual reducers. But, they're all short and this gets us off the ground for now.
       const tree = ingestNextstrain(demo_tree);
