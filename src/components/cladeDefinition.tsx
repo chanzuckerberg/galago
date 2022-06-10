@@ -92,16 +92,24 @@ function CladeDefinition(props: CladeDefinitionProps) {
           !cladeDescription.unselected_samples_in_cluster &&
           ` Your selected samples form their own clade without any other samples from this dataset.`}
         {cladeDescription.selected_samples && // mix of both samples of interest and other samples in this clade
-          cladeDescription.unselected_samples_in_cluster &&
-          ` This includes ${(
-            <FormatDataPoint
-              value={`${cladeDescription.selected_samples.length}`}
-            />
-          )} of your samples of interest and ${(
-            <FormatDataPoint
-              value={`${cladeDescription.unselected_samples_in_cluster.length}`}
-            />
-          )} other samples.`}
+          cladeDescription.unselected_samples_in_cluster && (
+            <>
+              {" "}
+              This includes
+              {
+                <FormatDataPoint
+                  value={cladeDescription.selected_samples.length}
+                />
+              }{" "}
+              of your samples of interest and
+              {
+                <FormatDataPoint
+                  value={cladeDescription.unselected_samples_in_cluster.length}
+                />
+              }{" "}
+              other samples.
+            </>
+          )}
       </p>
 
       <p className="results">
