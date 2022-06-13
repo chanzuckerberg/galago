@@ -1,5 +1,5 @@
-import { Node, GISAIDRecord, CladeDescription } from "../../d";
-import { GeoLevels } from "../../utils/countSamples";
+import { Node, GISAIDRecord, CladeDescription } from "../../../d";
+import { GeoLevels } from "../../../utils/countSamples";
 import { DataLevels } from "./table";
 
 import TextCell from "./textCell";

@@ -1,16 +1,16 @@
-import { GISAIDRecord, Node } from "../../d";
+import { GISAIDRecord, Node } from "../../../d";
 import SampleDistributionTable from "./table";
-import { getNodeCounts, getGisaidCounts } from "../../utils/countSamples";
+import { getNodeCounts, getGisaidCounts } from "../../../utils/countSamples";
 import { useSelector } from "react-redux";
-import { getNodeAttr, get_leaves } from "../../utils/treeMethods";
+import { getNodeAttr, get_leaves } from "../../../utils/treeMethods";
 
 interface SamplingBiasProps {
   gisaidCounts: GISAIDRecord[];
   sidenote_start: number;
 }
 
-import Sidenote from "../sidenote";
-import { FormatDataPoint } from "../formatters/dataPoint";
+import Sidenote from "../../formatters/sidenote";
+import { FormatDataPoint } from "../../formatters/dataPoint";
 
 function SamplingBias(props: SamplingBiasProps) {
   //@ts-ignore

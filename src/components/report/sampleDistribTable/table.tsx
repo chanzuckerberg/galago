@@ -1,9 +1,9 @@
-import { Node, GISAIDRecord, CladeDescription, HomeGeo } from "../../d";
+import { Node, GISAIDRecord, CladeDescription, HomeGeo } from "../../../d";
 import {
   getNodeCounts,
   getGisaidCounts,
   GeoLevels,
-} from "../../utils/countSamples";
+} from "../../../utils/countSamples";
 import { useSelector } from "react-redux";
 import TableRow from "./row";
 import TextCell from "./textCell";

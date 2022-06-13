@@ -1,11 +1,11 @@
-import { Node, GISAIDRecord, HomeGeo } from "../../d";
+import { Node, GISAIDRecord, HomeGeo } from "../../../d";
 import {
   GeoLevels,
   getGisaidCounts,
   getNodeCounts,
-} from "../../utils/countSamples";
+} from "../../../utils/countSamples";
 import { useSelector } from "react-redux";
-import { get_leaves } from "../../utils/treeMethods";
+import { get_leaves } from "../../../utils/treeMethods";
 import { DataLevels } from "./table";
 
 type CountsCellProps = {

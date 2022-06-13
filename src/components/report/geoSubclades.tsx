@@ -1,6 +1,6 @@
-import { CladeDescription } from "../d";
-import { FormatDataPoint } from "./formatters/dataPoint";
-import { FormatStringArray } from "./formatters/stringArray";
+import { CladeDescription } from "../../d";
+import { FormatDataPoint } from "../formatters/dataPoint";
+import { FormatStringArray } from "../formatters/stringArray";
 import { useSelector } from "react-redux";
 
 function GeoSublades() {

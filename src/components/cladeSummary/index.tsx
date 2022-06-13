@@ -2,7 +2,7 @@ import { Node } from "../../d";
 import { FormatDate } from "../formatters/date";
 import { FormatDataPoint } from "../formatters/dataPoint";
 import { MiniCladeDescription } from "./miniCladeDescription";
-import { EpiCurve } from "./epiCurve";
+import { EpiCurve } from "../viz/epiCurve";
 import { get_dist } from "../../utils/treeMethods";
 import { useSelector } from "react-redux";
 

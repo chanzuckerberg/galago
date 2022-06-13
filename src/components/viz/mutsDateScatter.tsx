@@ -188,18 +188,19 @@ function MutsDateScatter() {
     //   hoverSampleName &&
     //   mrcaNameToSampleNames[node.name].includes(hoverSampleName);
 
-    let radius = 3;
+    let radius = 6;
     let fill = "none";
-    let stroke = mediumGray;
+    let stroke = darkGray;
+    let strokeWidth = 2;
 
     if (isPinnedMrca) {
-      radius = 6;
+      radius = 10;
       fill = steelblue;
       stroke = steelblue;
     } else if (isHoverMrca) {
-      radius = 6;
-      fill = darkGray;
-      stroke = darkGray;
+      radius = 10;
+      fill = darkestGray;
+      stroke = darkestGray;
     } //else if (isHoverSampleAncestor) {
     //   fill = "mediumGray";
     // }
@@ -219,6 +220,7 @@ function MutsDateScatter() {
         style={{
           fill: fill,
           stroke: stroke,
+          strokeWidth: strokeWidth,
         }}
       />
     );
@@ -323,7 +325,7 @@ function MutsDateScatter() {
       </svg>
       <svg
         width={chartWidth}
-        height={45}
+        height={80}
         onMouseLeave={() => {
           if (state.mrca) {
             sethoverMRCA(state.mrca);
@@ -335,8 +337,13 @@ function MutsDateScatter() {
         {state.mrcaOptions.map((node: any, i: number) => plotMrca(node, i))}
         <g>
           {/* <text x={margin - 4} y={20} fontSize={10}> */}
-          <text x={chartWidth / 2 - 275} y={40} fontSize={16} fontStyle="bold">
-            {`Clusters, sorted by the date of their inferred primary case. Click to select.`}
+          <text
+            x={chartWidth / 2 - 350}
+            y={60}
+            fontSize={20}
+            // fontStyle="bold"
+          >
+            {`Hierarchical clusters, sorted by the date of their inferred primary case. Click to select.`}
           </text>
           <text x={margin} y={40} fontSize={10} fontStyle="italic">
             broader selection

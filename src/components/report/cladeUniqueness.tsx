@@ -1,8 +1,8 @@
-import { CladeDescription, Node } from "../d";
-import { getNodeAttr, get_dist } from "../utils/treeMethods";
-import { FormatStringArray } from "./formatters/stringArray";
-import { FormatDate } from "./formatters/date";
-import { FormatDataPoint } from "./formatters/dataPoint";
+import { CladeDescription, Node } from "../../d";
+import { getNodeAttr, get_dist } from "../../utils/treeMethods";
+import { FormatStringArray } from "../formatters/stringArray";
+import { FormatDate } from "../formatters/date";
+import { FormatDataPoint } from "../formatters/dataPoint";
 import { useSelector } from "react-redux";
 
 function CladeUniqueness() {

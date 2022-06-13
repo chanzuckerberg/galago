@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
-import { caseDefFilter } from "../../d";
+import { caseDefFilter } from "../../../d";
 import Slider from "@mui/material/Slider";
-import ContingencyTable from "./contingencyTable";
+import ContingencyTable from "../../viz/contingencyTable";
 
 type SelectorsProps = {
   selectedFields: string[];
@@ -96,7 +96,7 @@ export const Selectors = (props: SelectorsProps) => {
       >
         Submit
       </button>
-      <ContingencyTable />
+      {/* <ContingencyTable /> */}
     </>
   );
 };

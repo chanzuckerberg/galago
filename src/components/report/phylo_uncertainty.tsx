@@ -1,4 +1,4 @@
-import { CladeDescription } from "../d";
+import { CladeDescription } from "../../d";
 
 // THIS KIND OF CARD DESCRIBES A CLADE
 type DatasetProps = {

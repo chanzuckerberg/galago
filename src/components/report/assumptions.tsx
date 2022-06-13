@@ -1,5 +1,5 @@
-import Sidenote from "./sidenote";
-import { CladeDescription } from "../d";
+import Sidenote from "../formatters/sidenote";
+import { CladeDescription } from "../../d";
 
 type AssumptionsProps = {
   clade_description: CladeDescription;

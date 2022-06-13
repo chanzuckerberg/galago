@@ -1,14 +1,16 @@
 import Header from "../components/header";
 import LandingPage from "../components/landingPage";
-import SampleSelection from "../components/sampleSelection";
-import CaseDefinitionConstructor from "../components/caseDefinitionConstructor";
 import Footer from "../components/footer";
 import ContactUs from "../components/contactUs";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { SitStat } from "../components/sitStat";
+import { SitStat } from "../components/cladeSummary";
 import { get_leaves } from "../utils/treeMethods";
-import EpiCurve from "../components/sitStat/epiCurve";
+import EpiCurve from "../components/viz/epiCurve";
+import SamplesOfInterest from "../components/cladeSelection/samplesOfInterest";
+import ClusteringOptions from "../components/cladeSelection/clusteringMethodSelect";
+import CaseDefinitionConstructor from "../components/cladeSelection/caseDefinitionConstructor";
+import MutsDateScatter from "../components/viz/mutsDateScatter";
 
 export default function SampleSelectionRoute() {
   //@ts-ignore
