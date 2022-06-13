@@ -1,40 +1,69 @@
-import { Node, GISAIDRecord } from "../../d";
+import { Node, GISAIDRecord, HomeGeo } from "../../d";
 import {
-  HomeGeo,
-  RecencyValues,
-  SpecificityLevels,
-  get_current_counts,
-  get_gisaid_counts,
+  GeoLevels,
+  getGisaidCounts,
+  getNodeCounts,
 } from "../../utils/countSamples";
+import { useSelector } from "react-redux";
+import { get_leaves } from "../../utils/treeMethods";
+import { DataLevels } from "./table";
 
 type CountsCellProps = {
-  current_samples: Node[];
-  gisaid_records: GISAIDRecord[];
-  home_geo: HomeGeo;
-  specificity_level: SpecificityLevels;
-  recency: RecencyValues;
+  gisaidCounts: GISAIDRecord[];
+  geoLevel: GeoLevels;
+  dataLevel: DataLevels;
+  minMonth: number;
+  minYear: number;
+  maxMonth: number;
+  maxYear: number;
 };
 
 const CountsCell = (props: CountsCellProps) => {
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
   const {
-    current_samples,
-    home_geo,
-    specificity_level,
-    recency,
-    gisaid_records,
+    gisaidCounts,
+    geoLevel,
+    dataLevel,
+    minYear,
+    minMonth,
+    maxYear,
+    maxMonth,
   } = props;
 
-  const numerator = get_current_counts(
-    current_samples,
-    home_geo,
-    specificity_level,
-    recency
-  );
+  let counts = NaN;
 
-  // TODO: how do we want to deal with either deduplicating or double counting?
-  const denominator =
-    get_gisaid_counts(gisaid_records, home_geo, specificity_level, recency) +
-    numerator;
+  if (dataLevel === "gisaid") {
+    counts = getGisaidCounts(
+      gisaidCounts,
+      geoLevel,
+      state.cladeDescription.home_geo,
+      minYear,
+      minMonth,
+      maxYear,
+      maxMonth
+    );
+  } else if (dataLevel === "dataset") {
+    counts = getNodeCounts(
+      get_leaves(state.tree),
+      geoLevel,
+      state.cladeDescription.home_geo,
+      minYear,
+      minMonth,
+      maxYear,
+      maxMonth
+    );
+  } else {
+    counts = getNodeCounts(
+      get_leaves(state.mrca),
+      geoLevel,
+      state.cladeDescription.home_geo,
+      minYear,
+      minMonth,
+      maxYear,
+      maxMonth
+    );
+  }
 
   return (
     <p
@@ -45,13 +74,9 @@ const CountsCell = (props: CountsCellProps) => {
         fontFamily:
           "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
       }}
-      key={`${specificity_level}+${recency}`}
+      key={`${dataLevel}+${geoLevel}`}
     >
-      {`${numerator.toLocaleString("en-US")} / ${denominator.toLocaleString(
-        "en-US"
-      )}`}
-      <br />
-      {`(${((numerator / denominator) * 100).toFixed(1)}%)`}
+      {counts.toLocaleString("en-US")}
     </p>
   );
 };

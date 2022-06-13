@@ -1,11 +1,10 @@
 // TYPES
-import { Node, CladeDescription, GISAIDRecord, GISAIDRawCounts } from "../d";
+import { Node, CladeDescription, GISAIDRecord } from "../d";
 // HOOKS AND UTIL FUNCTIONS
 import { useSelector, useDispatch } from "react-redux";
 import { get_root, get_leaves } from "../utils/treeMethods";
 // COMPONENTS
 import Header from "../components/header";
-import LandingPage from "../components/landingPage";
 import SamplingBias from "../components/sampleDistribTable";
 import CladeDefinition from "../components/cladeDefinition";
 import CladeUniqueness from "../components/cladeUniqueness";
@@ -16,7 +15,7 @@ import Assumptions from "../components/assumptions";
 import { SitStat } from "../components/sitStat";
 import Footer from "../components/footer";
 import ContactUs from "../components/contactUs";
-import { gisaid_counts_file } from "../../data/gisaid_counts";
+import { gisaidCounts } from "../../data/gisaidCounts2022-06";
 import { useNavigate } from "react-router-dom";
 
 export default function ReportRoute() {
@@ -25,9 +24,6 @@ export default function ReportRoute() {
   // const dispatch = useDispatch();
 
   // DATA
-  //@ts-ignore
-  const gisaid_raw_counts = gisaid_counts_file;
-  const gisaid_census = gisaid_raw_counts.data;
 
   const allDataPresent = state.cladeDescription && state.tree;
   let navigate = useNavigate();
@@ -55,7 +51,7 @@ export default function ReportRoute() {
           <GeoSubclades />
           <SamplingBias
             // @ts-ignore
-            gisaid_census={gisaid_census}
+            gisaidCounts={gisaidCounts}
             all_samples={get_leaves(get_root(state.tree))}
             clade_description={state.cladeDescription}
             sidenote_start={7}

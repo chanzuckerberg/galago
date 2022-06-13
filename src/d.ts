@@ -50,18 +50,19 @@ export interface CladeDescription {
   // };
 }
 
+export type HomeGeo = {
+  location: string;
+  division: string;
+  country: string;
+};
+
 export interface GISAIDRecord {
-  days_before_2022_01_26: 28 | 84 | 364 | 36400;
-  region: string;
+  year: number;
+  month: number;
+  count: number;
   country: string;
   division: string;
   location: string;
-  strain: number;
-}
-
-export interface GISAIDRawCounts {
-  schema: any; // we don't care about this block
-  data: GISAIDRecord[];
 }
 
 export interface metadataFieldSummary {

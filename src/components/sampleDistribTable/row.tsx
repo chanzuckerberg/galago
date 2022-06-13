@@ -1,23 +1,32 @@
 import { Node, GISAIDRecord, CladeDescription } from "../../d";
-import {
-  HomeGeo,
-  RecencyValues,
-  SpecificityLevels,
-} from "../../utils/countSamples";
+import { GeoLevels } from "../../utils/countSamples";
+import { DataLevels } from "./table";
 
 import TextCell from "./textCell";
 import CountsCell from "./countsCell";
 
 const TableRow = (props: {
-  current_samples: Node[];
-  gisaid_records: GISAIDRecord[];
-  home_geo: HomeGeo;
-  specificity: SpecificityLevels;
+  gisaidCounts: Array<GISAIDRecord>;
+  geoLevel: GeoLevels;
   label: string;
+  key: any;
+  minMonth: number;
+  minYear: number;
+  maxMonth: number;
+  maxYear: number;
 }) => {
-  const { current_samples, gisaid_records, home_geo, specificity, label } =
-    props;
-  const recency_options: RecencyValues[] = [28, 84, 364, 36400];
+  const {
+    gisaidCounts,
+    geoLevel,
+    label,
+    key,
+    minMonth,
+    minYear,
+    maxMonth,
+    maxYear,
+  } = props;
+  const dataLevels: Array<DataLevels> = ["gisaid", "dataset", "clade"];
+
   return (
     <div
       style={{
@@ -29,14 +38,15 @@ const TableRow = (props: {
       }}
     >
       <TextCell text={label} />
-      {recency_options.map((recency, i) => (
+      {dataLevels.map((dl, i) => (
         <CountsCell
-          current_samples={current_samples}
-          gisaid_records={gisaid_records}
-          home_geo={home_geo}
-          specificity_level={specificity}
-          recency={recency}
-          key={i}
+          gisaidCounts={gisaidCounts}
+          geoLevel={geoLevel}
+          dataLevel={dl}
+          minMonth={minMonth}
+          minYear={minYear}
+          maxMonth={maxMonth}
+          maxYear={maxYear}
         />
       ))}
     </div>

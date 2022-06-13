@@ -1,47 +1,37 @@
-import { Node, GISAIDRecord, CladeDescription } from "../../d";
+import { Node, GISAIDRecord, CladeDescription, HomeGeo } from "../../d";
 import {
-  HomeGeo,
-  RecencyValues,
-  FlattenedAttrs,
-  SpecificityLevels,
-  filter_tally,
-  get_current_counts,
-  get_gisaid_counts,
+  getNodeCounts,
+  getGisaidCounts,
+  GeoLevels,
 } from "../../utils/countSamples";
-
+import { useSelector } from "react-redux";
 import TableRow from "./row";
 import TextCell from "./textCell";
 
+export type DataLevels = "gisaid" | "dataset" | "clade";
+
 interface SampleTableProps {
-  gisaid_census: GISAIDRecord[];
-  all_samples: Array<Node>;
-  clade_description: CladeDescription;
+  gisaidCounts: GISAIDRecord[];
+  minMonth: number;
+  minYear: number;
+  maxMonth: number;
+  maxYear: number;
 }
 
-// PACKAGE EACH INSIGHT AS ITS OWN REACT COMPONENT SO THAT WE CAN EMBED LOGIC AND DATA WITHIN THE TEXT AND UPDATE IT WHEN THE DATA INPUT CHANGES
 function SampleDistributionTable(props: SampleTableProps) {
-  const { all_samples, gisaid_census, clade_description } = props;
-  const specificity_options: Array<SpecificityLevels> = [
-    "location",
-    "division",
-    "country",
-    "global",
-  ];
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
+
+  const { gisaidCounts, minMonth, minYear, maxMonth, maxYear } = props;
+  const geoLevels: Array<GeoLevels> = ["location", "division", "country"];
 
   const row_labels = {
-    location: clade_description["home_geo"]["location"],
-    division: "Other CA counties",
-    country: "Other U.S. states",
-    global: "Other countries",
+    location: state.cladeDescription.home_geo.location,
+    division: `Other ${state.cladeDescription.home_geo.division} counties`,
+    country: `Other ${state.cladeDescription.home_geo.country} states`,
   };
 
-  const column_labels = [
-    "",
-    "Last 4 weeks",
-    "Last 3 months",
-    "Last 1 year",
-    "Total",
-  ];
+  const column_labels = ["", "All public data", "This dataset", "This clade"];
 
   return (
     <div // actual table container
@@ -52,7 +42,7 @@ function SampleDistributionTable(props: SampleTableProps) {
         flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "space-between",
-        width: 960,
+        width: 550,
         marginTop: "3em",
         marginBottom: "3em",
       }}
@@ -71,14 +61,16 @@ function SampleDistributionTable(props: SampleTableProps) {
           <TextCell text={t} key={i} />
         ))}
       </div>
-      {specificity_options.map((s, i) => (
+      {geoLevels.map((geo, i) => (
         <TableRow
-          current_samples={all_samples}
-          gisaid_records={gisaid_census}
-          home_geo={clade_description.home_geo}
-          specificity={s}
-          label={row_labels[s]}
+          gisaidCounts={gisaidCounts}
+          geoLevel={geo}
+          label={row_labels[geo]}
           key={i}
+          minMonth={minMonth}
+          minYear={minYear}
+          maxMonth={maxMonth}
+          maxYear={maxYear}
         />
       ))}
     </div>

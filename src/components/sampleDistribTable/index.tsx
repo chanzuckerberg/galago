@@ -1,36 +1,60 @@
-import { CladeDescription, Node, GISAIDRecord } from "../../d";
+import { GISAIDRecord, Node } from "../../d";
 import SampleDistributionTable from "./table";
-import {
-  get_current_counts,
-  get_gisaid_counts,
-} from "../../utils/countSamples";
+import { getNodeCounts, getGisaidCounts } from "../../utils/countSamples";
+import { useSelector } from "react-redux";
+import { getNodeAttr, get_leaves } from "../../utils/treeMethods";
 
 interface SamplingBiasProps {
-  gisaid_census: GISAIDRecord[];
-  all_samples: Array<Node>;
-  clade_description: CladeDescription;
+  gisaidCounts: GISAIDRecord[];
   sidenote_start: number;
 }
 
 import Sidenote from "../sidenote";
+import { FormatDataPoint } from "../formatters/dataPoint";
 
 function SamplingBias(props: SamplingBiasProps) {
-  const { all_samples, gisaid_census, clade_description, sidenote_start } =
-    props;
-  const recent_from_division_num = get_current_counts(
-    all_samples,
-    clade_description.home_geo,
-    "division",
-    28
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
+  const { gisaidCounts, sidenote_start } = props;
+
+  const cladeDescription = state.cladeDescription;
+  const cladeSamples = cladeDescription.selected_samples.concat(
+    cladeDescription.unselected_samples_in_cluster
   );
 
-  const recent_from_division_denom =
-    get_gisaid_counts(
-      gisaid_census,
-      clade_description.home_geo,
-      "division",
-      28
-    ) + recent_from_division_num;
+  const cladeDates = cladeSamples
+    .map((n: Node) => getNodeAttr(n, "num_date"))
+    .sort((a: Date, b: Date) => a.getTime() - b.getTime());
+
+  // we care about the time frame of the samples in this clade +/- 1 month
+  const minDate = cladeDates[0];
+  const maxDate = cladeDates.slice(-1)[0];
+  console.log(minDate, maxDate);
+
+  const minYear = minDate.getFullYear();
+  const minMonth = minDate.getMonth() - 1;
+  const maxYear = maxDate.getFullYear();
+  const maxMonth = maxDate.getMonth() + 1;
+
+  const datasetLocationCount = getNodeCounts(
+    get_leaves(state.tree),
+    "division",
+    state.cladeDescription.home_geo,
+    minYear,
+    minMonth,
+    maxYear,
+    maxMonth
+  );
+
+  const gisaidLocationCount = getGisaidCounts(
+    gisaidCounts,
+    "division",
+    state.cladeDescription.home_geo,
+    minYear,
+    minMonth,
+    maxYear,
+    maxMonth
+  );
 
   return (
     <div>
@@ -40,18 +64,22 @@ function SamplingBias(props: SamplingBiasProps) {
         in this report?
       </p>
       <p className="results">
+        {console.log(datasetLocationCount, gisaidLocationCount)}
         {
           <>
             This dataset contains{" "}
-            <span className="dataPoint">
-              {(
-                (recent_from_division_num / recent_from_division_denom) *
+            <FormatDataPoint
+              value={`${(
+                (datasetLocationCount / gisaidLocationCount) *
                 100
-              ).toFixed(0)}
-              %
-            </span>{" "}
+              ).toFixed(0)}%`}
+            />
             of the publicly available data from{" "}
-            {clade_description.home_geo.division} collected in the last 4 weeks.
+            {cladeDescription.home_geo.division} collected between
+            <FormatDataPoint
+              value={`${minMonth}/${minYear} - ${maxMonth}/${maxYear}`}
+            />
+            (+/- 1 month of the samples in this clade).
           </>
         }
       </p>
@@ -89,9 +117,11 @@ function SamplingBias(props: SamplingBiasProps) {
         }}
       >
         <SampleDistributionTable
-          gisaid_census={gisaid_census}
-          all_samples={all_samples}
-          clade_description={clade_description}
+          gisaidCounts={gisaidCounts}
+          minMonth={minMonth}
+          minYear={minYear}
+          maxMonth={maxMonth}
+          maxYear={maxYear}
         />
       </div>
     </div>
