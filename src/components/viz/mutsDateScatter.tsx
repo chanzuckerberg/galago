@@ -4,6 +4,8 @@ import { get_leaves, traverse_preorder } from "../../utils/treeMethods";
 import { scaleLinear, extent, scaleTime, symbolCross } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { useSelector, useDispatch } from "react-redux";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
 function MutsDateScatter() {
   // LOCAL AND GLOBAL STATE
@@ -13,6 +15,7 @@ function MutsDateScatter() {
   const [hoverMRCA, sethoverMRCA] = useState<Node | null>(
     state.mrca ? state.mrca : null
   );
+  const [viewPlot, setViewPlot] = useState<"scatter" | "tree">("scatter");
   const dispatch = useDispatch();
 
   // DATA SETUP
@@ -234,7 +237,16 @@ function MutsDateScatter() {
         flexDirection: "column",
       }}
     >
-      {state.mrca ? (
+      <ButtonGroup variant="contained" aria-label="toggle-plot" size="small">
+        <Button onClick={(e) => setViewPlot("scatter")}>
+          Select new cluster
+        </Button>
+        <Button onClick={(e) => setViewPlot("tree")} disabled={!state.mrca}>
+          View selected subtree
+        </Button>
+      </ButtonGroup>
+
+      {viewPlot === "tree" && state.mrca ? (
         <img
           style={{ padding: 20 }}
           width="1000"
