@@ -21,43 +21,92 @@ export default function SampleSelectionRoute() {
   let navigate = useNavigate();
 
   return (
-    <div>
-      <Header />
-      {allDataPresent && (
-        <div>
-          <h1>Investigate potential outbreak clusters in {state.location}</h1>
-          <SampleSelection />
-          <CaseDefinitionConstructor />
-          <ContactUs />
-        </div>
-      )}
+    // <Header />
 
-      {reportReady && (
-        <>
-          <SitStat />
-          <button
-            onClick={(e) => {
-              navigate("/galago/report");
-            }}
-          >
-            View full report
-          </button>
-        </>
-      )}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "space-between",
+      }}
+    >
+      {/* left side bar */}
+      <div
+        style={{
+          // width: "30%",
+          display: "flex",
+          flexDirection: "column",
+          margin: 0,
+          padding: 0,
+          justifyContent: "space-between",
+          alignItems: "baseline",
+        }}
+      >
+        <SamplesOfInterest />
+        <CaseDefinitionConstructor />
+        <ClusteringOptions />
+        <div />
 
-      {!allDataPresent && (
-        <div>
-          <h1>Woops! You need to upload data first</h1>
-          <button
-            onClick={() => {
-              navigate("/galago/");
-            }}
-          >
-            Get started
-          </button>
+        {/* middle half */}
+        <div
+          style={{
+            // width: "40%",
+            // display: "flex",
+            // flexDirection: "row",
+            margin: 0,
+            padding: 0,
+            // justifyContent: "space-between",
+            // alignItems: "baseline",
+          }}
+        >
+          <h1>Select a cluster to instantly generate a report</h1>
+          <MutsDateScatter />
         </div>
-      )}
-      <Footer />
+
+        {/* report preview in right side bar */}
+        <div
+          style={{
+            // width: "30%",
+            display: "flex",
+            flexDirection: "column",
+            margin: 0,
+            padding: 0,
+            justifyContent: "space-between",
+            alignItems: "baseline",
+          }}
+        >
+          {reportReady ? (
+            <>
+              <h2>Genomic summary of your selected cluster</h2>
+              <SitStat title={false} />
+              <button
+                onClick={(e) => {
+                  navigate("/galago/report");
+                }}
+              >
+                View full report
+              </button>
+            </>
+          ) : (
+            <p>Select a cluster to instantly generate a report</p>
+          )}
+        </div>
+        {/* {!allDataPresent && (
+          <div>
+            <h1>Woops! You need to upload data first</h1>
+            <button
+              onClick={() => {
+                navigate("/galago/");
+              }}
+            >
+              Get started
+            </button>
+          </div>
+        )} */}
+      </div>
+      {/* <ContactUs />
+      <Footer /> */}
     </div>
   );
 }
