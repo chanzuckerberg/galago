@@ -5,10 +5,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
-  padding: 4em 1em;
+  /* padding: 4em 1em; */
   color: #333;
-  margin: auto;
-  max-width: 65em;
+  /* margin: auto; */
+  /* max-width: 65em; */
   font-size: 16px;
   font-family: "Noto Serif";
 }
@@ -18,7 +18,7 @@ ul,
 li,
 ol,
 a {
-  max-width: 35em;
+  /* max-width: 35em; */
 }
 
 h1 {
@@ -28,17 +28,16 @@ h1 {
 
 h2,
 strong {
-  /* margin-top: 1em;
-  padding-top: 1em; */
+  margin-top: 1em;
+  padding-top: 1em;
   color: #333;
   margin-top: 3em;
   font-family: "Noto Sans";
 }
 
 h4 {
-  /* margin-top: 4em;
+  margin-top: 4em;
   padding-top: 1em;
-   */
   color: #333;
 }
 

@@ -21,61 +21,20 @@ export default function SampleSelectionRoute() {
   let navigate = useNavigate();
 
   return (
-    // <Header />
-
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "space-between",
-      }}
-    >
+    <div>
+      {/* <h1>Select a clade to instantly generate a report</h1> */}
       {/* left side bar */}
-      <div
-        style={{
-          // width: "30%",
-          display: "flex",
-          flexDirection: "column",
-          margin: 0,
-          padding: 0,
-          justifyContent: "space-between",
-          alignItems: "baseline",
-        }}
-      >
+      <div style={{ maxWidth: 200, border: "1px solid red" }}>
         <SamplesOfInterest />
         <CaseDefinitionConstructor />
         <ClusteringOptions />
         <div />
-
         {/* middle half */}
-        <div
-          style={{
-            // width: "40%",
-            // display: "flex",
-            // flexDirection: "row",
-            margin: 0,
-            padding: 0,
-            // justifyContent: "space-between",
-            // alignItems: "baseline",
-          }}
-        >
-          <h1>Select a cluster to instantly generate a report</h1>
+        <div style={{ border: "1px solid green" }}>
           <MutsDateScatter />
         </div>
-
         {/* report preview in right side bar */}
-        <div
-          style={{
-            // width: "30%",
-            display: "flex",
-            flexDirection: "column",
-            margin: 0,
-            padding: 0,
-            justifyContent: "space-between",
-            alignItems: "baseline",
-          }}
-        >
+        <div style={{ border: "1px solid orange" }}>
           {reportReady ? (
             <>
               <h2>Genomic summary of your selected cluster</h2>
@@ -104,9 +63,9 @@ export default function SampleSelectionRoute() {
             </button>
           </div>
         )} */}
-      </div>
-      {/* <ContactUs />
+        {/* <ContactUs />
       <Footer /> */}
+      </div>
     </div>
   );
 }
