@@ -197,6 +197,7 @@ function MutsDateScatter() {
       radius = 10;
       fill = steelblue;
       stroke = steelblue;
+      strokeWidth = 0;
     } else if (isHoverMrca) {
       radius = 10;
       fill = darkestGray;
@@ -286,7 +287,7 @@ function MutsDateScatter() {
           scale={_xScaleTime}
           numTicks={9}
         />
-        <text x="-150" y="45" transform="rotate(-90)" fontSize={10}>
+        <text x="-150" y="45" transform="rotate(-90)" fontSize={14}>
           Mutations
         </text>
         <g
@@ -294,14 +295,14 @@ function MutsDateScatter() {
           transform="translate(150,85)"
         >
           <circle cx="0" cy="7" r={3} fill={mediumGray} />
-          <text x="10" y="10" fontSize={10}>
+          <text x="10" y="10" fontSize={14}>
             Samples
           </text>
           <g transform={`translate(0,26.5)`}>
             <line x1="-4" y1="0" x2="4" y2="0" stroke="black" strokeWidth={1} />
             <line x1="0" y1="-4" x2="0" y2="4" stroke="black" strokeWidth={1} />
           </g>
-          <text x="10" y="30" fontSize={10}>
+          <text x="10" y="30" fontSize={14}>
             Your samples of interest
           </text>
           <circle
@@ -311,14 +312,14 @@ function MutsDateScatter() {
             fill={"rgb(240,240,240)"}
             stroke={darkGray}
           />
-          <text x="10" y="50" fontSize={10}>
+          <text x="10" y="50" fontSize={14}>
             Samples in hovered cluster
           </text>
           <g transform={`translate(0,66.5)`}>
             <line x1="-4" y1="0" x2="4" y2="0" stroke="black" strokeWidth={2} />
             <line x1="0" y1="-4" x2="0" y2="4" stroke="black" strokeWidth={2} />
           </g>
-          <text x="10" y="70" fontSize={10}>
+          <text x="10" y="70" fontSize={14}>
             Your samples of interest in hovered cluster
           </text>
         </g>
@@ -335,23 +336,24 @@ function MutsDateScatter() {
         }}
       >
         {state.mrcaOptions.map((node: any, i: number) => plotMrca(node, i))}
+        {state.mrca && plotMrca(state.mrca, -1)}
         <g>
-          {/* <text x={margin - 4} y={20} fontSize={10}> */}
+          {/* <text x={margin - 4} y={20} fontSize={14}> */}
           <text
-            x={chartWidth / 2 - 350}
+            x={chartWidth / 2 - 345}
             y={60}
             fontSize={20}
             // fontStyle="bold"
           >
             {`Hierarchical clusters, sorted by the date of their inferred primary case. Click to select.`}
           </text>
-          <text x={margin} y={40} fontSize={10} fontStyle="italic">
+          <text x={margin} y={40} fontSize={12} fontStyle="italic">
             broader selection
           </text>
           <text
             x={chartWidth - margin - 90}
             y={40}
-            fontSize={10}
+            fontSize={12}
             fontStyle="italic"
           >
             narrower selection
