@@ -10,7 +10,7 @@ export const SamplesOfInterest = () => {
 
   return (
     <div>
-      <h2>Samples of Interest</h2>
+      <p>Samples of Interest</p>
       <TextField
         id="selectedSamples"
         label="Samples of Interest"

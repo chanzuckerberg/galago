@@ -21,20 +21,20 @@ export default function SampleSelectionRoute() {
   let navigate = useNavigate();
 
   return (
-    <div>
+    <>
       {/* <h1>Select a clade to instantly generate a report</h1> */}
       {/* left side bar */}
-      <div style={{ maxWidth: 200, border: "1px solid red" }}>
-        <SamplesOfInterest />
-        <CaseDefinitionConstructor />
-        <ClusteringOptions />
-        <div />
-        {/* middle half */}
-        <div style={{ border: "1px solid green" }}>
+      <div style={{ display: "flex" }}>
+        <div>
+          <SamplesOfInterest />
+          <CaseDefinitionConstructor />
+          <ClusteringOptions />
+          {/* middle half */}
+        </div>
+        <div>
           <MutsDateScatter />
         </div>
-        {/* report preview in right side bar */}
-        <div style={{ border: "1px solid orange" }}>
+        <div>
           {reportReady ? (
             <>
               <h2>Genomic summary of your selected cluster</h2>
@@ -51,7 +51,10 @@ export default function SampleSelectionRoute() {
             <p>Select a cluster to instantly generate a report</p>
           )}
         </div>
-        {/* {!allDataPresent && (
+      </div>
+      {/* report preview in right side bar */}
+
+      {/* {!allDataPresent && (
           <div>
             <h1>Woops! You need to upload data first</h1>
             <button
@@ -63,9 +66,8 @@ export default function SampleSelectionRoute() {
             </button>
           </div>
         )} */}
-        {/* <ContactUs />
+      {/* <ContactUs />
       <Footer /> */}
-      </div>
-    </div>
+    </>
   );
 }
