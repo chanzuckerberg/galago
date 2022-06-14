@@ -1,5 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 export const SamplesOfInterest = () => {
   const dispatch = useDispatch();
@@ -8,38 +10,35 @@ export const SamplesOfInterest = () => {
 
   return (
     <div>
-      <h3>Highlight samples of interest</h3>
-      <p>
-        Input samples of interest to highlight them in the graph and suggest
-        only clusters that contain at least one of your input sample(s).
-        <br />
-        <span style={{ fontSize: "0.8em", fontStyle: "italic" }}>
-          Must match sample names in your tree file
-        </span>
-        <input
-          type="text"
-          name="selectedSamples"
-          onChange={(e) => {
-            dispatch({
-              type: "sample names string changed",
-              data: e.target.value,
-            });
-          }}
-          style={{ width: "30em" }}
-          value={
-            state.samplesOfInterestNames
-              ? state.samplesOfInterestNames.join(", ")
-              : "SampleID1, SampleID2, ..."
-          }
-        />
-        <button
-          type="button"
-          name="submitInput"
-          onClick={(e) => dispatch({ type: "sample submit button clicked" })}
-        >
-          Highlight and subset
-        </button>
-      </p>
+      <h2>Samples of Interest</h2>
+      <TextField
+        id="selectedSamples"
+        label="Samples of Interest"
+        multiline
+        rows={3}
+        style={{ width: "15em" }}
+        defaultValue={
+          state.samplesOfInterestNames
+            ? state.samplesOfInterestNames.join(", ")
+            : "Input sample IDs here, or select them via a case definition filter below."
+        }
+        onChange={(e) => {
+          dispatch({
+            type: "sample names string changed",
+            data: e.target.value,
+          });
+        }}
+        size="small"
+      />
+      <br />
+      <Button
+        variant="contained"
+        name="submitSamplesOfInterest"
+        onClick={(e) => dispatch({ type: "sample submit button clicked" })}
+        size="small"
+      >
+        Highlight & Subset
+      </Button>
     </div>
   );
 };
