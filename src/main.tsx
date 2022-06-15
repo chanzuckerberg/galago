@@ -6,7 +6,7 @@ import App from "./App";
 
 import { Provider } from "react-redux";
 import { store } from "./reducers/store";
-import SampleSelectionRoute from "./routes/sampleSelection";
+import SampleSelectionRoute from "./routes/cladeSelection";
 import ReportRoute from "./routes/report";
 
 ReactDOM.render(

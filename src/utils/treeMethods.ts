@@ -7,6 +7,8 @@ export const traverse_preorder = (
   traverse_condition?: Function,
   collection: Node[] = []
 ) => {
+  // recursively traverse the tree, breadth first
+
   // first visit this node and make a note that we've seen it
   if (!collect_condition || collect_condition(node)) {
     collection.push(node);
@@ -36,6 +38,8 @@ export const traverse_postorder = (
   traverse_condition?: Function,
   collection: Node[] = []
 ) => {
+  // recursively traverse the tree, depth-first
+
   // first visit children, left to right
   if (node.children.length > 0) {
     const children_to_visit = traverse_condition
@@ -165,6 +169,8 @@ export const get_dist = (target_nodes: Node[]) => {
 };
 
 export const get_pairwise_distances = (target_nodes: Node[]) => {
+  // pairwise patristic distances; brute force implementation
+
   let pairwise_dist: Array<{ nodes: Array<Node>; dist: number }> = [];
 
   for (let i = 0; i < target_nodes.length - 1; i++) {
@@ -179,6 +185,8 @@ export const get_pairwise_distances = (target_nodes: Node[]) => {
 };
 
 export const get_parent_for_cousins = (node: Node, min_muts: number = 1) => {
+  // get the parent node we want to use for reporting on "cousins," subject to the constraint that we want to keep looking deeper in the tree until we've gone at least X mutations back / are looking broadly enough
+
   if (!node.parent) {
     return node;
   }
@@ -200,6 +208,8 @@ export const get_parent_for_cousins = (node: Node, min_muts: number = 1) => {
 };
 
 export const get_leaves = (mrca: Node) => {
+  // get all terminal nodes in the tree
+
   const all_children: Array<Node> = traverse_preorder(mrca);
   let leaves: Node[] = [];
   for (let i = 0; i < all_children.length; i++) {
@@ -211,6 +221,8 @@ export const get_leaves = (mrca: Node) => {
 };
 
 export const get_root = (node: Node) => {
+  // return the root node of the tree (i.e., the first one without a parent)
+
   let current_node = node;
   while (node.parent) {
     current_node = node.parent;
@@ -236,6 +248,8 @@ export const getNodeAttr = (
     | "matutils_confidence"
     | "matutils_value" = "value"
 ) => {
+  // various types of values are stored in a number of different structures in nextstrain jsons; helper accessor / helper function to look all the different places and return the value
+
   let attrValue: any = undefined;
 
   // attribute present

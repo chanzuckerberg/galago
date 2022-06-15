@@ -13,7 +13,11 @@ import { demoMetadata } from "../../data/demo_fake_metadata";
 import { demo_tree } from "../../data/demo_tree";
 import { getMrcaOptions } from "../utils/clusterMethods";
 import { get_location_input_options } from "../utils/geoInputOptions";
-import { ingestMetadata, zipMetadataToTree } from "../utils/metadataUtils";
+import {
+  ingestCSVMetadata,
+  treeMetadataCensus,
+  zipMetadataToTree,
+} from "../utils/metadataUtils";
 import { describe_clade } from "../utils/describeClade";
 import { tree } from "d3";
 
@@ -51,6 +55,7 @@ export const global = (state = defaultState, action: any) => {
     case "load demo": {
       // TODO: this should all probably live in an thunk + action constructor instead of duplicating code from a bunch of individual reducers. But, they're all short and this gets us off the ground for now.
       const tree = ingestNextstrain(demo_tree);
+      const treeMetadata = treeMetadataCensus(tree);
       const samplesOfInterestNames = demo_sample_names
         .split(/[,\s]+/)
         .map((s: string) => s.trim());
@@ -60,7 +65,7 @@ export const global = (state = defaultState, action: any) => {
       //@ts-ignore -- we already check for null samples on the line above
       const mrca = get_mrca(samplesOfInterest);
 
-      const { tidyMetadata, metadataCensus } = ingestMetadata(demoMetadata);
+      const { tidyMetadata, metadataCensus } = ingestCSVMetadata(demoMetadata);
       zipMetadataToTree(tree, tidyMetadata, "sample id");
       // console.log(tree);
 
@@ -81,7 +86,7 @@ export const global = (state = defaultState, action: any) => {
         ...defaultState,
         tree: tree,
         metadataEntries: tidyMetadata,
-        metadataCensus: { ...state.metadataCensus, ...metadataCensus },
+        metadataCensus: { ...treeMetadataCensus, ...metadataCensus },
         metadataFieldToMatch: "sample id",
         samplesOfInterestNames: samplesOfInterestNames,
         samplesOfInterest: samplesOfInterest,
@@ -169,12 +174,15 @@ export const global = (state = defaultState, action: any) => {
     case "tree file uploaded": {
       // console.log("setting tree to", action.data);
       const tree = action.data;
+      const treeMetadata = treeMetadataCensus(tree);
+
       return {
         ...state,
         tree: tree,
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
+        metadataCensus: { ...state.metadataCensus, ...treeMetadataCensus },
       };
     }
 
@@ -252,10 +260,9 @@ export const global = (state = defaultState, action: any) => {
       return { ...state, caseDefFilters: newState };
     }
 
+    // TODO: also update samplesOfInterest with matching samples
     case "case definition submitted": {
       if (state.tree && state.caseDefFilters) {
-        console.log("in case def reducer", state.caseDefFilters);
-
         let matchingSamples = get_leaves(state.tree);
         if (Object.keys(state.caseDefFilters).length === 0) {
           return { ...state, samplesMatchingCaseDef: matchingSamples };
@@ -284,7 +291,6 @@ export const global = (state = defaultState, action: any) => {
                 ) >= thisFilter[1]["min"]
             );
           }
-          console.log(thisFilter, matchingSamples);
         }
         return { ...state, samplesMatchingCaseDef: matchingSamples };
       }

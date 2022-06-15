@@ -6,7 +6,7 @@ import { EpiCurve } from "../viz/epiCurve";
 import { get_dist } from "../../utils/treeMethods";
 import { useSelector } from "react-redux";
 
-export const SitStat = () => {
+export const SitStat = (noTitle?: any) => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const cladeDescription = state.cladeDescription;
@@ -45,7 +45,7 @@ export const SitStat = () => {
 
   return (
     <div>
-      <h2>Summary (genomic situation status)</h2>
+      {!noTitle && <h2>Summary (genomic situation status)</h2>}
       <p style={{ fontStyle: "italic" }}>
         A "clade" is a hierarchical cluster in a phylogenetic tree.
       </p>

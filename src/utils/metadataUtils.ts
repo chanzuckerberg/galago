@@ -1,4 +1,4 @@
-import { get_leaves } from "./treeMethods";
+import { getNodeAttr, get_leaves, traverse_preorder } from "./treeMethods";
 import { Node, metadataFieldSummary, papaParseMetadataEntry } from "../d";
 
 export const nullishMetadataValues = [
@@ -25,45 +25,61 @@ export const acceptedMetadataTypes = [
 ];
 
 export const inspectMetadataField = (
-  metadataEntries: papaParseMetadataEntry[],
-  field: string
+  metadataEntries: Array<Node | papaParseMetadataEntry>,
+  field: string,
+  type: "nodes" | "csv"
 ) => {
   /* 
     Infer the data type for a given metadata field in papaparse results. 
-    Return an object with the data type and the N of unique values (categorical data) or the range (date or numeric data). 
+    Return a summary with the data type and the N of unique values (categorical data) or the range (date or numeric data). 
 
-    If a field has mixed data types, or some type that is not date, numeric or string, return false
+    If a field has mixed data types, or some type that is not date, numeric or string, return undefined
     */
   let seenValueType = "";
   let seenUniqueValues: string[] = [];
   let seenMinValue: number | object = NaN;
   let seenMaxValue: number | object = NaN;
 
-  metadataEntries.forEach((m: papaParseMetadataEntry) => {
-    // field is present and not nullish
-    if (
-      Object.keys(m).includes(field) &&
-      !nullishMetadataValues.includes(m[field])
-    ) {
-      let thisValue = m[field];
-      let thisValueType = Object.prototype.toString.call(m[field]); // use this to differentiate dates from other objects
+  let nextstrainAncestralTraitsComputed: boolean; // make a note if ancestral states have been computed and byy which method
+  let matutilsAncestralTraitsComputed: boolean;
 
-      // check for invalid types
+  metadataEntries.forEach((entry: any) => {
+    let thisValue: any = undefined;
+    if (type === "nodes") {
+      // looking at a list of nodes
+      thisValue = getNodeAttr(entry, field);
+      nextstrainAncestralTraitsComputed = // all nodes thus far have returned a value for "confidence"
+        getNodeAttr(entry, field, "confidence") &&
+        [undefined, true].includes(nextstrainAncestralTraitsComputed);
+      matutilsAncestralTraitsComputed = // all nodes thus far have returned a value for "matutils_confidence"
+        getNodeAttr(entry, field, "matutils_confidence") &&
+        [undefined, true].includes(matutilsAncestralTraitsComputed);
+    } else {
+      // looking at a list of papaparse metadata entries; these don't have ancestral state information
+      thisValue = Object.keys(entry).includes(field) ? entry[field] : undefined;
+    }
+
+    // note: for now, ignore missing values. may want to revisit this decision later.
+    if (!nullishMetadataValues.includes(thisValue)) {
+      // use this to differentiate dates from other objects
+      let thisValueType = Object.prototype.toString.call(thisValue);
+
+      // check for invalid or mixed data types
       if (!seenValueType) {
         seenValueType = thisValueType;
       }
-
       if (
-        (seenValueType && seenValueType !== thisValueType) || // column has multiple data types - chuck it
+        seenValueType !== thisValueType || // column has multiple data types - chuck it
         !acceptedMetadataTypes.includes(thisValueType) // this is not a number, date or string - chuck it
       ) {
-        console.log(
+        console.warn(
           "Field has mixed and/or unaccepted data types:",
           field,
           thisValueType,
+          thisValue,
           seenValueType
         );
-        return false;
+        return undefined;
       }
 
       // record unique values for categorical data
@@ -84,10 +100,19 @@ export const inspectMetadataField = (
   });
 
   let summary: metadataFieldSummary = {
-    //@ts-ignore - guaranteed to be one of the accepted values above
+    // @ts-ignore - guaranteed to be one of the accepted values above
     type: seenValueType,
+    nextstrainAncestralTraitsComputed: nextstrainAncestralTraitsComputed
+      ? true
+      : false,
+    matutilsAncestralTraitsComputed: matutilsAncestralTraitsComputed
+      ? true
+      : false,
   };
-  if (seenValueType === "[object String]") {
+  if (
+    seenValueType === "[object String]" ||
+    seenValueType === "[object Boolean]"
+  ) {
     summary["dataType"] = "categorical";
     summary["uniqueValues"] = seenUniqueValues;
   } else if (seenValueType === "[object Boolean]") {
@@ -132,7 +157,7 @@ const replaceMissingValues = (
   return newMetadataEntry;
 };
 
-export const ingestMetadata = (metadata: papaParseMetadataEntry[]) => {
+export const ingestCSVMetadata = (metadata: papaParseMetadataEntry[]) => {
   /* Catalog the kind of data we received, chuck invalid fields, and tidy up missing values */
   const fields = Object.keys(metadata[0]);
   let metadataCensus: { [keys: string]: metadataFieldSummary } = {};
@@ -144,7 +169,7 @@ export const ingestMetadata = (metadata: papaParseMetadataEntry[]) => {
     }
   });
 
-  // console.log("metadatacensus", metadataCensus);
+  console.log("csv metadata census", metadataCensus);
   const tidyMetadata = metadata.map((entry: { [key: string]: any }) =>
     replaceMissingValues(entry, metadataCensus)
   );
@@ -159,6 +184,7 @@ export const zipMetadataToTree = (
 ) => {
   let reorganizedMetadata: { [key: string]: any } = {};
 
+  // reorient metadata to organize it by the field we're matching on <-> node names
   tidyMetadata.forEach((entry: papaParseMetadataEntry) => {
     const matchValue = entry[fieldToMatch];
     delete entry[fieldToMatch];
@@ -184,4 +210,22 @@ export const zipMetadataToTree = (
     " leaves"
   );
   return tree;
+};
+
+export const treeMetadataCensus = (tree: Node) => {
+  let allNodes = traverse_preorder(tree);
+
+  let metadataFields = new Set();
+  allNodes.forEach((n: Node) => {
+    Object.keys(n.node_attrs).forEach((k: string) => metadataFields.add(k));
+  });
+
+  let metadataCensus: { [key: string]: any } = {};
+  metadataFields.forEach(
+    //@ts-ignore
+    (field: string) =>
+      (metadataCensus[field] = inspectMetadataField(allNodes, field, "nodes"))
+  );
+  console.log("tree metadata census", metadataCensus);
+  return metadataCensus;
 };
