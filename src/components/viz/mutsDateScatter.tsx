@@ -6,11 +6,14 @@ import { AxisLeft, AxisBottom } from "@visx/axis";
 import { useSelector, useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import { Popover } from "@mui/material";
 
 function MutsDateScatter() {
   // LOCAL AND GLOBAL STATE
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
+
+  const samplesButtonRef = React.useRef();
 
   const [hoverMRCA, sethoverMRCA] = useState<Node | null>(
     state.mrca ? state.mrca : null
@@ -239,24 +242,46 @@ function MutsDateScatter() {
         flexDirection: "column",
       }}
     >
-      <ButtonGroup
-        variant="contained"
-        aria-label="toggle-plot"
-        size="small"
-        disableElevation
+      <div
+        // aria-describedby={1233245345}
+        style={{ display: "flex", justifyContent: "space-between" }}
       >
-        <Button onClick={(e) => setViewPlot("scatter")}>
-          Select new clade
+        <Button color="secondary" style={{ marginRight: 10 }}>
+          Samples (0)
         </Button>
-        <Button onClick={(e) => setViewPlot("tree")} disabled={!state.mrca}>
-          View subtree of selected clade
+        <Popover
+          // id={1233245345}
+          open={true}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+        >
+          hello world dddddd
+        </Popover>
+        <Button color="secondary" style={{ marginRight: 10 }}>
+          Cluster method
         </Button>
-      </ButtonGroup>
+
+        <ButtonGroup
+          color="secondary"
+          aria-label="toggle-plot"
+          size="small"
+          disableElevation
+        >
+          <Button onClick={(e) => setViewPlot("scatter")}>
+            Select new clade
+          </Button>
+          <Button onClick={(e) => setViewPlot("tree")} disabled={!state.mrca}>
+            View subtree of selected clade
+          </Button>
+        </ButtonGroup>
+      </div>
 
       {viewPlot === "tree" && state.mrca ? (
         <img
           style={{ padding: 20 }}
-          width="200"
+          width="835"
           src="https://user-images.githubusercontent.com/12618847/173690423-12b8d1f1-c4b7-4d82-be75-740762fddb81.png"
         />
       ) : (

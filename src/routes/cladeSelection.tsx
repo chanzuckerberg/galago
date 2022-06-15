@@ -33,6 +33,8 @@ export default function SampleSelectionRoute() {
 
   const topSectionHeight = 100;
 
+  const showLayoutBorders = false;
+
   return (
     <>
       {/* <h1>Select a clade to instantly generate a report</h1> */}
@@ -42,6 +44,7 @@ export default function SampleSelectionRoute() {
         style={{
           display: "flex",
           justifyContent: "space-between",
+          border: showLayoutBorders ? "1px solid red" : "none",
         }}
       >
         <div
@@ -49,6 +52,7 @@ export default function SampleSelectionRoute() {
             marginTop: topSectionHeight,
             width: windowWidth / 2,
             flexShrink: 0,
+            border: showLayoutBorders ? "1px solid green" : "none",
           }}
         >
           <MutsDateScatter />
@@ -68,12 +72,14 @@ export default function SampleSelectionRoute() {
         </div>
         <div
           style={{
+            border: showLayoutBorders ? "1px solid pink" : "none",
             marginTop: topSectionHeight,
             width: windowWidth * 0.4,
           }}
         >
           <div
             style={{
+              border: showLayoutBorders ? "1px solid orange" : "none",
               overflowY: "auto",
               margin: "auto",
               width: windowWidth * 0.35, // eventually windowWidth * rightSectionPercent
