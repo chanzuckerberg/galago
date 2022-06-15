@@ -157,7 +157,7 @@ const replaceMissingValues = (
   return newMetadataEntry;
 };
 
-export const ingestMetadata = (metadata: papaParseMetadataEntry[]) => {
+export const ingestCSVMetadata = (metadata: papaParseMetadataEntry[]) => {
   /* Catalog the kind of data we received, chuck invalid fields, and tidy up missing values */
   const fields = Object.keys(metadata[0]);
   let metadataCensus: { [keys: string]: metadataFieldSummary } = {};
@@ -169,7 +169,7 @@ export const ingestMetadata = (metadata: papaParseMetadataEntry[]) => {
     }
   });
 
-  // console.log("metadatacensus", metadataCensus);
+  console.log("csv metadata census", metadataCensus);
   const tidyMetadata = metadata.map((entry: { [key: string]: any }) =>
     replaceMissingValues(entry, metadataCensus)
   );
@@ -184,6 +184,7 @@ export const zipMetadataToTree = (
 ) => {
   let reorganizedMetadata: { [key: string]: any } = {};
 
+  // reorient metadata to organize it by the field we're matching on <-> node names
   tidyMetadata.forEach((entry: papaParseMetadataEntry) => {
     const matchValue = entry[fieldToMatch];
     delete entry[fieldToMatch];
@@ -209,4 +210,22 @@ export const zipMetadataToTree = (
     " leaves"
   );
   return tree;
+};
+
+export const treeMetadataCensus = (tree: Node) => {
+  let allNodes = traverse_preorder(tree);
+
+  let metadataFields = new Set();
+  allNodes.forEach((n: Node) => {
+    Object.keys(n.node_attrs).forEach((k: string) => metadataFields.add(k));
+  });
+
+  let metadataCensus: { [key: string]: any } = {};
+  metadataFields.forEach(
+    //@ts-ignore
+    (field: string) =>
+      (metadataCensus[field] = inspectMetadataField(allNodes, field, "nodes"))
+  );
+  console.log("tree metadata census", metadataCensus);
+  return metadataCensus;
 };

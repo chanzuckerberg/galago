@@ -7,7 +7,7 @@ import {
 import { ingestNextstrain } from "../../utils/nextstrainAdapter";
 import { Node } from "../../d";
 import { parse } from "papaparse";
-import { ingestMetadata } from "../../utils/metadataUtils";
+import { ingestCSVMetadata } from "../../utils/metadataUtils";
 import { useNavigate } from "react-router-dom";
 
 export const Upload = () => {
@@ -27,7 +27,7 @@ export const Upload = () => {
 
   const handleMetadataUpload = (file: any) => {
     const runOnUpload = (results: any, file: any) => {
-      const { tidyMetadata, metadataCensus } = ingestMetadata(results.data);
+      const { tidyMetadata, metadataCensus } = ingestCSVMetadata(results.data);
       console.log(metadataCensus);
       dispatch({
         type: "metadata uploaded and parsed",
