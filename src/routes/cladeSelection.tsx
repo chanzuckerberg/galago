@@ -18,67 +18,95 @@ import GeoSubclades from "../components/report/geoSubclades";
 import OnwardTransmission from "../components/report/onwardTransmission";
 import SamplingBias from "../components/report/sampleDistribTable";
 import TMRCA from "../components/report/tmrca";
-import { gisaidCounts } from "../../data/gisaidCounts2022-06";
+// import { gisaidCounts } from "../../data/gisaidCounts2022-06";
 import { useWindowSize } from "@react-hook/window-size";
 
 export default function SampleSelectionRoute() {
   //@ts-ignore
   const state = useSelector((state) => state.global);
-  const [width, height] = useWindowSize();
+  const [windowWidth, windowHeight] = useWindowSize();
 
   const allDataPresent =
     state.location && state.division && state.tree && state.loadReport;
   const reportReady = state.cladeDescription && state.tree;
   let navigate = useNavigate();
 
+  const topSectionHeight = 100;
+
   return (
     <>
       {/* <h1>Select a clade to instantly generate a report</h1> */}
       {/* left side bar */}
-      <div style={{ display: "flex" }}>
+      <Header />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
         <div
           style={{
-            width: width / 4,
-            maxWidth: width / 4,
-            overflowX: "hidden",
-            overflowY: "auto",
+            marginTop: topSectionHeight,
+            width: windowWidth / 2,
+            flexShrink: 0,
           }}
         >
-          <SamplesOfInterest />
-          <CaseDefinitionConstructor />
-          <ClusteringOptions />
-          {/* middle half */}
-        </div>
-        <div style={{ width: width / 2 }}>
           <MutsDateScatter />
+          <div
+            style={{
+              width: windowWidth * 0.7,
+              maxWidth: windowWidth * 0.7, // eventually windowWidth * leftSectionPercent
+              flexShrink: 0,
+              height: 100,
+            }}
+          >
+            {/* <SamplesOfInterest /> */}
+            <CaseDefinitionConstructor />
+            {/* <ClusteringOptions /> */}
+            {/* middle half*/}
+          </div>
         </div>
         <div
-          style={{ overflowY: "auto", width: width / 4, overflowX: "hidden" }}
+          style={{
+            marginTop: topSectionHeight,
+            width: windowWidth * 0.4,
+          }}
         >
-          {reportReady ? (
-            <>
-              <h2>Genomic summary of your selected cluster</h2>
-              <SitStat title={false} />
-              <CladeDefinition sidenote_start={1} />
-              <CladeUniqueness />
-              <TMRCA sidenote_start={3} />
-              <OnwardTransmission sidenote_start={6} />
-              <GeoSubclades />
-              <SamplingBias
-                // @ts-ignore
-                gisaidCounts={gisaidCounts}
-                all_samples={get_leaves(get_root(state.tree))}
-                clade_description={state.cladeDescription}
-                sidenote_start={7}
-              />
-              <Assumptions
-                clade_description={state.cladeDescription}
-                sidenote_start={8}
-              />
-            </>
-          ) : (
-            <p>Select a cluster to instantly generate a report</p>
-          )}
+          <div
+            style={{
+              overflowY: "auto",
+              margin: "auto",
+              width: windowWidth * 0.35, // eventually windowWidth * rightSectionPercent
+              height: windowHeight - topSectionHeight - 30, // eventually windowWidth - titleSectionHeightPixels
+            }}
+          >
+            {reportReady ? (
+              <>
+                <h2 style={{ marginTop: 0, paddingTop: 0 }}>
+                  Genomic summary of your selected cluster
+                </h2>
+                <SitStat title={true} />
+                <CladeDefinition sidenote_start={1} />
+                <CladeUniqueness />
+                <TMRCA sidenote_start={3} />
+                <OnwardTransmission sidenote_start={6} />
+                <GeoSubclades />
+                {/* <SamplingBias
+                  // @ts-ignore
+                  gisaidCounts={gisaidCounts}
+                  all_samples={get_leaves(get_root(state.tree))}
+                  clade_description={state.cladeDescription}
+                  sidenote_start={7}
+                /> */}
+                <Assumptions
+                  clade_description={state.cladeDescription}
+                  sidenote_start={8}
+                />
+              </>
+            ) : (
+              <p>Select a cluster to instantly generate a report</p>
+            )}
+          </div>
         </div>
       </div>
       {/* report preview in right side bar */}

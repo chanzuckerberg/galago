@@ -36,7 +36,7 @@ function CladeUniqueness() {
   ]);
 
   return (
-    <div>
+    <div style={{ marginTop: 70 }}>
       <h2>
         How similar or unique is this clade, relative to background community
         transmission?

@@ -9,7 +9,7 @@ type AssumptionsProps = {
 function Assumptions(props: AssumptionsProps) {
   const { clade_description, sidenote_start } = props;
   return (
-    <div>
+    <div style={{ marginTop: 70 }}>
       <h2> What assumptions influence this report?</h2>
       <p style={{ fontStyle: "italic" }}>
         Most of the data and insights described in this report are strictly

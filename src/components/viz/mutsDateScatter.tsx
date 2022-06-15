@@ -256,7 +256,7 @@ function MutsDateScatter() {
       {viewPlot === "tree" && state.mrca ? (
         <img
           style={{ padding: 20 }}
-          width="1000"
+          width="200"
           src="https://user-images.githubusercontent.com/12618847/173690423-12b8d1f1-c4b7-4d82-be75-740762fddb81.png"
         />
       ) : (

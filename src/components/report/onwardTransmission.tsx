@@ -29,7 +29,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
     .map((x) => x.name);
 
   return (
-    <div>
+    <div style={{ marginTop: 70 }}>
       <h2>How much onward transmission have we observed?</h2>
       <p style={{ fontStyle: "italic" }}>
         Differentiating between a superspreader event (where one primary case

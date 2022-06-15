@@ -29,7 +29,7 @@ function TMRCA(props: CladeProps) {
     (m) => mrca_distances[m] === 0
   );
   return (
-    <div>
+    <div style={{ marginTop: 70 }}>
       <h2>What was the date and genotype of the primary infection?</h2>
       <p>
         <Sidenote
