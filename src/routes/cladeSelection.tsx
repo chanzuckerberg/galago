@@ -5,12 +5,20 @@ import ContactUs from "../components/contactUs";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SitStat } from "../components/cladeSummary";
-import { get_leaves } from "../utils/treeMethods";
+import { get_leaves, get_root } from "../utils/treeMethods";
 import EpiCurve from "../components/viz/epiCurve";
 import SamplesOfInterest from "../components/cladeSelection/samplesOfInterest";
 import ClusteringOptions from "../components/cladeSelection/clusteringMethodSelect";
 import CaseDefinitionConstructor from "../components/cladeSelection/caseDefinitionConstructor";
 import MutsDateScatter from "../components/viz/mutsDateScatter";
+import Assumptions from "../components/report/assumptions";
+import CladeDefinition from "../components/report/cladeDefinition";
+import CladeUniqueness from "../components/report/cladeUniqueness";
+import GeoSubclades from "../components/report/geoSubclades";
+import OnwardTransmission from "../components/report/onwardTransmission";
+import SamplingBias from "../components/report/sampleDistribTable";
+import TMRCA from "../components/report/tmrca";
+import { gisaidCounts } from "../../data/gisaidCounts2022-06";
 import { useWindowSize } from "@react-hook/window-size";
 
 export default function SampleSelectionRoute() {
@@ -51,13 +59,22 @@ export default function SampleSelectionRoute() {
             <>
               <h2>Genomic summary of your selected cluster</h2>
               <SitStat title={false} />
-              <button
-                onClick={(e) => {
-                  navigate("/galago/report");
-                }}
-              >
-                View full report
-              </button>
+              <CladeDefinition sidenote_start={1} />
+              <CladeUniqueness />
+              <TMRCA sidenote_start={3} />
+              <OnwardTransmission sidenote_start={6} />
+              <GeoSubclades />
+              <SamplingBias
+                // @ts-ignore
+                gisaidCounts={gisaidCounts}
+                all_samples={get_leaves(get_root(state.tree))}
+                clade_description={state.cladeDescription}
+                sidenote_start={7}
+              />
+              <Assumptions
+                clade_description={state.cladeDescription}
+                sidenote_start={8}
+              />
             </>
           ) : (
             <p>Select a cluster to instantly generate a report</p>
