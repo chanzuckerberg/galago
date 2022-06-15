@@ -75,6 +75,8 @@ export interface metadataFieldSummary {
   min?: number | object;
   max?: number | object;
   uniqueValues?: Array<string>;
+  nextstrainAncestralTraitsComputed?: boolean;
+  matutilsAncestralTraitsComputed?: boolean;
 }
 
 export interface caseDefFilter {
