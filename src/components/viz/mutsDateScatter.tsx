@@ -15,7 +15,9 @@ function MutsDateScatter() {
   const [hoverMRCA, sethoverMRCA] = useState<Node | null>(
     state.mrca ? state.mrca : null
   );
-  const [viewPlot, setViewPlot] = useState<"scatter" | "tree">("scatter");
+  const [viewPlot, setViewPlot] = useState<"scatter" | "tree">(
+    state.mrca ? "tree" : "scatter"
+  );
   const dispatch = useDispatch();
 
   // DATA SETUP
@@ -216,7 +218,7 @@ function MutsDateScatter() {
           sethoverMRCA(node);
         }}
         onClick={() => {
-          dispatch({ type: "mrca clicked", data: node });
+          dispatch({ type: "mrca clicked", data: node }, setViewPlot("tree"));
         }}
         cx={_xScaleTime(node.node_attrs.num_date.value)}
         cy={10}
@@ -237,12 +239,17 @@ function MutsDateScatter() {
         flexDirection: "column",
       }}
     >
-      <ButtonGroup variant="contained" aria-label="toggle-plot" size="small">
+      <ButtonGroup
+        variant="contained"
+        aria-label="toggle-plot"
+        size="small"
+        disableElevation
+      >
         <Button onClick={(e) => setViewPlot("scatter")}>
-          Select new cluster
+          Select new clade
         </Button>
         <Button onClick={(e) => setViewPlot("tree")} disabled={!state.mrca}>
-          View selected subtree
+          View subtree of selected clade
         </Button>
       </ButtonGroup>
 
