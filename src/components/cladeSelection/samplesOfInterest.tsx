@@ -10,17 +10,23 @@ export const SamplesOfInterest = () => {
 
   return (
     <div>
-      <p>Samples of Interest</p>
+      {/* <p>Samples of Interest</p> */}
+      <h4>Samples of Interest</h4>
+      <p style={{ fontStyle: "italic", fontSize: 12 }}>
+        Highlight your samples of interest in the graph and filter to clades
+        that contain at least one of these samples.
+      </p>
       <TextField
         id="selectedSamples"
-        label="Samples of Interest"
+        // label="Samples of Interest"
         multiline
-        rows={3}
-        style={{ width: "15em" }}
+        rows={4}
+        fullWidth={true}
+        // style={{ width: "15em" }}
         defaultValue={
           state.samplesOfInterestNames
             ? state.samplesOfInterestNames.join(", ")
-            : "Input sample IDs here, or select them via a case definition filter below."
+            : "Input sample IDs here, or select them via a case definition filter."
         }
         onChange={(e) => {
           dispatch({
