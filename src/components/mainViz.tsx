@@ -7,12 +7,13 @@ import React, { useState } from "react";
 import SamplesOfInterest from "./cladeSelection/samplesOfInterest";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import ClusteringOptions from "./cladeSelection/clusteringMethodSelect";
+import EpiCurve from "./viz/epiCurve";
 
 export const MainViz = () => {
   // @ts-ignore
   const state = useSelector((state) => state.global);
-  const [viewPlot, setViewPlot] = useState<"scatter" | "tree">(
-    state.mrca ? "tree" : "scatter"
+  const [viewPlot, setViewPlot] = useState<"scatter" | "epiCurve">(
+    state.mrca ? "scatter" : "epiCurve"
   );
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [samplesOfInterestOpen, setSamplesOfInterestOpen] =
@@ -86,8 +87,11 @@ export const MainViz = () => {
           <Button onClick={(e) => setViewPlot("scatter")}>
             Select new clade
           </Button>
-          <Button onClick={(e) => setViewPlot("tree")} disabled={!state.mrca}>
-            View subtree of selected clade
+          <Button
+            onClick={(e) => setViewPlot("epiCurve")}
+            disabled={!state.mrca}
+          >
+            View epi curve of selected clade
           </Button>
         </ButtonGroup>
       </div>
@@ -95,10 +99,11 @@ export const MainViz = () => {
       <div
         style={{ width: chartWidth, height: chartHeight, margin: chartMargin }}
       >
-        {viewPlot === "tree" && state.mrca ? (
-          <img
-            style={{ width: chartWidth, height: chartHeight }}
-            src="https://user-images.githubusercontent.com/12618847/173690423-12b8d1f1-c4b7-4d82-be75-740762fddb81.png"
+        {viewPlot === "epiCurve" && state.mrca ? (
+          <EpiCurve
+            chartHeight={chartHeight}
+            chartWidth={chartWidth}
+            chartMargin={chartMargin}
           />
         ) : (
           <MutsDateScatter
