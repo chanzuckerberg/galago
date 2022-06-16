@@ -5,6 +5,7 @@ import { MiniCladeDescription } from "./miniCladeDescription";
 import { EpiCurve } from "../../viz/epiCurve";
 import { get_dist } from "../../../utils/treeMethods";
 import { useSelector } from "react-redux";
+import ContingencyTable from "../../viz/contingencyTable";
 
 export const SitStat = () => {
   //@ts-ignore
@@ -70,6 +71,8 @@ export const SitStat = () => {
           total samples from other locations in this clade
         </li>
       </ul>
+      {state.samplesOfInterest.length > 0 && <ContingencyTable />}
+
       <p className="results">
         Of all the samples in this cluster,{" "}
         <FormatDataPoint value={n_mrca_matches} /> have identical viral genomes
