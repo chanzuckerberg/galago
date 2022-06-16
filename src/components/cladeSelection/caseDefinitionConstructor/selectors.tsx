@@ -27,31 +27,13 @@ export const Selectors = (props: SelectorsProps) => {
   );
 
   return (
-    <div>
-      {selectedFields.size > 0 && (
-        <div style={{ width: "15em", paddingTop: "10px" }}>
-          <Button
-            variant="outlined"
-            name="submitCaseDef"
-            onClick={(e) => {
-              dispatch({
-                type: "case definition submitted",
-              });
-            }}
-            size="small"
-            disabled={Object.keys(state.caseDefFilters).length === 0}
-          >
-            Add matches to Samples of Interest
-          </Button>
-        </div>
-      )}
-      <div
-        style={{
-          overflowY: "auto",
-          maxHeight: "12em",
-          overflowX: "hidden",
-        }}
-      >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
+      <div>
         {continuousFields.map((field: string) => {
           let range = [
             metadataCensus[field]["min"],
@@ -92,7 +74,8 @@ export const Selectors = (props: SelectorsProps) => {
             </div>
           );
         })}
-
+      </div>
+      <div>
         {categoricalFields.map((field) => {
           const allValues = metadataCensus[field]["uniqueValues"];
           let options: any = [];
@@ -104,7 +87,7 @@ export const Selectors = (props: SelectorsProps) => {
             <>
               <Autocomplete
                 multiple
-                style={{ width: "15em", paddingTop: "10px" }}
+                style={{ width: "15em", marginTop: 30 }}
                 id="tags-outlined"
                 options={options}
                 getOptionLabel={(option: any) => option.label}
@@ -133,7 +116,6 @@ export const Selectors = (props: SelectorsProps) => {
           );
         })}
       </div>
-      {/* <ContingencyTable /> */}
     </div>
   );
 };

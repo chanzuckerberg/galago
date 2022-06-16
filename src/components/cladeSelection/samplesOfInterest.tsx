@@ -11,8 +11,8 @@ export const SamplesOfInterest = () => {
   return (
     <div>
       {/* <p>Samples of Interest</p> */}
-      <h4>Samples of Interest</h4>
-      <p style={{ fontStyle: "italic", fontSize: 12 }}>
+      <h2>Samples of interest</h2>
+      <p style={{ fontStyle: "italic", fontSize: 14 }}>
         Highlight your samples of interest in the graph and filter to clades
         that contain at least one of these samples.
       </p>
@@ -42,6 +42,7 @@ export const SamplesOfInterest = () => {
         name="submitSamplesOfInterest"
         onClick={(e) => dispatch({ type: "sample submit button clicked" })}
         size="small"
+        style={{ marginTop: 15 }}
       >
         Highlight & Subset
       </Button>

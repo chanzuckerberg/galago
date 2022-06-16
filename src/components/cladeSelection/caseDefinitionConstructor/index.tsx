@@ -3,8 +3,9 @@ import { useState } from "react";
 import Selectors from "./selectors";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import { Button } from "@mui/material";
 
-export const caseDefinitionConstructor = () => {
+export const CaseDefinitionConstructor = () => {
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
@@ -32,13 +33,15 @@ export const caseDefinitionConstructor = () => {
   });
 
   return (
-    <div style={{ width: "15em", padding: "10px 10px 0px" }}>
+    <div style={{ marginTop: 30, marginBottom: 50 }}>
       <h3>Case definition</h3>
-      Optionally, add samples of interest based on a case definition.
+      <p style={{ fontStyle: "italic", fontSize: 14 }}>
+        Optionally, add samples of interest based on a case definition.
+      </p>
       <Autocomplete
         multiple
-        style={{ width: "15em", paddingTop: "10px" }}
         id="tags-outlined"
+        style={{ paddingTop: 15, width: 250 }}
         options={validFields}
         getOptionLabel={(option: any) => option.label}
         limitTags={5}
@@ -63,8 +66,22 @@ export const caseDefinitionConstructor = () => {
         )}
       />
       {selectedFields && <Selectors selectedFields={selectedFields} />}
+      <Button
+        style={{ marginTop: 15 }}
+        variant="contained"
+        name="submitCaseDef"
+        onClick={(e) => {
+          dispatch({
+            type: "case definition submitted",
+          });
+        }}
+        size="small"
+        disabled={Object.keys(state.caseDefFilters).length === 0}
+      >
+        Add matches to Samples of Interest
+      </Button>
     </div>
   );
 };
 
-export default caseDefinitionConstructor;
+export default CaseDefinitionConstructor;

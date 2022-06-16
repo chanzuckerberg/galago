@@ -7,6 +7,8 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import { FormControl } from "@mui/material";
 
 function ClusteringOptions() {
   // @ts-ignore -- TODO: figure out how to add types to state
@@ -52,7 +54,6 @@ function ClusteringOptions() {
     (field: string) =>
       checkNextstrainValidity(field) || checkMatutilsValidity(field)
   );
-  console.log("metadata census", state.metadataCensus, "allFields", allFields);
 
   const handleClusterMethod = (value: "none" | "matutils" | "nextstrain") => {
     if (value === "none") {
@@ -75,75 +76,80 @@ function ClusteringOptions() {
 
   return (
     <div>
-      <p style={{ fontSize: 12, fontStyle: "italic" }}>
-        Select a method to suggest clusters where{" "}
-        {metadataField
-          ? `${metadataField} has changed.`
-          : "metadata values change (e.g., which correspond to movement between locations)."}
+      <h2>Metadata-based clustering</h2>
+      <p style={{ fontStyle: "italic", fontSize: 14 }}>
+        You can think of clades as the hierarchical clusters that make up a
+        phylogenetic tree. Clustering algorithms help identify interesting
+        clades to inspect based on where in the tree metadata attributes change.
+        For example, clustering based on "location" can help identify clades
+        that represent a new introduction to a given location.
+      </p>
+      <ul style={{ fontStyle: "italic", fontSize: 14 }}>
+        <li>
+          Nextstrain is a model-based method (recommended) and must be
+          pre-computed upstream (outside of Galago).
+        </li>
+        <li>
+          Matutils is a heuristic-based method and is computed on demand (please
+          be patient; 1 - 15 seconds){" "}
+        </li>
+      </ul>
+      <p>
+        <FormControl>
+          <Select
+            id="metadataFieldSelect"
+            //@ts-ignore
+            onChange={(event) => {
+              setMetadataField(event.target.value);
+            }}
+            style={{ width: 200 }}
+            size="small"
+            defaultValue="Select a metadata field"
+          >
+            {allFields.map((field: string) => {
+              return <MenuItem value={field}>{field}</MenuItem>;
+            })}
+          </Select>
+          <FormHelperText>First, select a metadata field</FormHelperText>
+        </FormControl>
       </p>
       <p>
-        <Select
-          id="metadataFieldSelectdemo-simple-select-standard"
-          value={metadataField}
-          onChange={(e, v) => console.log(e, v)}
-          label="Metadata field"
-        >
-          {allFields.map((field: string) => {
-            return <MenuItem value={field}>{field}</MenuItem>;
-          })}
-        </Select>
+        <FormControl>
+          <ToggleButtonGroup
+            // value={clusteringMethod}
+            color="primary"
+            exclusive
+            onChange={(e, v) => handleClusterMethod(v)}
+            aria-label="text alignment"
+          >
+            <ToggleButton
+              value="none"
+              aria-label="left aligned"
+              defaultChecked={true}
+            >
+              None
+            </ToggleButton>
+            <ToggleButton
+              value="matutils"
+              aria-label="centered"
+              disabled={!checkMatutilsValidity(metadataField)}
+            >
+              Matutils
+            </ToggleButton>
+            <ToggleButton
+              value="nextstrain"
+              aria-label="right aligned"
+              disabled={!checkNextstrainValidity(metadataField)}
+            >
+              Nextstrain
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <FormHelperText>
+            Next, choose a method
+            <br />
+          </FormHelperText>
+        </FormControl>
       </p>
-      <p>
-        <ToggleButtonGroup
-          // value={clusteringMethod}
-          exclusive
-          onChange={(e, v) => console.log(e, v)} //handleClusterMethod}
-          aria-label="text alignment"
-        >
-          <ToggleButton
-            value="none"
-            aria-label="left aligned"
-            defaultChecked={true}
-          >
-            None
-          </ToggleButton>
-          <ToggleButton
-            value="matutils"
-            aria-label="centered"
-            disabled={!checkMatutilsValidity(metadataField)}
-          >
-            Matutils
-          </ToggleButton>
-          <ToggleButton
-            value="nextstrain"
-            aria-label="right aligned"
-            disabled={!checkNextstrainValidity(metadataField)}
-          >
-            Nextstrain
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </p>
-
-      {/* example new select from docs */}
-      {/* <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}> */}
-      {/* <InputLabel id="matutils-attr-select">Foo</InputLabel>
-      <Select
-        labelId="matutils-attr-select"
-        id="demo-simple-select-standard"
-        value={"metadata field"}
-        onChange={(e, v) => console.log(e, v)}
-        label="Age"
-      /> */}
-      {/* <span style={{ fontSize: "0.8em", fontStyle: "italic" }}>
-        Heuristic-based method for tracking movement between facilities, states,
-        etc. <br />
-        Computed on demand; please be patient (1-15 seconds).
-      </span>
-      <span style={{ fontSize: "0.8em", fontStyle: "italic" }}>
-        Model-based method for tracking movement between facilities, states,
-        etc. <br />
-        Must be pre-computed upstream by Nextstrain.
-      </span> */}
     </div>
   );
 }

@@ -40,6 +40,7 @@ const defaultState = {
   samplesMatchingCaseDef: [],
   loadReport: false,
   cladeDescription: null,
+  viewPlot: "scatter",
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -50,6 +51,10 @@ export const global = (state = defaultState, action: any) => {
 
     case "reset to default": {
       return defaultState;
+    }
+
+    case "view plot toggled": {
+      return { ...state, viewPlot: action.data };
     }
 
     case "load demo": {
