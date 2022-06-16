@@ -6,30 +6,38 @@ import GeoSubclades from "./geoSubclades";
 import OnwardTransmission from "./onwardTransmission";
 import TMRCA from "./tmrca";
 import { useSelector } from "react-redux";
+import { get_leaves, get_root } from "../../utils/treeMethods";
+import SamplingBias from "./sampleDistribTable";
+import { gisaidCounts } from "../../../data/gisaidCounts2022-06";
 
 export const Report = () => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
-  // const allDataPresent =
-  //   state.location && state.division && state.tree && state.loadReport;
+  const allDataPresent = state.location && state.division && state.tree;
   const reportReady = state.cladeDescription && state.tree;
 
   return (
     <div>
-      <SitStat />
-      <CladeDefinition sidenote_start={1} />
-      <CladeUniqueness />
-      <TMRCA sidenote_start={3} />
-      <OnwardTransmission sidenote_start={6} />
-      <GeoSubclades />
-      {/* <SamplingBias
-      // @ts-ignore
-      gisaidCounts={gisaidCounts}
-      all_samples={get_leaves(get_root(state.tree))}
-      clade_description={state.cladeDescription}
-      sidenote_start={7}
-    /> */}
-      <Assumptions sidenote_start={8} />
+      {allDataPresent && reportReady && (
+        <>
+          <SitStat />
+          <CladeDefinition sidenote_start={1} />
+          <CladeUniqueness />
+          <TMRCA sidenote_start={3} />
+          <OnwardTransmission sidenote_start={6} />
+          <GeoSubclades />
+          <SamplingBias
+            // @ts-ignore
+            gisaidCounts={gisaidCounts}
+            sidenote_start={7}
+          />
+          <Assumptions sidenote_start={8} />
+        </>
+      )}
+
+      {(!allDataPresent || !reportReady) && (
+        <h2>Select a clade on the left to generate a report</h2>
+      )}
     </div>
   );
 };
