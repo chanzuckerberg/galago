@@ -6,17 +6,15 @@ import App from "./App";
 
 import { Provider } from "react-redux";
 import { store } from "./reducers/store";
-import SampleSelectionRoute from "./routes/cladeSelection";
-import ReportRoute from "./routes/report";
+import LandingPageRoute from "./routes/landingPageRoute";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="galago/" element={<App />} />
-          <Route path="galago/clustering" element={<SampleSelectionRoute />} />
-          <Route path="galago/report" element={<ReportRoute />} />
+          <Route path="galago/" element={<LandingPageRoute />} />
+          <Route path="galago/app" element={<App />} />
         </Routes>
       </BrowserRouter>
     </Provider>
