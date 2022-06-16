@@ -1,13 +1,16 @@
 import Sidenote from "../formatters/sidenote";
 import { CladeDescription } from "../../d";
+import { useSelector } from "react-redux";
 
 type AssumptionsProps = {
-  clade_description: CladeDescription;
   sidenote_start: number;
 };
 
 function Assumptions(props: AssumptionsProps) {
-  const { clade_description, sidenote_start } = props;
+  const { sidenote_start } = props;
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
+  const cladeDescription = state.cladeDescription;
   return (
     <div className="reportSection">
       <h2> What assumptions influence this report?</h2>
@@ -34,8 +37,8 @@ Higher values mean that we search more broadly for "cousins".`}
             We assume that the number of mutations that occurs with each
             transmission ranges between{" "}
             <span className="dataPoint">
-              {clade_description.muts_per_trans_minmax[0]} -{" "}
-              {clade_description.muts_per_trans_minmax[1]}
+              {cladeDescription.muts_per_trans_minmax[0]} -{" "}
+              {cladeDescription.muts_per_trans_minmax[1]}
             </span>
             .<sup style={{ fontSize: "10" }}>{sidenote_start}</sup>
           </li>
@@ -45,7 +48,7 @@ Higher values mean that we search more broadly for "cousins".`}
             related ("cousins"), we trace back to the most recent grand/parent
             that is separated from the primary case by at least{" "}
             <span className="dataPoint">
-              {clade_description.min_muts_to_parent}
+              {cladeDescription.min_muts_to_parent}
             </span>{" "}
             mutation(s).
             <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>
