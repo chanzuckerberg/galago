@@ -6,6 +6,7 @@ import { Card, Popper } from "@mui/material";
 import React, { useState } from "react";
 import SamplesOfInterest from "./cladeSelection/samplesOfInterest";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
+import ClusteringOptions from "./cladeSelection/clusteringMethodSelect";
 
 export const MainViz = () => {
   // @ts-ignore
@@ -14,18 +15,9 @@ export const MainViz = () => {
     state.mrca ? "tree" : "scatter"
   );
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [open, setOpen] = React.useState(false);
-
-  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-    setOpen(true);
-  };
-
-  const handleClickAway = () => {
-    setOpen(false);
-  };
-
-  const id = open ? "simple-popper" : undefined;
+  const [samplesOfInterestOpen, setSamplesOfInterestOpen] =
+    React.useState(false);
+  const [clusteringOpen, setClusteringOpen] = React.useState(false);
 
   const chartWidth = 960;
   const chartHeight = 560;
@@ -46,21 +38,44 @@ export const MainViz = () => {
         <Button
           color="secondary"
           style={{ marginRight: 10 }}
-          onClick={handleButtonClick}
+          onClick={(event) => {
+            setAnchorEl(event.currentTarget);
+            setSamplesOfInterestOpen(true);
+          }}
         >
           Samples of Interest ({state.samplesOfInterest.length})
         </Button>
-        <Popper id={id} open={open} anchorEl={anchorEl}>
-          <ClickAwayListener onClickAway={handleClickAway}>
-            <Card style={{ padding: 15, width: controlWidth }}>
+        <Popper
+          id={"samplesOfInterest"}
+          open={samplesOfInterestOpen}
+          anchorEl={anchorEl}
+        >
+          <ClickAwayListener
+            onClickAway={(e) => setSamplesOfInterestOpen(false)}
+          >
+            <Card style={{ padding: "0 20 20 20", width: controlWidth }}>
               <SamplesOfInterest />
             </Card>
           </ClickAwayListener>
         </Popper>
 
-        <Button color="secondary" style={{ marginRight: 10 }}>
+        <Button
+          color="secondary"
+          style={{ marginRight: 10 }}
+          onClick={(event) => {
+            setAnchorEl(event.currentTarget);
+            setClusteringOpen(true);
+          }}
+        >
           Cluster method
         </Button>
+        <Popper id={"clustering"} open={clusteringOpen} anchorEl={anchorEl}>
+          <ClickAwayListener onClickAway={(e) => setClusteringOpen(false)}>
+            <Card style={{ padding: "0 20 20 20", width: controlWidth }}>
+              <ClusteringOptions />
+            </Card>
+          </ClickAwayListener>
+        </Popper>
 
         <ButtonGroup
           color="secondary"
