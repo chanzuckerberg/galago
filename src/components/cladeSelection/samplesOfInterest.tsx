@@ -23,7 +23,7 @@ export const SamplesOfInterest = () => {
         rows={4}
         fullWidth={true}
         // style={{ width: "15em" }}
-        defaultValue={
+        value={
           state.samplesOfInterestNames
             ? state.samplesOfInterestNames.join(", ")
             : "Input sample IDs here, or select them via a case definition filter."
