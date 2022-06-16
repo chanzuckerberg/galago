@@ -28,6 +28,7 @@ export const MainViz = () => {
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Button color="secondary" style={{ marginRight: 10 }}>
           Samples (0)
+          Samples of Interest ({state.samplesOfInterest.length})
         </Button>
         {/* <Popover
           // id={1233245345}
