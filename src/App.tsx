@@ -13,13 +13,9 @@ export default function SampleSelectionRoute() {
   const state = useSelector((state) => state.global);
   const [windowWidth, windowHeight] = useWindowSize();
 
-  const allDataPresent =
-    state.location && state.division && state.tree && state.loadReport;
-  const reportReady = state.cladeDescription && state.tree;
   let navigate = useNavigate();
 
   const topSectionHeight = 100;
-
   const showLayoutBorders = false;
 
   return (
@@ -43,7 +39,7 @@ export default function SampleSelectionRoute() {
           }}
         >
           <MainViz />
-          <div
+          {/* <div
             style={{
               width: windowWidth * 0.7,
               maxWidth: windowWidth * 0.7, // eventually windowWidth * leftSectionPercent
@@ -52,10 +48,10 @@ export default function SampleSelectionRoute() {
             }}
           >
             {/* <SamplesOfInterest /> */}
-            <CaseDefinitionConstructor />
-            {/* <ClusteringOptions /> */}
-            {/* middle half*/}
-          </div>
+          {/* <CaseDefinitionConstructor /> */}
+          {/* <ClusteringOptions /> */}
+          {/* middle half*/}
+          {/* </div> */}
         </div>
         <div
           style={{
@@ -73,11 +69,7 @@ export default function SampleSelectionRoute() {
               height: windowHeight - topSectionHeight - 30, // eventually windowWidth - titleSectionHeightPixels
             }}
           >
-            {reportReady ? (
-              <Report />
-            ) : (
-              <p>Select a cluster to instantly generate a report</p>
-            )}
+            <Report />
           </div>
         </div>
       </div>
