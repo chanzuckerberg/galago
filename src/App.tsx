@@ -38,6 +38,7 @@ export default function App() {
             border: showLayoutBorders ? "1px solid green" : "none",
           }}
         >
+          <h5>CHOOSE CLADE / CLUSTER TO INVESTIGATE</h5>
           <MainViz />
           {/* <div
             style={{
@@ -69,6 +70,8 @@ export default function App() {
               height: windowHeight - topSectionHeight - 30, // eventually windowWidth - titleSectionHeightPixels
             }}
           >
+            <h5>AUTOMATICALLY GENERATED REPORT</h5>
+
             <Report />
           </div>
         </div>

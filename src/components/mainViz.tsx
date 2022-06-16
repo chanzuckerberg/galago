@@ -44,7 +44,7 @@ export const MainViz = () => {
             setSamplesOfInterestOpen(true);
           }}
         >
-          Samples of Interest ({state.samplesOfInterest.length})
+          Samples of Interest ({state.samplesOfInterest.length}) 🔽
         </Button>
         <Popper
           id={"samplesOfInterest"}
@@ -68,7 +68,7 @@ export const MainViz = () => {
             setClusteringOpen(true);
           }}
         >
-          Cluster method
+          Cluster method 🔽
         </Button>
         <Popper id={"clustering"} open={clusteringOpen} anchorEl={anchorEl}>
           <ClickAwayListener onClickAway={(e) => setClusteringOpen(false)}>
@@ -85,13 +85,13 @@ export const MainViz = () => {
           disableElevation
         >
           <Button onClick={(e) => setViewPlot("scatter")}>
-            Select new clade
+            Scatterplot of all clades
           </Button>
           <Button
             onClick={(e) => setViewPlot("epiCurve")}
             disabled={!state.mrca}
           >
-            View epi curve of selected clade
+            Epi curve for selected clade
           </Button>
         </ButtonGroup>
       </div>
