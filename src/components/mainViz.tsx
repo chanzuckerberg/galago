@@ -49,6 +49,8 @@ export const MainViz = () => {
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <React.Fragment key={"controlsDrawer"}>
           <Button
+            disableElevation
+            disableRipple
             variant="contained"
             onClick={toggleDrawer("controlsDrawer", true)}
           >
@@ -71,8 +73,15 @@ export const MainViz = () => {
           aria-label="viewPlotSelection"
           size="small"
         >
-          <ToggleButton value="scatter">Scatterplot of all clades</ToggleButton>
-          <ToggleButton value="epiCurve" disabled={!state.mrca}>
+          <ToggleButton value="scatter" disableElevation disableRipple>
+            Scatterplot of all clades
+          </ToggleButton>
+          <ToggleButton
+            value="epiCurve"
+            disabled={!state.mrca}
+            disableElevation
+            disableRipple
+          >
             Epi curve for selected clade
           </ToggleButton>
         </ToggleButtonGroup>

@@ -120,25 +120,20 @@ function ClusteringOptions() {
             color="primary"
             exclusive
             onChange={(e, v) => handleClusterMethod(v)}
-            aria-label="text alignment"
           >
-            <ToggleButton
-              value="none"
-              aria-label="left aligned"
-              defaultChecked={true}
-            >
+            <ToggleButton value="none" defaultChecked={true} disableRipple>
               None
             </ToggleButton>
             <ToggleButton
               value="matutils"
-              aria-label="centered"
+              disableRipple
               disabled={!checkMatutilsValidity(metadataField)}
             >
               Matutils
             </ToggleButton>
             <ToggleButton
               value="nextstrain"
-              aria-label="right aligned"
+              disableRipple
               disabled={!checkNextstrainValidity(metadataField)}
             >
               Nextstrain

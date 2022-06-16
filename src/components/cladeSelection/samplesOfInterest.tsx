@@ -38,6 +38,8 @@ export const SamplesOfInterest = () => {
       />
       <br />
       <Button
+        disableElevation
+        disableRipple
         variant="contained"
         name="submitSamplesOfInterest"
         onClick={(e) => dispatch({ type: "sample submit button clicked" })}

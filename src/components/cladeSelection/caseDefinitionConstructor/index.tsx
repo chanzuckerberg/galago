@@ -67,6 +67,8 @@ export const CaseDefinitionConstructor = () => {
       />
       {selectedFields && <Selectors selectedFields={selectedFields} />}
       <Button
+        disableElevation
+        disableRipple
         style={{ marginTop: 15 }}
         variant="contained"
         name="submitCaseDef"
