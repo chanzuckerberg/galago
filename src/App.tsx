@@ -8,7 +8,7 @@ import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
 import Report from "./components/report";
 
-export default function SampleSelectionRoute() {
+export default function App() {
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const [windowWidth, windowHeight] = useWindowSize();
