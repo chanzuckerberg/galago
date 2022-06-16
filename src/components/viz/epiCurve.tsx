@@ -17,20 +17,21 @@ import {
 import { Node } from "../../d";
 import { scaleTime } from "d3";
 
-export const EpiCurve = () => {
+type EpiCurveProps = {
+  chartHeight: number;
+  chartWidth: number;
+  chartMargin: number;
+};
+
+export const EpiCurve = (props: EpiCurveProps) => {
   // STATE
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const [colorBy, setColorBy] = useState<"transmissions" | "geography">(
     "transmissions"
   );
+  const { chartHeight, chartWidth, chartMargin } = props;
 
-  // STYLING
-  const chartSize = {
-    height: 350,
-    width: 600,
-    margin: 30,
-  };
   const lightestGray = "rgba(220,220,220,1)";
   const mediumGray = "rgba(180,180,180,1)";
   const darkGray = "rgba(130,130,130,1)";
@@ -165,26 +166,26 @@ export const EpiCurve = () => {
     range: [darkestGray, mediumGray, lightestGray],
   });
 
-  if (chartSize.width < 10) return null;
-  const xMax = chartSize.width;
-  const yMax = chartSize.height - chartSize.margin - 100;
+  if (chartWidth < 10) return null;
+  const xMax = chartWidth;
+  const yMax = chartHeight - chartMargin - 100;
 
   dateScale.rangeRound([0, xMax]);
   countScale.range([yMax, 0]);
 
   // PLOT
-  return chartSize.width < 10 ? null : (
-    <div style={{ position: "relative", width: chartSize.width }}>
-      <svg width={chartSize.width} height={chartSize.height}>
+  return chartWidth < 10 ? null : (
+    <div style={{ position: "relative", width: chartWidth }}>
+      <svg width={chartWidth} height={chartHeight}>
         {/* <rect
           x={0}
           y={0}
-          width={chartSize.width}
-          height={chartSize.height}
+          width={chartWidth}
+          height={chartHeight}
           fill={background}
           rx={14}
         /> */}
-        <Group top={chartSize.margin}>
+        <Group top={chartMargin}>
           <BarStack
             data={Object.values(dataPoints)}
             keys={keys}
@@ -210,7 +211,7 @@ export const EpiCurve = () => {
           </BarStack>
         </Group>
         <AxisBottom
-          top={yMax + chartSize.margin}
+          top={yMax + chartMargin}
           scale={dateScale}
           //   tickFormat={formatDate}
           stroke={darkestGray}
@@ -229,8 +230,8 @@ export const EpiCurve = () => {
           }}
         />
         <GridRows
-          top={chartSize.margin}
-          //   left={chartSize.margin}
+          top={chartMargin}
+          //   left={chartMargin}
           scale={countScale}
           width={xMax}
           height={yMax}
@@ -241,7 +242,7 @@ export const EpiCurve = () => {
       <div
         style={{
           position: "absolute",
-          top: chartSize.margin / 2 - 10,
+          top: chartMargin / 2 - 10,
           width: "100%",
           display: "flex",
           justifyContent: "center",
