@@ -21,6 +21,7 @@ import TMRCA from "../components/report/tmrca";
 // import { gisaidCounts } from "../../data/gisaidCounts2022-06";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "../components/mainViz";
+import Report from "./report";
 
 export default function SampleSelectionRoute() {
   //@ts-ignore
@@ -92,23 +93,7 @@ export default function SampleSelectionRoute() {
                 <h2 style={{ marginTop: 0, paddingTop: 0 }}>
                   Genomic summary of your selected cluster
                 </h2>
-                <SitStat title={true} />
-                <CladeDefinition sidenote_start={1} />
-                <CladeUniqueness />
-                <TMRCA sidenote_start={3} />
-                <OnwardTransmission sidenote_start={6} />
-                <GeoSubclades />
-                {/* <SamplingBias
-                  // @ts-ignore
-                  gisaidCounts={gisaidCounts}
-                  all_samples={get_leaves(get_root(state.tree))}
-                  clade_description={state.cladeDescription}
-                  sidenote_start={7}
-                /> */}
-                <Assumptions
-                  clade_description={state.cladeDescription}
-                  sidenote_start={8}
-                />
+                <Report />
               </>
             ) : (
               <p>Select a cluster to instantly generate a report</p>
