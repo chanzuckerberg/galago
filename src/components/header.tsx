@@ -13,7 +13,7 @@ const Header = () => {
         <Alert
           severity="info"
           style={{
-            width: windowWidth * 0.5,
+            width: windowWidth * 0.4,
             position: "absolute",
             top: 0,
             right: 0,
@@ -27,6 +27,7 @@ const Header = () => {
               Galago is still an early-stage prototype - we'd love your
               feedback!
             </strong>{" "}
+            <br />
             You can reach us either{" "}
             <a href="https://github.com/chanzuckerberg/galago/discussions">
               on our discussion board
