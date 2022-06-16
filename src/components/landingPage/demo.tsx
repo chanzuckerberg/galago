@@ -13,7 +13,7 @@ export const Demo = () => {
           name="loadDemo"
           onClick={() => {
             dispatch({ type: "load demo" });
-            navigate("/galago/clustering");
+            navigate("/galago/app");
           }}
         >
           Load Demo

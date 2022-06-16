@@ -6,6 +6,7 @@ import {
 } from "../../utils/geoInputOptions";
 import { ingestNextstrain } from "../../utils/nextstrainAdapter";
 import { Node } from "../../d";
+//@ts-ignore
 import { parse } from "papaparse";
 import { ingestCSVMetadata } from "../../utils/metadataUtils";
 import { useNavigate } from "react-router-dom";
@@ -173,7 +174,7 @@ export const Upload = () => {
         <button
           onClick={(e) => {
             dispatch({ type: "upload submit button clicked" });
-            navigate("/galago/clustering");
+            navigate("/galago/app");
           }}
           disabled={!state.division || !state.location || !state.tree}
         >
