@@ -1,9 +1,7 @@
 import Header from "./components/header";
 import Footer from "./components/footer";
-import ContactUs from "./components/contactUs";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import CaseDefinitionConstructor from "./components/cladeSelection/caseDefinitionConstructor";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
 import Report from "./components/report";
@@ -40,19 +38,6 @@ export default function App() {
         >
           <h5>CHOOSE CLADE / CLUSTER TO INVESTIGATE</h5>
           <MainViz />
-          {/* <div
-            style={{
-              width: windowWidth * 0.7,
-              maxWidth: windowWidth * 0.7, // eventually windowWidth * leftSectionPercent
-              flexShrink: 0,
-              height: 100,
-            }}
-          >
-            {/* <SamplesOfInterest /> */}
-          {/* <CaseDefinitionConstructor /> */}
-          {/* <ClusteringOptions /> */}
-          {/* middle half*/}
-          {/* </div> */}
         </div>
         <div
           style={{
@@ -76,22 +61,9 @@ export default function App() {
           </div>
         </div>
       </div>
-      {/* report preview in right side bar */}
-
-      {/* {!allDataPresent && (
-          <div>
-            <h1>Woops! You need to upload data first</h1>
-            <button
-              onClick={() => {
-                navigate("/galago/");
-              }}
-            >
-              Get started
-            </button>
-          </div>
-        )} */}
-      {/* <ContactUs />
-      <Footer /> */}
+      <div style={{ width: 500, margin: "auto" }}>
+        <Footer />
+      </div>
     </>
   );
 }
