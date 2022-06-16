@@ -59,7 +59,7 @@ export const ContingencyTable = () => {
 
   return (
     <div>
-      {isFinite(oddsRatio) && (
+      {oddsRatio && isFinite(oddsRatio) && (
         <p className="results">
           Odds Ratio (sample of interest | in selected clade) =
           <FormatDataPoint value={oddsRatio.toFixed(1)} />
