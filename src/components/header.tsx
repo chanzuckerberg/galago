@@ -1,8 +1,44 @@
+import { Alert, AlertTitle, Collapse } from "@mui/material";
 import { Helmet } from "react-helmet";
+import { useWindowSize } from "@react-hook/window-size";
+import { useState } from "react";
 
 const Header = () => {
+  const [windowWidth, windowHeight] = useWindowSize();
+  const [showAlert, setShowAlert] = useState<boolean>(true);
+
   return (
     <div>
+      <Collapse in={showAlert}>
+        <Alert
+          severity="info"
+          style={{
+            width: windowWidth * 0.5,
+            position: "absolute",
+            top: 0,
+            right: 0,
+          }}
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        >
+          <AlertTitle>
+            <strong>
+              Galago is still an early-stage prototype - we'd love your
+              feedback!
+            </strong>{" "}
+            You can reach us either{" "}
+            <a href="https://github.com/chanzuckerberg/galago/discussions">
+              on our discussion board
+            </a>{" "}
+            or <a href="mailto:sidneymbell@chanzuckerberg.com">via email.</a>
+          </AlertTitle>
+          We're continually working to improve Galago, and plan to release a
+          production version in a few months. In the meantime, please pardon our
+          dust (and don't use Galago for decision making just yet).
+        </Alert>
+      </Collapse>
+
       <p
         style={{
           position: "absolute",
