@@ -91,7 +91,6 @@ export const SitStat = () => {
         />
         ).
       </p>
-      <EpiCurve />
     </div>
   );
 };
