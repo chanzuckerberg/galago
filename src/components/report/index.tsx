@@ -1,4 +1,4 @@
-import { SitStat } from "../cladeSummary";
+import { SitStat } from "./cladeSummary";
 import Assumptions from "./assumptions";
 import CladeDefinition from "./cladeDefinition";
 import CladeUniqueness from "./cladeUniqueness";
@@ -9,7 +9,7 @@ import TMRCA from "./tmrca";
 export const Report = () => {
   return (
     <div>
-      <SitStat title={true} />
+      <SitStat />
       <CladeDefinition sidenote_start={1} />
       <CladeUniqueness />
       <TMRCA sidenote_start={3} />

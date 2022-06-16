@@ -1,12 +1,12 @@
-import { Node } from "../../d";
-import { FormatDate } from "../formatters/date";
-import { FormatDataPoint } from "../formatters/dataPoint";
+import { Node } from "../../../d";
+import { FormatDate } from "../../formatters/date";
+import { FormatDataPoint } from "../../formatters/dataPoint";
 import { MiniCladeDescription } from "./miniCladeDescription";
-import { EpiCurve } from "../viz/epiCurve";
-import { get_dist } from "../../utils/treeMethods";
+import { EpiCurve } from "../../viz/epiCurve";
+import { get_dist } from "../../../utils/treeMethods";
 import { useSelector } from "react-redux";
 
-export const SitStat = (noTitle?: any) => {
+export const SitStat = () => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const cladeDescription = state.cladeDescription;
@@ -45,7 +45,7 @@ export const SitStat = (noTitle?: any) => {
 
   return (
     <div>
-      {!noTitle && <h2>Summary (genomic situation status)</h2>}
+      {<h2>Summary (genomic situation status)</h2>}
       <p style={{ fontStyle: "italic" }}>
         A "clade" is a hierarchical cluster in a phylogenetic tree.
       </p>

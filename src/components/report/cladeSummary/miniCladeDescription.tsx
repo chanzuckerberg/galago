@@ -1,9 +1,10 @@
-import { CladeDescription, Node } from "../../d";
-import { FormatDataPoint } from "../formatters/dataPoint";
-import { get_dist } from "../../utils/treeMethods";
+import { CladeDescription, Node } from "../../../d";
+import { FormatDataPoint } from "../../formatters/dataPoint";
+import { get_dist } from "../../../utils/treeMethods";
 import { useSelector } from "react-redux";
 
 export const MiniCladeDescription = () => {
+  //@ts-ignore
   const state = useSelector((state) => state.global);
 
   const clade_description = state.cladeDescription;
