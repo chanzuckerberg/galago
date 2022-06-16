@@ -351,13 +351,8 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
         {state.mrca && plotMrca(state.mrca, -1)}
         <g>
           {/* <text x={chartMargin - 4} y={20} fontSize={14}> */}
-          <text
-            x={chartWidth / 2 - 345}
-            y={60}
-            fontSize={20}
-            // fontStyle="bold"
-          >
-            {`Hierarchical clusters, sorted by the date of their inferred primary case. Click to select.`}
+          <text x={chartWidth / 2 - 285} y={70} fontSize={20} fill="steelblue">
+            {`Clades (hierarchical clusters), sorted by date. Click to select.`}
           </text>
           <text x={chartMargin} y={40} fontSize={12} fontStyle="italic">
             broader selection
