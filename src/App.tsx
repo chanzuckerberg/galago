@@ -8,8 +8,6 @@ function App() {
     <div>
       <Header />
       <LandingPage />
-      <ContactUs />
-      <Footer />
     </div>
   );
 }
