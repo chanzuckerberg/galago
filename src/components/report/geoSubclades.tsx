@@ -26,7 +26,7 @@ function GeoSublades() {
       : [];
 
   return (
-    <div style={{ marginTop: 70 }}>
+    <div className="reportSection">
       <h2>
         Has transmission between geographic areas contributed to this clade?
       </h2>

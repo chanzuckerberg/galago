@@ -57,7 +57,7 @@ function SamplingBias(props: SamplingBiasProps) {
   );
 
   return (
-    <div style={{ marginTop: 70 }}>
+    <div className="reportSection">
       <h2>How representative is your dataset?</h2>
       <p style={{ fontStyle: "italic" }}>
         Should you be concerned about sampling bias changing the interpretations

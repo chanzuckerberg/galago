@@ -33,7 +33,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
   // });
 
   return (
-    <div style={{ marginTop: 70 }}>
+    <div className="reportSection">
       <h2>How closely related are your selected samples to each other?</h2>
 
       <p style={{ fontStyle: "italic" }}>
