@@ -14,32 +14,31 @@ export const ContingencyTable = () => {
   const sampleNamesInCluster = state.mrca // in genomic cluster
     ? get_leaves(state.mrca).map((n: Node) => n.name)
     : null;
-  const sampleNamesMatchingCaseDef =
-    state.caseDefFilters && Object.keys(state.caseDefFilters).length > 0 // matches case definition
-      ? state.samplesMatchingCaseDef.map((n: Node) => n.name)
+  const sampleOfInterestNames =
+    state.samplesOfInterestNames.length > 0 // matches case definition
+      ? state.samplesOfInterestNames
       : null;
-  const sampleNamesBothClusterAndCaseDef = // both matches case def and is in genomic cluster
-    sampleNamesInCluster && sampleNamesMatchingCaseDef
+  const samplesOfInterestInClusterNames = // both matches case def and is in genomic cluster
+    sampleNamesInCluster && sampleOfInterestNames
       ? sampleNamesInCluster.filter((name: string) =>
-          sampleNamesMatchingCaseDef.includes(name)
+          sampleOfInterestNames.includes(name)
         )
       : null;
 
   const nTotal = allSampleNames ? allSampleNames.length : "--";
 
   const nClusterOnly =
-    sampleNamesInCluster && sampleNamesBothClusterAndCaseDef
-      ? sampleNamesInCluster.length - sampleNamesBothClusterAndCaseDef.length
+    sampleNamesInCluster && samplesOfInterestInClusterNames
+      ? sampleNamesInCluster.length - samplesOfInterestInClusterNames.length
       : "--";
 
   const nCaseDefOnly =
-    sampleNamesMatchingCaseDef && sampleNamesBothClusterAndCaseDef
-      ? sampleNamesMatchingCaseDef.length -
-        sampleNamesBothClusterAndCaseDef.length
+    sampleOfInterestNames && samplesOfInterestInClusterNames
+      ? sampleOfInterestNames.length - samplesOfInterestInClusterNames.length
       : "--";
 
-  const nBoth = sampleNamesBothClusterAndCaseDef
-    ? sampleNamesBothClusterAndCaseDef.length
+  const nBoth = samplesOfInterestInClusterNames
+    ? samplesOfInterestInClusterNames.length
     : "--";
 
   const neither =
@@ -55,16 +54,17 @@ export const ContingencyTable = () => {
     nClusterOnly !== "--" &&
     nCaseDefOnly !== "--" &&
     nBoth !== "--"
-      ? ((nBoth * neither) / (nClusterOnly * nCaseDefOnly)).toFixed(1)
-      : "--";
+      ? (nBoth * neither) / (nClusterOnly * nCaseDefOnly)
+      : undefined;
 
   return (
     <div>
-      <p>
-        <FormatDataPoint
-          value={`Odds Ratio (matches case definition | in selected cluster) = ${oddsRatio}`}
-        />
-      </p>
+      {isFinite(oddsRatio) && (
+        <p className="results">
+          Odds Ratio (sample of interest | in selected clade) =
+          <FormatDataPoint value={oddsRatio.toFixed(1)} />
+        </p>
+      )}
       <div // overall table container
         style={{
           position: "relative",
@@ -111,7 +111,7 @@ export const ContingencyTable = () => {
             }}
           >
             {" "}
-            MATCH case definition
+            IS a sample of interest
           </p>
           <p // Top label 3
             style={{
@@ -123,9 +123,8 @@ export const ContingencyTable = () => {
                 "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
             }}
           >
-            DO NOT
-            <br />
-            match case definition
+            IS NOT
+            <br />a sample of interest
           </p>
         </div>
         <div // Row 2
@@ -147,7 +146,7 @@ export const ContingencyTable = () => {
                 "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
             }}
           >
-            IN selected cluster
+            IN selected clade
           </p>
           <p // Both in cluster & matching case definition
             style={{
@@ -193,7 +192,7 @@ export const ContingencyTable = () => {
                 "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
             }}
           >
-            OUT of selected cluster
+            OUT of selected clade
           </p>
           <p // In cluster only
             style={{

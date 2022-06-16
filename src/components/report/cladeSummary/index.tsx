@@ -52,6 +52,17 @@ export const SitStat = () => {
       </p>
       <h5>About this cluster ("clade")</h5>
       <MiniCladeDescription />
+
+      {state.samplesOfInterest.length > 0 && (
+        <>
+          {" "}
+          <h5>
+            How good is the overlap of your Samples of Interest and this clade?
+          </h5>
+          <ContingencyTable />
+        </>
+      )}
+
       <h5>Census of samples in this clade</h5>
       <ul>
         {state.samplesOfInterest.length > 0 && (
@@ -71,7 +82,6 @@ export const SitStat = () => {
           total samples from other locations in this clade
         </li>
       </ul>
-      {state.samplesOfInterest.length > 0 && <ContingencyTable />}
 
       <p className="results">
         Of all the samples in this cluster,{" "}
