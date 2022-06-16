@@ -268,7 +268,7 @@ export const global = (state = defaultState, action: any) => {
     // TODO: also update samplesOfInterest with matching samples
     case "case definition submitted": {
       if (state.tree && state.caseDefFilters) {
-        let matchingSamples = get_leaves(state.tree);
+        let matchingSamples: Node[] = get_leaves(state.tree);
         if (Object.keys(state.caseDefFilters).length === 0) {
           return { ...state, samplesMatchingCaseDef: matchingSamples };
         }
@@ -297,7 +297,18 @@ export const global = (state = defaultState, action: any) => {
             );
           }
         }
-        return { ...state, samplesMatchingCaseDef: matchingSamples };
+
+        matchingSamples = matchingSamples.filter(
+          (n: Node) => !state.samplesOfInterestNames.includes(n.name)
+        );
+        const matchingSampleNames = matchingSamples.map((n: Node) => n.name);
+
+        return {
+          ...state,
+          // samplesOfInterest: state.samplesOfInterest.concat(matchingSamples),
+          samplesOfInterestNames:
+            state.samplesOfInterestNames.concat(matchingSampleNames),
+        };
       }
     }
 
