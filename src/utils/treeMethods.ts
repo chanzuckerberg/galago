@@ -335,3 +335,26 @@ export const describeTree = (node: Node, get_root_first: boolean = false) => {
     height
   );
 };
+
+export const assignTipCount = (tree: Node) => {
+  // WARNING: IMPURE FUNCTION
+
+  const allNodes = traverse_postorder(tree).reverse();
+
+  allNodes.forEach((n: Node) => {
+    if (n.children.length === 0) {
+      n.node_attrs.tipCount = 0;
+    } else {
+      let currentNodeTipCount = 0;
+      for (let i = 0; i < n.children.length; i++) {
+        let child = n.children[i];
+        if (child.children.length === 0) {
+          currentNodeTipCount += 1;
+        } else {
+          currentNodeTipCount += child.node_attrs.tipCount;
+        }
+      }
+      n.node_attrs.tipCount = currentNodeTipCount;
+    }
+  });
+};

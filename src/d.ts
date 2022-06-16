@@ -11,6 +11,7 @@ export interface Node {
   node_attrs: {
     // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
     div: number;
+    tipCount: number;
     location: { value: string };
     country: { value: string };
     region: { value: string };

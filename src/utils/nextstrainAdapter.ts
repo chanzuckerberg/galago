@@ -1,6 +1,6 @@
 import { Node } from "../d";
 import { numericToDateObject } from "./misc";
-import { describeTree } from "./treeMethods";
+import { assignTipCount, describeTree } from "./treeMethods";
 
 export interface NSNode {
   name: string;
@@ -70,6 +70,7 @@ export const initializeTree = (node: NSNode, parent: Node | "root") => {
 
 export const ingestNextstrain = (nextstrain_json: NSJSON) => {
   const tree: Node = initializeTree(nextstrain_json.tree, "root"); // root has no parent
+  assignTipCount(tree);
   describeTree(tree);
   return tree;
 };
