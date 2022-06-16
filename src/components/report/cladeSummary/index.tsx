@@ -31,7 +31,7 @@ export const SitStat = () => {
   const mrca_distances: { [key: string]: number } = Object.fromEntries(
     cladeDescription.selected_samples
       .concat(cladeDescription.unselected_samples_in_cluster)
-      .map((x) => [
+      .map((x: any) => [
         x.name,
         cladeDescription.mrca ? get_dist([x, cladeDescription.mrca]) : NaN,
       ])
@@ -45,7 +45,7 @@ export const SitStat = () => {
 
   return (
     <div>
-      {<h2>Summary (genomic situation status)</h2>}
+      <h2>Genomic summary of your selected clade</h2>
       <p style={{ fontStyle: "italic" }}>
         A "clade" is a hierarchical cluster in a phylogenetic tree.
       </p>

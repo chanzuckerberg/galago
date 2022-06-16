@@ -10,7 +10,9 @@ export const LandingPage = () => {
       <AboutGalago />
       <Demo />
       <Upload />
-      <ContactUs />
+      <div className="reportSection">
+        <ContactUs />
+      </div>
       <Footer />
     </div>
   );

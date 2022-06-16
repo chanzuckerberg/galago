@@ -5,8 +5,15 @@ import CladeUniqueness from "./cladeUniqueness";
 import GeoSubclades from "./geoSubclades";
 import OnwardTransmission from "./onwardTransmission";
 import TMRCA from "./tmrca";
+import { useSelector } from "react-redux";
 
 export const Report = () => {
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
+  // const allDataPresent =
+  //   state.location && state.division && state.tree && state.loadReport;
+  const reportReady = state.cladeDescription && state.tree;
+
   return (
     <div>
       <SitStat />

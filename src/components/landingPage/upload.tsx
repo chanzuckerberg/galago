@@ -75,7 +75,7 @@ export const Upload = () => {
   };
 
   return (
-    <div>
+    <div className="reportSection">
       <h2>Analyze your data</h2>
       <p>
         <i>

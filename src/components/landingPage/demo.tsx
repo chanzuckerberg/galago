@@ -5,7 +5,7 @@ export const Demo = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   return (
-    <div>
+    <div className="reportSection">
       <h2>Demo with real-world outbreak data</h2>
       <p>
         <button
