@@ -20,6 +20,7 @@ import SamplingBias from "../components/report/sampleDistribTable";
 import TMRCA from "../components/report/tmrca";
 // import { gisaidCounts } from "../../data/gisaidCounts2022-06";
 import { useWindowSize } from "@react-hook/window-size";
+import MainViz from "../components/mainViz";
 
 export default function SampleSelectionRoute() {
   //@ts-ignore
@@ -55,7 +56,7 @@ export default function SampleSelectionRoute() {
             border: showLayoutBorders ? "1px solid green" : "none",
           }}
         >
-          <MutsDateScatter />
+          <MainViz />
           <div
             style={{
               width: windowWidth * 0.7,

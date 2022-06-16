@@ -8,18 +8,21 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Popover } from "@mui/material";
 
-function MutsDateScatter() {
+type MutsDateScatterProps = {
+  chartHeight: number;
+  chartWidth: number;
+  chartMargin: number;
+};
+
+export const MutsDateScatter = (props: MutsDateScatterProps) => {
+  const { chartHeight, chartWidth, chartMargin } = props;
+
   // LOCAL AND GLOBAL STATE
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
 
-  const samplesButtonRef = React.useRef();
-
   const [hoverMRCA, sethoverMRCA] = useState<Node | null>(
     state.mrca ? state.mrca : null
-  );
-  const [viewPlot, setViewPlot] = useState<"scatter" | "tree">(
-    state.mrca ? "tree" : "scatter"
   );
   const dispatch = useDispatch();
 
@@ -41,11 +44,6 @@ function MutsDateScatter() {
       //@ts-ignore
       (mrcaNameToSampleNames[n.name] = get_leaves(n).map((l) => l.name))
   );
-
-  // FORMATTING VARIABLES
-  const chartSize = 560;
-  const chartWidth = 960;
-  const margin = 30;
 
   /* colors in use */
   const lightestGray = "rgba(220,220,220,1)";
@@ -75,7 +73,7 @@ function MutsDateScatter() {
         return node.node_attrs.num_date.value;
       })
     )
-    .range([margin, chartWidth - margin]);
+    .range([chartMargin, chartWidth - chartMargin]);
 
   const _yMutsScale = scaleLinear()
     .domain(
@@ -84,7 +82,7 @@ function MutsDateScatter() {
         return sample.node_attrs.div;
       })
     )
-    .range([chartSize - margin, margin]);
+    .range([chartHeight - chartMargin, chartMargin]);
 
   // const getMetadataColor = (
   //   sample: Node,
@@ -221,7 +219,7 @@ function MutsDateScatter() {
           sethoverMRCA(node);
         }}
         onClick={() => {
-          dispatch({ type: "mrca clicked", data: node }, setViewPlot("tree"));
+          dispatch({ type: "mrca clicked", data: node });
         }}
         cx={_xScaleTime(node.node_attrs.num_date.value)}
         cy={10}
@@ -242,213 +240,139 @@ function MutsDateScatter() {
         flexDirection: "column",
       }}
     >
-      <div
-        // aria-describedby={1233245345}
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
-        <Button color="secondary" style={{ marginRight: 10 }}>
-          Samples (0)
-        </Button>
-        <Popover
-          // id={1233245345}
-          open={true}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-        >
-          hello world dddddd
-        </Popover>
-        <Button color="secondary" style={{ marginRight: 10 }}>
-          Cluster method
-        </Button>
-
-        <ButtonGroup
-          color="secondary"
-          aria-label="toggle-plot"
-          size="small"
-          disableElevation
-        >
-          <Button onClick={(e) => setViewPlot("scatter")}>
-            Select new clade
-          </Button>
-          <Button onClick={(e) => setViewPlot("tree")} disabled={!state.mrca}>
-            View subtree of selected clade
-          </Button>
-        </ButtonGroup>
-      </div>
-
-      {viewPlot === "tree" && state.mrca ? (
-        <img
-          style={{ padding: 20 }}
-          width="835"
-          src="https://user-images.githubusercontent.com/12618847/173690423-12b8d1f1-c4b7-4d82-be75-740762fddb81.png"
-        />
-      ) : (
-        <>
-          <svg width={chartWidth} height={chartSize}>
-            {allSamples.map((sample, i: number) => {
-              const isSampleOfInterest = _samplesOfInterestNames
-                ? _samplesOfInterestNames.includes(sample.name)
-                : false;
-              return isSampleOfInterest ? (
-                <g
-                  transform={`translate(
-                ${_xScaleTime(sample.node_attrs.num_date.value)},
-                ${_yMutsScale(sample.node_attrs.div)}
-              )`}
-                >
-                  {plotBaseLayerSampleOfInterest(sample, i)}
-                </g>
-              ) : (
-                plotBaseLayerSample(sample, i)
-              );
-            })}
-            {/* de-emphasis opacity layer to fade back all unselected nodes */}
-            {hoverMRCA && (
-              <rect
-                width={chartWidth}
-                height={chartSize}
-                fill={deemphasisLayerColor}
-              />
-            )}
-            {/* plot all the samples that descend from the hovered MRCA again on top of the de-emphasis layer */}
-            {allSamples.map((sample, i: number) => {
-              const isHoverMrcaDescendent =
-                hoverMRCA &&
-                //@ts-ignore
-                mrcaNameToSampleNames[hoverMRCA.name].includes(sample.name);
-
-              if (!isHoverMrcaDescendent) return;
-
-              const isSampleOfInterest = _samplesOfInterestNames
-                ? _samplesOfInterestNames.includes(sample.name)
-                : false;
-              return isSampleOfInterest ? (
-                <g
-                  transform={`translate(
-                ${_xScaleTime(sample.node_attrs.num_date.value)},
-                ${_yMutsScale(sample.node_attrs.div)}
-              )`}
-                >
-                  {plotTopLayerSampleOfInterest(sample, i)}
-                </g>
-              ) : (
-                plotTopLayerSample(sample, i)
-              );
-            })}
-            <AxisLeft strokeWidth={0} left={margin} scale={_yMutsScale} />
-            <AxisBottom
-              strokeWidth={0}
-              top={chartSize - margin}
-              scale={_xScaleTime}
-              numTicks={9}
-            />
-            <text x="-150" y="45" transform="rotate(-90)" fontSize={14}>
-              Mutations
-            </text>
+      <svg width={chartWidth} height={chartHeight}>
+        {allSamples.map((sample, i: number) => {
+          const isSampleOfInterest = _samplesOfInterestNames
+            ? _samplesOfInterestNames.includes(sample.name)
+            : false;
+          return isSampleOfInterest ? (
             <g
-              id="interactive-sample-selection-legend"
-              transform="translate(150,85)"
+              transform={`translate(
+                ${_xScaleTime(sample.node_attrs.num_date.value)},
+                ${_yMutsScale(sample.node_attrs.div)}
+              )`}
             >
-              <circle cx="0" cy="7" r={3} fill={mediumGray} />
-              <text x="10" y="10" fontSize={14}>
-                Samples
-              </text>
-              <g transform={`translate(0,26.5)`}>
-                <line
-                  x1="-4"
-                  y1="0"
-                  x2="4"
-                  y2="0"
-                  stroke="black"
-                  strokeWidth={1}
-                />
-                <line
-                  x1="0"
-                  y1="-4"
-                  x2="0"
-                  y2="4"
-                  stroke="black"
-                  strokeWidth={1}
-                />
-              </g>
-              <text x="10" y="30" fontSize={14}>
-                Your samples of interest
-              </text>
-              <circle
-                cx="0"
-                cy="47"
-                r={3}
-                fill={"rgb(240,240,240)"}
-                stroke={darkGray}
-              />
-              <text x="10" y="50" fontSize={14}>
-                Samples in hovered cluster
-              </text>
-              <g transform={`translate(0,66.5)`}>
-                <line
-                  x1="-4"
-                  y1="0"
-                  x2="4"
-                  y2="0"
-                  stroke="black"
-                  strokeWidth={2}
-                />
-                <line
-                  x1="0"
-                  y1="-4"
-                  x2="0"
-                  y2="4"
-                  stroke="black"
-                  strokeWidth={2}
-                />
-              </g>
-              <text x="10" y="70" fontSize={14}>
-                Your samples of interest in hovered cluster
-              </text>
+              {plotBaseLayerSampleOfInterest(sample, i)}
             </g>
-          </svg>
-          <svg
+          ) : (
+            plotBaseLayerSample(sample, i)
+          );
+        })}
+        {/* de-emphasis opacity layer to fade back all unselected nodes */}
+        {hoverMRCA && (
+          <rect
             width={chartWidth}
-            height={80}
-            onMouseLeave={() => {
-              if (state.mrca) {
-                sethoverMRCA(state.mrca);
-              } else {
-                sethoverMRCA(null);
-              }
-            }}
-          >
-            {state.mrcaOptions.map((node: any, i: number) => plotMrca(node, i))}
-            {state.mrca && plotMrca(state.mrca, -1)}
-            <g>
-              {/* <text x={margin - 4} y={20} fontSize={14}> */}
-              <text
-                x={chartWidth / 2 - 345}
-                y={60}
-                fontSize={20}
-                // fontStyle="bold"
-              >
-                {`Hierarchical clusters, sorted by the date of their inferred primary case. Click to select.`}
-              </text>
-              <text x={margin} y={40} fontSize={12} fontStyle="italic">
-                broader selection
-              </text>
-              <text
-                x={chartWidth - margin - 90}
-                y={40}
-                fontSize={12}
-                fontStyle="italic"
-              >
-                narrower selection
-              </text>
+            height={chartHeight}
+            fill={deemphasisLayerColor}
+          />
+        )}
+        {/* plot all the samples that descend from the hovered MRCA again on top of the de-emphasis layer */}
+        {allSamples.map((sample, i: number) => {
+          const isHoverMrcaDescendent =
+            hoverMRCA &&
+            //@ts-ignore
+            mrcaNameToSampleNames[hoverMRCA.name].includes(sample.name);
+
+          if (!isHoverMrcaDescendent) return;
+
+          const isSampleOfInterest = _samplesOfInterestNames
+            ? _samplesOfInterestNames.includes(sample.name)
+            : false;
+          return isSampleOfInterest ? (
+            <g
+              transform={`translate(
+                ${_xScaleTime(sample.node_attrs.num_date.value)},
+                ${_yMutsScale(sample.node_attrs.div)}
+              )`}
+            >
+              {plotTopLayerSampleOfInterest(sample, i)}
             </g>
-          </svg>
-        </>
-      )}
+          ) : (
+            plotTopLayerSample(sample, i)
+          );
+        })}
+        <AxisLeft strokeWidth={0} left={chartMargin} scale={_yMutsScale} />
+        <AxisBottom
+          strokeWidth={0}
+          top={chartHeight - chartMargin}
+          scale={_xScaleTime}
+          numTicks={9}
+        />
+        <text x="-150" y="45" transform="rotate(-90)" fontSize={14}>
+          Mutations
+        </text>
+        <g
+          id="interactive-sample-selection-legend"
+          transform="translate(150,85)"
+        >
+          <circle cx="0" cy="7" r={3} fill={mediumGray} />
+          <text x="10" y="10" fontSize={14}>
+            Samples
+          </text>
+          <g transform={`translate(0,26.5)`}>
+            <line x1="-4" y1="0" x2="4" y2="0" stroke="black" strokeWidth={1} />
+            <line x1="0" y1="-4" x2="0" y2="4" stroke="black" strokeWidth={1} />
+          </g>
+          <text x="10" y="30" fontSize={14}>
+            Your samples of interest
+          </text>
+          <circle
+            cx="0"
+            cy="47"
+            r={3}
+            fill={"rgb(240,240,240)"}
+            stroke={darkGray}
+          />
+          <text x="10" y="50" fontSize={14}>
+            Samples in hovered cluster
+          </text>
+          <g transform={`translate(0,66.5)`}>
+            <line x1="-4" y1="0" x2="4" y2="0" stroke="black" strokeWidth={2} />
+            <line x1="0" y1="-4" x2="0" y2="4" stroke="black" strokeWidth={2} />
+          </g>
+          <text x="10" y="70" fontSize={14}>
+            Your samples of interest in hovered cluster
+          </text>
+        </g>
+      </svg>
+      <svg
+        width={chartWidth}
+        height={80}
+        onMouseLeave={() => {
+          if (state.mrca) {
+            sethoverMRCA(state.mrca);
+          } else {
+            sethoverMRCA(null);
+          }
+        }}
+      >
+        {state.mrcaOptions.map((node: any, i: number) => plotMrca(node, i))}
+        {state.mrca && plotMrca(state.mrca, -1)}
+        <g>
+          {/* <text x={chartMargin - 4} y={20} fontSize={14}> */}
+          <text
+            x={chartWidth / 2 - 345}
+            y={60}
+            fontSize={20}
+            // fontStyle="bold"
+          >
+            {`Hierarchical clusters, sorted by the date of their inferred primary case. Click to select.`}
+          </text>
+          <text x={chartMargin} y={40} fontSize={12} fontStyle="italic">
+            broader selection
+          </text>
+          <text
+            x={chartWidth - chartMargin - 90}
+            y={40}
+            fontSize={12}
+            fontStyle="italic"
+          >
+            narrower selection
+          </text>
+        </g>
+      </svg>
     </div>
   );
-}
+};
 
 export default MutsDateScatter;
