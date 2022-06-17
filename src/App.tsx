@@ -14,6 +14,7 @@ export default function App() {
   let navigate = useNavigate();
 
   const topSectionHeight = 100;
+  const footerHeight = 10;
   const showLayoutBorders = false;
 
   return (
@@ -31,6 +32,7 @@ export default function App() {
         <div
           style={{
             marginTop: topSectionHeight,
+            marginBottom: footerHeight,
             width: windowWidth / 2,
             flexShrink: 0,
             border: showLayoutBorders ? "1px solid green" : "none",
@@ -43,6 +45,7 @@ export default function App() {
           style={{
             border: showLayoutBorders ? "1px solid pink" : "none",
             marginTop: topSectionHeight,
+            marginBottom: footerHeight,
             width: windowWidth * 0.4,
           }}
         >
@@ -51,8 +54,8 @@ export default function App() {
               border: showLayoutBorders ? "1px solid orange" : "none",
               overflowY: "auto",
               margin: "auto",
-              width: windowWidth * 0.35, // eventually windowWidth * rightSectionPercent
-              height: windowHeight - topSectionHeight - 30, // eventually windowWidth - titleSectionHeightPixels
+              width: windowWidth * 0.4, // eventually windowWidth * rightSectionPercent
+              height: windowHeight - topSectionHeight - footerHeight - 50,
             }}
           >
             <h5>AUTOMATICALLY GENERATED REPORT</h5>
@@ -61,7 +64,7 @@ export default function App() {
           </div>
         </div>
       </div>
-      <div style={{ width: 500, margin: "auto" }}>
+      <div style={{ width: 700, margin: "auto" }}>
         <Footer />
       </div>
     </>
