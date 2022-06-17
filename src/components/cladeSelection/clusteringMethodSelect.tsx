@@ -18,13 +18,17 @@ function ClusteringOptions() {
 
   const [metadataField, setMetadataField] = useState<string>("");
 
-  const excludedFields = ["author", "div", "recency", "url"];
+  const excludedFields = ["author", "div", "recency", "url", "tipCount"];
   const allNodes = traverse_preorder(state.tree).filter(
     (n: Node) => n.node_attrs.tipCount > 2
   );
 
   const checkNextstrainValidity = (field: string) => {
-    if (!field || excludedFields.includes(field)) {
+    if (
+      !field ||
+      excludedFields.includes(field) ||
+      field.includes("date") // BUG - should be parsing dates as dates and not strings
+    ) {
       return false;
     }
     return metadataCensus[field]["nextstrainAncestralTraitsComputed"];
@@ -40,6 +44,7 @@ function ClusteringOptions() {
     }
     if (
       field.includes("_exposure") || // this is weird for exposure histories
+      field.includes("date") || // BUG - should be parsing dates as dates and not strings
       metadataCensus[field]["dataType"] === "continuous" // must be categorical
     ) {
       return false;
