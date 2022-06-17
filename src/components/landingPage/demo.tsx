@@ -12,6 +12,8 @@ export const Demo = () => {
         <Button
           variant="contained"
           name="loadDemo"
+          disableElevation
+          disableRipple
           onClick={() => {
             dispatch({ type: "load demo" });
             navigate("/galago/app");

@@ -10,6 +10,7 @@ import { Node } from "../../d";
 import { parse } from "papaparse";
 import { ingestCSVMetadata } from "../../utils/metadataUtils";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export const Upload = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
@@ -87,6 +88,7 @@ export const Upload = () => {
         <b>First, please upload a tree file.</b>
         <br />
         <i>This must be in Nextstrain's JSON file format.</i>
+        <br />
         <input
           type="file"
           name="file"
@@ -171,7 +173,10 @@ export const Upload = () => {
         </select>
       </p>
       <p>
-        <button
+        <Button
+          variant="contained"
+          disableElevation
+          disableRipple
           onClick={(e) => {
             dispatch({ type: "upload submit button clicked" });
             navigate("/galago/app");
@@ -179,7 +184,7 @@ export const Upload = () => {
           disabled={!state.division || !state.location || !state.tree}
         >
           Submit
-        </button>
+        </Button>
       </p>
     </div>
   );
