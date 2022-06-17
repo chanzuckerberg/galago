@@ -92,7 +92,7 @@ export const global = (state = defaultState, action: any) => {
         ...defaultState,
         tree: tree,
         metadataEntries: tidyMetadata,
-        metadataCensus: { ...treeMetadataCensus, ...metadataCensus },
+        metadataCensus: { ...treeMetadata, ...metadataCensus },
         metadataFieldToMatch: "sample id",
         samplesOfInterestNames: samplesOfInterestNames,
         samplesOfInterest: samplesOfInterest,
@@ -188,7 +188,7 @@ export const global = (state = defaultState, action: any) => {
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
-        metadataCensus: { ...state.metadataCensus, ...treeMetadataCensus },
+        metadataCensus: { ...state.metadataCensus, ...treeMetadata },
       };
     }
 

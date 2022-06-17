@@ -40,8 +40,8 @@ export const inspectMetadataField = (
   let seenMinValue: number | object = NaN;
   let seenMaxValue: number | object = NaN;
 
-  let nextstrainAncestralTraitsComputed: boolean; // make a note if ancestral states have been computed and byy which method
-  let matutilsAncestralTraitsComputed: boolean;
+  let nextstrainAncestralTraitsComputed: boolean | undefined = undefined; // make a note if ancestral states have been computed and byy which method
+  let matutilsAncestralTraitsComputed: boolean | undefined = undefined;
 
   metadataEntries.forEach((entry: any) => {
     let thisValue: any = undefined;
@@ -163,13 +163,12 @@ export const ingestCSVMetadata = (metadata: papaParseMetadataEntry[]) => {
   let metadataCensus: { [keys: string]: metadataFieldSummary } = {};
 
   fields.forEach((field: string) => {
-    const summary = inspectMetadataField(metadata, field);
+    const summary = inspectMetadataField(metadata, field, "csv");
     if (summary) {
       metadataCensus[field] = summary;
     }
   });
 
-  console.log("csv metadata census", metadataCensus);
   const tidyMetadata = metadata.map((entry: { [key: string]: any }) =>
     replaceMissingValues(entry, metadataCensus)
   );
@@ -226,6 +225,5 @@ export const treeMetadataCensus = (tree: Node) => {
     (field: string) =>
       (metadataCensus[field] = inspectMetadataField(allNodes, field, "nodes"))
   );
-  console.log("tree metadata census", metadataCensus);
   return metadataCensus;
 };
