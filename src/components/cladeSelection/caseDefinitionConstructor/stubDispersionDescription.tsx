@@ -36,3 +36,5 @@ const majority_unselected =
     </p>
   );
 }
+
+export {};
