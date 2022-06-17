@@ -58,7 +58,9 @@ export const Selectors = (props: SelectorsProps) => {
                   const newFilter: caseDefFilter = {
                     field: field,
                     dataType: "continuous",
+                    //@ts-ignore
                     min: e.target.value[0],
+                    //@ts-ignore
                     max: e.target.value[1],
                   };
                   dispatch({
@@ -101,6 +103,7 @@ export const Selectors = (props: SelectorsProps) => {
                   const newFilter: caseDefFilter = {
                     field: field,
                     dataType: "categorical",
+                    //@ts-ignore
                     acceptedValues: [...new Set(acceptedValues)],
                   };
                   dispatch({

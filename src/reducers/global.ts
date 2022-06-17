@@ -84,6 +84,7 @@ export const global = (state = defaultState, action: any) => {
         },
         [0, 2],
         1,
+        // @ts-ignore
         samplesOfInterest
       );
 
@@ -253,6 +254,7 @@ export const global = (state = defaultState, action: any) => {
         //@ts-ignore
         if (
           newFilter.acceptedValues.length ===
+            //@ts-ignore
             state.metadataCensus[field]["uniqueValues"].length ||
           newFilter.acceptedValues.length === 0
         ) {
@@ -280,6 +282,7 @@ export const global = (state = defaultState, action: any) => {
           if (thisFilter[1]["dataType"] === "categorical") {
             //@ts-ignore
             matchingSamples = matchingSamples.filter((n: Node) =>
+              //@ts-ignore
               thisFilter[1]["acceptedValues"].includes(
                 getNodeAttr(n, thisFilter[0])
               )
@@ -288,17 +291,20 @@ export const global = (state = defaultState, action: any) => {
             //@ts-ignore
             matchingSamples = matchingSamples.filter(
               (n: Node) =>
+                //@ts-ignore
                 getNodeAttr(n, thisFilter[0]) <= thisFilter[1]["max"] &&
                 getNodeAttr(
                   n,
                   //@ts-ignore
                   thisFilter[0]
+                  //@ts-ignore
                 ) >= thisFilter[1]["min"]
             );
           }
         }
 
         matchingSamples = matchingSamples.filter(
+          //@ts-ignore - wtf is this one
           (n: Node) => !state.samplesOfInterestNames.includes(n.name)
         );
         const matchingSampleNames = matchingSamples.map((n: Node) => n.name);
@@ -307,6 +313,7 @@ export const global = (state = defaultState, action: any) => {
           ...state,
           // samplesOfInterest: state.samplesOfInterest.concat(matchingSamples),
           samplesOfInterestNames:
+            //@ts-ignore
             state.samplesOfInterestNames.concat(matchingSampleNames),
         };
       }

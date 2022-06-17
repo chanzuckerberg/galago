@@ -1,3 +1,4 @@
+// @ts-nocheck
 const overdispersed = clade_tree_proportion > 50;
 const majority_unselected =
   clade_description.unselected_samples_in_cluster.length >

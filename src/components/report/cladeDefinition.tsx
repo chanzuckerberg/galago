@@ -123,7 +123,9 @@ function CladeDefinition(props: CladeDefinitionProps) {
           <>
             The <FormatDataPoint value={all_local_samples.length} />
             samples from {cladeDescription.home_geo.location} are:
-            <FormatStringArray values={all_local_samples.map((s) => s.name)} />
+            <FormatStringArray
+              values={all_local_samples.map((s: Node) => s.name)}
+            />
           </>
         )}
       </p>

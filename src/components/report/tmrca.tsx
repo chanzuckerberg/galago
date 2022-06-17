@@ -10,6 +10,7 @@ type CladeProps = {
 };
 
 function TMRCA(props: CladeProps) {
+  //@ts-ignore
   const state = useSelector((state) => state.global);
   const cladeDescription = state.cladeDescription;
 

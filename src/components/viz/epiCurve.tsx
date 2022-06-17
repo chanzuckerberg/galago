@@ -192,6 +192,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
             x={(dp: any) => dp.dateBin}
             xScale={dateScale}
             yScale={countScale}
+            //@ts-ignore
             color={colorScale}
           >
             {(barStacks) =>
@@ -217,14 +218,16 @@ export const EpiCurve = (props: EpiCurveProps) => {
           stroke={darkestGray}
           tickStroke={darkestGray}
           //   numTicks={15}
+          //@ts-ignore
           tickLabelProps={() => ({
-            fill: { mediumGray },
+            fill: mediumGray,
             fontSize: 11,
             textAnchor: "middle",
           })}
           label={xLabel}
+          //@ts-ignore
           labelProps={{
-            fill: { mediumGray },
+            fill: mediumGray,
             fontSize: 13,
             textAnchor: "middle",
           }}

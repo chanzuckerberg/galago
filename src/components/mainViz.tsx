@@ -73,15 +73,10 @@ export const MainViz = () => {
           aria-label="viewPlotSelection"
           size="small"
         >
-          <ToggleButton value="scatter" disableElevation disableRipple>
+          <ToggleButton value="scatter" disableRipple>
             Scatterplot of all clades
           </ToggleButton>
-          <ToggleButton
-            value="epiCurve"
-            disabled={!state.mrca}
-            disableElevation
-            disableRipple
-          >
+          <ToggleButton value="epiCurve" disabled={!state.mrca} disableRipple>
             Epi curve for selected clade
           </ToggleButton>
         </ToggleButtonGroup>
