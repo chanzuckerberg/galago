@@ -8,7 +8,7 @@ const ContactUs = () => {
         <a href="https://github.com/chanzuckerberg/galago/discussions">
           on our discussion board
         </a>{" "}
-        or <a href="mailto:sidneymbell@chanzuckerberg.com">via email.</a>
+        or <a href="mailto:galago@chanzuckerberg.com">via email.</a>
       </p>
     </div>
   );
