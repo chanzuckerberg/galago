@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export const Demo = () => {
   const dispatch = useDispatch();
@@ -7,17 +8,18 @@ export const Demo = () => {
   return (
     <div className="reportSection">
       <h2>Demo with real-world outbreak data</h2>
-      <p>
-        <button
-          type="button"
+      <p style={{ width: 200, margin: "auto" }}>
+        <Button
+          variant="contained"
           name="loadDemo"
           onClick={() => {
             dispatch({ type: "load demo" });
             navigate("/galago/app");
           }}
+          size="large"
         >
           Load Demo
-        </button>{" "}
+        </Button>{" "}
       </p>
       <p>
         Genomic epidemiology helped public health officials understand a
