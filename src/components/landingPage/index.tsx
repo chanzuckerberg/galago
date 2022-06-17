@@ -10,7 +10,7 @@ export const LandingPage = () => {
       <AboutGalago />
       <Demo />
       <Upload />
-      <div className="reportSection">
+      <div className="reportSection" style={{ marginBottom: 70 }}>
         <ContactUs />
       </div>
       <Footer />
