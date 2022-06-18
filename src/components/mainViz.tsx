@@ -19,7 +19,9 @@ export const MainViz = () => {
   const [windowWidth, windowHeight] = useWindowSize();
 
   const chartWidth = windowWidth / 2;
-  const chartHeight = (windowWidth / 2) * 0.666; // 3:2 aspect ratio
+  const chartHeight = Math.min(
+    ...[(windowWidth / 2) * 0.666, windowHeight - 150 - 50]
+  ); // 3:2 aspect ratio
   const chartMargin = 30;
 
   const toggleDrawer =

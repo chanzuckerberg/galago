@@ -32,8 +32,8 @@ export default function App() {
         <div
           style={{
             marginTop: topSectionHeight,
-            marginBottom: footerHeight,
             width: windowWidth / 2,
+            height: windowHeight - footerHeight - topSectionHeight - 50,
             flexShrink: 0,
             border: showLayoutBorders ? "1px solid green" : "none",
           }}
@@ -45,7 +45,7 @@ export default function App() {
           style={{
             border: showLayoutBorders ? "1px solid pink" : "none",
             marginTop: topSectionHeight,
-            marginBottom: footerHeight,
+            height: windowHeight - footerHeight - topSectionHeight - 50,
             width: windowWidth * 0.4,
           }}
         >

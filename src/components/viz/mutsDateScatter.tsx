@@ -16,6 +16,8 @@ type MutsDateScatterProps = {
 
 export const MutsDateScatter = (props: MutsDateScatterProps) => {
   const { chartHeight, chartWidth, chartMargin } = props;
+  const lowerChartHeight = 80;
+  const upperChartHeight = chartHeight - lowerChartHeight;
 
   // LOCAL AND GLOBAL STATE
   // @ts-ignore -- TODO: figure out how to add types to state
@@ -82,7 +84,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
         return sample.node_attrs.div;
       })
     )
-    .range([chartHeight - chartMargin, chartMargin]);
+    .range([upperChartHeight - chartMargin, chartMargin]);
 
   // const getMetadataColor = (
   //   sample: Node,
@@ -241,7 +243,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
         flexDirection: "column",
       }}
     >
-      <svg width={chartWidth} height={chartHeight}>
+      <svg width={chartWidth} height={upperChartHeight}>
         {allSamples.map((sample, i: number) => {
           const isSampleOfInterest = _samplesOfInterestNames
             ? _samplesOfInterestNames.includes(sample.name)
@@ -263,7 +265,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
         {hoverMRCA && (
           <rect
             width={chartWidth}
-            height={chartHeight}
+            height={upperChartHeight}
             fill={deemphasisLayerColor}
           />
         )}
@@ -295,7 +297,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
         <AxisLeft strokeWidth={0} left={chartMargin} scale={_yMutsScale} />
         <AxisBottom
           strokeWidth={0}
-          top={chartHeight - chartMargin}
+          top={upperChartHeight - chartMargin}
           scale={_xScaleTime}
           numTicks={9}
         />
@@ -338,7 +340,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
       </svg>
       <svg
         width={chartWidth}
-        height={80}
+        height={lowerChartHeight}
         onMouseLeave={() => {
           if (state.mrca) {
             sethoverMRCA(state.mrca);
