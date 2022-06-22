@@ -8,7 +8,13 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
-import { FormControl } from "@mui/material";
+import {
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 
 function ClusteringOptions() {
   // @ts-ignore -- TODO: figure out how to add types to state
@@ -89,18 +95,11 @@ function ClusteringOptions() {
         For example, clustering based on "location" can help identify clades
         that represent a new introduction to a given location.
       </p>
-      <ul style={{ fontStyle: "italic", fontSize: 14 }}>
-        <li>
-          Nextstrain is a model-based method (recommended) and must be
-          pre-computed upstream (outside of Galago).
-        </li>
-        <li>
-          Matutils is a heuristic-based method and is computed on demand (please
-          be patient; 1 - 15 seconds){" "}
-        </li>
-      </ul>
       <p>
         <FormControl>
+          <FormLabel id="demo-radio-buttons-group-label">
+            First, select metadata field
+          </FormLabel>
           <Select
             id="metadataFieldSelect"
             //@ts-ignore
@@ -115,39 +114,58 @@ function ClusteringOptions() {
               return <MenuItem value={field}>{field}</MenuItem>;
             })}
           </Select>
-          <FormHelperText>First, select a metadata field</FormHelperText>
         </FormControl>
       </p>
       <p>
         <FormControl>
-          <ToggleButtonGroup
-            // value={clusteringMethod}
-            color="primary"
-            exclusive
-            onChange={(e, v) => handleClusterMethod(v)}
+          <FormLabel id="demo-radio-buttons-group-label">
+            Select clustering algorithm
+          </FormLabel>
+          <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue="female"
+            name="radio-buttons-group"
+            onChange={(e, v: string) =>
+              //@ts-ignore
+              handleClusterMethod(v)
+            }
           >
-            <ToggleButton value="none" defaultChecked={true} disableRipple>
-              None
-            </ToggleButton>
-            <ToggleButton
-              value="matutils"
-              disableRipple
-              disabled={!checkMatutilsValidity(metadataField)}
-            >
-              Matutils
-            </ToggleButton>
-            <ToggleButton
+            <FormControlLabel
+              value="none"
+              control={<Radio />}
+              label="None"
+              size="small"
+            />
+            <FormControlLabel
               value="nextstrain"
-              disableRipple
-              disabled={!checkNextstrainValidity(metadataField)}
-            >
-              Nextstrain
-            </ToggleButton>
-          </ToggleButtonGroup>
-          <FormHelperText>
-            Next, choose a method
-            <br />
-          </FormHelperText>
+              control={
+                <Radio
+                  disabled={!checkNextstrainValidity(metadataField)}
+                  size="small"
+                />
+              }
+              label="Nextstrain"
+            />
+
+            <FormHelperText>
+              Nextstrain is a model-based method (recommended). <br />
+              <b>Must be pre-computed upstream (outside of Galago).</b>
+            </FormHelperText>
+            <FormControlLabel
+              value="matutils"
+              control={
+                <Radio
+                  disabled={!checkMatutilsValidity(metadataField)}
+                  size="small"
+                />
+              }
+              label="Matutils"
+            />
+            <FormHelperText>
+              Matutils is a heuristic-based method. <br />
+              <b>Computed on demand (please be patient; 1 - 15 seconds)</b>
+            </FormHelperText>
+          </RadioGroup>
         </FormControl>
       </p>
     </div>
