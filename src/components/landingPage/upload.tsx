@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   get_division_input_options,
@@ -10,7 +10,14 @@ import { Node } from "../../d";
 import { parse } from "papaparse";
 import { ingestCSVMetadata } from "../../utils/metadataUtils";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 
 export const Upload = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
@@ -75,6 +82,15 @@ export const Upload = () => {
     console.log(state.tree, state.country, locationOptions);
   };
 
+  useEffect(() => {
+    console.log("location or division [options] changed\n", {
+      division: state.division,
+      divisionOptions: divisionOptions,
+      location: state.location,
+      locationOptions: locationOptions,
+    });
+  }, [divisionOptions, locationOptions, state.location, state.division]);
+
   return (
     <div className="reportSection">
       <h2>Analyze your data</h2>
@@ -97,43 +113,48 @@ export const Upload = () => {
           }}
         />
       </p>
-      <b>Next, please choose your location.</b>
+      <b>Next, select your location.</b>
       <br />
       <p>
-        State:{" "}
-        <select
-          id="division-select"
-          name="State"
-          onChange={(e) => handleDivisionSelection(e.target.value)}
-          disabled={!divisionOptions}
-          style={{ width: "15em" }}
-          defaultValue={""}
-        >
-          {divisionOptions &&
-            divisionOptions.map((division: string) => (
-              <option value={division}>{division}</option>
-            ))}
-        </select>
+        <FormControl>
+          <FormLabel>Select state/province</FormLabel>
+          <Select
+            id="divisionSelect"
+            //@ts-ignore
+            onChange={(e) => handleDivisionSelection(e.target.value)}
+            style={{ width: 200 }}
+            size="small"
+            disabled={!divisionOptions}
+          >
+            {divisionOptions &&
+              divisionOptions.map((division: string) => (
+                <MenuItem value={division}>{division}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
       </p>
       <p>
-        County:{" "}
-        <select
-          id="location-select"
-          name="County"
-          onChange={(event) => {
-            dispatch({
-              type: "location set",
-              data: event.target.value,
-            });
-          }}
-          disabled={!locationOptions}
-          style={{ width: "15em" }}
-        >
-          {locationOptions &&
-            locationOptions.map((county: string) => (
-              <option value={county}>{county}</option>
-            ))}
-        </select>
+        <FormControl>
+          <FormLabel>Select county/location</FormLabel>
+          <Select
+            id="locationSelect"
+            //@ts-ignore
+            onChange={(event) => {
+              dispatch({
+                type: "location set",
+                data: event.target.value,
+              });
+            }}
+            style={{ width: 200 }}
+            size="small"
+            disabled={!locationOptions}
+          >
+            {locationOptions &&
+              locationOptions.map((loc: string) => (
+                <MenuItem value={loc}>{loc}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
       </p>
       <p>
         <b>Optionally, upload sample metadata (e.g., a line list)</b>
@@ -150,27 +171,31 @@ export const Upload = () => {
             handleMetadataUpload(event.target.files[0]);
           }}
         />
-        <br />
-        Field to match metadata to sample names:
-        <br />
-        <select
-          id="metadata-key-select"
-          name="metadataKey"
-          onChange={(e) =>
-            dispatch({
-              type: "metadata match field selected",
-              data: e.target.value,
-            })
-          }
-          disabled={!metadataKeyOptions}
-          style={{ width: "15em" }}
-          defaultValue={""}
-        >
-          {metadataKeyOptions &&
-            metadataKeyOptions.map((field: string) => (
-              <option value={field}>{field}</option>
-            ))}
-        </select>
+      </p>
+      <p>
+        <FormControl>
+          <FormLabel style={{ width: "30em" }}>
+            Select field/column to match sample names
+          </FormLabel>
+          <Select
+            id="metadataKeySelect"
+            //@ts-ignore
+            onChange={(e) =>
+              dispatch({
+                type: "metadata match field selected",
+                data: e.target.value,
+              })
+            }
+            style={{ width: 200 }}
+            size="small"
+            disabled={!metadataKeyOptions}
+          >
+            {metadataKeyOptions &&
+              metadataKeyOptions.map((key: string) => (
+                <MenuItem value={key}>{key}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
       </p>
       <p>
         <Button
