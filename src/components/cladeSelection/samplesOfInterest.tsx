@@ -13,7 +13,8 @@ export const SamplesOfInterest = () => {
       {/* <p>Samples of Interest</p> */}
       <h2>Samples of interest</h2>
       <p style={{ fontStyle: "italic", fontSize: 14 }}>
-        Highlight your samples of interest in the graph and filter to clades
+        Specify samples of interest -- either by name or using a case definition
+        (below) -- to see them highlighted in the graph and filter to clades
         that contain at least one of these samples.
       </p>
       <TextField

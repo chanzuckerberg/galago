@@ -175,7 +175,8 @@ export const Upload = () => {
       <p>
         <FormControl>
           <FormLabel style={{ width: "30em" }}>
-            Select field/column to match sample names
+            Select field/column containing names to match metadata rows to
+            samples in the tree.
           </FormLabel>
           <Select
             id="metadataKeySelect"
