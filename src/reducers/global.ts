@@ -41,6 +41,7 @@ const defaultState = {
   loadReport: false,
   cladeDescription: null,
   viewPlot: "scatter",
+  debugReducers: false,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -178,7 +179,12 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "tree file uploaded": {
-      // console.log("setting tree to", action.data);
+      if (state.debugReducers) {
+        console.log(
+          "REDUCER 'tree file uploaded' - setting tree to",
+          action.data
+        );
+      }
       const tree = action.data;
       const treeMetadata = treeMetadataCensus(tree);
 
@@ -193,12 +199,22 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "location set": {
-      // console.log("setting location to", action.data);
+      if (state.debugReducers) {
+        console.log(
+          "REDUCER 'location set' - setting location to",
+          action.data
+        );
+      }
       return { ...state, location: action.data };
     }
 
     case "division set": {
-      // console.log("setting division to", action.data);
+      if (state.debugReducers) {
+        console.log(
+          "REDUCER 'division set' - setting division to",
+          action.data
+        );
+      }
       if (state.tree) {
         const newLocationOptions = get_location_input_options(
           state.tree,
@@ -213,6 +229,9 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "metadata uploaded and parsed": {
+      if (state.debugReducers) {
+        console.log("REDUCER metadata uploaded and parsed", action.data);
+      }
       const { tidyMetadata, metadataCensus } = action.data;
 
       return {
