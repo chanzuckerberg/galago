@@ -20,9 +20,14 @@ export const MainViz = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [windowWidth, windowHeight] = useWindowSize();
 
+  const stateCuesHeight = 40;
+  const footerHeight = 10;
+  const headerHeight = 100;
+  const extraHeight = headerHeight + footerHeight + stateCuesHeight + 190;
+
   const chartWidth = windowWidth / 2;
   const chartHeight = Math.min(
-    ...[(windowWidth / 2) * 0.666, windowHeight - 150 - 50]
+    ...[(windowWidth / 2) * 0.666, windowHeight - extraHeight]
   ); // 3:2 aspect ratio
   const chartMargin = 30;
 
@@ -90,6 +95,7 @@ export const MainViz = () => {
           onChange={(e, v) => dispatch({ type: "view plot toggled", data: v })}
           aria-label="viewPlotSelection"
           size="small"
+          style={{ height: 40 }}
         >
           <ToggleButton value="scatter" disableRipple>
             Scatterplot of all clades
