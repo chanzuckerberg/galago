@@ -9,6 +9,8 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useWindowSize } from "@react-hook/window-size";
 import { useDispatch } from "react-redux";
+import { FormControl, FormHelperText } from "@mui/material";
+import { FormControlUnstyled } from "@mui/base";
 
 export const MainViz = () => {
   // @ts-ignore
@@ -49,25 +51,39 @@ export const MainViz = () => {
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <React.Fragment key={"controlsDrawer"}>
-          <Button
-            disableElevation
-            disableRipple
-            variant="contained"
-            onClick={toggleDrawer("controlsDrawer", true)}
-          >
-            Filter and suggest clades
-          </Button>
-          <Drawer
-            anchor={"right"}
-            open={drawerOpen}
-            onClose={toggleDrawer("right", false)}
-          >
-            <div style={{ width: windowWidth * 0.4 }}>
-              <ControlsDrawer />
-            </div>
-          </Drawer>
-        </React.Fragment>
+        <FormControl>
+          <React.Fragment key={"controlsDrawer"}>
+            <Button
+              disableElevation
+              disableRipple
+              variant="contained"
+              onClick={toggleDrawer("controlsDrawer", true)}
+            >
+              Filter and suggest clades
+            </Button>
+            <Drawer
+              anchor={"right"}
+              open={drawerOpen}
+              onClose={toggleDrawer("right", false)}
+            >
+              <div style={{ width: windowWidth * 0.4 }}>
+                <ControlsDrawer />
+              </div>
+            </Drawer>
+          </React.Fragment>
+          <FormHelperText size="small">
+            Samples of interest: <u>{state.samplesOfInterestNames.length}</u>
+            <br />
+            Clustering: <u>{state.clusteringMethod}</u>
+            {state.clusteringMethod !== "none" &&
+              state.clusteringMetadataField && (
+                <>
+                  {" "}
+                  on <u>{state.clusteringMetadataField}</u>
+                </>
+              )}
+          </FormHelperText>
+        </FormControl>
 
         <ToggleButtonGroup
           exclusive
