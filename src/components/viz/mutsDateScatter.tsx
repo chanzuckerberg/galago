@@ -222,7 +222,6 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
         }}
         onClick={() => {
           dispatch({ type: "mrca clicked", data: node });
-          dispatch({ type: "view plot toggled", data: "epiCurve" });
         }}
         cx={_xScaleTime(node.node_attrs.num_date.value)}
         cy={10}
