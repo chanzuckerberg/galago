@@ -1,4 +1,4 @@
-import { get_root, get_leaves } from "./treeMethods";
+import { get_root, get_leaves, getNodeAttr } from "./treeMethods";
 import { Node } from "../d";
 
 const tidy_values = (values: string[]) => {
@@ -24,7 +24,13 @@ export const get_division_input_options = (tree: Node, country: string) => {
     (s) => s.node_attrs["country"]["value"] === country
   );
   const division_options = tidy_values(
-    samples_from_country.map((s) => s.node_attrs["division"]["value"])
+    samples_from_country.map((s) => {
+      if (getNodeAttr(s, "location")) {
+        return getNodeAttr(s, "division");
+      } else {
+        return undefined;
+      }
+    })
   );
   return division_options;
 };
