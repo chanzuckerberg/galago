@@ -76,6 +76,7 @@ export const MainViz = () => {
               </div>
             </Drawer>
           </React.Fragment>
+          {/* @ts-ignore */}
           <FormHelperText size="small">
             Samples of interest: <u>{state.samplesOfInterestNames.length}</u>
             <br />
