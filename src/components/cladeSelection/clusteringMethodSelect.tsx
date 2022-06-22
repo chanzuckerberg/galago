@@ -22,8 +22,6 @@ function ClusteringOptions() {
   const metadataCensus = state.metadataCensus;
   const dispatch = useDispatch();
 
-  const [metadataField, setMetadataField] = useState<string>("");
-
   const excludedFields = ["author", "div", "recency", "url", "tipCount"];
   const allNodes = traverse_preorder(state.tree).filter(
     (n: Node) => n.node_attrs.tipCount > 2
@@ -67,6 +65,7 @@ function ClusteringOptions() {
   );
 
   const handleClusterMethod = (value: "none" | "matutils" | "nextstrain") => {
+    dispatch({ type: "clustering method selected", data: value });
     if (value === "none") {
       dispatch({
         type: "clustering results updated",
@@ -75,12 +74,12 @@ function ClusteringOptions() {
     } else if (value === "matutils") {
       dispatch({
         type: "clustering results updated",
-        data: matutilsIntroduce(state.tree, metadataField),
+        data: matutilsIntroduce(state.tree, state.clusteringMetadataField),
       });
     } else {
       dispatch({
         type: "clustering results updated",
-        data: nextstrainGeo(state.tree, metadataField),
+        data: nextstrainGeo(state.tree, state.clusteringMetadataField),
       });
     }
   };
@@ -104,11 +103,15 @@ function ClusteringOptions() {
             id="metadataFieldSelect"
             //@ts-ignore
             onChange={(event) => {
-              setMetadataField(event.target.value);
+              dispatch({
+                type: "clustering metadata field selected",
+                data: event.target.value,
+              });
             }}
             style={{ width: 200 }}
             size="small"
             defaultValue="Select a metadata field"
+            value={state.clusteringMetadataField}
           >
             {allFields.map((field: string) => {
               return <MenuItem value={field}>{field}</MenuItem>;
@@ -118,29 +121,28 @@ function ClusteringOptions() {
       </p>
       <p>
         <FormControl>
-          <FormLabel id="demo-radio-buttons-group-label">
-            Select clustering algorithm
-          </FormLabel>
+          <FormLabel>Select clustering algorithm</FormLabel>
           <RadioGroup
-            aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="female"
+            aria-labelledby="select clustering method"
             name="radio-buttons-group"
             onChange={(e, v: string) =>
               //@ts-ignore
               handleClusterMethod(v)
             }
+            value={state.clusteringMethod}
           >
             <FormControlLabel
               value="none"
-              control={<Radio />}
+              control={<Radio size="small" />}
               label="None"
-              size="small"
             />
             <FormControlLabel
               value="nextstrain"
               control={
                 <Radio
-                  disabled={!checkNextstrainValidity(metadataField)}
+                  disabled={
+                    !checkNextstrainValidity(state.clusteringMetadataField)
+                  }
                   size="small"
                 />
               }
@@ -155,7 +157,9 @@ function ClusteringOptions() {
               value="matutils"
               control={
                 <Radio
-                  disabled={!checkMatutilsValidity(metadataField)}
+                  disabled={
+                    !checkMatutilsValidity(state.clusteringMetadataField)
+                  }
                   size="small"
                 />
               }

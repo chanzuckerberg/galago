@@ -42,6 +42,8 @@ const defaultState = {
   cladeDescription: null,
   viewPlot: "scatter",
   debugReducers: false,
+  clusteringMethod: "none",
+  clusteringMetadataField: undefined,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -104,6 +106,21 @@ export const global = (state = defaultState, action: any) => {
         division: "California",
         loadReport: true,
         cladeDescription: cladeDescription,
+      };
+    }
+
+    case "clustering metadata field selected": {
+      return {
+        ...state,
+        clusteringMetadataField: action.data,
+      };
+    }
+
+    case "clustering method selected": {
+      console.log("method set to", action.data);
+      return {
+        ...state,
+        clusteringMethod: action.data,
       };
     }
 
