@@ -9,6 +9,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useWindowSize } from "@react-hook/window-size";
 import { useDispatch } from "react-redux";
+import { DrawTree } from "./viz/tree";
 
 export const MainViz = () => {
   // @ts-ignore
@@ -87,7 +88,12 @@ export const MainViz = () => {
       <div
         style={{ width: chartWidth, height: chartHeight, margin: chartMargin }}
       >
-        {viewPlot === "epiCurve" && state.mrca ? (
+        <DrawTree
+          chartWidth={chartWidth}
+          chartHeight={chartHeight}
+          chartMargin={chartMargin}
+        />
+        {/* {viewPlot === "epiCurve" && state.mrca ? (
           <EpiCurve
             chartHeight={chartHeight}
             chartWidth={chartWidth}
@@ -99,7 +105,7 @@ export const MainViz = () => {
             chartWidth={chartWidth}
             chartMargin={chartMargin}
           />
-        )}
+        )} */}
       </div>
     </div>
   );

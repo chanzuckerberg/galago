@@ -91,3 +91,15 @@ export interface caseDefFilter {
 export interface papaParseMetadataEntry {
   [key: string]: any;
 }
+
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface D3Datum {
+  x: number;
+  y: number;
+  fx: number | null;
+  fy: number | null;
+}
