@@ -61,12 +61,28 @@ export const DrawTree = (props: DrawTreeProps) => {
       if (n.name === state.mrca.name) {
         return; // don't draw the branch leading into the mrca
       }
-      const thisForceLinkToParent = {
+
+      forceLinks.push({
         source: nodeNameToIndex[n.parent.name],
         target: nodeNameToIndex[n.name],
+        //@ts-ignore
         distance: n.branch_attrs.length,
-      };
-      forceLinks.push(thisForceLinkToParent);
+      });
+
+      const polytomyChildren = n.children.filter(
+        (ch: Node) => ch.branch_attrs.length === 0
+      );
+      for (let i = 0; i < polytomyChildren.length - 1; i++) {
+        // This is where you'll capture that last value
+        for (let j = i + 1; j < polytomyChildren.length; j++) {
+          forceLinks.push({
+            source: nodeNameToIndex[polytomyChildren[i].name],
+            target: nodeNameToIndex[polytomyChildren[j].name],
+            //@ts-ignore
+            distance: 0,
+    });
+        }
+      }
     });
 
     const simulation = d3
