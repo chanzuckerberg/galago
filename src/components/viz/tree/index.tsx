@@ -85,13 +85,26 @@ export const DrawTree = (props: DrawTreeProps) => {
       }
     });
 
+    const maxDist =
+      nodes.slice(-1)[0].node_attrs.div - state.mrca.node_attrs.div;
+    const distanceMultiplier = chartWidth / (1.5 * maxDist);
+
     const simulation = d3
       .forceSimulation()
       .nodes(forceNodes)
-      .force("link", d3.forceLink(forceLinks).distance(50).strength(20))
-      .force("charge", d3.forceManyBody().strength(-20));
-
-    // let simulation = runSimulation();
+      .force(
+        "link",
+        d3
+          .forceLink(forceLinks)
+          .distance((d: any) => d.distance * distanceMultiplier)
+          .strength(1)
+      )
+      .force(
+        "charge",
+        d3.forceManyBody().strength(-100).distanceMin(0)
+      )
+      .force("center", d3.forceCenter(chartWidth / 2, chartHeight / 2))
+      .force("collision", d3.forceCollide().radius(7));
 
     simulation.on("end", () => {
       console.log("nodes on simulation end", forceNodes, forceNodes[0].x);
