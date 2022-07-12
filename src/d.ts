@@ -1,3 +1,5 @@
+import { SimulationLinkDatum, SimulationNodeDatum } from "d3";
+
 export interface Node {
   name: string;
   parent: Node | null; // not in default nextstrain export; add later via traversal
@@ -42,13 +44,6 @@ export interface CladeDescription {
   };
   subclade_geo: string | null;
   subclades: Node[];
-
-  // transmissions_across_demes: {
-  //   location: Introduction[];
-  //   division: Introduction[];
-  //   country: Introduction[];
-  //   region: Introduction[];
-  // };
 }
 
 export type HomeGeo = {
@@ -88,18 +83,20 @@ export interface caseDefFilter {
   acceptedValues?: Array<string>;
 }
 
+export interface forceNode extends SimulationNodeDatum {
+  id: string;
+  mrcaDist: number;
+}
+
+// export interface forceNode extends SimulationNodeDatum {
+//   id: string;
+//   mrcaDist: number;
+// }
+
+export interface forceLink extends SimulationLinkDatum<forceNode> {
+  distance: number;
+}
+
 export interface papaParseMetadataEntry {
   [key: string]: any;
-}
-
-export interface Point {
-  x: number;
-  y: number;
-}
-
-export interface D3Datum {
-  x: number;
-  y: number;
-  fx: number | null;
-  fy: number | null;
 }

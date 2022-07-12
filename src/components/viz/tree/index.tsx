@@ -1,10 +1,9 @@
 import { useSelector } from "react-redux";
-import { traverse_preorder } from "../../../utils/treeMethods";
-import { Node, Point, D3Datum } from "../../../d";
+import { get_dist, traverse_preorder } from "../../../utils/treeMethods";
+import { Node, forceNode, forceLink } from "../../../d";
 import * as d3 from "d3";
-import { Simulation, SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 import { useEffect, useState } from "react";
-import DrawLinks from "./drawLinks";
+import DrawForceLink from "./drawForceLink";
 import DrawNodes from "./drawNodes";
 import DrawLabels from "./drawLabels";
 
@@ -20,9 +19,8 @@ export const DrawTree = (props: DrawTreeProps) => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
 
-  const [positionedNodes, setPositionedNodes] = useState<SimulationNodeDatum[]>(
-    []
-  );
+  const [positionedNodes, setPositionedNodes] = useState<forceNode[]>([]);
+  const [positionedLinks, setPositionedLinks] = useState<forceLink[]>([]);
 
   // https://github.com/chanzuckerberg/ontology-ui/blob/main/src/components/OntologyExplorer/index.tsx#L128
 
@@ -39,8 +37,8 @@ export const DrawTree = (props: DrawTreeProps) => {
   useEffect(() => {
     const nodes = state.mrca ? traverse_preorder(state.mrca) : [];
     const nodeNameToIndex: any = {};
-    let forceLinks: SimulationLinkDatum<SimulationNodeDatum>[] = [];
-    let forceNodes: SimulationNodeDatum[] = [];
+    let forceLinks: forceLink[] = [];
+    let forceNodes: forceNode[] = [];
 
     nodes.forEach((n: Node, i: number) => (nodeNameToIndex[n.name] = i));
 
@@ -55,6 +53,7 @@ export const DrawTree = (props: DrawTreeProps) => {
         vx: 0,
         vy: 0,
         id: n.name,
+        mrcaDist: get_dist([n, state.mrca]),
       };
       forceNodes.push(thisForceNode);
 
@@ -80,7 +79,7 @@ export const DrawTree = (props: DrawTreeProps) => {
             target: nodeNameToIndex[polytomyChildren[j].name],
             //@ts-ignore
             distance: 0,
-    });
+          });
         }
       }
     });
@@ -102,13 +101,17 @@ export const DrawTree = (props: DrawTreeProps) => {
       .force(
         "charge",
         d3.forceManyBody().strength(-100).distanceMin(0)
+        // .distanceMax((maxDist * distanceMultiplier) / 2)
       )
       .force("center", d3.forceCenter(chartWidth / 2, chartHeight / 2))
       .force("collision", d3.forceCollide().radius(7));
 
     simulation.on("end", () => {
-      console.log("nodes on simulation end", forceNodes, forceNodes[0].x);
+      console.log("nodes on simulation end", forceNodes, forceNodes[0]);
+      console.log("links on simulation end", forceLinks);
+
       setPositionedNodes(forceNodes);
+      setPositionedLinks(forceLinks);
     });
   }, [state.mrca, state.tree]);
 
@@ -119,11 +122,13 @@ export const DrawTree = (props: DrawTreeProps) => {
         width={chartWidth}
         height={chartHeight}
       >
-        <g>
-          {/* <DrawLinks forceLinks={forceLinks} /> */}
-          {positionedNodes && <DrawNodes forceNodes={positionedNodes} />}
-          {/* <DrawLabels nodes={forceNodes} onNodeSelected={() => {}} /> */}
-        </g>
+        {positionedNodes &&
+          positionedLinks &&
+          positionedLinks.map((forceLink: forceLink) => (
+            <DrawForceLink forceLink={forceLink} forceNodes={positionedNodes} />
+          ))}
+        {positionedNodes && <DrawNodes forceNodes={positionedNodes} />}
+        {/* <DrawLabels nodes={forceNodes} onNodeSelected={() => {}} /> */}
       </svg>
     </div>
   );
