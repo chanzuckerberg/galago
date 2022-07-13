@@ -28,6 +28,8 @@ export const DrawTree = (props: DrawTreeProps) => {
     Array<forceNode[]>
   >([]);
 
+  const initForceNode = (n: Node, i: number) => {};
+
   const initData = () => {
     /** Traverses the subtree and initializes the forceNodes, forceLinks, and polytomies (used for drawing hulls) */
     const nodes: Node[] = state.mrca ? traverse_preorder(state.mrca) : []; // tree nodes
@@ -78,11 +80,16 @@ export const DrawTree = (props: DrawTreeProps) => {
        */
       const polytomyChildrenNames = n.children
         .filter((ch: Node) => ch.branch_attrs.length === 0)
-        .map((n: Node) => n.name);
+        .map((ch: Node) => ch.name);
 
-      polytomiesIdx.push(
-        polytomyChildrenNames.map((name: string) => nodeNameToIndex[name])
-      );
+      if (polytomyChildrenNames.length > 1) {
+        // TODO: should we also draw mini "hulls" as internal nodes?
+        let polytomyIdx = polytomyChildrenNames.map(
+          (name: string) => nodeNameToIndex[name]
+        );
+        polytomyIdx.push(i); // current node index
+        polytomiesIdx.push(polytomyIdx);
+      }
 
       for (let i = 0; i < polytomyChildrenNames.length - 1; i++) {
         for (let j = i + 1; j < polytomyChildrenNames.length; j++) {
@@ -94,7 +101,6 @@ export const DrawTree = (props: DrawTreeProps) => {
         }
       }
     });
-
     return {
       forceNodes: forceNodes,
       forceLinks: forceLinks,
@@ -148,7 +154,11 @@ export const DrawTree = (props: DrawTreeProps) => {
       // fka 'gravity' - nodes close to the center are only slightly affected, nodes farther away are pulled inwards with progressively increasing force
       .force("center", d3.forceCenter(chartWidth / 2, chartHeight / 2))
       // don't overlap nodes with each other
-      .force("collision", d3.forceCollide().radius(7));
+      .force(
+        "collision",
+        //@ts-ignore
+        d3.forceCollide().radius((d: forceNode) => (d.isLeaf ? 7 : 0))
+      );
 
     return simulation;
   };
@@ -184,10 +194,10 @@ export const DrawTree = (props: DrawTreeProps) => {
         width={chartWidth}
         height={chartHeight}
       >
-        {positionedPolytomies &&
+        {/* {positionedPolytomies &&
           positionedPolytomies.map((pt: forceNode[]) => (
             <DrawHull polytomyNodes={pt} />
-          ))}
+          ))} */}
 
         {positionedNodes &&
           positionedLinks &&
