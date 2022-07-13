@@ -166,7 +166,7 @@ function ClusteringOptions() {
               label="Introduction Weight Heuristic"
             />
             <FormHelperText>
-              Introduction Weight is a simple heuristic-based clustering method, originally implemented in <a href="https://academic.oup.com/ve/article/8/1/veac048/6609172">Cluster-Tracker</a>. <br />
+              <a href="https://academic.oup.com/ve/article/8/1/veac048/6609172">Introduction Weight</a> is a simple heuristic-based method. 
               <b>Computed on demand (please be patient; 1 - 15 seconds)</b>
             </FormHelperText>
           </RadioGroup>
