@@ -15,7 +15,7 @@ type DrawTreeProps = {
   onNodeSelected?: any;
 };
 
-export const DrawTree = (props: DrawTreeProps) => {
+export const ForceGraph = (props: DrawTreeProps) => {
   const { chartHeight, chartWidth, chartMargin, onNodeSelected } = props;
   /** Initialize state */
   //@ts-ignore
@@ -163,7 +163,6 @@ export const DrawTree = (props: DrawTreeProps) => {
           // @ts-ignore - somehow it still can't figure out that forceNode extends NodeSimulationDatum
           .strength((d: forceNode) => (d.isPolytomy ? -25 : -100))
           .distanceMin(0)
-        // .distanceMax((maxDist * distanceMultiplier) / 2)
       )
       // fka 'gravity' - nodes close to the center are only slightly affected, nodes farther away are pulled inwards with progressively increasing force
       .force("center", d3.forceCenter(chartWidth / 2, chartHeight / 2))
@@ -225,4 +224,4 @@ export const DrawTree = (props: DrawTreeProps) => {
   );
 };
 
-export default DrawTree;
+export default ForceGraph;

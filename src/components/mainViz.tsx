@@ -9,7 +9,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useWindowSize } from "@react-hook/window-size";
 import { useDispatch } from "react-redux";
-import { DrawTree } from "./viz/tree";
+import { ForceGraph } from "./viz/drawForceGraph";
 
 export const MainViz = () => {
   // @ts-ignore
@@ -88,7 +88,7 @@ export const MainViz = () => {
       <div
         style={{ width: chartWidth, height: chartHeight, margin: chartMargin }}
       >
-        <DrawTree
+        <ForceGraph
           chartWidth={chartWidth}
           chartHeight={chartHeight}
           chartMargin={chartMargin}
