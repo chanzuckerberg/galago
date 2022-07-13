@@ -163,10 +163,10 @@ function ClusteringOptions() {
                   size="small"
                 />
               }
-              label="Matutils"
+              label="Introduction Weight Heuristic"
             />
             <FormHelperText>
-              Matutils is a heuristic-based method. <br />
+              <a href="https://academic.oup.com/ve/article/8/1/veac048/6609172">Introduction Weight</a> is a simple heuristic-based method. <br />
               <b>Computed on demand (please be patient; 1 - 15 seconds)</b>
             </FormHelperText>
           </RadioGroup>
