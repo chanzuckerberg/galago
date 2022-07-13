@@ -10,8 +10,10 @@ const Footer = () => {
     >
       <p style={{ width: 700, height: 10 }}>
         Galago: a little tree explorer made with &hearts; by the CZ Gen Epi team
-        &#183; &copy; 2017 - 2022 CZI &#183; MIT licensed &#183;{" "}
-        <a href="https://github.com/chanzuckerberg/galago"> Source code</a>
+        &#183; Content: CC0 licensed &#183;{" "}
+        <a href="https://github.com/chanzuckerberg/galago">
+          Code: MIT licensed
+        </a>{" "}
       </p>
     </div>
   );
