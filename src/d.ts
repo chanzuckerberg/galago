@@ -86,12 +86,8 @@ export interface caseDefFilter {
 export interface forceNode extends SimulationNodeDatum {
   id: string;
   mrcaDist: number;
+  isLeaf: boolean;
 }
-
-// export interface forceNode extends SimulationNodeDatum {
-//   id: string;
-//   mrcaDist: number;
-// }
 
 export interface forceLink extends SimulationLinkDatum<forceNode> {
   distance: number;

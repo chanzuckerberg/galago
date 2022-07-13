@@ -75,13 +75,20 @@ export const DrawNodes = (props: DrawNodesProps) => {
     <g className="nodes">
       {forceNodes.map((forceNode: SimulationNodeDatum) => {
         //@ts-ignore
+        if (!forceNode.isLeaf) {
+          return <></>;
+        }
+
+        //@ts-ignore
         if (state.samplesOfInterestNames.includes(forceNode.id)) {
           return drawSquare(
+            //@ts-ignore
             forceNode,
             state.cladeDescription.muts_per_trans_minmax
           );
         } else {
           return drawCircle(
+            //@ts-ignore
             forceNode,
             state.cladeDescription.muts_per_trans_minmax
           );
