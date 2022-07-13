@@ -87,6 +87,7 @@ export interface forceNode extends SimulationNodeDatum {
   id: string;
   mrcaDist: number;
   isLeaf: boolean;
+  isPolytomy: boolean;
 }
 
 export interface forceLink extends SimulationLinkDatum<forceNode> {

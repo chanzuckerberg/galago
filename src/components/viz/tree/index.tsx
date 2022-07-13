@@ -40,6 +40,19 @@ export const DrawTree = (props: DrawTreeProps) => {
     let forceNodes: forceNode[] = []; // MUTABLE by D3: minimal objects for the force layout to use
     let polytomiesIdx: Array<number[]> = [];
 
+    const checkIfPolytomy = (node: Node) => {
+      if (node.children.length === 0 && node.branch_attrs.length === 0) {
+        return true;
+      } else if (
+        node.children.filter((ch: Node) => ch.branch_attrs.length === 0)
+          .length > 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
     /** initialize forceNodes */
     nodes.forEach((n: Node, i) => {
       if (!n.parent) {
@@ -56,6 +69,7 @@ export const DrawTree = (props: DrawTreeProps) => {
         id: n.name,
         mrcaDist: get_dist([n, state.mrca]), // distance from the mrca of the selected clade; used for coloring
         isLeaf: n.children.length === 0,
+        isPolytomy: checkIfPolytomy(n),
       };
       forceNodes.push(thisForceNode);
 
@@ -74,7 +88,7 @@ export const DrawTree = (props: DrawTreeProps) => {
       /** catalog polytomies */
       /**
        * A polytomy is an internal node of the tree with many samples (leaves) as children which are all identical to the internal node -- that is, they have 0 branch length and thus form a tight cluster.
-       * We want to draw a hull beneath each of these clusters.
+       * We want to reinforce this tight clustering in a few ways downstream, so we need to keep track of which polytomies exist.
        * We catalog each polytomy as an array of the internal node and all of its identical children.
        * Because the forceNode objects will be modified by the d3 simulation, we store these as indices of the forceNode * array that we can then access later once the simulation is complete.
        */
@@ -147,7 +161,7 @@ export const DrawTree = (props: DrawTreeProps) => {
         d3
           .forceManyBody()
           // @ts-ignore - somehow it still can't figure out that forceNode extends NodeSimulationDatum
-          .strength((d: forceNode) => (d.isLeaf ? -100 : 0))
+          .strength((d: forceNode) => (d.isPolytomy ? -25 : -100))
           .distanceMin(0)
         // .distanceMax((maxDist * distanceMultiplier) / 2)
       )
