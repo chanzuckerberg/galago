@@ -7,32 +7,38 @@ import { useSelector } from "react-redux";
 
 type DrawNodesProps = {
   forceNodes: forceNode[];
+  colorScale: [string, string, string];
 };
-
-const darkPurple = "#4f2379";
-const mediumPurple = "#9475b3";
-const lightPurple = "#d9cde3";
 
 const outlineColor = "rgba(80,80,80,1)";
 const radius = 10;
 
-const getColor = (forceNode: forceNode, muts_per_trans_minmax: number[]) => {
+const getColor = (
+  forceNode: forceNode,
+  muts_per_trans_minmax: number[],
+  colorScale: [string, string, string]
+) => {
   //@ts-ignore -- not sure why the `extend` works for forceLink but not forceNode in d.ts
   if (forceNode.mrcaDist === 0) {
-    return darkPurple;
+    return colorScale[0];
     //@ts-ignore
   } else if (
     //@ts-ignore
-    forceNode.mrcaDist < muts_per_trans_minmax[1]
+    forceNode.mrcaDist <=
+    muts_per_trans_minmax[1] * 2
   ) {
-    return mediumPurple;
+    return colorScale[1];
   } else {
-    return lightPurple;
+    return colorScale[2];
   }
 };
 
-const drawCircle = (forceNode: forceNode, muts_per_trans_minmax: number[]) => {
-  const color = getColor(forceNode, muts_per_trans_minmax);
+const drawCircle = (
+  forceNode: forceNode,
+  muts_per_trans_minmax: number[],
+  colorScale: [string, string, string]
+) => {
+  const color = getColor(forceNode, muts_per_trans_minmax, colorScale);
   return (
     <circle
       onClick={() => {}}
@@ -48,8 +54,12 @@ const drawCircle = (forceNode: forceNode, muts_per_trans_minmax: number[]) => {
   );
 };
 
-const drawSquare = (forceNode: forceNode, muts_per_trans_minmax: number[]) => {
-  const color = getColor(forceNode, muts_per_trans_minmax);
+const drawSquare = (
+  forceNode: forceNode,
+  muts_per_trans_minmax: number[],
+  colorScale: [string, string, string]
+) => {
+  const color = getColor(forceNode, muts_per_trans_minmax, colorScale);
   return (
     <rect
       onClick={() => {}}
@@ -67,7 +77,7 @@ const drawSquare = (forceNode: forceNode, muts_per_trans_minmax: number[]) => {
 };
 
 export const DrawNodes = (props: DrawNodesProps) => {
-  const { forceNodes } = props;
+  const { forceNodes, colorScale } = props;
   // @ts-ignore
   const state = useSelector((state) => state.global);
 
@@ -84,13 +94,15 @@ export const DrawNodes = (props: DrawNodesProps) => {
           return drawSquare(
             //@ts-ignore
             forceNode,
-            state.cladeDescription.muts_per_trans_minmax
+            state.cladeDescription.muts_per_trans_minmax,
+            colorScale
           );
         } else {
           return drawCircle(
             //@ts-ignore
             forceNode,
-            state.cladeDescription.muts_per_trans_minmax
+            state.cladeDescription.muts_per_trans_minmax,
+            colorScale
           );
         }
       })}
