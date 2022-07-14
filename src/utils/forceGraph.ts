@@ -26,11 +26,6 @@ export const initForceGraphData = (mrca: Node) => {
 
   /** initialize forceNodes */
   nodes.forEach((n: Node, i) => {
-    if (!n.parent) {
-      // don't try to draw the root of the tree, it's not a real node.
-      return;
-    }
-
     const thisForceNode: forceNode = {
       index: i,
       x: 0,
@@ -49,12 +44,14 @@ export const initForceGraphData = (mrca: Node) => {
       return; // don't draw the branch leading into the mrca
     }
 
-    forceLinks.push({
-      source: nodeNameToIndex[n.parent.name],
-      target: nodeNameToIndex[n.name],
-      //@ts-ignore
-      distance: n.branch_attrs.length,
-    });
+    if (n.parent) {
+      forceLinks.push({
+        source: nodeNameToIndex[n.parent.name],
+        target: nodeNameToIndex[n.name],
+        //@ts-ignore
+        distance: n.branch_attrs.length,
+      });
+    }
 
     /** catalog polytomies */
     /**
