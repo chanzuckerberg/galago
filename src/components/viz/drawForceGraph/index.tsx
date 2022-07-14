@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 import DrawForceLink from "./drawForceLink";
 import DrawNodes from "./drawNodes";
 import DrawLabels from "./drawLabels";
-import DrawHull from "./drawHull";
 import ForceGraphLegend from "./drawLegend";
 import {
   initForceGraphData,
   initSimulation,
-  polytomiesIdxToForceNode,
 } from "../../../utils/forceGraph";
 
 type DrawTreeProps = {
@@ -35,9 +33,7 @@ export const ForceGraph = (props: DrawTreeProps) => {
 
   // only run the simulation (once) if the tree or the mrca is changed
   useEffect(() => {
-    const { forceNodes, forceLinks, polytomiesIdx, nodes } = initForceGraphData(
-      state.mrca
-    );
+    const { forceNodes, forceLinks, nodes } = initForceGraphData(state.mrca);
 
     const maxDist =
       nodes.slice(-1)[0].node_attrs.div - state.mrca.node_attrs.div;
@@ -65,11 +61,9 @@ export const ForceGraph = (props: DrawTreeProps) => {
         width={chartWidth}
         height={chartHeight}
       >
-        {/* {positionedPolytomies &&
-          positionedPolytomies.map((pt: forceNode[]) => (
-            <DrawHull polytomyNodes={pt} />
-          ))} */}
-
+        <g
+          transform={`scale(${scale[0]}, ${scale[1]}) translate(${translate[0]}, ${translate[1]})`}
+        >
         {positionedNodes &&
           positionedLinks &&
           positionedLinks.map((forceLink: forceLink) => (

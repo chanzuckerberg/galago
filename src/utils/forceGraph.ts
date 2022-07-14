@@ -23,7 +23,6 @@ export const initForceGraphData = (mrca: Node) => {
 
   let forceLinks: forceLink[] = [];
   let forceNodes: forceNode[] = []; // MUTABLE by D3: minimal objects for the force layout to use
-  let polytomiesIdx: Array<number[]> = [];
 
   /** initialize forceNodes */
   nodes.forEach((n: Node, i) => {
@@ -68,15 +67,6 @@ export const initForceGraphData = (mrca: Node) => {
       .filter((ch: Node) => ch.branch_attrs.length === 0)
       .map((ch: Node) => ch.name);
 
-    if (polytomyChildrenNames.length > 1) {
-      // TODO: should we also draw mini "hulls" as internal nodes?
-      let polytomyIdx = polytomyChildrenNames.map(
-        (name: string) => nodeNameToIndex[name]
-      );
-      polytomyIdx.push(i); // current node index
-      polytomiesIdx.push(polytomyIdx);
-    }
-
     for (let i = 0; i < polytomyChildrenNames.length - 1; i++) {
       for (let j = i + 1; j < polytomyChildrenNames.length; j++) {
         forceLinks.push({
@@ -90,7 +80,6 @@ export const initForceGraphData = (mrca: Node) => {
   return {
     forceNodes: forceNodes,
     forceLinks: forceLinks,
-    polytomiesIdx: polytomiesIdx,
     nodes: nodes,
   };
 };
@@ -157,17 +146,17 @@ export const initSimulation = (
   return simulation;
 };
 
-export const polytomiesIdxToForceNode = (
-  polytomiesIdx: Array<number[]>,
-  forceNodes: forceNode[]
+export const calcScaleTransform = (
+  forceNodes: forceNode[],
+  chartWidth: number,
 ) => {
-  //* once the force nodes have been positioned by d3, we can swap out our index-based records for the actual forceNode objects */
-  let translatedPolytomies: Array<forceNode[]> = [];
+  const allX: number[] = forceNodes.map((n: forceNode) => (n.x ? n.x : 0));
+  const allY = forceNodes.map((n: forceNode) => (n.y ? n.y : 0));
 
-  polytomiesIdx.forEach((pti: number[]) => {
-    let translatedPolytomy = pti.map((idx: number) => forceNodes[idx]);
-    translatedPolytomies.push(translatedPolytomy);
-  });
+  const xRange = Math.max(...allX) - Math.min(...allX);
+  const yRange = Math.max(...allY) - Math.min(...allY);
 
-  return translatedPolytomies;
+  const xScale = chartWidth / (xRange + 2 * chartMargin);
+
+  const scale: [number, number] = [
 };
