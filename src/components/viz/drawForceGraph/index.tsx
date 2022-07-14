@@ -35,8 +35,9 @@ export const ForceGraph = (props: DrawTreeProps) => {
 
   // only run the simulation (once) if the tree or the mrca is changed
   useEffect(() => {
-    const { forceNodes, forceLinks, polytomiesIdx, nodes } =
-      initForceGraphData();
+    const { forceNodes, forceLinks, polytomiesIdx, nodes } = initForceGraphData(
+      state.mrca
+    );
 
     const maxDist =
       nodes.slice(-1)[0].node_attrs.div - state.mrca.node_attrs.div;
@@ -75,7 +76,11 @@ export const ForceGraph = (props: DrawTreeProps) => {
             <DrawForceLink forceLink={forceLink} forceNodes={positionedNodes} />
           ))}
         {positionedNodes && (
-          <DrawNodes forceNodes={positionedNodes} colorScale={colorScale} />
+            <DrawNodes
+              forceNodes={positionedNodes}
+              colorScale={colorScale}
+              chartHeight={chartHeight}
+            />
         )}
         <ForceGraphLegend colorScale={colorScale} />
         {/* <DrawLabels nodes={forceNodes} onNodeSelected={() => {}} /> */}

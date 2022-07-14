@@ -1,14 +1,23 @@
 import * as d3 from "d3";
-import { useSelector } from "react-redux";
 import { forceLink, forceNode, Node } from "../d";
 import { traverse_preorder, get_dist } from "./treeMethods";
 
-export const initForceGraphData = () => {
+const checkIfPolytomy = (n: Node) => {
+  if (n.children.length === 0 && n.branch_attrs.length === 0) {
+    return true;
+  } else if (
+    n.children.filter((ch) => ch.branch_attrs.length === 0).length > 0
+  ) {
+    return true;
+  }
+  return false;
+};
+
+export const initForceGraphData = (mrca: Node) => {
   //@ts-ignore
-  const state = useSelector((state) => state.global);
 
   /** Traverses the subtree and initializes the forceNodes, forceLinks, and polytomies (used for drawing hulls) */
-  const nodes: Node[] = state.mrca ? traverse_preorder(state.mrca) : []; // tree nodes
+  const nodes: Node[] = mrca ? traverse_preorder(mrca) : []; // tree nodes
   const nodeNameToIndex: any = {};
   nodes.forEach((n: Node, i: number) => (nodeNameToIndex[n.name] = i));
 
@@ -30,14 +39,14 @@ export const initForceGraphData = () => {
       vx: 0,
       vy: 0,
       id: n.name,
-      mrcaDist: get_dist([n, state.mrca]), // distance from the mrca of the selected clade; used for coloring
+      mrcaDist: get_dist([n, mrca]), // distance from the mrca of the selected clade; used for coloring
       isLeaf: n.children.length === 0,
       isPolytomy: checkIfPolytomy(n),
     };
     forceNodes.push(thisForceNode);
 
     /** initialize forceLinks */
-    if (n.name === state.mrca.name) {
+    if (n.name === mrca.name) {
       return; // don't draw the branch leading into the mrca
     }
 
