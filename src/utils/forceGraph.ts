@@ -59,9 +59,7 @@ export const initForceGraphData = (mrca: Node) => {
     /** catalog polytomies */
     /**
      * A polytomy is an internal node of the tree with many samples (leaves) as children which are all identical to the internal node -- that is, they have 0 branch length and thus form a tight cluster.
-     * We want to reinforce this tight clustering in a few ways downstream, so we need to keep track of which polytomies exist.
-     * We catalog each polytomy as an array of the internal node and all of its identical children.
-     * Because the forceNode objects will be modified by the d3 simulation, we store these as indices of the forceNode * array that we can then access later once the simulation is complete.
+     * We want to reinforce this tight clustering by drawing invisible 0-length cross-links between them.
      */
     const polytomyChildrenNames = n.children
       .filter((ch: Node) => ch.branch_attrs.length === 0)
@@ -160,15 +158,15 @@ export const calcScaleTransform = (
 
   const xScale = chartWidth / (xRange + 2 * chartMargin);
   const yScale = chartHeight / (yRange + 2 * chartMargin);
-  console.log(chartWidth, xRange, chartHeight, yRange);
+  // console.log(chartWidth, xRange, chartHeight, yRange);
 
   const scale: [number, number] = [
     Math.min(xScale, yScale),
     Math.min(xScale, yScale),
   ];
   const translate: [number, number] = [
-    (chartWidth - Math.max(...allX)) * scale[0],
-    (chartHeight - Math.max(...allY)) * scale[0],
+    chartWidth - chartMargin - Math.max(...allX),
+    chartHeight - chartMargin - Math.max(...allY),
   ];
 
   return { calcScale: scale, calcTranslate: translate };
