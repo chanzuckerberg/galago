@@ -93,6 +93,8 @@ export const initSimulation = (
   chartWidth: number,
   chartHeight: number
 ) => {
+  const radius = chartHeight / (0.8 * forceNodes.length);
+
   const simulation = d3
     .forceSimulation()
     .nodes(forceNodes)
@@ -120,7 +122,18 @@ export const initSimulation = (
     .force(
       "collision",
       //@ts-ignore
-      d3.forceCollide().radius((d: forceNode) => (d.isLeaf ? 7 : 0))
+      d3.forceCollide().radius((d: forceNode) => {
+        if (!d.isLeaf) {
+          // internal nodes
+          return 0;
+        } else if (!d.isPolytomy) {
+          // standalone nodes
+          return radius;
+        } else {
+          // polytomy leaves
+          return radius * 0.5;
+        }
+      })
     );
 
   return simulation;

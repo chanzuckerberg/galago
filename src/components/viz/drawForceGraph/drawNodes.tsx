@@ -8,10 +8,10 @@ import { useSelector } from "react-redux";
 type DrawNodesProps = {
   forceNodes: forceNode[];
   colorScale: [string, string, string];
+  chartHeight: number;
 };
 
-const outlineColor = "rgba(80,80,80,1)";
-const radius = 10;
+const outlineColor = "black"; //"rgba(80,80,80,1)";
 
 const getColor = (
   forceNode: forceNode,
@@ -36,7 +36,8 @@ const getColor = (
 const drawCircle = (
   forceNode: forceNode,
   muts_per_trans_minmax: number[],
-  colorScale: [string, string, string]
+  colorScale: [string, string, string],
+  radius: number
 ) => {
   const color = getColor(forceNode, muts_per_trans_minmax, colorScale);
   return (
@@ -57,17 +58,18 @@ const drawCircle = (
 const drawSquare = (
   forceNode: forceNode,
   muts_per_trans_minmax: number[],
-  colorScale: [string, string, string]
+  colorScale: [string, string, string],
+  radius: number
 ) => {
   const color = getColor(forceNode, muts_per_trans_minmax, colorScale);
   return (
     <rect
       onClick={() => {}}
       className="node"
-      x={forceNode.x ? forceNode.x - radius : NaN}
-      y={forceNode.y ? forceNode.y - radius : NaN}
-      width={radius * 1.5}
-      height={radius * 1.5}
+      x={forceNode.x ? forceNode.x - radius * Math.cos(45) : NaN}
+      y={forceNode.y ? forceNode.y - radius * Math.cos(45) : NaN}
+      width={2 * radius * Math.cos(45)}
+      height={2 * radius * Math.cos(45)}
       fill={color}
       key={`node-${uuid()}`}
       stroke={outlineColor}
@@ -77,7 +79,10 @@ const drawSquare = (
 };
 
 export const DrawNodes = (props: DrawNodesProps) => {
-  const { forceNodes, colorScale } = props;
+  const { forceNodes, colorScale, chartHeight } = props;
+  const radius = chartHeight / (0.8 * forceNodes.length);
+  console.log(radius);
+
   // @ts-ignore
   const state = useSelector((state) => state.global);
 
@@ -95,14 +100,16 @@ export const DrawNodes = (props: DrawNodesProps) => {
             //@ts-ignore
             forceNode,
             state.cladeDescription.muts_per_trans_minmax,
-            colorScale
+            colorScale,
+            radius
           );
         } else {
           return drawCircle(
             //@ts-ignore
             forceNode,
             state.cladeDescription.muts_per_trans_minmax,
-            colorScale
+            colorScale,
+            radius
           );
         }
       })}
