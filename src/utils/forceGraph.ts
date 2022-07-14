@@ -122,7 +122,16 @@ export const initSimulation = (
       d3
         .forceManyBody()
         // @ts-ignore - somehow it still can't figure out that forceNode extends NodeSimulationDatum
-        .strength((d: forceNode) => (d.isPolytomy ? -25 : -100))
+        .strength((d: forceNode) => {
+          if (!d.isPolytomy) {
+            return -100;
+          } else if (d.isPolytomy && !d.isLeaf) {
+            return +1;
+          } else {
+            // polytomy leaves
+            return -25;
+          }
+        })
         .distanceMin(0)
     )
     // fka 'gravity' - nodes close to the center are only slightly affected, nodes farther away are pulled inwards with progressively increasing force
