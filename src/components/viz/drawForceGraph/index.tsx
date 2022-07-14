@@ -10,6 +10,7 @@ import {
   initForceGraphData,
   initSimulation,
 } from "../../../utils/forceGraph";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type DrawTreeProps = {
   chartHeight: number;
@@ -33,6 +34,7 @@ export const ForceGraph = (props: DrawTreeProps) => {
   const [positionedLinks, setPositionedLinks] = useState<forceLink[]>([]);
   const [scale, setScale] = useState<[number, number]>([1, 1]);
   const [translate, setTranslate] = useState<[number, number]>([0, 0]);
+  const [ready, setReady] = useState<boolean>(false);
 
   // only run the simulation (once) if the tree or the mrca is changed
   useEffect(() => {
@@ -50,11 +52,10 @@ export const ForceGraph = (props: DrawTreeProps) => {
       chartHeight
     );
 
-    // wait until positions are assigned before updating the svg
+    // wait until positions are assigned before scaling the svg
     simulation.on("end", () => {
-      setPositionedNodes(forceNodes);
       setPositionedLinks(forceLinks);
-
+      setPositionedNodes(forceNodes);
       const { calcScale, calcTranslate } = calcScaleTransform(
         forceNodes,
         chartWidth,
@@ -63,38 +64,52 @@ export const ForceGraph = (props: DrawTreeProps) => {
       );
       setScale(calcScale);
       setTranslate(calcTranslate);
+      setReady(true);
     });
   }, [state.mrca, state.tree]);
 
   return (
     <div>
-      <svg
-        style={{ border: "1px solid pink" }}
-        width={chartWidth}
-        height={chartHeight}
-      >
-        <g
-          transform={`scale(${scale[0]}, ${scale[1]}) translate(${translate[0]}, ${translate[1]})`}
+      {!ready && (
+        <div
+          style={{
+            position: "relative",
+            top: chartHeight / 2 - 37.5,
+            left: chartWidth / 2 - 37.5,
+          }}
         >
-          {positionedNodes &&
-            positionedLinks &&
-            positionedLinks.map((forceLink: forceLink) => (
-              <DrawForceLink
-                forceLink={forceLink}
+          <CircularProgress variant="indeterminate" size={75} color="primary" />
+        </div>
+      )}
+      {ready && (
+        <svg
+          style={{ border: "1px solid pink" }}
+          width={chartWidth}
+          height={chartHeight}
+        >
+          <g
+            transform={`scale(${scale[0]}, ${scale[1]}) translate(${translate[0]}, ${translate[1]})`}
+          >
+            {positionedNodes &&
+              positionedLinks &&
+              positionedLinks.map((forceLink: forceLink) => (
+                <DrawForceLink
+                  forceLink={forceLink}
+                  forceNodes={positionedNodes}
+                />
+              ))}
+            {positionedNodes && (
+              <DrawNodes
                 forceNodes={positionedNodes}
+                colorScale={colorScale}
+                chartHeight={chartHeight}
               />
-            ))}
-          {positionedNodes && (
-            <DrawNodes
-              forceNodes={positionedNodes}
-              colorScale={colorScale}
-              chartHeight={chartHeight}
-            />
-          )}
-          {/* <DrawLabels nodes={forceNodes} onNodeSelected={() => {}} /> */}
-        </g>
-        <ForceGraphLegend colorScale={colorScale} />
-      </svg>
+            )}
+            {/* <DrawLabels nodes={forceNodes} onNodeSelected={() => {}} /> */}
+          </g>
+          <ForceGraphLegend colorScale={colorScale} />
+        </svg>
+      )}
     </div>
   );
 };
