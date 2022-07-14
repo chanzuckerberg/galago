@@ -89,7 +89,10 @@ export const initSimulation = (
   chartWidth: number,
   chartHeight: number
 ) => {
-  const radius = chartHeight / (0.8 * forceNodes.length);
+  const radius = Math.max(
+    Math.min(chartHeight / (0.8 * forceNodes.length), 25),
+    5
+  );
 
   const simulation = d3
     .forceSimulation()

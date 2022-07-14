@@ -80,7 +80,10 @@ const drawSquare = (
 
 export const DrawNodes = (props: DrawNodesProps) => {
   const { forceNodes, colorScale, chartHeight } = props;
-  const radius = chartHeight / (0.8 * forceNodes.length);
+  const radius = Math.max(
+    Math.min(chartHeight / (0.8 * forceNodes.length), 25),
+    5
+  );
 
   // @ts-ignore
   const state = useSelector((state) => state.global);
