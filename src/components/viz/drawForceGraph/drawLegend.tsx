@@ -65,7 +65,7 @@ export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
         width={legendWidth}
         height={legendHeight}
         fill="white"
-        opacity={0.6}
+        opacity={0.2}
       />
       {colorScale.map((cs, i) => drawColorScaleSegment(cs, i))}
       <text x={paddingX} y={paddingY} fontSize={10}>
