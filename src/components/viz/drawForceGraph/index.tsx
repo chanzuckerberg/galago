@@ -6,6 +6,7 @@ import DrawNodes from "./drawNodes";
 import DrawLabels from "./drawLabels";
 import ForceGraphLegend from "./drawLegend";
 import {
+  calcScaleTransform,
   initForceGraphData,
   initSimulation,
 } from "../../../utils/forceGraph";
@@ -30,6 +31,8 @@ export const ForceGraph = (props: DrawTreeProps) => {
   // links and nodes that d3 has finished finding positions for
   const [positionedNodes, setPositionedNodes] = useState<forceNode[]>([]);
   const [positionedLinks, setPositionedLinks] = useState<forceLink[]>([]);
+  const [scale, setScale] = useState<[number, number]>([1, 1]);
+  const [translate, setTranslate] = useState<[number, number]>([0, 0]);
 
   // only run the simulation (once) if the tree or the mrca is changed
   useEffect(() => {
@@ -51,6 +54,15 @@ export const ForceGraph = (props: DrawTreeProps) => {
     simulation.on("end", () => {
       setPositionedNodes(forceNodes);
       setPositionedLinks(forceLinks);
+
+      const { calcScale, calcTranslate } = calcScaleTransform(
+        forceNodes,
+        chartWidth,
+        chartHeight,
+        chartMargin
+      );
+      setScale(calcScale);
+      setTranslate(calcTranslate);
     });
   }, [state.mrca, state.tree]);
 
@@ -64,20 +76,24 @@ export const ForceGraph = (props: DrawTreeProps) => {
         <g
           transform={`scale(${scale[0]}, ${scale[1]}) translate(${translate[0]}, ${translate[1]})`}
         >
-        {positionedNodes &&
-          positionedLinks &&
-          positionedLinks.map((forceLink: forceLink) => (
-            <DrawForceLink forceLink={forceLink} forceNodes={positionedNodes} />
-          ))}
-        {positionedNodes && (
+          {positionedNodes &&
+            positionedLinks &&
+            positionedLinks.map((forceLink: forceLink) => (
+              <DrawForceLink
+                forceLink={forceLink}
+                forceNodes={positionedNodes}
+              />
+            ))}
+          {positionedNodes && (
             <DrawNodes
               forceNodes={positionedNodes}
               colorScale={colorScale}
               chartHeight={chartHeight}
             />
-        )}
+          )}
+          {/* <DrawLabels nodes={forceNodes} onNodeSelected={() => {}} /> */}
+        </g>
         <ForceGraphLegend colorScale={colorScale} />
-        {/* <DrawLabels nodes={forceNodes} onNodeSelected={() => {}} /> */}
       </svg>
     </div>
   );
