@@ -1,8 +1,6 @@
 import { useSelector } from "react-redux";
 
 type ForceGraphLegendProps = {
-  legendWidth: number;
-  legendHeight: number;
   colorScale: string[];
 };
 
@@ -37,19 +35,21 @@ export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
       }+ muts)`,
     ];
     return (
-      <g>
+      <g key={`colorBarSegment-${i}`}>
         <rect
           x={paddingX}
           y={colorBarStartY + glyphHeight * i}
           width={glyphWidth}
           height={glyphHeight}
           fill={color}
+          key={`colorBarGlyph-${i}`}
         />
         <text
           x={textX}
           y={colorBarStartY + glyphHeight * i + glyphHeight / 2}
-          dominant-baseline="middle"
+          dominantBaseline="middle"
           fontSize={10}
+          key={`colorBarText-${i}`}
         >
           {colorScaleLegends[i]}
         </text>
@@ -83,7 +83,7 @@ export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
         x={textX}
         y={markerStartY + glyphHeight / 2}
         fontSize={10}
-        dominant-baseline="middle"
+        dominantBaseline="middle"
       >
         Your samples of interest
       </text>
@@ -97,7 +97,7 @@ export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
       <text
         x={textX}
         y={markerStartY + glyphHeight + paddingY}
-        dominant-baseline="middle"
+        dominantBaseline="middle"
         fontSize={10}
       >
         Other samples
@@ -133,7 +133,7 @@ export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
       <text
         x={paddingX}
         y={tickBarStartY + glyphHeight + paddingY}
-        dominant-baseline="bottom"
+        dominantBaseline="bottom"
         fontSize={10}
         width={tickBarLength}
       >
