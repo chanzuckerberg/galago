@@ -7,6 +7,7 @@ import DrawForceLink from "./drawForceLink";
 import DrawNodes from "./drawNodes";
 import DrawLabels from "./drawLabels";
 import DrawHull from "./drawHull";
+import ForceGraphLegend from "./drawLegend";
 
 type DrawTreeProps = {
   chartHeight: number;
@@ -20,6 +21,11 @@ export const ForceGraph = (props: DrawTreeProps) => {
   /** Initialize state */
   //@ts-ignore
   const state = useSelector((state) => state.global);
+  const colorScale: [string, string, string] = [
+    "#4f2379",
+    "#9475b3",
+    "#d9cde3",
+  ];
 
   // links and nodes that d3 has finished finding positions for
   const [positionedNodes, setPositionedNodes] = useState<forceNode[]>([]);
@@ -217,7 +223,12 @@ export const ForceGraph = (props: DrawTreeProps) => {
           positionedLinks.map((forceLink: forceLink) => (
             <DrawForceLink forceLink={forceLink} forceNodes={positionedNodes} />
           ))}
-        {positionedNodes && <DrawNodes forceNodes={positionedNodes} />}
+        {positionedNodes && (
+          <DrawNodes forceNodes={positionedNodes} colorScale={colorScale} />
+        )}
+          <ForceGraphLegend
+            colorScale={colorScale}
+          />
         {/* <DrawLabels nodes={forceNodes} onNodeSelected={() => {}} /> */}
       </svg>
     </div>
