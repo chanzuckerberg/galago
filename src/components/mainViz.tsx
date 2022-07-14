@@ -15,7 +15,7 @@ export const MainViz = () => {
   // @ts-ignore
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
-  const viewPlot: "scatter" | "epiCurve" = state.viewPlot;
+  const viewPlot: "scatter" | "forceGraph" = state.viewPlot;
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [windowWidth, windowHeight] = useWindowSize();
 
@@ -79,8 +79,8 @@ export const MainViz = () => {
           <ToggleButton value="scatter" disableRipple>
             Scatterplot of all clades
           </ToggleButton>
-          <ToggleButton value="epiCurve" disabled={!state.mrca} disableRipple>
-            Epi curve for selected clade
+          <ToggleButton value="forceGraph" disabled={!state.mrca} disableRipple>
+            Network diagram for selected clade
           </ToggleButton>
         </ToggleButtonGroup>
       </div>
@@ -88,15 +88,10 @@ export const MainViz = () => {
       <div
         style={{ width: chartWidth, height: chartHeight, margin: chartMargin }}
       >
-        <ForceGraph
-          chartWidth={chartWidth}
-          chartHeight={chartHeight}
-          chartMargin={chartMargin}
-        />
-        {/* {viewPlot === "epiCurve" && state.mrca ? (
-          <EpiCurve
-            chartHeight={chartHeight}
+        {viewPlot === "forceGraph" && state.mrca ? (
+          <ForceGraph
             chartWidth={chartWidth}
+            chartHeight={chartHeight}
             chartMargin={chartMargin}
           />
         ) : (
@@ -105,7 +100,7 @@ export const MainViz = () => {
             chartWidth={chartWidth}
             chartMargin={chartMargin}
           />
-        )} */}
+        )}
       </div>
     </div>
   );
