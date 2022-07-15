@@ -62,15 +62,15 @@ export const initForceGraphData = (mrca: Node) => {
       .filter((ch: Node) => ch.branch_attrs.length === 0)
       .map((ch: Node) => ch.name);
 
-    for (let i = 0; i < polytomyChildrenNames.length - 1; i++) {
-      for (let j = i + 1; j < polytomyChildrenNames.length; j++) {
-        forceLinks.push({
-          source: nodeNameToIndex[polytomyChildrenNames[i]],
-          target: nodeNameToIndex[polytomyChildrenNames[j]],
-          distance: 0,
-        });
-      }
-    }
+    // for (let i = 0; i < polytomyChildrenNames.length - 1; i++) {
+    //   for (let j = i + 1; j < polytomyChildrenNames.length; j++) {
+    //     forceLinks.push({
+    //       source: nodeNameToIndex[polytomyChildrenNames[i]],
+    //       target: nodeNameToIndex[polytomyChildrenNames[j]],
+    //       distance: 0,
+    //     });
+    // }
+    // }
   });
   return {
     forceNodes: forceNodes,
@@ -88,7 +88,7 @@ export const initSimulation = (
 ) => {
   const radius = Math.max(
     Math.min(chartHeight / (0.8 * forceNodes.length), 25),
-    5
+    2
   );
 
   const simulation = d3
@@ -111,12 +111,12 @@ export const initSimulation = (
         // @ts-ignore - somehow it still can't figure out that forceNode extends NodeSimulationDatum
         .strength((d: forceNode) => {
           if (!d.isPolytomy) {
-            return -100;
+            return -30 * (forceNodes.length / 10);
           } else if (d.isPolytomy && !d.isLeaf) {
             return +1;
           } else {
             // polytomy leaves
-            return -25;
+            return -1 * (forceNodes.length / 10);
           }
         })
         .distanceMin(0)
@@ -158,7 +158,7 @@ export const calcScaleTransform = (
 
   const xScale = chartWidth / (xRange + 2 * chartMargin);
   const yScale = chartHeight / (yRange + 2 * chartMargin);
-  // console.log(chartWidth, xRange, chartHeight, yRange);
+  console.log(chartWidth, xRange, chartHeight, yRange);
 
   const scale: [number, number] = [
     Math.min(xScale, yScale),
