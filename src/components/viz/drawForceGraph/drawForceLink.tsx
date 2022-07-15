@@ -1,6 +1,4 @@
-// src/component/SimpleForceGraph/Links.tsx
-
-import d3 from "d3";
+import * as d3 from "d3";
 import { forceLink, forceNode } from "../../../d";
 //@ts-ignore
 import uuid from "react-uuid";
@@ -9,6 +7,11 @@ import { useRef } from "react";
 type DrawForceLinkProps = {
   forceLink: forceLink;
   forceNodes: forceNode[];
+  chartWidth: number;
+  chartHeight: number;
+  chartMargin: number;
+  scaleDomainX: [number, number];
+  scaleDomainY: [number, number];
 };
 
 const calculateTicks = (
@@ -16,7 +19,9 @@ const calculateTicks = (
   x2: number,
   y1: number,
   y2: number,
-  nMuts: number
+  nMuts: number,
+  scaleX: Function,
+  scaleY: Function
 ) => {
   if (nMuts === 0) {
     return;
@@ -44,7 +49,12 @@ const calculateTicks = (
 
     let tickStartY = tickCenterY - (tickHeight / 2) * Math.sin(90 + theta);
     let tickEndY = tickCenterY + (tickHeight / 2) * Math.sin(90 + theta);
-    tickCoordinates.push([tickStartX, tickEndX, tickStartY, tickEndY]);
+    tickCoordinates.push([
+      scaleX(tickStartX),
+      scaleX(tickEndX),
+      scaleY(tickStartY),
+      scaleY(tickEndY),
+    ]);
   }
   return tickCoordinates;
 };
@@ -66,7 +76,24 @@ export const DrawForceLink = (props: DrawForceLinkProps) => {
   //       .attr("y", event.nativeEvent.offsetY);
   //   };
 
-  const { forceLink, forceNodes } = props;
+  const {
+    forceLink,
+    forceNodes,
+    chartWidth,
+    chartHeight,
+    chartMargin,
+    scaleDomainX,
+    scaleDomainY,
+  } = props;
+
+  const scaleX = d3
+    .scaleLinear()
+    .domain(scaleDomainX)
+    .range([chartMargin, chartWidth - chartMargin]);
+  const scaleY = d3
+    .scaleLinear()
+    .domain(scaleDomainY)
+    .range([chartMargin, chartHeight - chartMargin]);
 
   let target: any = { x: undefined, y: undefined };
   let source: any = { x: undefined, y: undefined };
@@ -88,17 +115,19 @@ export const DrawForceLink = (props: DrawForceLinkProps) => {
     target.x,
     source.y,
     target.y,
-    forceLink.distance
+    forceLink.distance,
+    scaleX,
+    scaleY
   );
 
   return (
     <g className="linkGroup">
       <line
         className="link"
-        x1={source.x}
-        x2={target.x}
-        y1={source.y}
-        y2={target.y}
+        x1={scaleX(source.x)}
+        x2={scaleX(target.x)}
+        y1={scaleY(source.y)}
+        y2={scaleY(target.y)}
         stroke={forceLink.distance === 0 ? "none" : "black"}
         // onMouseOver={(event) => {
         //   onMouseOverHandler(event);
