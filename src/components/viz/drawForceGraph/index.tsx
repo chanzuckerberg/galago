@@ -11,6 +11,7 @@ import {
   initSimulation,
 } from "../../../utils/forceGraph";
 import CircularProgress from "@mui/material/CircularProgress";
+import * as d3 from "d3";
 
 type DrawTreeProps = {
   chartHeight: number;
@@ -32,8 +33,16 @@ export const ForceGraph = (props: DrawTreeProps) => {
   // links and nodes that d3 has finished finding positions for
   const [positionedNodes, setPositionedNodes] = useState<forceNode[]>([]);
   const [positionedLinks, setPositionedLinks] = useState<forceLink[]>([]);
-  const [scale, setScale] = useState<[number, number]>([1, 1]);
-  const [translate, setTranslate] = useState<[number, number]>([0, 0]);
+  const [scaleDomainX, setScaleDomainX] = useState<[number, number]>([
+    0,
+    chartWidth,
+  ]);
+  const [scaleDomainY, setScaleDomainY] = useState<[number, number]>([
+    0,
+    chartHeight,
+  ]);
+
+  // const [translate, setTranslate] = useState<[number, number]>([0, 0]);
   const [ready, setReady] = useState<boolean>(false);
 
   // only run the simulation (once) if the tree or the mrca is changed
@@ -56,14 +65,21 @@ export const ForceGraph = (props: DrawTreeProps) => {
     simulation.on("end", () => {
       setPositionedLinks(forceLinks);
       setPositionedNodes(forceNodes);
-      const { calcScale, calcTranslate } = calcScaleTransform(
-        forceNodes,
-        chartWidth,
-        chartHeight,
-        chartMargin
+      // const { calcScale, calcTranslate } = calcScaleTransform(
+      //   forceNodes,
+      //   chartWidth,
+      //   chartHeight,
+      //   chartMargin
+      // );
+      const allX: number[] = forceNodes.map((n: forceNode) =>
+        n.x ? n.x : NaN
       );
-      setScale(calcScale);
-      setTranslate(calcTranslate);
+      const allY: number[] = forceNodes.map((n: forceNode) =>
+        n.y ? n.y : NaN
+      );
+
+      setScaleDomainY([Math.min(...allY), Math.max(...allY)]);
+      setScaleDomainX([Math.min(...allX), Math.max(...allX)]);
       setReady(true);
     });
   }, [state.mrca, state.tree]);
@@ -88,21 +104,32 @@ export const ForceGraph = (props: DrawTreeProps) => {
           height={chartHeight}
         >
           <g
-            transform={`scale(${scale[0]}, ${scale[1]}) translate(${translate[0]}, ${translate[1]})`}
+            transform={`scale(0.5,0.5) translate{${chartMargin}, ${chartMargin}}`}
           >
-            {positionedNodes &&
-              positionedLinks &&
-              positionedLinks.map((forceLink: forceLink) => (
-                <DrawForceLink
-                  forceLink={forceLink}
-                  forceNodes={positionedNodes}
-                />
-              ))}
+            <g id="forceLinks">
+              {positionedNodes &&
+                positionedLinks &&
+                positionedLinks.map((forceLink: forceLink) => (
+                  <DrawForceLink
+                    forceLink={forceLink}
+                    forceNodes={positionedNodes}
+                    chartWidth={chartWidth}
+                    chartHeight={chartHeight}
+                    chartMargin={chartMargin}
+                    scaleDomainX={scaleDomainX}
+                    scaleDomainY={scaleDomainY}
+                  />
+                ))}
+            </g>
             {positionedNodes && (
               <DrawNodes
                 forceNodes={positionedNodes}
                 colorScale={colorScale}
+                chartWidth={chartWidth}
                 chartHeight={chartHeight}
+                chartMargin={chartMargin}
+                scaleDomainX={scaleDomainX}
+                scaleDomainY={scaleDomainY}
               />
             )}
             {/* <DrawLabels nodes={forceNodes} onNodeSelected={() => {}} /> */}
