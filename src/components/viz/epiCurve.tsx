@@ -1,10 +1,13 @@
+import * as d3 from "d3";
+import { Label, Connector, CircleSubject, Annotation } from "@visx/annotation";
+import { LinePath } from "@visx/shape";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState } from "react";
 import { BarStack } from "@visx/shape";
 import { SeriesPoint } from "@visx/shape/lib/types";
 import { Group } from "@visx/group";
 import { GridRows } from "@visx/grid";
-import { AxisBottom } from "@visx/axis";
+import { AxisBottom, AxisLeft } from "@visx/axis";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { timeParse, timeFormat } from "d3-time-format";
 // import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
@@ -15,7 +18,14 @@ import {
   traverse_preorder,
 } from "../../utils/treeMethods";
 import { Node } from "../../d";
-import { scaleTime } from "d3";
+import { range, scaleTime } from "d3";
+import {
+  binMonthlyDate,
+  binWeeklyDate,
+  getDateRange,
+  getTimepoints,
+  sortDates,
+} from "../../utils/dates";
 
 type EpiCurveProps = {
   chartHeight: number;
@@ -47,38 +57,38 @@ export const EpiCurve = (props: EpiCurveProps) => {
         getNodeAttr(b, "num_date").getTime()
     );
 
-  const allDates: Date[] = samples
-    .map((n: Node) => getNodeAttr(n, "num_date"))
-    .sort((a, b) => a.getTime() - b.getTime());
+  const allDates: Date[] = sortDates(
+    samples.map((n: Node) => getNodeAttr(n, "num_date"))
+  );
+  const { minDate, maxDate, dateSpan } = getDateRange(allDates);
+  const tmrca = getNodeAttr(state.mrca, "num_date");
 
-  const dateSpan = allDates.slice(-1)[0].getTime() - allDates[0].getTime();
-  let formatDate: Function;
-  let xLabel: string;
-  if (dateSpan > 7.884e9) {
-    // more than 3mo total range
-    xLabel = "Month of sample collection";
-    formatDate = (date: Date) => {
-      return timeFormat("%b %Y")(date);
-    };
-  } else {
-    xLabel = "Epi week of sample collection (Saturday end date)";
-    formatDate = (date: Date) => {
-      const offsetToNextSaturday = 6 - date.getDay(); // "epi weeks" end on Saturdays per CDC
-      const nextSaturdayDate = new Date(date);
-      nextSaturdayDate.setDate(
-        nextSaturdayDate.getDate() + offsetToNextSaturday
-      );
-      return timeFormat("%b %d %Y")(nextSaturdayDate);
-    }; // < 3 months - use Sunday-based week of the year per CDC calendar
-  }
+  const binScale: "weekly" | "monthly" =
+    dateSpan > 7.884e9 ? "monthly" : "weekly";
 
-  const getDateBin = (node: Node) => {
-    return formatDate(getNodeAttr(node, "num_date"));
+  const xLabel =
+    binScale === "monthly"
+      ? "Month of sample collection"
+      : "Epi week of sample collection (Saturday end date)";
+
+  const binDate = binScale === "monthly" ? binMonthlyDate : binWeeklyDate;
+
+  const nodeToBinnedDate = (node: Node) => {
+    return binDate(getNodeAttr(node, "num_date"));
   };
 
-  const allDateBins: string[] = allDates.map((date: Date) => formatDate(date));
+  let dateFormatString = binScale === "monthly" ? "%b" : "%b %d";
+
+  const formatDate = (date: Date) => {
+    return timeFormat(dateFormatString)(date);
+  };
+
+  let allDateBins: string[] = getTimepoints(tmrca, maxDate, binScale).map(
+    (d: Date) => formatDate(d)
+  );
 
   // ACCESSORS & COUNTS
+  // leaving these here bc they requires lots of state
   const keys =
     colorBy === "transmissions"
       ? [
@@ -126,7 +136,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
   // DATA WRANGLING
   const dataPoints: { [key: string]: any } = {};
   samples.forEach((n: Node) => {
-    const nodeDateBin = getDateBin(n); //getNodeAttr(n, "num_date");
+    const nodeDateBin = formatDate(nodeToBinnedDate(n));
     if (!Object.keys(dataPoints).includes(nodeDateBin)) {
       dataPoints[nodeDateBin] = { dateBin: nodeDateBin };
       keys.forEach((k: string) => {
@@ -173,19 +183,27 @@ export const EpiCurve = (props: EpiCurveProps) => {
   dateScale.rangeRound([0, xMax]);
   countScale.range([yMax, 0]);
 
+  let yTickValues = [];
+  let gridValues = [];
+  const countRange = range(maxCount + 1);
+  if (maxCount < 40) {
+    yTickValues = countRange.filter((t) => t % 5 === 0);
+    gridValues = countRange;
+  } else if (maxCount < 100) {
+    yTickValues = countRange.filter((t) => t % 10 === 0);
+    gridValues = countRange.filter((t) => t % 10 === 0);
+  } else if (maxCount < 1000) {
+    yTickValues = countRange.filter((t) => t % 100 === 0);
+    gridValues = countRange.filter((t) => t % 100 === 0);
+  } else {
+    yTickValues = countRange.filter((t) => t % 500 === 0);
+  }
+
   // PLOT
   return chartWidth < 10 ? null : (
     <div style={{ position: "relative", width: chartWidth }}>
       <svg width={chartWidth} height={chartHeight}>
-        {/* <rect
-          x={0}
-          y={0}
-          width={chartWidth}
-          height={chartHeight}
-          fill={background}
-          rx={14}
-        /> */}
-        <Group top={chartMargin}>
+        <Group top={chartMargin} left={chartMargin / 2}>
           <BarStack
             data={Object.values(dataPoints)}
             keys={keys}
@@ -196,23 +214,26 @@ export const EpiCurve = (props: EpiCurveProps) => {
             color={colorScale}
           >
             {(barStacks) =>
-              barStacks.map((barStack) =>
-                barStack.bars.map((bar) => (
-                  <rect
-                    key={`bar-stack-${barStack.index}-${bar.index}`}
-                    x={bar.x}
-                    y={bar.y}
-                    height={bar.height}
-                    width={bar.width}
-                    fill={bar.color}
-                  />
-                ))
+              barStacks.map((barStack, i) =>
+                barStack.bars.map((bar, j) => {
+                  return (
+                    <rect
+                      key={`bar-stack-${barStack.index}-${bar.index}`}
+                      x={bar.x}
+                      y={bar.y}
+                      height={bar.height}
+                      width={bar.width}
+                      fill={bar.color}
+                    />
+                  );
+                })
               )
             }
           </BarStack>
         </Group>
         <AxisBottom
           top={yMax + chartMargin}
+          left={chartMargin / 2}
           scale={dateScale}
           //   tickFormat={formatDate}
           stroke={darkestGray}
@@ -232,14 +253,30 @@ export const EpiCurve = (props: EpiCurveProps) => {
             textAnchor: "middle",
           }}
         />
+        <AxisLeft
+          scale={countScale}
+          hideAxisLine={true}
+          hideZero={true}
+          hideTicks={true}
+          tickStroke={mediumGray}
+          tickLabelProps={() => ({
+            fill: mediumGray,
+            fontSize: 10,
+            textAnchor: "middle",
+          })}
+          left={chartMargin / 2}
+          top={chartMargin}
+          tickValues={yTickValues}
+        />
         <GridRows
           top={chartMargin}
-          //   left={chartMargin}
+          left={chartMargin / 2}
           scale={countScale}
           width={xMax}
           height={yMax}
           stroke="white"
           strokeOpacity={1}
+          tickValues={gridValues}
         />
       </svg>
       <div
@@ -249,7 +286,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
           width: "100%",
           display: "flex",
           justifyContent: "center",
-          fontSize: "14px",
+          fontSize: "11px",
         }}
       >
         <LegendOrdinal
