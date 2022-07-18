@@ -37,6 +37,14 @@ type EpiCurveProps = {
   chartMargin: number;
 };
 
+const lightestGray = "rgba(220,220,220,1)";
+const mediumGray = "rgba(180,180,180,1)";
+const darkestGray = "rgba(80,80,80,1)";
+
+const darkPurple = "#4f2379";
+const mediumPurple = "#9475b3";
+const lightPurple = "#d9cde3";
+
 export const EpiCurve = (props: EpiCurveProps) => {
   // STATE
   //@ts-ignore
@@ -45,12 +53,6 @@ export const EpiCurve = (props: EpiCurveProps) => {
     "transmissions"
   );
   const { chartHeight, chartWidth, chartMargin } = props;
-
-  const lightestGray = "rgba(220,220,220,1)";
-  const mediumGray = "rgba(180,180,180,1)";
-  const darkGray = "rgba(130,130,130,1)";
-  const darkestGray = "rgba(80,80,80,1)";
-  const steelblue = `rgba(70,130,180, 1)`;
 
   // DATES
   const samples = traverse_preorder(state.mrca)
@@ -177,10 +179,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
 
   const colorScale = scaleOrdinal<string>({
     domain: keys,
-    range:
-      colorBy === "transmissions"
-        ? [darkestGray, mediumGray, lightestGray]
-        : [darkestGray, darkGray, mediumGray, lightestGray],
+    range: [darkPurple, mediumPurple, lightPurple, lightestGray],
   });
 
   if (chartWidth < 10) return null;
@@ -190,10 +189,15 @@ export const EpiCurve = (props: EpiCurveProps) => {
   dateScale.rangeRound([0, xMax]);
   countScale.range([yMax, 0]);
 
+  let xTickValues = Array.from(allDateBins);
+  xTickValues[0] = xTickValues[0] + "*";
   let yTickValues = [];
   let gridValues: number[] = [];
   const countRange = range(maxCount + 1);
-  if (maxCount < 40) {
+  if (maxCount < 5) {
+    yTickValues = countRange;
+    gridValues = countRange;
+  } else if (maxCount < 30) {
     yTickValues = countRange.filter((t) => t % 5 === 0);
     gridValues = countRange;
   } else if (maxCount < 100) {
@@ -293,16 +297,28 @@ export const EpiCurve = (props: EpiCurveProps) => {
           top={yMax + chartMargin}
           left={chartMargin / 2}
           scale={dateScale}
-          //   tickFormat={formatDate}
           stroke={darkestGray}
           tickStroke={darkestGray}
-          //   numTicks={15}
+          tickValues={allDateBins}
           //@ts-ignore
-          tickLabelProps={() => ({
-            fill: mediumGray,
-            fontSize: 11,
-            textAnchor: "middle",
-          })}
+          tickLabelProps={(tickLabel: string) => {
+            if (tickLabel === allDateBins[0]) {
+              return {
+                fill: darkPurple,
+                fontSize: 12,
+                fontWeight: "bold",
+                textAnchor: "middle",
+                enableBackground: true,
+                backgroundColor: "yellow",
+              };
+            } else {
+              return {
+                fill: mediumGray,
+                fontSize: 11,
+                textAnchor: "middle",
+              };
+            }
+          }}
           label={xLabel}
           //@ts-ignore
           labelProps={{
@@ -332,7 +348,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
           scale={countScale}
           width={xMax}
           height={yMax}
-          stroke="white"
+          stroke={gridValues !== [] ? "white" : mediumGray}
           strokeOpacity={1}
           tickValues={gridValues}
         />

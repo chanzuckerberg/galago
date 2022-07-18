@@ -52,10 +52,23 @@ export const SitStat = () => {
       <h5>About this cluster ("clade")</h5>
       <MiniCladeDescription />
       <h5>Timeline</h5>
-      <p>
-        The primary case (upstream of all the samples in this clade) most likely
-        existed around{" "}
+      <EpiCurve
+        chartHeight={windowWidth * 0.15}
+        chartWidth={windowWidth * 0.35}
+        chartMargin={60}
+      />
+      <span
+        style={{
+          fontWeight: "bold",
+          fontSize: 12,
+          color: "#4f2379",
+        }}
+      >
+        * The primary case most likely existed around{" "}
         <FormatDate date={cladeDescription.mrca.node_attrs.num_date.value} />{" "}
+      </span>
+      {/* <span style={{ fontSize: 12 }}>
+        {" "}
         (95% CI{" "}
         <FormatDate
           date={cladeDescription.mrca.node_attrs.num_date.confidence[0]}
@@ -65,12 +78,7 @@ export const SitStat = () => {
           date={cladeDescription.mrca.node_attrs.num_date.confidence[1]}
         />
         ).
-      </p>
-      <EpiCurve
-        chartHeight={windowWidth * 0.15}
-        chartWidth={windowWidth * 0.35}
-        chartMargin={60}
-      />
+      </span> */}
       {state.samplesOfInterest.length > 0 && (
         <>
           <h5>
