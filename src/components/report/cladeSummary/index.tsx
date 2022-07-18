@@ -69,11 +69,10 @@ export const SitStat = () => {
       <EpiCurve
         chartHeight={windowWidth * 0.15}
         chartWidth={windowWidth * 0.35}
-        chartMargin={30}
+        chartMargin={60}
       />
       {state.samplesOfInterest.length > 0 && (
         <>
-          {" "}
           <h5>
             How good is the overlap of your Samples of Interest and this clade?
           </h5>
