@@ -1,5 +1,5 @@
 import { Node } from "../d";
-import { numericToDateObject } from "./misc";
+import { numericToDateObject } from "./dates";
 import { assignTipCount, describeTree } from "./treeMethods";
 
 export interface NSNode {

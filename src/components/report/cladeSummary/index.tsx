@@ -6,11 +6,13 @@ import { EpiCurve } from "../../viz/epiCurve";
 import { get_dist } from "../../../utils/treeMethods";
 import { useSelector } from "react-redux";
 import ContingencyTable from "../../viz/contingencyTable";
+import { useWindowSize } from "@react-hook/window-size";
 
 export const SitStat = () => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const cladeDescription = state.cladeDescription;
+  const [windowWidth, windowHeight] = useWindowSize();
 
   const all_clade_samples: Node[] =
     cladeDescription.unselected_samples_in_cluster
@@ -25,9 +27,6 @@ export const SitStat = () => {
     (n: Node) =>
       n.node_attrs.location.value === cladeDescription.home_geo.location
   );
-
-  // const clade_tree_proportion: number =
-  //   (all_clade_samples.length * 100) / all_samples.length;
 
   const mrca_distances: { [key: string]: number } = Object.fromEntries(
     cladeDescription.selected_samples
@@ -52,10 +51,36 @@ export const SitStat = () => {
       </p>
       <h5>About this cluster ("clade")</h5>
       <MiniCladeDescription />
-
+      <h5>Timeline</h5>
+      <EpiCurve
+        chartHeight={windowWidth * 0.15}
+        chartWidth={windowWidth * 0.35}
+        chartMargin={60}
+      />
+      <span
+        style={{
+          fontWeight: "bold",
+          fontSize: 12,
+          color: "#4f2379",
+        }}
+      >
+        * The primary case most likely existed around{" "}
+        <FormatDate date={cladeDescription.mrca.node_attrs.num_date.value} />{" "}
+      </span>
+      {/* <span style={{ fontSize: 12 }}>
+        {" "}
+        (95% CI{" "}
+        <FormatDate
+          date={cladeDescription.mrca.node_attrs.num_date.confidence[0]}
+        />{" "}
+        -{" "}
+        <FormatDate
+          date={cladeDescription.mrca.node_attrs.num_date.confidence[1]}
+        />
+        ).
+      </span> */}
       {state.samplesOfInterest.length > 0 && (
         <>
-          {" "}
           <h5>
             How good is the overlap of your Samples of Interest and this clade?
           </h5>
@@ -82,28 +107,6 @@ export const SitStat = () => {
           total samples from other locations in this clade
         </li>
       </ul>
-
-      <p className="results">
-        Of all the samples in this cluster,{" "}
-        <FormatDataPoint value={n_mrca_matches} /> have identical viral genomes
-        to the primary case; <FormatDataPoint value={n_tertiary_cases} /> likely
-        represent onward transmission (at least tertiary cases).
-      </p>
-      <h5>Timeline</h5>
-      <p>
-        The primary case (upstream of all the samples in this clade) most likely
-        existed around{" "}
-        <FormatDate date={cladeDescription.mrca.node_attrs.num_date.value} />{" "}
-        (95% CI{" "}
-        <FormatDate
-          date={cladeDescription.mrca.node_attrs.num_date.confidence[0]}
-        />{" "}
-        -{" "}
-        <FormatDate
-          date={cladeDescription.mrca.node_attrs.num_date.confidence[1]}
-        />
-        ).
-      </p>
     </div>
   );
 };
