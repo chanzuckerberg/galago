@@ -9,6 +9,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.0",
     "@react-hook/window-size": "^3.0.7",
     "@visx/axis": "^2.6.0",
