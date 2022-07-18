@@ -41,7 +41,7 @@ export default function App() {
           <h5>CHOOSE CLADE / CLUSTER TO INVESTIGATE</h5>
           <MainViz />
         </div>
-        {/* <div
+        <div
           style={{
             border: showLayoutBorders ? "1px solid pink" : "none",
             marginTop: topSectionHeight,
@@ -62,7 +62,7 @@ export default function App() {
 
             <Report />
           </div>
-        </div> */}
+        </div>
       </div>
       <div style={{ width: 700, margin: "auto" }}>
         <Footer />
