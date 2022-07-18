@@ -87,26 +87,6 @@ export const SitStat = () => {
           <ContingencyTable />
         </>
       )}
-
-      <h5>Census of samples in this clade</h5>
-      <ul>
-        {state.samplesOfInterest.length > 0 && (
-          <li>
-            <FormatDataPoint value={cladeDescription.selected_samples.length} />{" "}
-            selected samples
-          </li>
-        )}
-        <li>
-          <FormatDataPoint value={local_samples.length} /> total samples from{" "}
-          {cladeDescription.home_geo.location} in this clade
-        </li>
-        <li>
-          <FormatDataPoint
-            value={all_clade_samples.length - local_samples.length}
-          />{" "}
-          total samples from other locations in this clade
-        </li>
-      </ul>
     </div>
   );
 };
