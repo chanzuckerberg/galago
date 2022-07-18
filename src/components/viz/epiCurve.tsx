@@ -12,13 +12,17 @@ import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { timeParse, timeFormat } from "d3-time-format";
 // import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { LegendOrdinal } from "@visx/legend";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import TimelineIcon from "@mui/icons-material/Timeline";
+import MapIcon from "@mui/icons-material/Map";
 import {
   getNodeAttr,
   get_dist,
   traverse_preorder,
 } from "../../utils/treeMethods";
 import { Node } from "../../d";
-import { range, scaleTime } from "d3";
+import { color, range, scaleTime } from "d3";
 import {
   binMonthlyDate,
   binWeeklyDate,
@@ -173,7 +177,10 @@ export const EpiCurve = (props: EpiCurveProps) => {
 
   const colorScale = scaleOrdinal<string>({
     domain: keys,
-    range: [darkestGray, mediumGray, lightestGray],
+    range:
+      colorBy === "transmissions"
+        ? [darkestGray, mediumGray, lightestGray]
+        : [darkestGray, darkGray, mediumGray, lightestGray],
   });
 
   if (chartWidth < 10) return null;
@@ -184,7 +191,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
   countScale.range([yMax, 0]);
 
   let yTickValues = [];
-  let gridValues = [];
+  let gridValues: number[] = [];
   const countRange = range(maxCount + 1);
   if (maxCount < 40) {
     yTickValues = countRange.filter((t) => t % 5 === 0);
@@ -199,10 +206,61 @@ export const EpiCurve = (props: EpiCurveProps) => {
     yTickValues = countRange.filter((t) => t % 500 === 0);
   }
 
+  const handleColorbySelection = (
+    event: React.MouseEvent<HTMLElement>,
+    newValue: "transmissions" | "geography" | null
+  ) => {
+    if (newValue !== null) {
+      setColorBy(newValue);
+    }
+  };
+
   // PLOT
   return chartWidth < 10 ? null : (
-    <div style={{ position: "relative", width: chartWidth }}>
-      <svg width={chartWidth} height={chartHeight}>
+    <div
+      style={{
+        position: "relative",
+        width: chartWidth,
+        borderColor: "red",
+        borderWidth: 2,
+      }}
+    >
+      <div style={{ position: "absolute", top: 0 }}>
+        <ToggleButtonGroup
+          value={colorBy}
+          exclusive
+          onChange={handleColorbySelection}
+          aria-label="color by"
+          size="small"
+        >
+          <ToggleButton value="transmissions" aria-label="transmissions">
+            <TimelineIcon />
+          </ToggleButton>
+          <ToggleButton value="geography" aria-label="geography">
+            <MapIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          top: chartMargin / 2 - 10,
+          left: 60,
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          fontSize: "11px",
+        }}
+      >
+        <LegendOrdinal
+          scale={colorScale}
+          direction="row"
+          labelMargin="0 15px 0 0"
+        />
+      </div>
+
+      <svg width={chartWidth} height={chartHeight - 50}>
+        {/* BUG / hack solution - SVG height is overly tall, but decreasing svg height squishes the actual elements in it */}
         <Group top={chartMargin} left={chartMargin / 2}>
           <BarStack
             data={Object.values(dataPoints)}
@@ -279,22 +337,6 @@ export const EpiCurve = (props: EpiCurveProps) => {
           tickValues={gridValues}
         />
       </svg>
-      <div
-        style={{
-          position: "absolute",
-          top: chartMargin / 2 - 10,
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          fontSize: "11px",
-        }}
-      >
-        <LegendOrdinal
-          scale={colorScale}
-          direction="row"
-          labelMargin="0 15px 0 0"
-        />
-      </div>
     </div>
   );
 };
