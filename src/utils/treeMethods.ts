@@ -148,9 +148,10 @@ export const get_path = (target_nodes: Node[]) => {
   return { mrca: mrca, path: path1.concat(path2.reverse()) };
 };
 
-export const get_dist = (target_nodes: Node[]) => {
-  console.assert(target_nodes.length === 2, target_nodes);
-
+export const get_dist = (target_nodes: [Node, Node]) => {
+  if (target_nodes[0].name === target_nodes[1].name) {
+    return 0;
+  }
   const mp = get_path(target_nodes);
   const mrca = mp["mrca"];
   const path = mp["path"];
