@@ -26,7 +26,10 @@ export interface CladeDescription {
   selected_samples: Node[];
   unselected_samples_in_cluster: Node[];
 
-  muts_bn_selected_minmax: number[];
+  pairwiseDistances: Array<{
+    strain: string;
+    distances: Array<{ strain: string; dist: number }>;
+  }>;
   muts_per_trans_minmax: number[]; // user input
 
   mrca: Node;

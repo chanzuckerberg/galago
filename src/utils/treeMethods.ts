@@ -169,17 +169,30 @@ export const get_dist = (target_nodes: [Node, Node]) => {
   return dist;
 };
 
-export const get_pairwise_distances = (target_nodes: Node[]) => {
+export const calcPairwiseDistances = (target_nodes: Node[]) => {
   // pairwise patristic distances; brute force implementation
 
-  let pairwise_dist: Array<{ nodes: Array<Node>; dist: number }> = [];
+  let pairwise_dist: Array<{
+    strain: string;
+    distances: Array<{ strain: string; dist: number }>;
+  }> = [];
 
   for (let i = 0; i < target_nodes.length - 1; i++) {
+    let distances_from_strain_i: {
+      strain: string;
+      distances: Array<{ strain: string; dist: number }>;
+    } = {
+      strain: target_nodes[i].name,
+      distances: [],
+    };
     for (let j = i + 1; j < target_nodes.length; j++) {
-      let pair = [target_nodes[i], target_nodes[j]];
-      let result = { nodes: pair, dist: get_dist(pair) };
-      pairwise_dist.push(result);
+      let dist_ij = {
+        strain: target_nodes[j].name,
+        dist: get_dist([target_nodes[i], target_nodes[j]]),
+      };
+      distances_from_strain_i["distances"].push(dist_ij);
     }
+    pairwise_dist.push(distances_from_strain_i);
   }
 
   return pairwise_dist;

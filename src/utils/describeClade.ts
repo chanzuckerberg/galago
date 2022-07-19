@@ -2,7 +2,7 @@ import { Node, CladeDescription } from "../d";
 import {
   get_mrca,
   get_leaves,
-  get_pairwise_distances,
+  calcPairwiseDistances,
   get_root,
   get_parent_for_cousins,
   getAttrChanges,
@@ -59,9 +59,6 @@ export const describe_clade = (
   min_muts_to_parent: number,
   selected_samples: Array<Node> = []
 ) => {
-  const muts_bn_selected: Array<{ nodes: Node[]; dist: number }> =
-    get_pairwise_distances(selected_samples);
-
   const parent_for_cousins: Node | undefined = get_parent_for_cousins(
     mrca,
     min_muts_to_parent
@@ -87,10 +84,7 @@ export const describe_clade = (
         : [],
     home_geo: home_geo,
     muts_per_trans_minmax: muts_per_trans_minmax,
-    muts_bn_selected_minmax: [
-      Math.min(...muts_bn_selected.map((a) => a["dist"])),
-      Math.max(...muts_bn_selected.map((a) => a["dist"])),
-    ],
+    pairwiseDistances: calcPairwiseDistances(get_leaves(mrca)),
     subclade_geo: returned_subclade_geo,
     subclades: returned_subclades,
   };
