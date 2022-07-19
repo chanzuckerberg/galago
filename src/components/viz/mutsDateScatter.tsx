@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Node } from "../../d";
 import { get_leaves, traverse_preorder } from "../../utils/treeMethods";
 import { scaleLinear, extent, scaleTime, symbolCross } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { useSelector, useDispatch } from "react-redux";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import { Popover } from "@mui/material";
+//@ts-ignore
+import uuid from "react-uuid";
 
 type MutsDateScatterProps = {
   chartHeight: number;
@@ -109,10 +108,10 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
   //   return cmap["other"];
   // };
 
-  const plotBaseLayerSample = (sample: Node, i: number) => {
+  const plotBaseLayerSample = (sample: Node) => {
     return (
       <circle
-        key={i}
+        key={`baseLayerSample-${uuid()}`}
         cx={_xScaleTime(sample.node_attrs.num_date.value)}
         cy={_yMutsScale(sample.node_attrs.div)}
         r={2.5}
@@ -123,7 +122,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
     );
   };
 
-  const plotBaseLayerSampleOfInterest = (sample: Node, i: number) => {
+  const plotBaseLayerSampleOfInterest = (sample: Node) => {
     return (
       <>
         <line
@@ -133,7 +132,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
           y2="0"
           stroke={"black"} //getMetadataColor(sample)}
           strokeWidth={1}
-          key={i}
+          key={`baseLayerSampleOfInterest-${uuid()}`}
         />
         <line
           x1="0"
@@ -142,16 +141,16 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
           y2="4"
           stroke={"black"} //getMetadataColor(sample)}
           strokeWidth={1}
-          key={i + 0.5}
+          key={`baseLayerSampleOfInterest-${uuid()}`}
         />
       </>
     );
   };
 
-  const plotTopLayerSample = (sample: Node, i: number) => {
+  const plotTopLayerSample = (sample: Node) => {
     return (
       <circle
-        key={i}
+        key={`topLayerSample-${uuid()}`}
         cx={_xScaleTime(sample.node_attrs.num_date.value)}
         cy={_yMutsScale(sample.node_attrs.div)}
         r={3}
@@ -164,7 +163,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
     );
   };
 
-  const plotTopLayerSampleOfInterest = (sample: Node, i: number) => {
+  const plotTopLayerSampleOfInterest = (sample: Node) => {
     return (
       <>
         <line
@@ -174,7 +173,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
           y2="0"
           stroke={"black"} //getMetadataColor(sample)}
           strokeWidth={3}
-          key={i}
+          key={`topLayerSampleOfInterest-${uuid()}`}
         />
         <line
           x1="0"
@@ -183,13 +182,13 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
           y2="6"
           stroke={"black"} //getMetadataColor(sample)}
           strokeWidth={3}
-          key={i + 0.5}
+          key={`topLayerSampleOfInterest-${uuid()}`}
         />
       </>
     );
   };
 
-  const plotMrca = (node: Node, i: number) => {
+  const plotMrca = (node: Node) => {
     const isHoverMrca = hoverMRCA && hoverMRCA.name === node.name;
     const isPinnedMrca = state.mrca && state.mrca.name === node.name;
     // const isHoverSampleAncestor =
@@ -216,7 +215,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
 
     return (
       <circle
-        key={i}
+        key={`mrcaCircle-${uuid()}`}
         onMouseEnter={() => {
           sethoverMRCA(node);
         }}
@@ -243,7 +242,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
       }}
     >
       <svg width={chartWidth} height={upperChartHeight}>
-        {allSamples.map((sample, i: number) => {
+        {allSamples.map((sample) => {
           const isSampleOfInterest = _samplesOfInterestNames
             ? _samplesOfInterestNames.includes(sample.name)
             : false;
@@ -253,11 +252,12 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
                 ${_xScaleTime(sample.node_attrs.num_date.value)},
                 ${_yMutsScale(sample.node_attrs.div)}
               )`}
+              key={`sampleOfInterestGroup-${uuid()}`}
             >
-              {plotBaseLayerSampleOfInterest(sample, i)}
+              {plotBaseLayerSampleOfInterest(sample)}
             </g>
           ) : (
-            plotBaseLayerSample(sample, i)
+            plotBaseLayerSample(sample)
           );
         })}
         {/* de-emphasis opacity layer to fade back all unselected nodes */}
@@ -286,6 +286,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
                 ${_xScaleTime(sample.node_attrs.num_date.value)},
                 ${_yMutsScale(sample.node_attrs.div)}
               )`}
+              key={`sampleOfInterestGroup-${uuid()}`}
             >
               {plotTopLayerSampleOfInterest(sample, i)}
             </g>
@@ -348,7 +349,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
           }
         }}
       >
-        {state.mrcaOptions.map((node: any, i: number) => plotMrca(node, i))}
+        {state.mrcaOptions.map((node: any) => plotMrca(node))}
         {state.mrca && plotMrca(state.mrca, -1)}
         <g>
           {/* <text x={chartMargin - 4} y={20} fontSize={14}> */}
