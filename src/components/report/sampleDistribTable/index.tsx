@@ -29,7 +29,6 @@ function SamplingBias(props: SamplingBiasProps) {
   // we care about the time frame of the samples in this clade +/- 1 month
   const minDate = cladeDates[0];
   const maxDate = cladeDates.slice(-1)[0];
-  console.log(minDate, maxDate);
 
   const minYear = minDate.getFullYear();
   const minMonth = minDate.getMonth() - 1;
@@ -64,7 +63,6 @@ function SamplingBias(props: SamplingBiasProps) {
         in this report?
       </p>
       <p className="results">
-        {console.log(datasetLocationCount, gisaidLocationCount)}
         {
           <>
             This dataset contains{" "}

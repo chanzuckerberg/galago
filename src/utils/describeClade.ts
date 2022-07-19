@@ -94,6 +94,6 @@ export const describe_clade = (
     subclade_geo: returned_subclade_geo,
     subclades: returned_subclades,
   };
-  console.log("clade description", clade);
+  // console.log("clade description", clade);
   return clade;
 };
