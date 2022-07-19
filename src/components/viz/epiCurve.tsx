@@ -308,8 +308,6 @@ export const EpiCurve = (props: EpiCurveProps) => {
                 fontSize: 12,
                 fontWeight: "bold",
                 textAnchor: "middle",
-                enableBackground: true,
-                backgroundColor: "yellow",
               };
             } else {
               return {
