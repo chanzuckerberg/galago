@@ -5,6 +5,9 @@ import { DataLevels } from "./table";
 import TextCell from "./textCell";
 import CountsCell from "./countsCell";
 
+//@ts-ignore
+import uuid from "react-uuid";
+
 const TableRow = (props: {
   gisaidCounts: Array<GISAIDRecord>;
   geoLevel: GeoLevels;
@@ -38,7 +41,7 @@ const TableRow = (props: {
       }}
     >
       <TextCell text={label} />
-      {dataLevels.map((dl, i) => (
+      {dataLevels.map((dl) => (
         <CountsCell
           gisaidCounts={gisaidCounts}
           geoLevel={geoLevel}
@@ -47,6 +50,7 @@ const TableRow = (props: {
           minYear={minYear}
           maxMonth={maxMonth}
           maxYear={maxYear}
+          key={`countsCell-${uuid()}`}
         />
       ))}
     </div>

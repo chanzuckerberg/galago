@@ -288,10 +288,10 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
               )`}
               key={`sampleOfInterestGroup-${uuid()}`}
             >
-              {plotTopLayerSampleOfInterest(sample, i)}
+              {plotTopLayerSampleOfInterest(sample)}
             </g>
           ) : (
-            plotTopLayerSample(sample, i)
+            plotTopLayerSample(sample)
           );
         })}
         <AxisLeft strokeWidth={0} left={chartMargin} scale={_yMutsScale} />
@@ -350,7 +350,7 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
         }}
       >
         {state.mrcaOptions.map((node: any) => plotMrca(node))}
-        {state.mrca && plotMrca(state.mrca, -1)}
+        {state.mrca && plotMrca(state.mrca)}
         <g>
           {/* <text x={chartMargin - 4} y={20} fontSize={14}> */}
           <text x={chartWidth / 2 - 285} y={70} fontSize={20} fill="steelblue">
