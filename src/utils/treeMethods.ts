@@ -339,15 +339,15 @@ export const describeTree = (node: Node, get_root_first: boolean = false) => {
   const height = leaves
     .sort((a, b) => a.node_attrs.div - b.node_attrs.div)
     .slice(-1)[0].node_attrs.div;
-  console.log(
-    "loaded tree and found:",
-    "total nodes",
-    all_objects.length,
-    "total leaves",
-    leaves.length,
-    "max divergence",
-    height
-  );
+  // console.log(
+  //   "loaded tree and found:",
+  //   "total nodes",
+  //   all_objects.length,
+  //   "total leaves",
+  //   leaves.length,
+  //   "max divergence",
+  //   height
+  // );
 };
 
 export const assignTipCount = (tree: Node) => {

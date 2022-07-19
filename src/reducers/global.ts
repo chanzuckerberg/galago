@@ -75,7 +75,6 @@ export const global = (state = defaultState, action: any) => {
 
       const { tidyMetadata, metadataCensus } = ingestCSVMetadata(demoMetadata);
       zipMetadataToTree(tree, tidyMetadata, "sample id");
-      // console.log(tree);
 
       const cladeDescription = describe_clade(
         mrca,
@@ -117,7 +116,9 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "clustering method selected": {
-      console.log("method set to", action.data);
+      if (state.debugReducers) {
+        console.log("method set to", action.data);
+      }
       return {
         ...state,
         clusteringMethod: action.data,
@@ -156,7 +157,9 @@ export const global = (state = defaultState, action: any) => {
           1,
           state.samplesOfInterest
         );
-        // console.log("new clade description", cladeDescription);
+        if (state.debugReducers) {
+          console.log("new clade description", cladeDescription);
+        }
       }
 
       return {

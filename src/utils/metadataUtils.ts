@@ -201,13 +201,13 @@ export const zipMetadataToTree = (
       };
     }
   });
-  console.log(
-    "matched metadata for ",
-    leavesWithData,
-    " out of ",
-    leaves.length,
-    " leaves"
-  );
+  // console.log(
+  //   "matched metadata for ",
+  //   leavesWithData,
+  //   " out of ",
+  //   leaves.length,
+  //   " leaves"
+  // );
   return tree;
 };
 

@@ -93,7 +93,6 @@ export const getGisaidCounts = (
     );
   } else if (geoLevel === "division") {
     // same state, different counties
-    // console.log(homeGeo);
     filteredGisaidRecords = gisaidRecords.filter(
       (gr: GISAIDRecord) =>
         gr.country === homeGeo.country &&

@@ -269,12 +269,6 @@ export const assignInternalNodeTraits = (tree: Node, attr: string) => {
   const uniqueAttrValues = new Set(allValidAttrValues);
   if (uniqueAttrValues.size < 2 || uniqueAttrValues.size > 100) {
     // poor man's error management - at least don't fall over
-    console.log(
-      "Not assigning values for trait ",
-      attr,
-      " because of the number of values: ",
-      uniqueAttrValues.size
-    );
     return;
   }
 
@@ -305,7 +299,7 @@ export const assignInternalNodeTraits = (tree: Node, attr: string) => {
           "matutils_confidence"
         );
         if (previousAssignmentConfidence === confidence) {
-          console.log("FOUND IDENTICAL CONFIDENCE VALUES", confidence);
+          // console.log("FOUND IDENTICAL CONFIDENCE VALUES", confidence);
           // INSERT SOME LOGIC HERE TO MATCH TO THE PARENT IF THERE IS A TIE... parent gets visited *after* children so might need to do a second pass through the tree??
         } else {
           recordAssignments(currentNode, attr, confidence, attrValue); // this fn checks to see if a prior confidence score exists and only overwrites if the current confidence score is greater

@@ -86,16 +86,16 @@ export const getMrcaOptions = (
     samplesOfInterestMrcaNames.includes(mrca.name)
   );
 
-  console.log(
-    "all internal nodes",
-    traverse_preorder(tree).filter((n: Node) => n.children.length >= 2).length,
-    "\nsample of interest mrcas",
-    samplesOfInterestMrcas.length,
-    "\nclustering mrcas",
-    clusteringMrcas.length,
-    "\nintersection - new mrcas",
-    intersectMrcaOptions.length
-  );
+  // console.log(
+  //   "all internal nodes",
+  //   traverse_preorder(tree).filter((n: Node) => n.children.length >= 2).length,
+  //   "\nsample of interest mrcas",
+  //   samplesOfInterestMrcas.length,
+  //   "\nclustering mrcas",
+  //   clusteringMrcas.length,
+  //   "\nintersection - new mrcas",
+  //   intersectMrcaOptions.length
+  // );
 
   return intersectMrcaOptions;
 };

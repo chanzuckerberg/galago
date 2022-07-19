@@ -37,7 +37,6 @@ export const Upload = () => {
   const handleMetadataUpload = (file: any) => {
     const runOnUpload = (results: any, file: any) => {
       const { tidyMetadata, metadataCensus } = ingestCSVMetadata(results.data);
-      console.log(metadataCensus);
       dispatch({
         type: "metadata uploaded and parsed",
         data: { metadataCensus: metadataCensus, tidyMetadata: tidyMetadata },
@@ -79,17 +78,14 @@ export const Upload = () => {
   const handleDivisionSelection = (division: string) => {
     dispatch({ type: "division set", data: division });
     setLocationOptions(get_location_input_options(state.tree, division));
-    console.log(state.tree, state.country, locationOptions);
   };
 
-  useEffect(() => {
-    // console.log("location or division [options] changed\n", {
-    //   division: state.division,
-    //   divisionOptions: divisionOptions,
-    //   location: state.location,
-    //   locationOptions: locationOptions,
-    // });
-  }, [divisionOptions, locationOptions, state.location, state.division]);
+  useEffect(() => {}, [
+    divisionOptions,
+    locationOptions,
+    state.location,
+    state.division,
+  ]);
 
   return (
     <div className="reportSection">

@@ -143,31 +143,3 @@ export const initSimulation = (
 
   return simulation;
 };
-
-export const calcScaleTransform = (
-  forceNodes: forceNode[],
-  chartWidth: number,
-  chartHeight: number,
-  chartMargin: number
-) => {
-  const allX: number[] = forceNodes.map((n: forceNode) => (n.x ? n.x : 0));
-  const allY = forceNodes.map((n: forceNode) => (n.y ? n.y : 0));
-
-  const xRange = Math.max(...allX) - Math.min(...allX);
-  const yRange = Math.max(...allY) - Math.min(...allY);
-
-  const xScale = chartWidth / (xRange + 2 * chartMargin);
-  const yScale = chartHeight / (yRange + 2 * chartMargin);
-  console.log(chartWidth, xRange, chartHeight, yRange);
-
-  const scale: [number, number] = [
-    Math.min(xScale, yScale),
-    Math.min(xScale, yScale),
-  ];
-  const translate: [number, number] = [
-    chartWidth - chartMargin - Math.max(...allX),
-    chartHeight - chartMargin - Math.max(...allY),
-  ];
-
-  return { calcScale: scale, calcTranslate: translate };
-};
