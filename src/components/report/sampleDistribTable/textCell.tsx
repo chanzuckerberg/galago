@@ -1,3 +1,6 @@
+//@ts-ignore
+import uuid from "react-uuid";
+
 const TextCell = (props: { text: string }) => {
   const { text } = props;
   return (
@@ -10,7 +13,7 @@ const TextCell = (props: { text: string }) => {
         fontFamily:
           "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
       }}
-      key={text}
+      key={`textCell-${uuid()}`}
     >{`${text}`}</p>
   );
 };

@@ -16,6 +16,7 @@ type CountsCellProps = {
   minYear: number;
   maxMonth: number;
   maxYear: number;
+  key: string;
 };
 
 const CountsCell = (props: CountsCellProps) => {
@@ -29,6 +30,7 @@ const CountsCell = (props: CountsCellProps) => {
     minMonth,
     maxYear,
     maxMonth,
+    key,
   } = props;
 
   let counts = NaN;
@@ -74,7 +76,7 @@ const CountsCell = (props: CountsCellProps) => {
         fontFamily:
           "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
       }}
-      key={`${dataLevel}+${geoLevel}`}
+      key={key}
     >
       {counts.toLocaleString("en-US")}
     </p>
