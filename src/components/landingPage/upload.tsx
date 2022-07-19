@@ -83,12 +83,12 @@ export const Upload = () => {
   };
 
   useEffect(() => {
-    console.log("location or division [options] changed\n", {
-      division: state.division,
-      divisionOptions: divisionOptions,
-      location: state.location,
-      locationOptions: locationOptions,
-    });
+    // console.log("location or division [options] changed\n", {
+    //   division: state.division,
+    //   divisionOptions: divisionOptions,
+    //   location: state.location,
+    //   locationOptions: locationOptions,
+    // });
   }, [divisionOptions, locationOptions, state.location, state.division]);
 
   return (
@@ -101,7 +101,7 @@ export const Upload = () => {
         </i>
       </p>
       <p>
-        <b>First, please upload a tree file.</b>
+        <b>1. First, please upload a tree file.</b>
         <br />
         <i>This must be in Nextstrain's JSON file format.</i>
         <br />
@@ -113,51 +113,50 @@ export const Upload = () => {
           }}
         />
       </p>
-      <b>Next, select your location.</b>
+      <b>2. Next, select your location.</b>
       <br />
+
+      <FormControl>
+        <FormLabel>Select state/province</FormLabel>
+        <Select
+          id="divisionSelect"
+          //@ts-ignore
+          onChange={(e) => handleDivisionSelection(e.target.value)}
+          style={{ width: 200 }}
+          size="small"
+          disabled={!divisionOptions}
+        >
+          {divisionOptions &&
+            divisionOptions.map((division: string) => (
+              <MenuItem value={division}>{division}</MenuItem>
+            ))}
+        </Select>
+      </FormControl>
+      <br />
+      {/* <br /> */}
+      <FormControl>
+        <FormLabel>Select county/location</FormLabel>
+        <Select
+          id="locationSelect"
+          //@ts-ignore
+          onChange={(event) => {
+            dispatch({
+              type: "location set",
+              data: event.target.value,
+            });
+          }}
+          style={{ width: 200 }}
+          size="small"
+          disabled={!locationOptions}
+        >
+          {locationOptions &&
+            locationOptions.map((loc: string) => (
+              <MenuItem value={loc}>{loc}</MenuItem>
+            ))}
+        </Select>
+      </FormControl>
       <p>
-        <FormControl>
-          <FormLabel>Select state/province</FormLabel>
-          <Select
-            id="divisionSelect"
-            //@ts-ignore
-            onChange={(e) => handleDivisionSelection(e.target.value)}
-            style={{ width: 200 }}
-            size="small"
-            disabled={!divisionOptions}
-          >
-            {divisionOptions &&
-              divisionOptions.map((division: string) => (
-                <MenuItem value={division}>{division}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </p>
-      <p>
-        <FormControl>
-          <FormLabel>Select county/location</FormLabel>
-          <Select
-            id="locationSelect"
-            //@ts-ignore
-            onChange={(event) => {
-              dispatch({
-                type: "location set",
-                data: event.target.value,
-              });
-            }}
-            style={{ width: 200 }}
-            size="small"
-            disabled={!locationOptions}
-          >
-            {locationOptions &&
-              locationOptions.map((loc: string) => (
-                <MenuItem value={loc}>{loc}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </p>
-      <p>
-        <b>Optionally, upload sample metadata (e.g., a line list)</b>
+        <b> 3. Optionally, upload sample metadata (e.g., a line list)</b>
         <br />
         <i>
           Helps you identify meaningful clusters and integrate genomic and
@@ -172,46 +171,45 @@ export const Upload = () => {
           }}
         />
       </p>
-      <p>
-        <FormControl>
-          <FormLabel style={{ width: "30em" }}>
-            Select field/column containing names to match metadata rows to
-            samples in the tree.
-          </FormLabel>
-          <Select
-            id="metadataKeySelect"
-            //@ts-ignore
-            onChange={(e) =>
-              dispatch({
-                type: "metadata match field selected",
-                data: e.target.value,
-              })
-            }
-            style={{ width: 200 }}
-            size="small"
-            disabled={!metadataKeyOptions}
-          >
-            {metadataKeyOptions &&
-              metadataKeyOptions.map((key: string) => (
-                <MenuItem value={key}>{key}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </p>
-      <p>
-        <Button
-          variant="contained"
-          disableElevation
-          disableRipple
-          onClick={(e) => {
-            dispatch({ type: "upload submit button clicked" });
-            navigate("/galago/app");
-          }}
-          disabled={!state.division || !state.location || !state.tree}
+
+      <FormControl>
+        <FormLabel style={{ width: "30em" }}>
+          Select field/column containing names to match metadata rows to samples
+          in the tree.
+        </FormLabel>
+        <Select
+          id="metadataKeySelect"
+          //@ts-ignore
+          onChange={(e) =>
+            dispatch({
+              type: "metadata match field selected",
+              data: e.target.value,
+            })
+          }
+          style={{ width: 200 }}
+          size="small"
+          disabled={!metadataKeyOptions}
         >
-          Submit
-        </Button>
-      </p>
+          {metadataKeyOptions &&
+            metadataKeyOptions.map((key: string) => (
+              <MenuItem value={key}>{key}</MenuItem>
+            ))}
+        </Select>
+      </FormControl>
+      <br />
+      <br />
+      <Button
+        variant="contained"
+        disableElevation
+        disableRipple
+        onClick={(e) => {
+          dispatch({ type: "upload submit button clicked" });
+          navigate("/galago/app");
+        }}
+        disabled={!state.division || !state.location || !state.tree}
+      >
+        Submit
+      </Button>
     </div>
   );
 };
