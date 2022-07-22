@@ -23,15 +23,14 @@ export const Heatmap = (props: heatmapProps) => {
   const state = useSelector((state) => state.global);
   const { chartWidth, chartHeight, chartMargin } = props;
 
-  // DATA setup
   const rawData = state.cladeDescription.pairwiseDistances;
-  const data = filterToIncludedSamples(rawData, state.samplesOfInterestNames);
+  const maxSamples = 50; // TODO: make this responsive based on chartWidth
 
-  const defaultSampleSet = () => {
-    return;
-  };
-  const [includedSamples, setIncludedSamples] = useState<string[]>(
-    defaultSampleSet()
+  const [filteredData, setFilteredData] = useState<Array<MutDistances>>(
+    filterToIncludedSamples(
+      rawData,
+      getDefaultSampleSet(rawData, state.samplesOfInterestNames, maxSamples)
+    )
   );
 
   // ACCESSORS
@@ -49,17 +48,23 @@ export const Heatmap = (props: heatmapProps) => {
   };
 
   // SCALES;
-  function max<Datum>(data: Datum[], value: (d: Datum) => number): number {
-    return Math.max(...data.map(value));
+  function max<Datum>(
+    filteredData: Datum[],
+    value: (d: Datum) => number
+  ): number {
+    return Math.max(...filteredData.map(value));
   }
-  function min<Datum>(data: Datum[], value: (d: Datum) => number): number {
-    return Math.min(...data.map(value));
+  function min<Datum>(
+    filteredData: Datum[],
+    value: (d: Datum) => number
+  ): number {
+    return Math.min(...filteredData.map(value));
   }
-  const colorMax = 3; //max(data, (d) => max(bins(d), count));
-  const bucketSizeMax = max(data, (d) => bins(d).length);
+  const colorMax = 3; //max(filteredData, (d) => max(bins(d), count));
+  const bucketSizeMax = max(filteredData, (d) => bins(d).length);
 
   const xScale = scaleLinear<number>({
-    domain: [0, data.length],
+    domain: [0, filteredData.length],
   });
   const yScale = scaleLinear<number>({
     domain: [0, bucketSizeMax],
@@ -76,90 +81,89 @@ export const Heatmap = (props: heatmapProps) => {
   const xMax = chartWidth - 2 * chartMargin;
   const yMax = chartHeight - 2 * chartMargin;
 
-  const binWidth = xMax / data.length;
+  const binWidth = xMax / filteredData.length;
   const binHeight = yMax / bucketSizeMax;
   const radius = min([binWidth, binHeight], (d) => d) / 2 - 1;
 
   xScale.range([0, xMax]);
   yScale.range([yMax, 0]);
 
+  console.log("filtered data updated", filteredData);
+
   // PLOT
   return state.cladeDescription.pairwiseDistances < 4 ? null : (
-    <svg width={chartWidth} height={chartHeight}>
-      <rect
-        x={0}
-        y={0}
-        width={chartWidth}
-        height={chartHeight}
-        fill={"white"}
-      />
-      <Group id="heatmap" left={chartMargin}>
-        <HeatmapCircle
-          data={data}
-          xScale={(d) => xScale(d) ?? 0}
-          yScale={(d) => yScale(d) ?? 0}
-          colorScale={circleColorScale}
-          bins={bins}
-          count={count}
-          //   opacityScale={opacityScale}
-        >
-          {(heatmap) =>
-            heatmap.map((heatmapBins) =>
-              heatmapBins.map((bin) => (
-                <circle
-                  key={`heatmap-circle-${bin.row}-${bin.column}`}
-                  className="visx-heatmap-circle"
-                  cx={bin.cx}
-                  cy={bin.cy}
-                  r={radius}
-                  fill={bin.color}
-                  fillOpacity={bin.opacity}
-                  //   onClick={() => {
-                  //     if (!events) return;
-                  //     const { row, column } = bin;
-                  //     alert(JSON.stringify({ row, column, bin: bin.bin }));
-                  //   }}
-                />
-              ))
-            )
-          }
-        </HeatmapCircle>
-      </Group>
-      <g id="axis-labels" transform={`translate(${chartMargin} 0)`}>
-        <HeatmapAxes
-          xScale={xScale}
-          yScale={yScale}
-          data={data}
-          radius={radius}
-          yMax={yMax}
-          chartMargin={chartMargin}
-        />
-      </g>
-      <g
-        id="legend"
-        transform={`translate(${chartWidth / 2} ${chartMargin / 3 + 5})`}
-      >
-        <HeatmapLegend
-          circleColorScale={circleColorScale}
-          radius={radius}
-          data={data}
+    <div style={{ margin: "auto", width: "auto" }}>
+      <div style={{ position: "relative", top: 10, left: 7 }}>
+        <HeatmapSampleSelection
           rawData={rawData}
+          filteredData={filteredData}
+          setFilteredData={setFilteredData}
+          maxSamples={50}
         />
-      </g>
-
-      {/* {rawData.length < data.length && (
-        <g
-          id="heatmapSampleSelection"
-          transform={`translate(${chartWidth / 2} ${chartMargin / 3 + 5})`}
-        >
-          <HeatmapSampleSelection
-            data={data}
-            rawData={rawData}
+      </div>
+      <svg width={chartWidth} height={chartHeight - 60}>
+        <rect
+          x={0}
+          y={0}
+          width={chartWidth}
+          height={chartHeight}
+          fill={"white"}
+        />
+        <Group id="heatmap" left={chartMargin}>
+          <HeatmapCircle
+            data={filteredData}
+            xScale={(d) => xScale(d) ?? 0}
+            yScale={(d) => yScale(d) ?? 0}
+            colorScale={circleColorScale}
+            bins={bins}
+            count={count}
+            //   opacityScale={opacityScale}
+          >
+            {(heatmap) =>
+              heatmap.map((heatmapBins) =>
+                heatmapBins.map((bin) => (
+                  <circle
+                    key={`heatmap-circle-${bin.row}-${bin.column}`}
+                    className="visx-heatmap-circle"
+                    cx={bin.cx}
+                    cy={bin.cy}
+                    r={radius}
+                    fill={bin.color}
+                    fillOpacity={bin.opacity}
+                    //   onClick={() => {
+                    //     if (!events) return;
+                    //     const { row, column } = bin;
+                    //     alert(JSON.stringify({ row, column, bin: bin.bin }));
+                    //   }}
+                  />
+                ))
+              )
+            }
+          </HeatmapCircle>
+        </Group>
+        <g id="axis-labels" transform={`translate(${chartMargin} 0)`}>
+          <HeatmapAxes
+            xScale={xScale}
+            yScale={yScale}
+            data={filteredData}
             radius={radius}
+            yMax={yMax}
+            chartMargin={chartMargin}
           />
         </g>
-      )} */}
-    </svg>
+        <g
+          id="legend"
+          transform={`translate(${chartWidth / 2} ${chartMargin / 3 + 5})`}
+        >
+          <HeatmapLegend
+            circleColorScale={circleColorScale}
+            radius={radius}
+            data={filteredData}
+            rawData={rawData}
+          />
+        </g>
+      </svg>
+    </div>
   );
 };
 

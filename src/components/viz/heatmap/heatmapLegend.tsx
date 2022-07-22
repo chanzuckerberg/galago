@@ -54,28 +54,6 @@ export const heatmapLegend = (props: heatmapLegendProps) => {
             state.cladeDescription.muts_per_trans_minmax[1] * 2 + 1
           }+ muts)`}
         </text>
-
-        <text fontSize={10} x={0} y={radius * 14} dominantBaseline="middle">
-          {`Showing ${data.length}/${rawData.length} total samples from this clade`}
-        </text>
-
-        {state.samplesOfInterest && (
-          <text
-            fontSize={10}
-            x={0}
-            y={radius * 14 + 12}
-            dominantBaseline="middle"
-          >
-            {`Showing ${
-              data
-                .map((d: any) => d.strain)
-                .filter((n: string) => state.samplesOfInterestNames.includes(n))
-                .length
-            }/${
-              state.cladeDescription.selected_samples.length
-            } samples of interest in this clade`}
-          </text>
-        )}
       </g>
     </>
   );
