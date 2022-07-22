@@ -97,7 +97,7 @@ export const Heatmap = (props: heatmapProps) => {
   yScale.range([yMax, 0]);
 
   // PLOT
-  return chartWidth < 10 ? null : (
+  return state.cladeDescription.pairwiseDistances < 4 ? null : (
     <svg width={chartWidth} height={chartHeight}>
       <rect
         x={0}
