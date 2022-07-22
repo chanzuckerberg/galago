@@ -1,5 +1,5 @@
 import { NSNode } from "./nextstrainAdapter";
-import { Node } from "../d";
+import { MutDistances, Node } from "../d";
 
 export const traverse_preorder = (
   node: Node,
@@ -172,16 +172,10 @@ export const get_dist = (target_nodes: [Node, Node]) => {
 export const calcPairwiseDistances = (target_nodes: Node[]) => {
   // pairwise patristic distances; brute force implementation
 
-  let pairwise_dist: Array<{
-    strain: string;
-    distances: Array<{ strain: string; dist: number }>;
-  }> = [];
+  let pairwise_dist: Array<MutDistances> = [];
 
   for (let i = 0; i < target_nodes.length - 1; i++) {
-    let distances_from_strain_i: {
-      strain: string;
-      distances: Array<{ strain: string; dist: number }>;
-    } = {
+    let distances_from_strain_i: MutDistances = {
       strain: target_nodes[i].name,
       distances: [],
     };
