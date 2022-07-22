@@ -1,34 +1,21 @@
 import { useSelector } from "react-redux";
-import { HeatmapCircle, HeatmapRect } from "@visx/heatmap";
-import { scaleLinear, scaleOrdinal } from "@visx/scale";
+import { HeatmapCircle } from "@visx/heatmap";
+import { scaleLinear } from "@visx/scale";
 import { Group } from "@visx/group";
-import { AxisBottom } from "@visx/axis";
 import HeatmapLegend from "./heatmapLegend";
 import HeatmapSampleSelection from "./heatmapSampleSelection";
 import { useState } from "react";
 import { HeatmapAxes } from "./heatmapAxes";
+import { MutDistances } from "../../../d";
+import {
+  filterToIncludedSamples,
+  getDefaultSampleSet,
+} from "../../../utils/filterHeatmapStrains";
 
 type heatmapProps = {
   chartWidth: number;
   chartHeight: number;
   chartMargin: number;
-};
-const filterToIncludedSamples = (
-  inputData: Array<{
-    strain: string;
-    distances: Array<{ strain: string; dist: number }>;
-  }>,
-  strainsToKeep: string[]
-) => {
-  const data = [...inputData];
-  const filterDistances = (
-    distances: Array<{ strain: string; dist: number }>
-  ) => {
-    return distances.filter((entry: { strain: string; dist: number }) =>
-      strainsToKeep.includes(entry.strain)
-    );
-  };
-  return data;
 };
 
 export const Heatmap = (props: heatmapProps) => {
