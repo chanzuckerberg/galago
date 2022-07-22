@@ -68,7 +68,7 @@ export const Heatmap = (props: heatmapProps) => {
   const darkPurple = "#4f2379";
   const lightPurple = "#d9cde3";
   const circleColorScale = scaleLinear<string>({
-    range: [lightPurple, darkPurple],
+    range: [darkPurple, lightPurple],
     domain: [0, colorMax],
   });
 
