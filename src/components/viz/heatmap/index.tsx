@@ -155,12 +155,7 @@ export const Heatmap = (props: heatmapProps) => {
           id="legend"
           transform={`translate(${chartWidth / 2} ${chartMargin / 3 + 5})`}
         >
-          <HeatmapLegend
-            circleColorScale={circleColorScale}
-            radius={radius}
-            data={filteredData}
-            rawData={rawData}
-          />
+          <HeatmapLegend circleColorScale={circleColorScale} />
         </g>
       </svg>
     </div>
