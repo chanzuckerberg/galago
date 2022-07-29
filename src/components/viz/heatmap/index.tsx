@@ -1,10 +1,10 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { HeatmapCircle } from "@visx/heatmap";
 import { scaleLinear } from "@visx/scale";
 import { Group } from "@visx/group";
 import HeatmapLegend from "./heatmapLegend";
 import HeatmapSampleSelection from "./heatmapSampleSelection";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HeatmapAxes } from "./heatmapAxes";
 import { MutDistances } from "../../../d";
 import {
@@ -21,17 +21,41 @@ type heatmapProps = {
 export const Heatmap = (props: heatmapProps) => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
+  const dispatch = useDispatch();
   const { chartWidth, chartHeight, chartMargin } = props;
-
-  const rawData = state.cladeDescription.pairwiseDistances;
   const maxSamples = 50; // TODO: make this responsive based on chartWidth
 
-  const [filteredData, setFilteredData] = useState<Array<MutDistances>>(
-    filterToIncludedSamples(
-      rawData,
-      getDefaultSampleSet(rawData, state.samplesOfInterestNames, maxSamples)
-    )
-  );
+  const [filteredData, setFilteredData] = useState<Array<MutDistances>>([]);
+
+  useEffect(() => {
+    const newDefaultSampleNames = getDefaultSampleSet(
+      state.cladeDescription.pairwiseDistances,
+      state.samplesOfInterestNames,
+      maxSamples
+    );
+    dispatch({
+      type: "heatmap selected samples changed",
+      data: newDefaultSampleNames,
+    });
+  }, [state.mrca.name]);
+
+  useEffect(() => {
+    console.log("saw new selected samples", state.heatmapSelectedSampleNames);
+    if (
+      state.cladeDescription &&
+      state.cladeDescription.pairwiseDistances &&
+      state.heatmapSelectedSampleNames
+    ) {
+      setFilteredData(
+        filterToIncludedSamples(
+          state.cladeDescription.pairwiseDistances,
+          state.heatmapSelectedSampleNames
+        )
+      );
+    } else {
+      setFilteredData([]);
+    }
+  }, [state.heatmapSelectedSampleNames]);
 
   // ACCESSORS
   const bins = (d: any) => d.distances;
@@ -83,23 +107,16 @@ export const Heatmap = (props: heatmapProps) => {
 
   const binWidth = xMax / filteredData.length;
   const binHeight = yMax / bucketSizeMax;
-  const radius = min([binWidth, binHeight], (d) => d) / 2 - 1;
+  const radius = 7; //min([binWidth, binHeight], (d) => d) / 2 - 1;
 
   xScale.range([0, xMax]);
   yScale.range([yMax, 0]);
 
-  console.log("filtered data updated", filteredData);
-
   // PLOT
-  return state.cladeDescription.pairwiseDistances < 4 ? null : (
+  return filteredData.length < 4 ? null : (
     <div style={{ margin: "auto", width: "auto" }}>
       <div style={{ position: "relative", top: 10, left: 7 }}>
-        <HeatmapSampleSelection
-          rawData={rawData}
-          filteredData={filteredData}
-          setFilteredData={setFilteredData}
-          maxSamples={50}
-        />
+        <HeatmapSampleSelection maxSamples={50} />
       </div>
       <svg width={chartWidth} height={chartHeight - 60}>
         <rect

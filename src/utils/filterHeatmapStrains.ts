@@ -42,7 +42,6 @@ export const getDefaultSampleSet = (
   includedSampleNames = includedSampleNames
     .concat(dataOtherSamples.slice(0, remainingSpots))
     .map((d: any) => d.strain);
-  console.log("included sample set default", includedSampleNames.length);
 
   return includedSampleNames;
 };

@@ -1,57 +1,73 @@
 import { Button } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Popper from "@mui/material/Popper";
-import { useState, useCallback } from "react";
-import Checkbox from "@mui/material/Checkbox";
+import { useState, useCallback, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { MutDistances } from "../../../d";
-import SamplesOfInterest from "../../cladeSelection/samplesOfInterest";
-import { filterToIncludedSamples } from "../../../utils/filterHeatmapStrains";
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-type heatmapLegendProps = {
-  rawData: Array<MutDistances>;
-  filteredData: Array<MutDistances>;
-  setFilteredData: any;
+type heatmapSampleSelectionProps = {
   maxSamples: number;
 };
 
-export const heatmapSampleSelection = (props: heatmapLegendProps) => {
+export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
   // PROPS and GLOBAL STATE
-  const { rawData, filteredData, setFilteredData, maxSamples } = props;
+  const { maxSamples } = props;
   //@ts-ignore
   const state = useSelector((state) => state.global);
+  const dispatch = useDispatch();
   // confusingly, anchorEl is the way that MUI decides whether or not to show the poppper -- it's the element in the dom that the popper uses to position itself. You can mostly ignore this.
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // OPTIONS SETUP & STATE
-  const options: Array<{ name: string; group: string }> = rawData
-    .map((datum: MutDistances) => {
-      return {
-        name: datum.strain,
-        group: state.samplesOfInterestNames.includes(datum.strain)
-          ? "Samples of interest"
-          : "Other samples",
-      };
-    })
-    .sort((a: any, b: any) => (a.group === "Samples of interest" ? -1 : 1));
+  const getOptions = (rawData: Array<MutDistances>) => {
+    return rawData
+      .map((datum: MutDistances) => {
+        return {
+          name: datum.strain,
+          group: state.samplesOfInterestNames.includes(datum.strain)
+            ? "Samples of interest"
+            : "Other samples",
+        };
+      })
+      .sort((a: any, b: any) => (a.group === "Samples of interest" ? -1 : 1));
+  };
 
-  console.log("props", props, "options N", options.length);
-
-  const initialSelectedOptions = options.filter(
-    (option: { name: string; group: string }) =>
-      filteredData.map((d: MutDistances) => d.strain).includes(option.name)
-  );
+  const [options, setOptions] = useState<
+    Array<{ name: string; group: string }>
+  >(getOptions(state.cladeDescription.pairwiseDistances));
 
   const [selectedOptions, setSelectedOptions] = useState<
     Array<{ name: string; group: string }>
-  >(initialSelectedOptions);
+  >(
+    options.filter((option: { name: string; group: string }) =>
+      state.heatmapSelectedSampleNames.includes(option.name)
+    )
+  );
+
+  useEffect(() => {
+    const newOptions = getOptions(state.cladeDescription.pairwiseDistances);
+    setOptions(newOptions);
+    const newSelectedOptions = newOptions.filter(
+      (option: { name: string; group: string }) =>
+        state.heatmapSelectedSampleNames.includes(option.name)
+    );
+    setSelectedOptions(newSelectedOptions);
+  }, [state.heatmapSampleSelection]);
+
+  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (anchorEl && selectedOptions.length >= 2) {
+      let selectedOptionNames = selectedOptions.map(
+        (option: any) => option.name
+      );
+      dispatch({
+        type: "heatmap selected samples changed",
+        data: selectedOptionNames,
+      });
+    }
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
 
   // POPPER STATE and HANDLERS
   const open = Boolean(anchorEl);
@@ -62,24 +78,6 @@ export const heatmapSampleSelection = (props: heatmapLegendProps) => {
       !selectedOptions.map((o: any) => o.name).includes(option.name),
     [selectedOptions]
   );
-  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (anchorEl && selectedOptions.length >= 2) {
-      let selectedOptionNames = selectedOptions.map(
-        (option: any) => option.name
-      );
-      let thisfiltereddata = filterToIncludedSamples(
-        rawData,
-        selectedOptionNames
-      );
-      console.log(
-        "filtering data",
-        selectedOptionNames.length,
-        thisfiltereddata.length
-      );
-      setFilteredData(thisfiltereddata);
-    }
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-  };
 
   return (
     <div>
@@ -125,4 +123,4 @@ export const heatmapSampleSelection = (props: heatmapLegendProps) => {
   );
 };
 
-export default heatmapSampleSelection;
+export default HeatmapSampleSelection;

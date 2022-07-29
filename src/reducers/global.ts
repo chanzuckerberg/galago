@@ -44,6 +44,7 @@ const defaultState = {
   debugReducers: false,
   clusteringMethod: "none",
   clusteringMetadataField: undefined,
+  heatmapSelectedSampleNames: [],
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -58,6 +59,10 @@ export const global = (state = defaultState, action: any) => {
 
     case "view plot toggled": {
       return { ...state, viewPlot: action.data };
+    }
+
+    case "heatmap selected samples changed": {
+      return { ...state, heatmapSelectedSampleNames: action.data };
     }
 
     case "load demo": {
