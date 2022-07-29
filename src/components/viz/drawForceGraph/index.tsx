@@ -94,7 +94,7 @@ export const ForceGraph = (props: DrawTreeProps) => {
       )}
       {ready && (
         <svg
-          style={{ border: "1px solid pink" }}
+          // style={{ border: "1px solid pink" }}
           width={chartWidth}
           height={chartHeight}
         >
