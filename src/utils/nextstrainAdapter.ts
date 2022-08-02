@@ -71,6 +71,6 @@ export const initializeTree = (node: NSNode, parent: Node | "root") => {
 export const ingestNextstrain = (nextstrain_json: NSJSON) => {
   const tree: Node = initializeTree(nextstrain_json.tree, "root"); // root has no parent
   assignTipCount(tree);
-  describeTree(tree);
+  describeTree(tree); // just a console log sense check
   return tree;
 };

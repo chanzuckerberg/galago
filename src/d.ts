@@ -31,11 +31,11 @@ export interface MutDistances {
 }
 
 export interface CladeDescription {
-  selected_samples: Node[];
+  selected_samples: Node[]; // samples of interest in this clade
   unselected_samples_in_cluster: Node[];
 
   pairwiseDistances: Array<MutDistances>;
-  muts_per_trans_minmax: number[]; // user input
+  muts_per_trans_minmax: number[];
 
   mrca: Node;
   parent_for_cousins: Node;

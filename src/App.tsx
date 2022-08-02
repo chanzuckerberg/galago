@@ -1,7 +1,6 @@
 import Header from "./components/header";
 import Footer from "./components/footer";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
 import Report from "./components/report";
@@ -11,11 +10,9 @@ export default function App() {
   const state = useSelector((state) => state.global);
   const [windowWidth, windowHeight] = useWindowSize();
 
-  let navigate = useNavigate();
-
   const topSectionHeight = 100;
   const footerHeight = 10;
-  const showLayoutBorders = false;
+  const showLayoutBorders = true;
 
   return (
     <>
