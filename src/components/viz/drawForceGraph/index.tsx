@@ -5,13 +5,8 @@ import DrawForceLink from "./drawForceLink";
 import DrawNodes from "./drawNodes";
 import DrawLabels from "./drawLabels";
 import ForceGraphLegend from "./drawLegend";
-import {
-  calcScaleTransform,
-  initForceGraphData,
-  initSimulation,
-} from "../../../utils/forceGraph";
+import { initForceGraphData, initSimulation } from "../../../utils/forceGraph";
 import CircularProgress from "@mui/material/CircularProgress";
-import * as d3 from "d3";
 
 type DrawTreeProps = {
   chartHeight: number;
@@ -99,7 +94,7 @@ export const ForceGraph = (props: DrawTreeProps) => {
       )}
       {ready && (
         <svg
-          style={{ border: "1px solid pink" }}
+          // style={{ border: "1px solid pink" }}
           width={chartWidth}
           height={chartHeight}
         >

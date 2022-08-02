@@ -5,6 +5,8 @@ import { FormatDate } from "../formatters/date";
 import { FormatDataPoint } from "../formatters/dataPoint";
 import { useSelector } from "react-redux";
 import { getNodeAttr } from "../../utils/treeMethods";
+import { useWindowSize } from "@react-hook/window-size";
+import { Heatmap } from "../viz/heatmap";
 
 interface CladeDefinitionProps {
   sidenote_start: number;
@@ -14,6 +16,8 @@ function CladeDefinition(props: CladeDefinitionProps) {
   const { sidenote_start } = props;
   //@ts-ignore
   const state = useSelector((state) => state.global);
+  const [windowWidth, windowHeight] = useWindowSize();
+
   const cladeDescription = state.cladeDescription;
 
   const all_samples = cladeDescription.selected_samples.concat(
@@ -51,8 +55,13 @@ function CladeDefinition(props: CladeDefinitionProps) {
         ) to get a rough estimate of the number of transmissions separating two
         samples.
       </p>
-      <p className="results">{/* Put heatmap here */}</p>
-
+      <div style={{ margin: "auto" }}>
+        <Heatmap
+          chartHeight={windowWidth * 0.3}
+          chartWidth={windowWidth * 0.3}
+          chartMargin={60}
+        />
+      </div>
       <h5>Hierarchical clustering ("clades"):</h5>
       <p>
         <Sidenote
