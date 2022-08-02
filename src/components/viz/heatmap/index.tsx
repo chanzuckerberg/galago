@@ -40,7 +40,6 @@ export const Heatmap = (props: heatmapProps) => {
   }, [state.mrca.name]);
 
   useEffect(() => {
-    console.log("saw new selected samples", state.heatmapSelectedSampleNames);
     if (
       state.cladeDescription &&
       state.cladeDescription.pairwiseDistances &&
@@ -107,7 +106,7 @@ export const Heatmap = (props: heatmapProps) => {
 
   const binWidth = xMax / filteredData.length;
   const binHeight = yMax / bucketSizeMax;
-  const radius = 7; //min([binWidth, binHeight], (d) => d) / 2 - 1;
+  const radius = min([binWidth, binHeight], (d) => d) / 2 - 1;
 
   xScale.range([0, xMax]);
   yScale.range([yMax, 0]);

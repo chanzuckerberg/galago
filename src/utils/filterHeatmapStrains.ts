@@ -24,6 +24,7 @@ export const getDefaultSampleSet = (
   samplesOfInterestNames: string[],
   maxSamples: number = 50
 ) => {
+  // console.log("getting default sample set from raw data:", rawData);
   // NB: the entries in rawData are already ordered by proximity to the MRCA of the selected clade because of how they're calculated -- i.e., we can just take them in order until full
   const dataSamplesOfInterest = rawData.filter((datum: any) =>
     samplesOfInterestNames.includes(datum.strain)
@@ -36,12 +37,12 @@ export const getDefaultSampleSet = (
   let includedSampleNames: Array<string> = dataSamplesOfInterest
     .slice(0, 50)
     .map((d: any) => d.strain);
-
+  // console.log("found N samples of interest", includedSampleNames);
   // then fill in with other samples, again in order of increasing distance from the MRCA
   const remainingSpots = maxSamples - includedSampleNames.length;
-  includedSampleNames = includedSampleNames
-    .concat(dataOtherSamples.slice(0, remainingSpots))
-    .map((d: any) => d.strain);
+  includedSampleNames = includedSampleNames.concat(
+    dataOtherSamples.slice(0, remainingSpots).map((d: any) => d.strain)
+  );
 
   return includedSampleNames;
 };
