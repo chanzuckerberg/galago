@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Dispatch, SetStateAction, useRef } from "react";
 import { Node } from "../../../d";
+//@ts-ignore
 import uuid from "react-uuid";
 
 type DrawLabelsProps = {
