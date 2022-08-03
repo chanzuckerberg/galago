@@ -3,7 +3,7 @@ import { FormatDate } from "../../formatters/date";
 import { FormatDataPoint } from "../../formatters/dataPoint";
 import { MiniCladeDescription } from "./miniCladeDescription";
 import { EpiCurve } from "../../viz/epiCurve";
-import { get_dist } from "../../../utils/treeMethods";
+import { getNodeAttr, get_dist } from "../../../utils/treeMethods";
 import { useSelector } from "react-redux";
 import ContingencyTable from "../../viz/contingencyTable";
 import { useWindowSize } from "@react-hook/window-size";
@@ -57,16 +57,18 @@ export const SitStat = () => {
         chartWidth={windowWidth * 0.35}
         chartMargin={60}
       />
-      <span
-        style={{
-          fontWeight: "bold",
-          fontSize: 12,
-          color: "#4f2379",
-        }}
-      >
-        * The primary case most likely existed around{" "}
-        <FormatDate date={cladeDescription.mrca.node_attrs.num_date.value} />{" "}
-      </span>
+      {!isNaN(getNodeAttr(cladeDescription.mrca, "num_date")) && (
+        <span
+          style={{
+            fontWeight: "bold",
+            fontSize: 12,
+            color: "#4f2379",
+          }}
+        >
+          * The primary case most likely existed around{" "}
+          <FormatDate date={cladeDescription.mrca.node_attrs.num_date.value} />{" "}
+        </span>
+      )}
       {/* <span style={{ fontSize: 12 }}>
         {" "}
         (95% CI{" "}
