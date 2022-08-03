@@ -9,29 +9,31 @@ const Header = () => {
 
   return (
     <div>
-      <Alert
-        severity="info"
-        style={{
-          width: windowWidth * 0.66,
-          position: "absolute",
-          top: 0,
-          right: 0,
-        }}
-      >
-        <AlertTitle>
-          <strong>
-            Galago is still an early-stage prototype - we'd love your feedback!
-          </strong>{" "}
-          You can reach us either{" "}
-          <a href="https://github.com/chanzuckerberg/galago/discussions">
-            on our discussion board
-          </a>{" "}
-          or <a href="mailto:galago@chanzuckerberg.com">via email.</a>
-        </AlertTitle>
-        We're continually working to improve Galago, and plan to release a
-        stable version in a few months. Please pardon our dust (and don't use
-        Galago for decision making just yet).
-      </Alert>
+      <Collapse in={showAlert}>
+        <Alert
+          severity="info"
+          style={{
+            width: 430,
+            height: 60,
+            position: "absolute",
+            top: 0,
+            right: 0,
+          }}
+          onClose={() => {
+            setShowAlert(false);
+          }}
+        >
+          <AlertTitle>
+            <strong>Galago is in beta - we'd love your feedback!</strong>{" "}
+            <span style={{}}>
+              <a href="https://github.com/chanzuckerberg/galago/discussions">
+                Discussion board
+              </a>{" "}
+              - <a href="mailto:galago@chanzuckerberg.com">Email.</a>
+            </span>
+          </AlertTitle>
+        </Alert>
+      </Collapse>
 
       <p
         style={{
