@@ -39,7 +39,7 @@ export const NSNodeToNode = (node: NSNode, parent: Node | "root") => {
   );
 
   // convert dates
-  const rawNumDateData = tmpNode.node_attrs.num_date.value;
+  tmpNode.node_attrs.num_date ??= {};
   tmpNode.node_attrs.num_date.value = tmpNode.node_attrs.num_date.value
     ? numericToDateObject(tmpNode.node_attrs.num_date.value)
     : NaN;
