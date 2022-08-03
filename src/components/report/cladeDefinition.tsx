@@ -1,7 +1,6 @@
 import { CladeDescription, Node } from "../../d";
 import Sidenote from "../formatters/sidenote";
 import { FormatStringArray } from "../formatters/stringArray";
-import { FormatDate } from "../formatters/date";
 import { FormatDataPoint } from "../formatters/dataPoint";
 import { useSelector } from "react-redux";
 import { getNodeAttr } from "../../utils/treeMethods";
