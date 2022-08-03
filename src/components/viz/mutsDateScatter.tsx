@@ -15,28 +15,20 @@ type MutsDateScatterProps = {
 
 export const MutsDateScatter = (props: MutsDateScatterProps) => {
   const { chartHeight, chartWidth, chartMargin } = props;
-  const lowerChartHeight = 80;
-  const upperChartHeight = chartHeight - lowerChartHeight;
+  const upperChartHeight = chartHeight;
 
   // LOCAL AND GLOBAL STATE
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
 
-  const [hoverMRCA, sethoverMRCA] = useState<Node | null>(
-    state.mrca ? state.mrca : null
-  );
   const dispatch = useDispatch();
-
   // DATA SETUP
-  const _samplesOfInterestNames = state.samplesOfInterest.map(
-    (n: Node) => n.name
-  );
   const allNodes = traverse_preorder(state.tree);
   const allSamples: Array<Node> = allNodes.filter(
     (n) => n.children.length === 0
   );
   allSamples.sort((sample1: Node, sample2: Node) => {
-    return _samplesOfInterestNames.includes(sample1.name) ? 1 : -1;
+    return state.samplesOfInterestNames.includes(sample1.name) ? 1 : -1;
   });
   const mrcaNameToSampleNames = {};
   const allInternalNodes = allNodes.filter((n) => n.children.length >= 2);
@@ -52,19 +44,6 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
   const darkGray = "rgba(130,130,130,1)";
   const darkestGray = "rgba(80,80,80,1)";
   const steelblue = `rgba(70,130,180, 1)`;
-
-  /* deemphasis */
-  const deemphasisLayerColor = `rgba(255,255,255,0.4)`;
-
-  /*
-    mrca hover interface to help users see distribution of 
-    mrcas that have all samples of interest 
-    thinking tool
-  // */
-  // const defaultMrcaStroke = null;
-  // const defaultMrcaFill = null;
-  // const mrcaContainsAllSamplesOfInterestFill = null; /* filled in */
-  // const mrcaContainsAllSamplesOfInterestStroke = null; /* filled in */
 
   // AXES
   const _xScaleTime = scaleTime()
@@ -84,29 +63,6 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
       })
     )
     .range([upperChartHeight - chartMargin, chartMargin]);
-
-  // const getMetadataColor = (
-  //   sample: Node,
-  //   fields: string[] = ["location", "division"], // hierarchically search for a match
-  //   valuesToMatch: string[] = [state.location, state.division], // first check if `location.value` is a match to state.location
-  //   cmap = {
-  //     location: steelblue, // if it is, use the `location` color
-  //     division: "lightsteelblue", // if `location` doesn't match but `division` does, use `division` color
-  //     other: mediumGray, // default
-  //   }
-  // ) => {
-  //   for (let i = 0; i < fields.length; i++) {
-  //     let field = fields[i];
-  //     let valueToMatch = valuesToMatch[i];
-  //     if (sample.node_attrs[field]["value"] === valueToMatch) {
-  //       const color = Object.keys(cmap).includes(field)
-  //         ? cmap[field]
-  //         : cmap["other"];
-  //       return color;
-  //     }
-  //   }
-  //   return cmap["other"];
-  // };
 
   const plotBaseLayerSample = (sample: Node) => {
     return (
@@ -188,63 +144,12 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
     );
   };
 
-  const plotMrca = (node: Node) => {
-    const isHoverMrca = hoverMRCA && hoverMRCA.name === node.name;
-    const isPinnedMrca = state.mrca && state.mrca.name === node.name;
-    // const isHoverSampleAncestor =
-    //   hoverSampleName &&
-    //   mrcaNameToSampleNames[node.name].includes(hoverSampleName);
-
-    let radius = 6;
-    let fill = "none";
-    let stroke = darkGray;
-    let strokeWidth = 2;
-
-    if (isPinnedMrca) {
-      radius = 10;
-      fill = steelblue;
-      stroke = steelblue;
-      strokeWidth = 0;
-    } else if (isHoverMrca) {
-      radius = 10;
-      fill = darkestGray;
-      stroke = darkestGray;
-    } //else if (isHoverSampleAncestor) {
-    //   fill = "mediumGray";
-    // }
-
-    return (
-      <circle
-        key={`mrcaCircle-${uuid()}`}
-        onMouseEnter={() => {
-          sethoverMRCA(node);
-        }}
-        onClick={() => {
-          dispatch({ type: "mrca clicked", data: node });
-        }}
-        cx={_xScaleTime(node.node_attrs.num_date.value)}
-        cy={10}
-        r={radius}
-        style={{
-          fill: fill,
-          stroke: stroke,
-          strokeWidth: strokeWidth,
-        }}
-      />
-    );
-  };
-
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div>
       <svg width={chartWidth} height={upperChartHeight}>
         {allSamples.map((sample) => {
-          const isSampleOfInterest = _samplesOfInterestNames
-            ? _samplesOfInterestNames.includes(sample.name)
+          const isSampleOfInterest = state.samplesOfInterestNames
+            ? state.samplesOfInterestNames.includes(sample.name)
             : false;
           return isSampleOfInterest ? (
             <g
@@ -335,37 +240,6 @@ export const MutsDateScatter = (props: MutsDateScatterProps) => {
           </g>
           <text x="10" y="70" fontSize={14}>
             Your samples of interest in hovered cluster
-          </text>
-        </g>
-      </svg>
-      <svg
-        width={chartWidth}
-        height={lowerChartHeight}
-        onMouseLeave={() => {
-          if (state.mrca) {
-            sethoverMRCA(state.mrca);
-          } else {
-            sethoverMRCA(null);
-          }
-        }}
-      >
-        {state.mrcaOptions.map((node: any) => plotMrca(node))}
-        {state.mrca && plotMrca(state.mrca)}
-        <g>
-          {/* <text x={chartMargin - 4} y={20} fontSize={14}> */}
-          <text x={chartWidth / 2 - 285} y={70} fontSize={20} fill="steelblue">
-            {`Clades (hierarchical clusters), sorted by date. Click to select.`}
-          </text>
-          <text x={chartMargin} y={40} fontSize={12} fontStyle="italic">
-            broader selection
-          </text>
-          <text
-            x={chartWidth - chartMargin - 90}
-            y={40}
-            fontSize={12}
-            fontStyle="italic"
-          >
-            narrower selection
           </text>
         </g>
       </svg>
