@@ -1,6 +1,6 @@
-import SamplesOfInterest from "./cladeSelection/samplesOfInterest";
-import CaseDefinitionConstructor from "./cladeSelection/caseDefinitionConstructor";
-import ClusteringOptions from "./cladeSelection/clusteringMethodSelect";
+import SamplesOfInterest from "./samplesOfInterest";
+import CaseDefinitionConstructor from "./caseDefinitionConstructor";
+import ClusteringOptions from "./clusteringMethodSelect";
 import { useWindowSize } from "@react-hook/window-size";
 import Divider from "@mui/material/Divider";
 

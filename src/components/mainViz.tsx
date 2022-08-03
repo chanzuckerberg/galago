@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { MutsDateScatter } from "./viz/mutsDateScatter";
 import Button from "@mui/material/Button";
-import ControlsDrawer from "./controlsDrawer";
+import ControlsDrawer from "./cladeSelection/controlsDrawer";
 import Drawer from "@mui/material/Drawer";
 import React, { useState } from "react";
 import EpiCurve from "./viz/epiCurve";
