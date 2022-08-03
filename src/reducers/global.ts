@@ -40,7 +40,7 @@ const defaultState = {
   samplesMatchingCaseDef: [],
   loadReport: false,
   cladeDescription: null,
-  viewPlot: "scatter",
+  viewPlot: "scatter", // "scatter" | "forceGraph"
   debugReducers: false,
   clusteringMethod: "none", // string
   clusteringMetadataField: undefined, // string | undefined

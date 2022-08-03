@@ -60,9 +60,9 @@ export const MainViz = () => {
         <FormControl>
           <React.Fragment key={"controlsDrawer"}>
             <Button
+              variant="outlined"
               disableElevation
               disableRipple
-              variant="contained"
               onClick={toggleDrawer("controlsDrawer", true)}
             >
               Filter and suggest clades
@@ -91,21 +91,6 @@ export const MainViz = () => {
               )}
           </FormHelperText>
         </FormControl>
-
-        <ToggleButtonGroup
-          exclusive
-          onChange={(e, v) => dispatch({ type: "view plot toggled", data: v })}
-          aria-label="viewPlotSelection"
-          size="small"
-          style={{ height: 40 }}
-        >
-          <ToggleButton value="scatter" disableRipple>
-            Scatterplot of all clades
-          </ToggleButton>
-          <ToggleButton value="forceGraph" disabled={!state.mrca} disableRipple>
-            Network diagram for selected clade
-          </ToggleButton>
-        </ToggleButtonGroup>
       </div>
 
       <div
@@ -124,6 +109,23 @@ export const MainViz = () => {
             chartMargin={chartMargin}
           />
         )}
+      </div>
+      <div>
+        <ToggleButtonGroup
+          value={viewPlot}
+          exclusive
+          onChange={(e, v) => dispatch({ type: "view plot toggled", data: v })}
+          aria-label="viewPlotSelection"
+          size="small"
+          style={{ height: 40 }}
+        >
+          <ToggleButton value="scatter" disableRipple>
+            Scatterplot of all clades
+          </ToggleButton>
+          <ToggleButton value="forceGraph" disabled={!state.mrca} disableRipple>
+            Network diagram for selected clade
+          </ToggleButton>
+        </ToggleButtonGroup>
       </div>
     </div>
   );
