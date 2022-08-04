@@ -19,7 +19,6 @@ import {
   zipMetadataToTree,
 } from "../utils/metadataUtils";
 import { describe_clade } from "../utils/describeClade";
-import { tree } from "d3";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
