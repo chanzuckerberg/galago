@@ -25,6 +25,7 @@ const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
   samplesOfInterest: [], // array of Nodes, representing leaves that the user cares about
   mrca: null, // "most recent common ancestor" - root Node of the selected clade
+  previewMrca: null,
   mrcaOptions: [], // Node objects representing mrcas that match both clustering algo suggestions (if any) andcontain at least one sample of interest (if any)
   clusteringMrcas: [], // Node objects that are suggested as relevant by the clustering algo (if any)
   tree: null, // root Node of the entire tree (only changes if json changes)
@@ -146,8 +147,9 @@ export const global = (state = defaultState, action: any) => {
       }
     }
 
-    case "mrca clicked": {
-      const mrca = action.data;
+    case "mrca previewed": {
+      return { ...state, previewMrca: action.data };
+    }
       let cladeDescription: null | CladeDescription = state.cladeDescription;
       if (state.tree && state.location && state.division) {
         cladeDescription = describe_clade(
