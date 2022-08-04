@@ -296,7 +296,6 @@ export const global = (state = defaultState, action: any) => {
       return { ...state, caseDefFilters: newState };
     }
 
-    // TODO: also update samplesOfInterest with matching samples
     case "case definition submitted": {
       if (state.tree && state.caseDefFilters) {
         let matchingSamples: Node[] = get_leaves(state.tree);
@@ -340,7 +339,8 @@ export const global = (state = defaultState, action: any) => {
 
         return {
           ...state,
-          // samplesOfInterest: state.samplesOfInterest.concat(matchingSamples),
+          //@ts-ignore
+          samplesOfInterest: state.samplesOfInterest.concat(matchingSamples),
           samplesOfInterestNames:
             //@ts-ignore
             state.samplesOfInterestNames.concat(matchingSampleNames),
