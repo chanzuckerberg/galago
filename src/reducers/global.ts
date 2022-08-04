@@ -146,6 +146,17 @@ export const global = (state = defaultState, action: any) => {
     case "mrca previewed": {
       return { ...state, previewMrca: action.data };
     }
+
+    case "mrca confirmed": {
+      if (!state.tree || !action.data) {
+        return state;
+      }
+      const mrcaName = action.data;
+      const mrca = find_leaf_by_name(mrcaName, traverse_preorder(state.tree));
+      if (!mrca) {
+        return state;
+      }
+
       let cladeDescription: null | CladeDescription = state.cladeDescription;
       if (state.tree && state.location && state.division) {
         cladeDescription = describe_clade(
@@ -164,7 +175,7 @@ export const global = (state = defaultState, action: any) => {
 
       return {
         ...state,
-        mrca: action.data,
+        mrca: mrca,
         cladeDescription: cladeDescription,
       };
     }
