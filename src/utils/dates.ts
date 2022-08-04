@@ -73,3 +73,33 @@ export const numericToDateObject = (numDate: number) => {
   date.setDate(date.getDate() + nDays);
   return date;
 };
+
+export const dateObjectToNumeric = (date: Date) => {
+  /* Beware: for `Date`, months are 0-indexed, days are 1-indexed */
+  const year = date.getFullYear();
+  const nDaysInYear = isLeapYear(year) ? 366 : 365;
+  const month = date.getMonth();
+  const day = date.getDate();
+  const monthLengths = {
+    0: 31,
+    1: isLeapYear(year) ? 29 : 28,
+    2: 31,
+    3: 30,
+    4: 31,
+    5: 30,
+    6: 31,
+    7: 31,
+    8: 30,
+    9: 31,
+    10: 30,
+    11: 31,
+  };
+
+  let dayOfYear = day;
+  for (let i = 0; i < month; i++) {
+    //@ts-ignore
+    dayOfYear += monthLengths[i];
+  }
+  let decDate = year + dayOfYear / nDaysInYear;
+  return Math.round(decDate * 100) / 100;
+};
