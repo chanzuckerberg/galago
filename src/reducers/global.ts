@@ -42,7 +42,6 @@ const defaultState = {
   loadReport: false,
   cladeDescription: null,
   viewPlot: "scatter", // "scatter" | "forceGraph"
-  debugReducers: false,
   clusteringMethod: "none", // string
   clusteringMetadataField: undefined, // string | undefined
   heatmapSelectedSampleNames: [], // string[]
@@ -122,9 +121,6 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "clustering method selected": {
-      if (state.debugReducers) {
-        console.log("method set to", action.data);
-      }
       return {
         ...state,
         clusteringMethod: action.data,
@@ -164,9 +160,6 @@ export const global = (state = defaultState, action: any) => {
           1,
           state.samplesOfInterest
         );
-        if (state.debugReducers) {
-          console.log("new clade description", cladeDescription);
-        }
       }
 
       return {
@@ -206,12 +199,6 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "tree file uploaded": {
-      if (state.debugReducers) {
-        console.log(
-          "REDUCER 'tree file uploaded' - setting tree to",
-          action.data
-        );
-      }
       const tree = action.data;
       const treeMetadata = treeMetadataCensus(tree);
 
@@ -226,22 +213,10 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "location set": {
-      if (state.debugReducers) {
-        console.log(
-          "REDUCER 'location set' - setting location to",
-          action.data
-        );
-      }
       return { ...state, location: action.data };
     }
 
     case "division set": {
-      if (state.debugReducers) {
-        console.log(
-          "REDUCER 'division set' - setting division to",
-          action.data
-        );
-      }
       if (state.tree) {
         const newLocationOptions = get_location_input_options(
           state.tree,
@@ -256,9 +231,6 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "metadata uploaded and parsed": {
-      if (state.debugReducers) {
-        console.log("REDUCER metadata uploaded and parsed", action.data);
-      }
       const { tidyMetadata, metadataCensus } = action.data;
 
       return {
