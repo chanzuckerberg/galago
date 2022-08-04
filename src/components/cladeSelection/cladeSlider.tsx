@@ -15,7 +15,8 @@ import {
 import React from "react";
 import ControlsDrawer from "./controlsDrawer";
 import { useWindowSize } from "@react-hook/window-size";
-// import { timeFormat } from "d3-time-format";
+import { timeFormat } from "d3-time-format";
+import { extent } from "d3-array";
 
 export const CladeSlider = (props: { chartWidth: number }) => {
   const { chartWidth } = props;
@@ -52,34 +53,60 @@ export const CladeSlider = (props: { chartWidth: number }) => {
       ? "num_date"
       : "div";
 
-  const formatMrcaSliderOption = (n: Node) => {
-    // retrieve slider value for given node, including converting from Date to number as needed
-    let value, label;
+  const formatMrcaSliderOptionValue = (mrca: Node) => {
+    let value = getNodeAttr(mrca, sliderField);
     if (sliderField === "num_date") {
-      const date: Date = getNodeAttr(n, "num_date");
-      value = dateObjectToNumeric(date);
-      //   label = timeFormat("%b %d")(date);
-    } else {
-      value = getNodeAttr(n, sliderField);
-      //   label = value.toString();
+      value = dateObjectToNumeric(value);
     }
-    return {
-      value: value,
-      label: label,
+    return value;
+  };
+
+  // const formatMrcaSliderOptionLabel = (mrca: Node) => {
+  //   let rawValue = getNodeAttr(mrca, sliderField);
+  //   if (sliderField === "num_date") {
+  //     return timeFormat("%Y-%m-%d")(rawValue);
+  //   } else {
+  //     return rawValue.toString();
+  //   }
+  // };
+
+  const formatMrcaSliderOptions = (mrcas: Node[]) => {
+    const sortFn = (a: Node, b: Node) => {
+      let aVal = getNodeAttr(a, sliderField);
+      let bVal = getNodeAttr(b, sliderField);
+
+      if (sliderField === "num_date") {
+        aVal = dateObjectToNumeric(aVal);
+        bVal = dateObjectToNumeric(bVal);
+      }
+      return aVal - bVal;
     };
+
+    mrcas.sort(sortFn);
+
+    let formattedOptions = [];
+    for (let i = 0; i < mrcas.length; i++) {
+      // retrieve slider value for given node, including converting from Date to number as needed
+      const mrca = mrcas[i];
+      const option: any = { value: formatMrcaSliderOptionValue(mrca) };
+
+      // if (i === 0 || i === mrcas.length - 1) {
+      //   option["label"] = formatMrcaSliderOptionLabel(mrca);
+      // }
+      formattedOptions.push(option);
+    }
+    return formattedOptions;
   };
 
   // SLIDER STATE
   // Primary data structure for the slider; useEffect updates this whenever the tree or the mrcaOptions (i.e., filters on which mrcas to consider) change
   const [formattedSliderOptions, setFormattedSliderOptions] = useState<
     Array<{ value: number }>
-  >(state.mrcaOptions.map((mrca: Node) => formatMrcaSliderOption(mrca)));
+  >(formatMrcaSliderOptions(state.mrcaOptions));
 
   useEffect(() => {
     if (state.tree && state.mrcaOptions) {
-      setFormattedSliderOptions(
-        state.mrcaOptions.map((mrca: Node) => formatMrcaSliderOption(mrca))
-      );
+      setFormattedSliderOptions(formatMrcaSliderOptions(state.mrcaOptions));
     }
   }, [state.tree, state.mrcaOptions]);
 
@@ -90,7 +117,7 @@ export const CladeSlider = (props: { chartWidth: number }) => {
   // SELECTOR DATA UTILS
   let sliderValueMrcasMap: { [key: string]: Node[] } = {};
   allMrcas.forEach((mrca: Node) => {
-    const val: string = formatMrcaSliderOption(mrca)["value"].toString();
+    const val: string = formatMrcaSliderOptionValue(mrca).toString();
     if (Object.keys(sliderValueMrcasMap).includes(val)) {
       sliderValueMrcasMap[val].push(mrca);
     } else {
@@ -101,7 +128,7 @@ export const CladeSlider = (props: { chartWidth: number }) => {
   const formatSelectorMrcaLabel = (mrca: Node) => {
     const tipCount = getNodeAttr(mrca, "tipCount");
     const niceName = mrca.name.replace("NODE_", "Clade ");
-    return tipCount ? `${niceName} (${tipCount})` : niceName;
+    return tipCount ? `${niceName} (${tipCount} samples)` : niceName;
   };
 
   const formatSelectorOptions = () => {
@@ -125,6 +152,10 @@ export const CladeSlider = (props: { chartWidth: number }) => {
 
   // SELECTOR STATE
   // Primary data structure for the selector; useEffect to update options whenever the slider is moved or clades are filtered
+  const wholeTreeMinMax = extent(traverse_preorder(state.tree), (n) =>
+    getNodeAttr(n, sliderField)
+  );
+
   const [formattedSelectorOptions, setFormattedSelectorOptions] = useState<any>(
     formatSelectorOptions()
   );
@@ -141,9 +172,7 @@ export const CladeSlider = (props: { chartWidth: number }) => {
   }, [state.tree, state.mrcaOptions, sliderValue]);
 
   return (
-    // TODO: fix the padding and width on these
     // Add labels to min/max on slider
-    // Add units next to slider
     // Add reset button?
     // Ideally: make the marks bigger; make two "thumbs"; make date values nicer on hover
     <div
@@ -168,11 +197,31 @@ export const CladeSlider = (props: { chartWidth: number }) => {
             track={false}
             value={sliderValue}
             onChange={(event: Event, newValue: any) => setSliderValue(newValue)}
-            min={Math.min(...formattedSliderOptions.map((o: any) => o.value))}
-            max={Math.max(...formattedSliderOptions.map((o: any) => o.value))}
+            min={
+              sliderField === "num_date"
+                ? dateObjectToNumeric(wholeTreeMinMax[0])
+                : wholeTreeMinMax[0]
+            }
+            max={
+              sliderField === "num_date"
+                ? dateObjectToNumeric(wholeTreeMinMax[1])
+                : wholeTreeMinMax[1]
+            }
             size="medium"
           />
-          <FormHelperText>
+          <FormHelperText style={{ position: "absolute", left: -20, top: 20 }}>
+            {sliderField === "num_date"
+              ? timeFormat("%Y-%m-%d")(wholeTreeMinMax[0])
+              : wholeTreeMinMax[0].toString()}
+          </FormHelperText>
+          <FormHelperText style={{ position: "absolute", right: -20, top: 20 }}>
+            {sliderField === "num_date"
+              ? timeFormat("%Y-%m-%d")(wholeTreeMinMax[1])
+              : wholeTreeMinMax[1].toString()}{" "}
+          </FormHelperText>
+          <FormHelperText
+            style={{ margin: "auto", position: "relative", top: -45 }}
+          >
             {sliderField === "num_date"
               ? "Date of cluster's primary case"
               : "Mutations between root & cluster's primary case"}
