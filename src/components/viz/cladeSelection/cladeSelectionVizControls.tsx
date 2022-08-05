@@ -32,6 +32,12 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
     (n: Node) => n.children.length >= 2
   );
 
+  // const lightestGray = "rgba(220,220,220,1)";
+  // const mediumPurple = "#9475b3";
+  // const lightPurple = "#d9cde3";
+  const darkPurple = "#4f2379";
+  const darkestGray = "rgba(80,80,80,1)";
+
   const toggleDrawer =
     (anchor: string, open: boolean) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -91,10 +97,6 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
       // retrieve slider value for given node, including converting from Date to number as needed
       const mrca = mrcas[i];
       const option: any = { value: formatMrcaSliderOptionValue(mrca) };
-
-      // if (i === 0 || i === mrcas.length - 1) {
-      //   option["label"] = formatMrcaSliderOptionLabel(mrca);
-      // }
       formattedOptions.push(option);
     }
     return formattedOptions;
@@ -193,6 +195,26 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
       <div style={{ width: 300 }}>
         <FormControl fullWidth={true} margin="dense">
           <Slider
+            //@ts-ignore
+            sx={{
+              "& .MuiSlider-thumb": {
+                color: darkPurple,
+                opacity: 0.7,
+              },
+              "& .MuiSlider-rail": {
+                color: "gray",
+              },
+              "& .MuiSlider-mark": {
+                color: darkestGray,
+                height: 8,
+                "&.MuiSlider-markActive": {
+                  opacity: 1.0,
+                  visible: true,
+                  height: 10,
+                  color: darkestGray,
+                },
+              },
+            }}
             aria-label="Use slider to select a hierarchical cluster (clade)"
             step={null}
             defaultValue={
@@ -287,19 +309,6 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
               </div>
             </Drawer>
           </React.Fragment>
-          {/* @ts-ignore */}
-          {/* <FormHelperText size="small">
-            Samples of interest: <u>{state.samplesOfInterestNames.length}</u>
-            <br />
-            Clustering: <u>{state.clusteringMethod}</u>
-            {state.clusteringMethod !== "none" &&
-              state.clusteringMetadataField && (
-                <>
-                  {" "}
-                  on <u>{state.clusteringMetadataField}</u>
-                </>
-              )}
-          </FormHelperText> */}
         </FormControl>
       </div>
       <div style={{ position: "relative", top: -5, left: -10 }}>
@@ -316,13 +325,6 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
         </FormHelperText>
       </div>
     </div>
-
-    // onMouseEnter={() => {
-    //             sethoverMRCA(node);
-    //           }}
-    //           onClick={() => {
-    //             dispatch({ type: "mrca clicked", data: node });
-    //           }}
   );
 };
 
