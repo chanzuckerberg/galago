@@ -16,8 +16,9 @@ type CladeSelectionVizProps = {
 
 export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
   const { chartHeight, chartWidth, chartMargin } = props;
-  const controlsHeight = 200;
+  const controlsHeight = 70;
   const scatterplotHeight = chartHeight - controlsHeight;
+  const showLayoutBorders = false;
 
   // LOCAL AND GLOBAL STATE
   // @ts-ignore
@@ -198,12 +199,29 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
   };
 
   return (
-    <>
-      <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: chartHeight,
+        border: showLayoutBorders ? "1px solid red" : "none",
+      }}
+    >
+      <div
+        style={{
+          height: controlsHeight,
+          border: showLayoutBorders ? "1px solid yellow" : "none",
+        }}
+      >
         <CladeSelectionVizControls chartWidth={chartWidth} />
       </div>
       <div>
-        <svg width={chartWidth} height={scatterplotHeight}>
+        <svg
+          width={chartWidth}
+          height={scatterplotHeight}
+          style={{ border: showLayoutBorders ? "1px solid orange" : "none" }}
+        >
           {allSamples
             .sort((a: Node, b: Node) => {
               let aVal = checkIfPreviewSample(a) + checkIfCurrentMrcaSample(a);
@@ -227,7 +245,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
           />
         </svg>
       </div>
-    </>
+    </div>
   );
 };
 

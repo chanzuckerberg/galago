@@ -9,7 +9,7 @@ const Header = () => {
 
   return (
     <div>
-      <Alert
+      {/* <Alert
         severity="info"
         style={{
           width: windowWidth * 0.66,
@@ -31,7 +31,7 @@ const Header = () => {
         We're continually working to improve Galago, and plan to release a
         stable version in a few months. Please pardon our dust (and don't use
         Galago for decision making just yet).
-      </Alert>
+      </Alert> */}
 
       <p
         style={{

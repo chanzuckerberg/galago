@@ -14,7 +14,7 @@ export const MainViz = () => {
   const [windowWidth, windowHeight] = useWindowSize();
 
   const footerHeight = 10;
-  const headerHeight = 100;
+  const headerHeight = 215;
   const plotToggleHeight = 50;
   const extraHeight = headerHeight + footerHeight + plotToggleHeight;
 
@@ -22,17 +22,25 @@ export const MainViz = () => {
   const chartWidth: number = windowWidth / 2 - chartMargin;
   const chartHeight = windowHeight - extraHeight;
 
+  const showLayoutBorders = false;
+
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
         height: windowHeight - headerHeight - footerHeight,
-        // border: "1px solid yellow",
+        border: showLayoutBorders ? "1px solid red" : "none",
       }}
     >
-      <div style={{ width: chartWidth, height: chartHeight }}>
+      <div
+        style={{
+          width: chartWidth + chartMargin,
+          height: chartHeight,
+          border: showLayoutBorders ? "1px solid purple" : "none",
+        }}
+      >
         {viewPlot === "forceGraph" && state.mrca ? (
           <ForceGraph
             chartWidth={chartWidth}
@@ -47,7 +55,15 @@ export const MainViz = () => {
           />
         )}
       </div>
-      <div>
+      <div
+        style={{
+          width: chartWidth,
+          height: plotToggleHeight,
+          position: "relative",
+          top: 0,
+          left: chartWidth - 525,
+        }}
+      >
         <ToggleButtonGroup
           value={viewPlot}
           exclusive
