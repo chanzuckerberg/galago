@@ -45,11 +45,11 @@ export const SitStat = () => {
 
   return (
     <div>
-      <h2>Genomic summary of your selected clade</h2>
+      <h2>Genomic situation status</h2>
+      <h5>About this cluster ("clade")</h5>
       <p style={{ fontStyle: "italic" }}>
         A "clade" is a hierarchical cluster in a phylogenetic tree.
       </p>
-      <h5>About this cluster ("clade")</h5>
       <MiniCladeDescription />
       <h5>Timeline</h5>
       <EpiCurve
