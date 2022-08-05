@@ -111,7 +111,9 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
   }, [state.tree, state.mrcaOptions]);
 
   let [sliderValue, setSliderValue] = useState<number>(
-    formattedSliderOptions[0].value
+    state.mrca
+      ? formatMrcaSliderOptionValue(state.mrca)
+      : formattedSliderOptions[0].value
   );
 
   // SELECTOR DATA UTILS
@@ -191,7 +193,11 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
           <Slider
             aria-label="Use slider to select a hierarchical cluster (clade)"
             step={null}
-            defaultValue={formattedSliderOptions[0].value}
+            defaultValue={
+              state.mrca
+                ? formatMrcaSliderOptionValue(state.mrca)
+                : formattedSliderOptions[0].value
+            }
             valueLabelDisplay="auto"
             marks={formattedSliderOptions}
             track={false}
