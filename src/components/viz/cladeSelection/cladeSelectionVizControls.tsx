@@ -11,12 +11,14 @@ import {
   Drawer,
   FormControl,
   FormHelperText,
+  IconButton,
 } from "@mui/material";
 import React from "react";
 import CladeFilterDrawer from "../../cladeFilterDrawer";
 import { useWindowSize } from "@react-hook/window-size";
 import { timeFormat } from "d3-time-format";
 import { extent } from "d3-array";
+import TuneIcon from "@mui/icons-material/Tune";
 
 export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
   const { chartWidth } = props;
@@ -181,7 +183,7 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
       style={{
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "space-evenly",
         position: "absolute",
         width: chartWidth,
         paddingLeft: 25,
@@ -234,7 +236,7 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
           </FormHelperText>
         </FormControl>
       </div>
-      <div style={{ width: 100 }}>
+      <div>
         <Select
           variant="standard"
           value={state.previewMrca}
@@ -264,17 +266,16 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
           Confirm
         </Button>
       </div>
-      <div>
+      <div style={{ position: "relative", top: -12 }}>
         <FormControl>
           <React.Fragment key={"controlsDrawer"}>
-            <Button
-              variant="text"
-              disableElevation
-              disableRipple
+            <IconButton
+              // disableElevation
+              // disableRipple
               onClick={toggleDrawer("controlsDrawer", true)}
             >
-              Filter and suggest clades
-            </Button>
+              <TuneIcon style={{ fontSize: 40 }} />
+            </IconButton>
             <Drawer
               anchor={"right"}
               open={drawerOpen}
@@ -299,6 +300,19 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
               )}
           </FormHelperText> */}
         </FormControl>
+      </div>
+      <div style={{ position: "relative", top: -5, left: -10 }}>
+        <FormHelperText>
+          Samples of interest: <u>{state.samplesOfInterestNames.length}</u>
+          <br />
+          Clustering: <u>{state.clusteringMethod}</u>
+          {state.clusteringMethod !== "none" && state.clusteringMetadataField && (
+            <>
+              {" "}
+              on <u>{state.clusteringMetadataField}</u>
+            </>
+          )}
+        </FormHelperText>
       </div>
     </div>
 
