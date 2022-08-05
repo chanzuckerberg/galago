@@ -1,18 +1,10 @@
 import { useSelector } from "react-redux";
-import { MutsDateScatter } from "./viz/mutsDateScatter";
-import Button from "@mui/material/Button";
-import ControlsDrawer from "./cladeSelection/controlsDrawer";
-import Drawer from "@mui/material/Drawer";
-import React, { useState } from "react";
-import EpiCurve from "./viz/epiCurve";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { CladeSelectionViz } from "./viz/cladeSelection";
 import { useWindowSize } from "@react-hook/window-size";
 import { useDispatch } from "react-redux";
-import { FormControl, FormHelperText } from "@mui/material";
-import { FormControlUnstyled } from "@mui/base";
 import { ForceGraph } from "./viz/drawForceGraph";
-import CladeSlider from "./cladeSelection/cladeSlider";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup/ToggleButtonGroup";
+import ToggleButton from "@mui/material/ToggleButton";
 
 export const MainViz = () => {
   // @ts-ignore
@@ -22,11 +14,9 @@ export const MainViz = () => {
   const [windowWidth, windowHeight] = useWindowSize();
 
   const footerHeight = 10;
-  const headerHeight = 220;
-  const cladeControlsHeight = 100;
+  const headerHeight = 100;
   const plotToggleHeight = 50;
-  const extraHeight =
-    headerHeight + footerHeight + cladeControlsHeight + plotToggleHeight;
+  const extraHeight = headerHeight + footerHeight + plotToggleHeight;
 
   const chartMargin = 30;
   const chartWidth: number = windowWidth / 2 - chartMargin;
@@ -42,9 +32,6 @@ export const MainViz = () => {
         // border: "1px solid yellow",
       }}
     >
-      <div>
-        <CladeSlider chartWidth={chartWidth} />
-      </div>
       <div style={{ width: chartWidth, height: chartHeight }}>
         {viewPlot === "forceGraph" && state.mrca ? (
           <ForceGraph
@@ -53,7 +40,7 @@ export const MainViz = () => {
             chartMargin={chartMargin}
           />
         ) : (
-          <MutsDateScatter
+          <CladeSelectionViz
             chartHeight={chartHeight}
             chartWidth={chartWidth}
             chartMargin={chartMargin}

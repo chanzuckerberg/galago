@@ -4,7 +4,7 @@ import ClusteringOptions from "./clusteringMethodSelect";
 import { useWindowSize } from "@react-hook/window-size";
 import Divider from "@mui/material/Divider";
 
-export const ControlsDrawer = () => {
+export const CladeFilterDrawer = () => {
   const [windowWidth, windowHeight] = useWindowSize();
 
   return (
@@ -19,4 +19,4 @@ export const ControlsDrawer = () => {
   );
 };
 
-export default ControlsDrawer;
+export default CladeFilterDrawer;

@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import Slider from "@mui/material/Slider";
-import { getNodeAttr, traverse_preorder } from "../../utils/treeMethods";
-import { Node } from "../../d";
+import { getNodeAttr, traverse_preorder } from "../../../utils/treeMethods";
+import { Node } from "../../../d";
 import { useEffect, useState } from "react";
-import { dateObjectToNumeric } from "../../utils/dates";
+import { dateObjectToNumeric } from "../../../utils/dates";
 import {
   MenuItem,
   Select,
@@ -13,12 +13,12 @@ import {
   FormHelperText,
 } from "@mui/material";
 import React from "react";
-import ControlsDrawer from "./controlsDrawer";
+import CladeFilterDrawer from "../../cladeFilterDrawer";
 import { useWindowSize } from "@react-hook/window-size";
 import { timeFormat } from "d3-time-format";
 import { extent } from "d3-array";
 
-export const CladeSlider = (props: { chartWidth: number }) => {
+export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
   const { chartWidth } = props;
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [windowWidth, windowHeight] = useWindowSize();
@@ -248,15 +248,12 @@ export const CladeSlider = (props: { chartWidth: number }) => {
         <Button
           variant="contained"
           size="small"
-          disabled={
-            state.mrca &&
-            state.previewMrca &&
-            state.mrca.name === state.previewMrca.name
-          }
-          // TODO: figure out why this blows everything up
+          disabled={!state.previewMrca}
           onClick={() => {
             dispatch({ type: "mrca confirmed", data: state.previewMrca });
+            dispatch({ type: "mrca previewed", data: null });
           }}
+          sx={{ backgroundColor: "#4f2379" }}
         >
           Confirm
         </Button>
@@ -278,7 +275,7 @@ export const CladeSlider = (props: { chartWidth: number }) => {
               onClose={toggleDrawer("right", false)}
             >
               <div style={{ width: windowWidth * 0.4 }}>
-                <ControlsDrawer />
+                <CladeFilterDrawer />
               </div>
             </Drawer>
           </React.Fragment>
@@ -308,4 +305,4 @@ export const CladeSlider = (props: { chartWidth: number }) => {
   );
 };
 
-export default CladeSlider;
+export default CladeSelectionVizControls;
