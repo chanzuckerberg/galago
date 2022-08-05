@@ -246,6 +246,7 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
           }
           size="small"
           disabled={formattedSelectorOptions.length < 2}
+          sx={{ fontSize: 12, fontColor: "rgba(130,130,130,1)" }}
         >
           {formattedSelectorOptions.map((o: any) => (
             <MenuItem value={o.value}>{o.label}</MenuItem>
