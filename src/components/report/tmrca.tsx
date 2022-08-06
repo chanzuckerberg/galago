@@ -20,10 +20,6 @@ function TMRCA(props: CladeProps) {
     cladeDescription.unselected_samples_in_cluster
   );
 
-  const haveInternalDates = all_samples.every(
-    (n: Node) => !isNaN(getNodeAttr(n, "num_date"))
-  );
-
   let mrca_distances: { [key: string]: number } = Object.fromEntries(
     all_samples.map((x) => [
       x.name,
@@ -35,7 +31,7 @@ function TMRCA(props: CladeProps) {
   );
   return (
     <div className="reportSection">
-      {haveInternalDates ? (
+      {state.haveInternalNodeDates ? (
         <h2>What was the date and genotype of the primary infection?</h2>
       ) : (
         <h2>What was the genotype of the primary case?</h2>
@@ -46,7 +42,7 @@ function TMRCA(props: CladeProps) {
           text="You may also hear this referred to as the 'most recent common ancestor (MRCA)' of a clade."
         />
       </p>
-      {haveInternalDates ? (
+      {state.haveInternalNodeDates ? (
         <p style={{ fontStyle: "italic" }}>
           We can use the tree to make inferences about the timing of the primary
           case -- and the genotype of the pathogen
@@ -103,7 +99,7 @@ function TMRCA(props: CladeProps) {
           </p>
         </>
       )}
-      {haveInternalDates && (
+      {state.haveInternalNodeDates && (
         <>
           <p>
             <Sidenote

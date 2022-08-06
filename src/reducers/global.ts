@@ -28,6 +28,7 @@ const defaultState = {
   mrcaOptions: [], // Node objects representing mrcas that match both clustering algo suggestions (if any) andcontain at least one sample of interest (if any)
   clusteringMrcas: [], // Node objects that are suggested as relevant by the clustering algo (if any)
   tree: null, // root Node of the entire tree (only changes if json changes)
+  haveInternalNodeDates: undefined,
   location: "",
   division: "",
   country: "USA",
@@ -56,6 +57,10 @@ export const global = (state = defaultState, action: any) => {
       return defaultState;
     }
 
+    case "determined if internal node dates": {
+      return { ...state, haveInternalNodeDates: action.data };
+    }
+
     case "view plot toggled": {
       return { ...state, viewPlot: action.data };
     }
@@ -66,7 +71,7 @@ export const global = (state = defaultState, action: any) => {
 
     case "load demo": {
       // TODO: this should all probably live in an thunk + action constructor instead of duplicating code from a bunch of individual reducers. But, they're all short and this gets us off the ground for now.
-      const tree = ingestNextstrain(demo_tree);
+      const { tree, haveInternalNodeDates } = ingestNextstrain(demo_tree);
       const treeMetadata = treeMetadataCensus(tree);
       const samplesOfInterestNames = demo_sample_names
         .split(/[,\s]+/)
@@ -97,6 +102,7 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...defaultState,
         tree: tree,
+        haveInternalNodeDates: haveInternalNodeDates,
         metadataEntries: tidyMetadata,
         metadataCensus: { ...treeMetadata, ...metadataCensus },
         metadataFieldToMatch: "sample id",

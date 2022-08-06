@@ -14,20 +14,6 @@ export const SitStat = () => {
   const cladeDescription = state.cladeDescription;
   const [windowWidth, windowHeight] = useWindowSize();
 
-  const all_clade_samples: Node[] =
-    cladeDescription.unselected_samples_in_cluster
-      .concat(cladeDescription.selected_samples)
-      .sort(
-        (a: Node, b: Node) =>
-          a.node_attrs.num_date.value.getTime() -
-          b.node_attrs.num_date.value.getTime()
-      );
-
-  const local_samples = all_clade_samples.filter(
-    (n: Node) =>
-      n.node_attrs.location.value === cladeDescription.home_geo.location
-  );
-
   const mrca_distances: { [key: string]: number } = Object.fromEntries(
     cladeDescription.selected_samples
       .concat(cladeDescription.unselected_samples_in_cluster)

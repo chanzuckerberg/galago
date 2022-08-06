@@ -366,3 +366,16 @@ export const assignTipCount = (tree: Node) => {
     }
   });
 };
+
+export const determineIfInternalNodeDates = (tree: Node) => {
+  let haveNodeDates: boolean = true;
+  let allNodes = traverse_preorder(tree);
+  for (let i = 0; i < allNodes.length; i++) {
+    let node: Node = allNodes[i];
+    if (!getNodeAttr(node, "num_date")) {
+      haveNodeDates = false;
+      break;
+    }
+  }
+  return haveNodeDates;
+};

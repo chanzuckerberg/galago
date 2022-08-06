@@ -56,10 +56,7 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
     };
 
   // SLIDER DATA UTILS
-  const sliderField =
-    state.tree && allMrcas.every((n) => !isNaN(getNodeAttr(n, "num_date")))
-      ? "num_date"
-      : "div";
+  const sliderField = state.haveInternalNodeDates ? "num_date" : "div";
 
   const formatMrcaSliderOptionValue = (mrca: Node) => {
     let value = getNodeAttr(mrca, sliderField);
@@ -269,13 +266,14 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
           size="small"
           disabled={formattedSelectorOptions.length < 2}
           sx={{ fontSize: 12, fontColor: "rgba(130,130,130,1)" }}
+          disableUnderline={true}
         >
           {formattedSelectorOptions.map((o: any) => (
             <MenuItem value={o.value}>{o.label}</MenuItem>
           ))}
         </Select>
       </div>
-      <div style={{ width: 100 }}>
+      <div>
         <Button
           variant="contained"
           size="small"

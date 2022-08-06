@@ -68,9 +68,15 @@ export const Upload = () => {
     fileReader.readAsText(file, "application/JSON");
     fileReader.onload = (event) => {
       if (event?.target?.result && typeof event.target.result === "string") {
-        const newTree: Node = ingestNextstrain(JSON.parse(event.target.result));
-        dispatch({ type: "tree file uploaded", data: newTree });
-        setDivisionOptions(get_division_input_options(newTree, state.country));
+        const { tree, haveInternalNodeDates } = ingestNextstrain(
+          JSON.parse(event.target.result)
+        );
+        dispatch({ type: "tree file uploaded", data: tree });
+        dispatch({
+          type: "determined if internal node dates",
+          data: haveInternalNodeDates,
+        });
+        setDivisionOptions(get_division_input_options(tree, state.country));
       }
     };
   };
