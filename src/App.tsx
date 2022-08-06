@@ -12,7 +12,7 @@ export default function App() {
 
   const topSectionHeight = 100;
   const footerHeight = 10;
-  const showLayoutBorders = true;
+  const showLayoutBorders = false;
 
   return (
     <>
@@ -35,7 +35,7 @@ export default function App() {
             border: showLayoutBorders ? "1px solid green" : "none",
           }}
         >
-          <h5>CHOOSE CLADE / CLUSTER TO INVESTIGATE</h5>
+          <h5>CHOOSE HIERARCHICAL CLUSTER ("CLADE") TO INVESTIGATE</h5>
           <MainViz />
         </div>
         <div
@@ -55,7 +55,7 @@ export default function App() {
               height: windowHeight - topSectionHeight - footerHeight - 50,
             }}
           >
-            <h5>AUTOMATICALLY GENERATED REPORT</h5>
+            <h5>AUTOMATICALLY GENERATED REPORT FOR SELECTED CLADE</h5>
 
             <Report />
           </div>

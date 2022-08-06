@@ -28,6 +28,12 @@ strong {
   font-family: "Noto Sans";
 }
 
+h2 {
+  color: #333;
+  font-family: "Noto Sans";
+  font-size: 20px;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

@@ -89,9 +89,11 @@ export const EpiCurve = (props: EpiCurveProps) => {
     return timeFormat(dateFormatString)(date);
   };
 
-  let allDateBins: string[] = getTimepoints(tmrca, maxDate, binScale).map(
-    (d: Date) => formatDate(d)
-  );
+  let allDateBins: string[] = getTimepoints(
+    tmrca ? tmrca : minDate,
+    maxDate,
+    binScale
+  ).map((d: Date) => formatDate(d));
 
   // ACCESSORS & COUNTS
   // leaving these here bc they requires lots of state
@@ -302,7 +304,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
           tickValues={allDateBins}
           //@ts-ignore
           tickLabelProps={(tickLabel: string) => {
-            if (tickLabel === allDateBins[0]) {
+            if (tickLabel === allDateBins[0] && tmrca) {
               return {
                 fill: darkPurple,
                 fontSize: 12,

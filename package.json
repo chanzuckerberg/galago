@@ -12,6 +12,7 @@
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.0",
     "@react-hook/window-size": "^3.0.7",
+    "@redux-devtools/extension": "^3.2.2",
     "@visx/axis": "^2.6.0",
     "@visx/heatmap": "^2.10.0",
     "@visx/visx": "^2.10.0",

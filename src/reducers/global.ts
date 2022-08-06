@@ -19,15 +19,16 @@ import {
   zipMetadataToTree,
 } from "../utils/metadataUtils";
 import { describe_clade } from "../utils/describeClade";
-import { tree } from "d3";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
   samplesOfInterest: [], // array of Nodes, representing leaves that the user cares about
   mrca: null, // "most recent common ancestor" - root Node of the selected clade
+  previewMrca: null,
   mrcaOptions: [], // Node objects representing mrcas that match both clustering algo suggestions (if any) andcontain at least one sample of interest (if any)
   clusteringMrcas: [], // Node objects that are suggested as relevant by the clustering algo (if any)
   tree: null, // root Node of the entire tree (only changes if json changes)
+  haveInternalNodeDates: undefined,
   location: "",
   division: "",
   country: "USA",
@@ -40,8 +41,7 @@ const defaultState = {
   samplesMatchingCaseDef: [],
   loadReport: false,
   cladeDescription: null,
-  viewPlot: "scatter",
-  debugReducers: false,
+  viewPlot: "scatter", // "scatter" | "forceGraph"
   clusteringMethod: "none", // string
   clusteringMetadataField: undefined, // string | undefined
   heatmapSelectedSampleNames: [], // string[]
@@ -57,6 +57,10 @@ export const global = (state = defaultState, action: any) => {
       return defaultState;
     }
 
+    case "determined if internal node dates": {
+      return { ...state, haveInternalNodeDates: action.data };
+    }
+
     case "view plot toggled": {
       return { ...state, viewPlot: action.data };
     }
@@ -67,7 +71,7 @@ export const global = (state = defaultState, action: any) => {
 
     case "load demo": {
       // TODO: this should all probably live in an thunk + action constructor instead of duplicating code from a bunch of individual reducers. But, they're all short and this gets us off the ground for now.
-      const tree = ingestNextstrain(demo_tree);
+      const { tree, haveInternalNodeDates } = ingestNextstrain(demo_tree);
       const treeMetadata = treeMetadataCensus(tree);
       const samplesOfInterestNames = demo_sample_names
         .split(/[,\s]+/)
@@ -98,6 +102,7 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...defaultState,
         tree: tree,
+        haveInternalNodeDates: haveInternalNodeDates,
         metadataEntries: tidyMetadata,
         metadataCensus: { ...treeMetadata, ...metadataCensus },
         metadataFieldToMatch: "sample id",
@@ -121,9 +126,6 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "clustering method selected": {
-      if (state.debugReducers) {
-        console.log("method set to", action.data);
-      }
       return {
         ...state,
         clusteringMethod: action.data,
@@ -146,8 +148,20 @@ export const global = (state = defaultState, action: any) => {
       }
     }
 
-    case "mrca clicked": {
-      const mrca = action.data;
+    case "mrca previewed": {
+      return { ...state, previewMrca: action.data };
+    }
+
+    case "mrca confirmed": {
+      if (!state.tree || !action.data) {
+        return state;
+      }
+      const mrcaName = action.data;
+      const mrca = find_leaf_by_name(mrcaName, traverse_preorder(state.tree));
+      if (!mrca) {
+        return state;
+      }
+
       let cladeDescription: null | CladeDescription = state.cladeDescription;
       if (state.tree && state.location && state.division) {
         cladeDescription = describe_clade(
@@ -162,14 +176,11 @@ export const global = (state = defaultState, action: any) => {
           1,
           state.samplesOfInterest
         );
-        if (state.debugReducers) {
-          console.log("new clade description", cladeDescription);
-        }
       }
 
       return {
         ...state,
-        mrca: action.data,
+        mrca: mrca,
         cladeDescription: cladeDescription,
       };
     }
@@ -204,12 +215,6 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "tree file uploaded": {
-      if (state.debugReducers) {
-        console.log(
-          "REDUCER 'tree file uploaded' - setting tree to",
-          action.data
-        );
-      }
       const tree = action.data;
       const treeMetadata = treeMetadataCensus(tree);
 
@@ -224,22 +229,10 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "location set": {
-      if (state.debugReducers) {
-        console.log(
-          "REDUCER 'location set' - setting location to",
-          action.data
-        );
-      }
       return { ...state, location: action.data };
     }
 
     case "division set": {
-      if (state.debugReducers) {
-        console.log(
-          "REDUCER 'division set' - setting division to",
-          action.data
-        );
-      }
       if (state.tree) {
         const newLocationOptions = get_location_input_options(
           state.tree,
@@ -254,9 +247,6 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "metadata uploaded and parsed": {
-      if (state.debugReducers) {
-        console.log("REDUCER metadata uploaded and parsed", action.data);
-      }
       const { tidyMetadata, metadataCensus } = action.data;
 
       return {
@@ -311,7 +301,6 @@ export const global = (state = defaultState, action: any) => {
       return { ...state, caseDefFilters: newState };
     }
 
-    // TODO: also update samplesOfInterest with matching samples
     case "case definition submitted": {
       if (state.tree && state.caseDefFilters) {
         let matchingSamples: Node[] = get_leaves(state.tree);
@@ -355,7 +344,8 @@ export const global = (state = defaultState, action: any) => {
 
         return {
           ...state,
-          // samplesOfInterest: state.samplesOfInterest.concat(matchingSamples),
+          //@ts-ignore
+          samplesOfInterest: state.samplesOfInterest.concat(matchingSamples),
           samplesOfInterestNames:
             //@ts-ignore
             state.samplesOfInterestNames.concat(matchingSampleNames),
