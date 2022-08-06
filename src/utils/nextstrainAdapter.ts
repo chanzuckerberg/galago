@@ -44,19 +44,15 @@ export const NSNodeToNode = (node: NSNode, parent: Node | "root") => {
 
   // convert dates
   tmpNode.node_attrs.num_date ??= {};
-  if (tmpNode.children?.length > 0) {
-    tmpNode.node_attrs.num_date["value"] = NaN;
-  } else {
-    tmpNode.node_attrs.num_date.value = tmpNode.node_attrs.num_date.value
-      ? numericToDateObject(tmpNode.node_attrs.num_date.value)
-      : NaN;
-    tmpNode.node_attrs.num_date.confidence = tmpNode.node_attrs.num_date
-      .confidence
-      ? tmpNode.node_attrs.num_date.confidence.map((n: number) =>
-          numericToDateObject(n)
-        )
-      : [NaN, NaN];
-  }
+  tmpNode.node_attrs.num_date.value = tmpNode.node_attrs.num_date.value
+    ? numericToDateObject(tmpNode.node_attrs.num_date.value)
+    : NaN;
+  tmpNode.node_attrs.num_date.confidence = tmpNode.node_attrs.num_date
+    .confidence
+    ? tmpNode.node_attrs.num_date.confidence.map((n: number) =>
+        numericToDateObject(n)
+      )
+    : [NaN, NaN];
 
   const newNode: Node = { ...tmpNode };
   return newNode;
