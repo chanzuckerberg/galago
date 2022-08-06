@@ -55,7 +55,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
         return node.node_attrs.num_date.value;
       })
     )
-    .range([chartMargin, chartWidth - chartMargin]);
+    .range([chartMargin * 2, chartWidth - chartMargin]);
 
   const _yMutsScale = scaleLinear()
     .domain(
@@ -233,7 +233,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
           <CladeSelectionVizLegend />
           <AxisLeft
             strokeWidth={0}
-            left={chartMargin}
+            left={chartMargin * 2}
             scale={_yMutsScale}
             label="Mutations from root"
           />
