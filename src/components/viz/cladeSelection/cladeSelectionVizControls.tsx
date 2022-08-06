@@ -32,7 +32,7 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
     (n: Node) => n.children.length >= 2
   );
 
-  // const lightestGray = "rgba(220,220,220,1)";
+  const lightestGray = "rgba(220,220,220,1)";
   // const mediumPurple = "#9475b3";
   // const lightPurple = "#d9cde3";
   const darkPurple = "#4f2379";
@@ -131,7 +131,8 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
   const formatSelectorMrcaLabel = (mrca: Node) => {
     const tipCount = getNodeAttr(mrca, "tipCount");
     const niceName = mrca.name.replace("NODE_", "Clade ");
-    return tipCount ? `${niceName} (${tipCount} samples)` : niceName;
+    return niceName;
+    // return tipCount ? `${niceName} (${tipCount} samples)` : niceName;
   };
 
   const formatSelectorOptions = () => {
@@ -158,6 +159,15 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
   const wholeTreeMinMax = extent(traverse_preorder(state.tree), (n) =>
     getNodeAttr(n, sliderField)
   );
+
+  const mrcaNameToTipCount: { [key: string]: number } = {};
+  if (state.tree) {
+    traverse_preorder(state.tree).forEach((n: Node) => {
+      if (n.children) {
+        mrcaNameToTipCount[n.name] = getNodeAttr(n, "tipCount");
+      }
+    });
+  }
 
   const [formattedSelectorOptions, setFormattedSelectorOptions] = useState<any>(
     formatSelectorOptions()
@@ -256,22 +266,35 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
         </FormControl>
       </div>
       <div>
-        <Select
-          variant="standard"
-          value={state.previewMrca}
-          defaultValue={formattedSelectorOptions[0].label}
-          onChange={(event) =>
-            dispatch({ type: "mrca previewed", data: event.target.value })
-          }
-          size="small"
-          disabled={formattedSelectorOptions.length < 2}
-          sx={{ fontSize: 12, fontColor: "rgba(130,130,130,1)" }}
-          disableUnderline={true}
-        >
-          {formattedSelectorOptions.map((o: any) => (
-            <MenuItem value={o.value}>{o.label}</MenuItem>
-          ))}
-        </Select>
+        <FormControl margin="dense" size="small">
+          <Select
+            variant="standard"
+            value={state.previewMrca}
+            defaultValue={formattedSelectorOptions[0].label}
+            onChange={(event) =>
+              dispatch({ type: "mrca previewed", data: event.target.value })
+            }
+            size="small"
+            disabled={formattedSelectorOptions.length < 2}
+            //@ts-ignore
+            IconComponent={
+              formattedSelectorOptions.length < 2 ? null : undefined
+            }
+            sx={{ fontSize: 12 }}
+            disableUnderline={true}
+          >
+            {formattedSelectorOptions.map((o: any) => (
+              <MenuItem value={o.value}>{o.label}</MenuItem>
+            ))}
+          </Select>
+          <FormHelperText sx={{ fontSize: 10, position: "relative", top: -10 }}>
+            {state.previewMrca && mrcaNameToTipCount[state.previewMrca]
+              ? `${mrcaNameToTipCount[
+                  state.previewMrca
+                ].toLocaleString()} samples`
+              : ""}
+          </FormHelperText>
+        </FormControl>
       </div>
       <div>
         <Button
@@ -282,7 +305,7 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
             dispatch({ type: "mrca confirmed", data: state.previewMrca });
             dispatch({ type: "mrca previewed", data: null });
           }}
-          sx={{ backgroundColor: "#4f2379" }}
+          sx={{ backgroundColor: "#4f2379", fontSize: 14 }}
         >
           Confirm
         </Button>
