@@ -10,14 +10,28 @@ import { get_leaves, get_root } from "../../utils/treeMethods";
 import SamplingBias from "./sampleDistribTable";
 import { gisaidCounts } from "../../../data/gisaidCounts2022-06";
 
-export const Report = () => {
+type ReportProps = {
+  sectionHeight: number;
+  sectionWidth: number;
+};
+
+export const Report = (props: ReportProps) => {
+  const { sectionHeight, sectionWidth } = props;
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const allDataPresent = state.location && state.division && state.tree;
   const reportReady = state.cladeDescription && state.tree;
 
   return (
-    <div>
+    <div
+      style={{
+        overflowY: "scroll",
+        margin: "auto",
+        width: sectionWidth,
+        height: sectionHeight,
+      }}
+    >
+      {" "}
       {allDataPresent && reportReady && (
         <>
           <SitStat />
@@ -34,7 +48,6 @@ export const Report = () => {
           <Assumptions sidenote_start={8} />
         </>
       )}
-
       {(!allDataPresent || !reportReady) && (
         <h2>Select a clade on the left to generate a report</h2>
       )}

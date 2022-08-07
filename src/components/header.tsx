@@ -3,12 +3,25 @@ import { Helmet } from "react-helmet";
 import { useWindowSize } from "@react-hook/window-size";
 import { useState } from "react";
 
-const Header = () => {
-  const [windowWidth, windowHeight] = useWindowSize();
+type HeaderProps = {
+  sectionHeight: number;
+  sectionWidth: number;
+};
+const Header = (props: HeaderProps) => {
+  const { sectionHeight, sectionWidth } = props;
   const [showAlert, setShowAlert] = useState<boolean>(true);
 
   return (
-    <div>
+    <div
+      style={{
+        width: sectionWidth,
+        height: sectionHeight,
+        // border: "1px solid pink",
+        position: "relative",
+        top: 0,
+        left: 0,
+      }}
+    >
       <Collapse in={showAlert}>
         <Alert
           severity="info"
@@ -35,7 +48,7 @@ const Header = () => {
         </Alert>
       </Collapse>
 
-      <p
+      <div
         style={{
           position: "absolute",
           left: 20,
@@ -45,7 +58,7 @@ const Header = () => {
         }}
       >
         Galago
-      </p>
+      </div>
       <Helmet>
         <meta charSet="utf-8" />
         <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
