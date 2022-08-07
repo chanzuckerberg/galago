@@ -22,7 +22,7 @@ export const MainViz = (props: MainVizProps) => {
 
   const chartMargin = 30;
   const chartWidth: number = sectionWidth;
-  const chartHeight = sectionHeight;
+  const chartHeight = sectionHeight - plotToggleHeight;
 
   const showLayoutBorders = false;
 
@@ -34,7 +34,7 @@ export const MainViz = (props: MainVizProps) => {
         justifyContent: "space-between",
         height: sectionHeight,
         width: sectionWidth,
-        // paddingTop: 20,
+        paddingTop: 25,
         border: showLayoutBorders ? "1px solid red" : "none",
       }}
     >
