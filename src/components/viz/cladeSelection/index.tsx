@@ -214,7 +214,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
           border: showLayoutBorders ? "1px solid yellow" : "none",
         }}
       >
-        <CladeSelectionVizControls chartWidth={chartWidth} />
+        <CladeSelectionVizControls sectionWidth={chartWidth} />
       </div>
       <div>
         <svg
