@@ -35,6 +35,7 @@ const Header = (props: HeaderProps) => {
           onClose={() => {
             setShowAlert(false);
           }}
+          sx={{ backgroundColor: "#f2f0f0" }}
         >
           <AlertTitle>
             <strong>Galago is in beta - we'd love your feedback!</strong>{" "}
