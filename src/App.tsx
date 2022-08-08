@@ -10,17 +10,19 @@ export default function App() {
   const state = useSelector((state) => state.global);
   const [windowWidth, windowHeight] = useWindowSize();
 
-  const headerHeight = 60;
+  const headerHeight = 100;
   const sectionHeaderHeight = 100;
   const topSectionHeight = headerHeight + sectionHeaderHeight;
   const footerHeight = 50;
-  const leftColWidth = windowWidth * 0.45;
-  const rightColWidth = windowWidth * 0.45;
   const contentHeight = windowHeight - topSectionHeight - footerHeight;
+  const contentWidth = windowWidth - 50;
+
+  const leftColWidth = contentWidth * 0.45;
+  const rightColWidth = contentWidth * 0.45;
   const showLayoutBorders = false;
 
   return (
-    <>
+    <div>
       {/* <h1>Select a clade to instantly generate a report</h1> */}
       {/* left side bar */}
       <Header sectionHeight={headerHeight} sectionWidth={windowWidth} />
@@ -31,7 +33,9 @@ export default function App() {
           justifyContent: "space-between",
           border: showLayoutBorders ? "1px solid red" : "none",
           height: contentHeight + sectionHeaderHeight,
-          width: windowWidth,
+          width: contentWidth,
+          position: "relative",
+          margin: "auto",
         }}
       >
         <div // left column
@@ -65,6 +69,6 @@ export default function App() {
       <div style={{ width: 700, margin: "auto" }}>
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
