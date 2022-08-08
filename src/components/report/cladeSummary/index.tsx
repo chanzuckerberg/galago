@@ -7,6 +7,7 @@ import { getNodeAttr, get_dist } from "../../../utils/treeMethods";
 import { useSelector } from "react-redux";
 import ContingencyTable from "../../viz/contingencyTable";
 import { useWindowSize } from "@react-hook/window-size";
+import Sidenote from "../../formatters/sidenote";
 
 export const SitStat = () => {
   //@ts-ignore
@@ -34,7 +35,22 @@ export const SitStat = () => {
       <h2>Genomic situation status</h2>
       <h5>About this cluster ("clade")</h5>
       <p style={{ fontStyle: "italic" }}>
-        A "clade" is a hierarchical cluster in a phylogenetic tree.
+        A "clade" is a hierarchical cluster in a{" "}
+        <Sidenote
+          target={" phylogenetic tree"}
+          contents={
+            <>
+              This is conceptually similar to your family tree: the branching
+              patterns show us that you are more closely related to your
+              siblings than to your cousins, and that you are more closely
+              related to your cousins than to a stranger.{" "}
+              <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#what-is-a-phylogenetic-tree">
+                Learn more about 'clades.'
+              </a>
+            </>
+          }
+        />
+        .
       </p>
       <MiniCladeDescription />
       <h5>Timeline</h5>

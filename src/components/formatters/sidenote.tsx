@@ -1,36 +1,34 @@
-/*
- NOTE: to get the correct alignment, place this within 
- <div> // "top level" thing that is returned from an insight component
- <p> // not className = "results", normal paragraphs only
- <Sidenote/>
- </p>
- </div>
-*/
+import { Tooltip, tooltipClasses } from "@mui/material";
+
+const tooltipProps = {
+  tooltip: {
+    sx: {
+      fontSize: "16px",
+      // fontWeight: "bold",
+      bgcolor: "#616161",
+      a: { color: "white", fontWeight: "bold" },
+    },
+  },
+};
+
 type SidenoteProps = {
-  text: string | any;
-  num: number;
+  contents: string | any;
+  target: string;
 };
 
 const Sidenote = (props: SidenoteProps) => {
-  const { text, num } = props;
+  const { contents, target } = props;
   return (
-    <span
-      style={{
-        float: "right",
-        clear: "right",
-        marginRight: "-25em",
-        width: "17em", // half the main paragraph
-        marginTop: 0,
-        marginBottom: 0,
-        fontSize: 12,
-        lineHeight: 1.3,
-        verticalAlign: "baseline",
-        position: "relative",
-      }}
-    >
-      <sup style={{ marginRight: 2 }}>{num}</sup>
-      {text}
-    </span>
+    <Tooltip title={contents} componentsProps={tooltipProps}>
+      <span
+        style={{
+          // fontWeight: "bold",
+          borderBottom: "3px dotted #4f2379",
+        }}
+      >
+        {target}
+      </span>
+    </Tooltip>
   );
 };
 export default Sidenote;

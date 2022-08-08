@@ -86,13 +86,10 @@ function SamplingBias(props: SamplingBiasProps) {
         The phylogenetic tree underlying this report represents the most likely
         genetic relationships between samples in this dataset. Importantly,
         though, the tree does not take into account cases that are not sampled
-        (or not included in this dataset), which can lead to sampling bias that
-        influences our inferences -- both for surveillance and for outbreak
-        investigations
-        <sup style={{ fontSize: 10 }}>{sidenote_start}</sup>.{" "}
+        (or not included in this dataset), which can lead to{" "}
         <Sidenote
-          num={sidenote_start}
-          text={
+          target={"sampling bias"}
+          contents={
             <span>
               Learn more about{" "}
               <a href="https://alliblk.github.io/genepi-book/broad-use-cases-for-genomic-epidemiology.html#what-kind-of-sampling-do-you-need-to-answer-the-question">
@@ -101,7 +98,9 @@ function SamplingBias(props: SamplingBiasProps) {
               </a>
             </span>
           }
-        />
+        />{" "}
+        that influences our inferences -- both for surveillance and for outbreak
+        investigations
       </p>
       <p>
         One way that we can minimize sampling bias is by including enough

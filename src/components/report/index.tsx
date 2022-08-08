@@ -26,8 +26,9 @@ export const Report = (props: ReportProps) => {
     <div
       style={{
         overflowY: "scroll",
-        margin: "auto",
-        width: sectionWidth,
+        overflowX: "hidden",
+        marginRight: 30,
+        width: sectionWidth - 30,
         height: sectionHeight,
       }}
     >
