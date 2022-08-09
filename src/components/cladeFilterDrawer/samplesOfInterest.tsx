@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import { tooltipProps } from "../formatters/sidenote";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import SearchIcon from "@mui/icons-material/Search";
 
 export const SamplesOfInterest = () => {
   const dispatch = useDispatch();
@@ -13,8 +14,8 @@ export const SamplesOfInterest = () => {
 
   return (
     <div>
-      <h2>
-        Samples of interest{" "}
+      <div style={{ display: "flex", flexDirection: "row", marginBottom: 0 }}>
+        <SearchIcon sx={{ fontSize: 18, position: "relative", top: 25 }} />{" "}
         <Tooltip
           title={`Specify samples of interest -- either by name or using a case definition
           (below) -- to see them highlighted in the graph and filter to clades
@@ -25,13 +26,15 @@ export const SamplesOfInterest = () => {
           <InfoOutlinedIcon
             sx={{
               position: "relative",
-              top: 5,
+              top: 25,
+              left: -2,
               color: "#4f2379",
-              fontSize: 20,
+              fontSize: 18,
             }}
           />
         </Tooltip>
-      </h2>
+        <h4>Samples of interest </h4>
+      </div>
       <p style={{ fontStyle: "italic", fontSize: 14 }}></p>
       <TextField
         id="selectedSamples"

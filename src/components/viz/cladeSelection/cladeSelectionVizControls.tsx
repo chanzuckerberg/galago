@@ -44,23 +44,6 @@ export const CladeSelectionVizControls = (
   const darkPurple = "#4f2379";
   const darkestGray = "rgba(80,80,80,1)";
 
-  const toggleDrawer =
-    (anchor: string, open: boolean) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-
-      setDrawerOpen(open);
-      if (open) {
-        dispatch({ type: "view plot toggled", data: "scatter" });
-      }
-    };
-
   // SLIDER DATA UTILS
   const sliderField = state.haveInternalNodeDates ? "num_date" : "div";
 
@@ -340,45 +323,6 @@ export const CladeSelectionVizControls = (
           >
             Confirm
           </Button>
-        </div>
-      </div>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div>
-          {/* style={{ position: "relative", top: -12 }}> */}
-          <FormControl margin="dense">
-            <React.Fragment key={"controlsDrawer"}>
-              <IconButton
-                // disableElevation
-                // disableRipple
-                onClick={toggleDrawer("controlsDrawer", true)}
-              >
-                <TuneIcon style={{ fontSize: 30 }} />
-              </IconButton>
-              <Drawer
-                anchor={"right"}
-                open={drawerOpen}
-                onClose={toggleDrawer("right", false)}
-              >
-                <div style={{ width: windowWidth * 0.4 }}>
-                  <CladeFilterDrawer />
-                </div>
-              </Drawer>
-            </React.Fragment>
-          </FormControl>
-        </div>
-        <div>
-          <FormHelperText>
-            Samples of interest: <u>{state.samplesOfInterestNames.length}</u>
-            <br />
-            Clustering: <u>{state.clusteringMethod}</u>
-            {state.clusteringMethod !== "none" &&
-              state.clusteringMetadataField && (
-                <>
-                  {" "}
-                  on <u>{state.clusteringMetadataField}</u>
-                </>
-              )}
-          </FormHelperText>
         </div>
       </div>
     </div>

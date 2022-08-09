@@ -2,10 +2,9 @@ import { Node } from "../../d";
 import { nextstrainGeo, matutilsIntroduce } from "../../utils/clusterMethods";
 import { useSelector, useDispatch } from "react-redux";
 import { traverse_preorder, getNodeAttr } from "../../utils/treeMethods";
-import { useState } from "react";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SearchIcon from "@mui/icons-material/Search";
+import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import {
@@ -95,8 +94,8 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
 
   return (
     <div>
-      <h2>
-        Metadata-based clustering{" "}
+      <div style={{ display: "flex", flexDirection: "row", marginBottom: 0 }}>
+        <FilterAltIcon sx={{ fontSize: 18, position: "relative", top: 25 }} />{" "}
         <Tooltip
           title={`Clustering algorithms help identify interesting
             clades to inspect based on where in the tree metadata attributes
@@ -109,13 +108,15 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
           <InfoOutlinedIcon
             sx={{
               position: "relative",
-              top: 5,
+              top: 25,
+              left: -2,
               color: "#4f2379",
-              fontSize: 20,
+              fontSize: 18,
             }}
           />
         </Tooltip>
-      </h2>
+        <h4>Metadata-based clustering</h4>
+      </div>
       <p>
         <FormControl>
           <FormLabel id="demo-radio-buttons-group-label">

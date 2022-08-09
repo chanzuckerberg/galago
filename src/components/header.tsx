@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Collapse } from "@mui/material";
+import { Alert, AlertTitle, Collapse, Paper } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { useWindowSize } from "@react-hook/window-size";
 import { useState } from "react";
@@ -31,6 +31,7 @@ const Header = (props: HeaderProps) => {
             position: "absolute",
             top: 0,
             right: 0,
+            zIndex: 1000002,
           }}
           onClose={() => {
             setShowAlert(false);
@@ -52,10 +53,23 @@ const Header = (props: HeaderProps) => {
       <div
         style={{
           position: "absolute",
+          left: -10,
+          top: -10,
+          margin: "auto",
+          zIndex: 1000000,
+          height: sectionHeight,
+          width: sectionWidth - 10,
+          backgroundColor: "white",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
           left: 20,
           top: 20,
           fontSize: 24,
           margin: 0,
+          zIndex: 1000001,
         }}
       >
         Galago
