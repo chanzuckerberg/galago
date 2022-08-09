@@ -26,14 +26,14 @@ export default function App() {
     ? windowWidth - 50 - 290
     : windowWidth - 50;
 
-  const leftColWidth = contentWidth * 0.45;
-  const rightColWidth = contentWidth * 0.45;
+  const leftColWidth = contentWidth * 0.43;
+  const rightColWidth = contentWidth * 0.43;
   const showLayoutBorders = false;
 
   return (
     <div>
       {/* full page*/}
-      <Header sectionHeight={headerHeight} sectionWidth={windowWidth} />
+      <Header sectionHeight={headerHeight} sectionWidth={windowWidth - 10} />
       <div // drawer + content
         style={{
           display: "flex",
@@ -41,7 +41,7 @@ export default function App() {
           justifyContent: "space-between",
           border: showLayoutBorders ? "1px solid red" : "none",
           height: contentHeight + sectionHeaderHeight,
-          width: windowWidth,
+          width: windowWidth - 10,
           position: "relative",
           margin: "auto",
         }}
