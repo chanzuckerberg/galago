@@ -24,20 +24,11 @@ export const CladeFilterDrawer = (props: CladeFilterDrawerProps) => {
         marginTop: 120,
       }}
     >
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div
-          style={{
-            marginLeft: "auto",
-            marginRight: 0,
-            position: "relative",
-            top: 15,
-          }}
-        >
-          <IconButton onClick={() => dispatch({ type: "drawer toggled" })}>
-            <ChevronLeft style={{ fontSize: 32 }} />
-          </IconButton>
-        </div>
-      </div>
+      {/* <Divider
+        variant="middle"
+        style={{ position: "relative", top: -20, left: -15, width: 250 }}
+      /> */}
+
       <ClusteringOptions drawerWidth={drawerWidth} />
       <Divider variant="middle" style={{ marginTop: 30 }} />
       <SamplesOfInterest />

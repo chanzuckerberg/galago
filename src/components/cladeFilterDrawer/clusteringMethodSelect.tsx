@@ -3,14 +3,16 @@ import { nextstrainGeo, matutilsIntroduce } from "../../utils/clusterMethods";
 import { useSelector, useDispatch } from "react-redux";
 import { traverse_preorder, getNodeAttr } from "../../utils/treeMethods";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import SearchIcon from "@mui/icons-material/Search";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
+import { ChevronLeft } from "@mui/icons-material";
+
 import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  IconButton,
   Radio,
   RadioGroup,
   Tooltip,
@@ -116,6 +118,9 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
           />
         </Tooltip>
         <h4>Metadata-based clustering</h4>
+        <IconButton onClick={() => dispatch({ type: "drawer toggled" })}>
+          <ChevronLeft style={{ fontSize: 32 }} />
+        </IconButton>
       </div>
       <p>
         <FormControl>
