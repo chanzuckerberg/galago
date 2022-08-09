@@ -18,7 +18,7 @@ import CladeFilterDrawer from "../../cladeFilterDrawer";
 import { useWindowSize } from "@react-hook/window-size";
 import { timeFormat } from "d3-time-format";
 import { extent } from "d3-array";
-import TuneIcon from "@mui/icons-material/Tune";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 type CladeSelectionVizControlsProps = {
   sectionWidth: number;
@@ -343,7 +343,7 @@ export const CladeSelectionVizControls = (
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <div>
+        <div style={{ position: "relative", top: -12 }}>
           {/* style={{ position: "relative", top: -12 }}> */}
           <FormControl margin="dense">
             <React.Fragment key={"controlsDrawer"}>
@@ -352,7 +352,7 @@ export const CladeSelectionVizControls = (
                 // disableRipple
                 onClick={toggleDrawer("controlsDrawer", true)}
               >
-                <TuneIcon style={{ fontSize: 30 }} />
+                <FilterAltIcon style={{ fontSize: 30 }} />
               </IconButton>
               <Drawer
                 anchor={"right"}
