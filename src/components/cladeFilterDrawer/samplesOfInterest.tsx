@@ -2,6 +2,9 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import { tooltipProps } from "../formatters/sidenote";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export const SamplesOfInterest = () => {
   const dispatch = useDispatch();
@@ -10,13 +13,26 @@ export const SamplesOfInterest = () => {
 
   return (
     <div>
-      {/* <p>Samples of Interest</p> */}
-      <h2>Samples of interest</h2>
-      <p style={{ fontStyle: "italic", fontSize: 14 }}>
-        Specify samples of interest -- either by name or using a case definition
-        (below) -- to see them highlighted in the graph and filter to clades
-        that contain at least one of these samples.
-      </p>
+      <h2>
+        Samples of interest{" "}
+        <Tooltip
+          title={`Specify samples of interest -- either by name or using a case definition
+          (below) -- to see them highlighted in the graph and filter to clades
+          that contain at least one of these samples.`}
+          componentsProps={tooltipProps}
+          arrow
+        >
+          <InfoOutlinedIcon
+            sx={{
+              position: "relative",
+              top: 5,
+              color: "#4f2379",
+              fontSize: 20,
+            }}
+          />
+        </Tooltip>
+      </h2>
+      <p style={{ fontStyle: "italic", fontSize: 14 }}></p>
       <TextField
         id="selectedSamples"
         // label="Samples of Interest"
@@ -36,6 +52,10 @@ export const SamplesOfInterest = () => {
           });
         }}
         size="small"
+        sx={{
+          color: "#4f2379",
+          fontSize: 14,
+        }}
       />
       <br />
       <Button
@@ -46,6 +66,14 @@ export const SamplesOfInterest = () => {
         onClick={(e) => dispatch({ type: "sample submit button clicked" })}
         size="small"
         style={{ marginTop: 15 }}
+        sx={{
+          backgroundColor: "#4f2379",
+          fontSize: 14,
+          "&:hover": {
+            backgroundColor: "#f2f0f0",
+            color: "#6D4F8A",
+          },
+        }}
       >
         Highlight & Subset
       </Button>

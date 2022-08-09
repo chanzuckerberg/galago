@@ -33,12 +33,10 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
       <p style={{ fontStyle: "italic" }}>
         Differentiating between a superspreader event (where one primary case
         transmits to multiple secondary cases) and onward transmission (here,
-        defined as tertiary or further downstream cases), can be tricky.
-      </p>
-      <p>
+        defined as tertiary or further downstream cases),{" "}
         <Sidenote
-          num={sidenote_start}
-          text={
+          target={"can be tricky"}
+          contents={
             <span>
               <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#how-many-mutations-are-enough-to-rule-linkage-out">
                 Learn more about ruling out direct linkage
@@ -50,6 +48,9 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
             </span>
           }
         />
+        .
+      </p>
+      <p>
         An infected case may have multiple pathogen genotypes present in their
         body, generated as the pathogen replicates. This means that sometimes
         you may observe a few different genotypes which vary by
@@ -65,7 +66,6 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
           value={cladeDescription.muts_per_trans_minmax[1] + 1}
         />
         + mutations represent tertiary or further downstream transmission.
-        <sup style={{ fontSize: 10 }}>{sidenote_start}</sup>
       </p>
       <div className="results">
         <p>

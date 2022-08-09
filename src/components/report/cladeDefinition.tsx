@@ -63,25 +63,9 @@ function CladeDefinition(props: CladeDefinitionProps) {
       </div>
       <h5>Hierarchical clustering ("clades"):</h5>
       <p>
-        <Sidenote
-          num={sidenote_start}
-          text={
-            <span>
-              This is conceptually similar to your family tree: the branching
-              patterns show us that you are more closely related to your
-              siblings than to your cousins, and that you are more closely
-              related to your cousins than to a stranger.{" "}
-              <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#what-is-a-phylogenetic-tree">
-                Learn more about 'clades.'
-              </a>
-            </span>
-          }
-        />
         A 'clade' is a hierarchical cluster (or 'subtree') in a phylogenetic
-        tree.
-        <sup style={{ fontSize: "10" }}>{sidenote_start}</sup> By definition,
-        all of the samples within a clade are more closely related to each other
-        than they are to anything else in the dataset.
+        tree. By definition, all of the samples within a clade are more closely
+        related to each other than they are to anything else in the dataset.
       </p>
 
       <p className="results">
@@ -139,22 +123,21 @@ function CladeDefinition(props: CladeDefinitionProps) {
       </p>
       <h5>Lineages ("variants")</h5>
       <p>
-        "Lineages" or "variants" are special clades that the scientific
-        community has decided to label for ease of discussion.{" "}
         <Sidenote
-          num={sidenote_start + 1}
-          text={
+          target={`"Lineages" or "variants"`}
+          contents={
             <span>
               <a href="https://cov-lineages.org/lineage_list.html">
                 Learn more about these lineages.
               </a>
             </span>
           }
-        />
+        />{" "}
+        are special clades that the scientific community has decided to label
+        for ease of discussion.{" "}
       </p>
       <p className="results">
         This clade contains samples that are part of these lineage(s):
-        <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>
         <FormatStringArray
           values={cladeDescription.selected_samples
             .concat(cladeDescription.unselected_samples_in_cluster)

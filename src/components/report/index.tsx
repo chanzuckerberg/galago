@@ -11,14 +11,29 @@ import SamplingBias from "./sampleDistribTable";
 import { gisaidCounts } from "../../../data/gisaidCounts2022-06";
 import { SkeletonReport } from "./skeleton";
 
-export const Report = () => {
+type ReportProps = {
+  sectionHeight: number;
+  sectionWidth: number;
+};
+
+export const Report = (props: ReportProps) => {
+  const { sectionHeight, sectionWidth } = props;
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const allDataPresent = state.location && state.division && state.tree;
   const reportReady = state.cladeDescription && state.tree;
 
   return (
-    <div>
+    <div
+      style={{
+        overflowY: "scroll",
+        overflowX: "hidden",
+        marginRight: 30,
+        width: sectionWidth - 30,
+        height: sectionHeight,
+      }}
+    >
+      {" "}
       {allDataPresent && reportReady && (
         <>
           <SitStat />

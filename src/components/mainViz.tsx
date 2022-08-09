@@ -6,21 +6,23 @@ import { ForceGraph } from "./viz/drawForceGraph";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 
-export const MainViz = () => {
+type MainVizProps = {
+  sectionHeight: number;
+  sectionWidth: number;
+};
+
+export const MainViz = (props: MainVizProps) => {
   // @ts-ignore
   const state = useSelector((state) => state.global);
+  const { sectionHeight, sectionWidth } = props;
   const dispatch = useDispatch();
   const viewPlot: "scatter" | "forceGraph" = state.viewPlot;
-  const [windowWidth, windowHeight] = useWindowSize();
 
-  const footerHeight = 10;
-  const headerHeight = 215;
   const plotToggleHeight = 50;
-  const extraHeight = headerHeight + footerHeight + plotToggleHeight;
 
   const chartMargin = 30;
-  const chartWidth: number = windowWidth / 2 - chartMargin;
-  const chartHeight = windowHeight - extraHeight;
+  const chartWidth: number = sectionWidth;
+  const chartHeight = sectionHeight - plotToggleHeight;
 
   const showLayoutBorders = false;
 
@@ -29,14 +31,16 @@ export const MainViz = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        // justifyContent: "space-between",
-        height: windowHeight - headerHeight - footerHeight,
+        justifyContent: "space-between",
+        height: sectionHeight,
+        width: sectionWidth,
+        paddingTop: 25,
         border: showLayoutBorders ? "1px solid red" : "none",
       }}
     >
       <div
         style={{
-          width: chartWidth + chartMargin,
+          width: sectionWidth,
           height: chartHeight,
           border: showLayoutBorders ? "1px solid purple" : "none",
         }}

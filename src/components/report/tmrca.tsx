@@ -34,27 +34,23 @@ function TMRCA(props: CladeProps) {
       {state.haveInternalNodeDates ? (
         <h2>What was the date and genotype of the primary infection?</h2>
       ) : (
-        <h2>What was the genotype of the primary case?</h2>
+        <h2>What was the genotype of the primary infection?</h2>
       )}
-      <p>
-        <Sidenote
-          num={sidenote_start}
-          text="You may also hear this referred to as the 'most recent common ancestor (MRCA)' of a clade."
-        />
-      </p>
       {state.haveInternalNodeDates ? (
         <p style={{ fontStyle: "italic" }}>
-          We can use the tree to make inferences about the timing of the primary
-          case -- and the genotype of the pathogen
-          <sup style={{ fontSize: "10" }}>{sidenote_start}</sup> infecting them
-          -- upstream of all the samples in our clade of interest.
+          We can use the tree to make inferences about the timing of the{" "}
+          <Sidenote
+            target={"primary case"}
+            contents="You may also hear this referred to as the 'most recent common ancestor (MRCA)' of a clade."
+          />{" "}
+          -- and the genotype of the pathogen -- upstream of all the samples in
+          our clade of interest.
         </p>
       ) : (
         <p style={{ fontStyle: "italic" }}>
           We can use the tree to make inferences about the genotype of the
-          pathogen
-          <sup style={{ fontSize: "10" }}>{sidenote_start}</sup> infecting the
-          primary case -- upstream of all the samples in our clade of interest.
+          pathogen primary case -- upstream of all the samples in our clade of
+          interest.
         </p>
       )}
 
@@ -82,29 +78,31 @@ function TMRCA(props: CladeProps) {
             -- while identical to any samples listed above --{" "}
             <b>may not be represented in this dataset</b> (e.g., if the primary
             case was not sampled, or if the sample from the primary case
-            happened to contain a different within-host variant
-            <sup style={{ fontSize: "10" }}>{sidenote_start + 1}</sup>).
+            happened to contain a{" "}
             <Sidenote
-              num={sidenote_start + 1}
-              text={
+              target={"different within-host variant."}
+              contents={
                 <span>
                   Learn more about{" "}
                   <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#viral-diversity-accumulates-over-the-course-of-a-single-individuals-infection.">
                     Within-host pathogen diversity
                   </a>
-                  .
                 </span>
               }
             />
+            ).
           </p>
         </>
       )}
       {state.haveInternalNodeDates && (
         <>
           <p>
+            Even if the true primary case is not represented by a sample in this
+            dataset, because pathogens{" "}
             <Sidenote
-              num={sidenote_start + 2}
-              text={
+              target={`accumulate mutations at a steady rate
+              over time`}
+              contents={
                 <span>
                   Learn more about{" "}
                   <a href="https://alliblk.github.io/genepi-book/fundamental-theory-in-genomic-epidemiology.html#temporally-resolved-phylogenetic-trees.">
@@ -116,12 +114,9 @@ function TMRCA(props: CladeProps) {
                   </a>
                 </span>
               }
-            />
-            Even if the true primary case is not represented by a sample in this
-            dataset, because pathogens accumulate mutations at a steady rate
+            />{" "}
             over time, we can still infer the approximate date of the primary
-            case
-            <sup style={{ fontSize: "10" }}>{sidenote_start + 2}</sup>.
+            case.
           </p>
           <span className="results">
             <p>

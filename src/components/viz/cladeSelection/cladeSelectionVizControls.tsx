@@ -18,10 +18,16 @@ import CladeFilterDrawer from "../../cladeFilterDrawer";
 import { useWindowSize } from "@react-hook/window-size";
 import { timeFormat } from "d3-time-format";
 import { extent } from "d3-array";
-import TuneIcon from "@mui/icons-material/Tune";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
-  const { chartWidth } = props;
+type CladeSelectionVizControlsProps = {
+  sectionWidth: number;
+};
+
+export const CladeSelectionVizControls = (
+  props: CladeSelectionVizControlsProps
+) => {
+  const { sectionWidth } = props;
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [windowWidth, windowHeight] = useWindowSize();
 
@@ -191,159 +197,189 @@ export const CladeSelectionVizControls = (props: { chartWidth: number }) => {
     <div
       style={{
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        position: "absolute",
-        width: chartWidth,
+        flexDirection: "column",
+        justifyContent: "space-around",
+        width: sectionWidth,
         paddingLeft: 25,
-        // border: "1px solid purple",
       }}
     >
-      <div style={{ width: 300 }}>
-        <FormControl fullWidth={true} margin="dense">
-          <Slider
-            //@ts-ignore
-            sx={{
-              "& .MuiSlider-thumb": {
-                color: darkPurple,
-                opacity: 0.7,
-              },
-              "& .MuiSlider-rail": {
-                color: "gray",
-              },
-              "& .MuiSlider-mark": {
-                color: darkestGray,
-                height: 8,
-                "&.MuiSlider-markActive": {
-                  opacity: 1.0,
-                  visible: true,
-                  height: 10,
-                  color: darkestGray,
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          position: "relative",
+          width: sectionWidth,
+          // paddingLeft: 25,
+          // border: "1px solid purple",
+        }}
+      >
+        <div style={{ width: sectionWidth - 250, flexShrink: 0 }}>
+          <FormControl fullWidth={true} margin="dense">
+            <Slider
+              //@ts-ignore
+              sx={{
+                // width: sectionWidth - 100,
+                "& .MuiSlider-thumb": {
+                  color: darkPurple,
+                  opacity: 0.7,
                 },
+                "& .MuiSlider-rail": {
+                  color: "gray",
+                },
+                "& .MuiSlider-mark": {
+                  color: darkestGray,
+                  height: 8,
+                  "&.MuiSlider-markActive": {
+                    opacity: 1.0,
+                    visible: true,
+                    height: 10,
+                    color: darkestGray,
+                  },
+                },
+              }}
+              aria-label="Use slider to select a hierarchical cluster (clade)"
+              step={null}
+              defaultValue={
+                state.mrca
+                  ? formatMrcaSliderOptionValue(state.mrca)
+                  : formattedSliderOptions[0].value
+              }
+              valueLabelDisplay="auto"
+              marks={formattedSliderOptions}
+              track={false}
+              value={sliderValue}
+              onChange={(event: Event, newValue: any) =>
+                setSliderValue(newValue)
+              }
+              min={
+                sliderField === "num_date"
+                  ? dateObjectToNumeric(wholeTreeMinMax[0])
+                  : wholeTreeMinMax[0]
+              }
+              max={
+                sliderField === "num_date"
+                  ? dateObjectToNumeric(wholeTreeMinMax[1])
+                  : wholeTreeMinMax[1]
+              }
+              size="medium"
+            />
+            <FormHelperText
+              style={{ position: "absolute", left: -20, top: 20 }}
+            >
+              {sliderField === "num_date"
+                ? timeFormat("%Y-%m-%d")(wholeTreeMinMax[0])
+                : wholeTreeMinMax[0].toString()}
+            </FormHelperText>
+            <FormHelperText
+              style={{ position: "absolute", right: -20, top: 20 }}
+            >
+              {sliderField === "num_date"
+                ? timeFormat("%Y-%m-%d")(wholeTreeMinMax[1])
+                : wholeTreeMinMax[1].toString()}{" "}
+            </FormHelperText>
+            <FormHelperText
+              style={{ margin: "auto", position: "relative", top: -45 }}
+            >
+              {sliderField === "num_date"
+                ? "Date of cluster's primary case"
+                : "Mutations between root & cluster's primary case"}
+            </FormHelperText>
+          </FormControl>
+        </div>
+        <div style={{ width: 100 }}>
+          <FormControl margin="dense" size="small">
+            <Select
+              variant="standard"
+              value={state.previewMrca}
+              defaultValue={formattedSelectorOptions[0].label}
+              onChange={(event) =>
+                dispatch({ type: "mrca previewed", data: event.target.value })
+              }
+              size="small"
+              disabled={formattedSelectorOptions.length < 2}
+              //@ts-ignore
+              IconComponent={
+                formattedSelectorOptions.length < 2 ? null : undefined
+              }
+              sx={{ fontSize: 12 }}
+              disableUnderline={true}
+            >
+              {formattedSelectorOptions.map((o: any) => (
+                <MenuItem value={o.value}>{o.label}</MenuItem>
+              ))}
+            </Select>
+            <FormHelperText
+              sx={{ fontSize: 10, position: "relative", top: -10 }}
+            >
+              {state.previewMrca && mrcaNameToTipCount[state.previewMrca]
+                ? `${mrcaNameToTipCount[
+                    state.previewMrca
+                  ].toLocaleString()} samples`
+                : ""}
+            </FormHelperText>
+          </FormControl>
+        </div>
+        <div>
+          <Button
+            variant="contained"
+            size="small"
+            disabled={!state.previewMrca}
+            onClick={() => {
+              dispatch({ type: "mrca confirmed", data: state.previewMrca });
+              dispatch({ type: "mrca previewed", data: null });
+            }}
+            sx={{
+              backgroundColor: "#4f2379",
+              fontSize: 14,
+              "&:hover": {
+                backgroundColor: "#f2f0f0",
+                color: "#6D4F8A",
               },
             }}
-            aria-label="Use slider to select a hierarchical cluster (clade)"
-            step={null}
-            defaultValue={
-              state.mrca
-                ? formatMrcaSliderOptionValue(state.mrca)
-                : formattedSliderOptions[0].value
-            }
-            valueLabelDisplay="auto"
-            marks={formattedSliderOptions}
-            track={false}
-            value={sliderValue}
-            onChange={(event: Event, newValue: any) => setSliderValue(newValue)}
-            min={
-              sliderField === "num_date"
-                ? dateObjectToNumeric(wholeTreeMinMax[0])
-                : wholeTreeMinMax[0]
-            }
-            max={
-              sliderField === "num_date"
-                ? dateObjectToNumeric(wholeTreeMinMax[1])
-                : wholeTreeMinMax[1]
-            }
-            size="medium"
-          />
-          <FormHelperText style={{ position: "absolute", left: -20, top: 20 }}>
-            {sliderField === "num_date"
-              ? timeFormat("%Y-%m-%d")(wholeTreeMinMax[0])
-              : wholeTreeMinMax[0].toString()}
-          </FormHelperText>
-          <FormHelperText style={{ position: "absolute", right: -20, top: 20 }}>
-            {sliderField === "num_date"
-              ? timeFormat("%Y-%m-%d")(wholeTreeMinMax[1])
-              : wholeTreeMinMax[1].toString()}{" "}
-          </FormHelperText>
-          <FormHelperText
-            style={{ margin: "auto", position: "relative", top: -45 }}
           >
-            {sliderField === "num_date"
-              ? "Date of cluster's primary case"
-              : "Mutations between root & cluster's primary case"}
+            Confirm
+          </Button>
+        </div>
+      </div>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ position: "relative", top: -12 }}>
+          {/* style={{ position: "relative", top: -12 }}> */}
+          <FormControl margin="dense">
+            <React.Fragment key={"controlsDrawer"}>
+              <IconButton
+                // disableElevation
+                // disableRipple
+                onClick={toggleDrawer("controlsDrawer", true)}
+              >
+                <FilterAltIcon style={{ fontSize: 30 }} />
+              </IconButton>
+              <Drawer
+                anchor={"right"}
+                open={drawerOpen}
+                onClose={toggleDrawer("right", false)}
+              >
+                <div style={{ width: windowWidth * 0.4 }}>
+                  <CladeFilterDrawer />
+                </div>
+              </Drawer>
+            </React.Fragment>
+          </FormControl>
+        </div>
+        <div>
+          <FormHelperText>
+            Samples of interest: <u>{state.samplesOfInterestNames.length}</u>
+            <br />
+            Clustering: <u>{state.clusteringMethod}</u>
+            {state.clusteringMethod !== "none" &&
+              state.clusteringMetadataField && (
+                <>
+                  {" "}
+                  on <u>{state.clusteringMetadataField}</u>
+                </>
+              )}
           </FormHelperText>
-        </FormControl>
-      </div>
-      <div>
-        <FormControl margin="dense" size="small">
-          <Select
-            variant="standard"
-            value={state.previewMrca}
-            defaultValue={formattedSelectorOptions[0].label}
-            onChange={(event) =>
-              dispatch({ type: "mrca previewed", data: event.target.value })
-            }
-            size="small"
-            disabled={formattedSelectorOptions.length < 2}
-            //@ts-ignore
-            IconComponent={
-              formattedSelectorOptions.length < 2 ? null : undefined
-            }
-            sx={{ fontSize: 12 }}
-            disableUnderline={true}
-          >
-            {formattedSelectorOptions.map((o: any) => (
-              <MenuItem value={o.value}>{o.label}</MenuItem>
-            ))}
-          </Select>
-          <FormHelperText sx={{ fontSize: 10, position: "relative", top: -10 }}>
-            {state.previewMrca && mrcaNameToTipCount[state.previewMrca]
-              ? `${mrcaNameToTipCount[
-                  state.previewMrca
-                ].toLocaleString()} samples`
-              : ""}
-          </FormHelperText>
-        </FormControl>
-      </div>
-      <div>
-        <Button
-          variant="contained"
-          size="small"
-          disabled={!state.previewMrca}
-          onClick={() => {
-            dispatch({ type: "mrca confirmed", data: state.previewMrca });
-            dispatch({ type: "mrca previewed", data: null });
-          }}
-          sx={{ backgroundColor: "#4f2379", fontSize: 14 }}
-        >
-          Confirm
-        </Button>
-      </div>
-      <div style={{ position: "relative", top: -12 }}>
-        <FormControl>
-          <React.Fragment key={"controlsDrawer"}>
-            <IconButton
-              // disableElevation
-              // disableRipple
-              onClick={toggleDrawer("controlsDrawer", true)}
-            >
-              <TuneIcon style={{ fontSize: 40 }} />
-            </IconButton>
-            <Drawer
-              anchor={"right"}
-              open={drawerOpen}
-              onClose={toggleDrawer("right", false)}
-            >
-              <div style={{ width: windowWidth * 0.4 }}>
-                <CladeFilterDrawer />
-              </div>
-            </Drawer>
-          </React.Fragment>
-        </FormControl>
-      </div>
-      <div style={{ position: "relative", top: -5, left: -10 }}>
-        <FormHelperText>
-          Samples of interest: <u>{state.samplesOfInterestNames.length}</u>
-          <br />
-          Clustering: <u>{state.clusteringMethod}</u>
-          {state.clusteringMethod !== "none" && state.clusteringMetadataField && (
-            <>
-              {" "}
-              on <u>{state.clusteringMetadataField}</u>
-            </>
-          )}
-        </FormHelperText>
+        </div>
       </div>
     </div>
   );

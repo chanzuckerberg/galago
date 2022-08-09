@@ -14,9 +14,18 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
+  Tooltip,
 } from "@mui/material";
+import Sidenote, { tooltipProps } from "../formatters/sidenote";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-function ClusteringOptions() {
+type ClusteringOptionsProps = {
+  drawerWidth: number;
+};
+
+function ClusteringOptions(props: ClusteringOptionsProps) {
+  const { drawerWidth } = props;
+
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
   const metadataCensus = state.metadataCensus;
@@ -86,18 +95,31 @@ function ClusteringOptions() {
 
   return (
     <div>
-      <h2>Metadata-based clustering</h2>
-      <p style={{ fontStyle: "italic", fontSize: 14 }}>
-        You can think of clades as the hierarchical clusters that make up a
-        phylogenetic tree. Clustering algorithms help identify interesting
-        clades to inspect based on where in the tree metadata attributes change.
-        For example, clustering based on "location" can help identify clades
-        that represent a new introduction to a given location.
-      </p>
+      <h2>
+        Metadata-based clustering{" "}
+        <Tooltip
+          title={`Clustering algorithms help identify interesting
+            clades to inspect based on where in the tree metadata attributes
+            change. For example, clustering based on "location" can help
+            identify clades that represent a new introduction to a given
+            location.`}
+          componentsProps={tooltipProps}
+          arrow
+        >
+          <InfoOutlinedIcon
+            sx={{
+              position: "relative",
+              top: 5,
+              color: "#4f2379",
+              fontSize: 20,
+            }}
+          />
+        </Tooltip>
+      </h2>
       <p>
         <FormControl>
           <FormLabel id="demo-radio-buttons-group-label">
-            First, select metadata field
+            First, select metadata field to cluster on
           </FormLabel>
           <Select
             id="metadataFieldSelect"
@@ -121,7 +143,7 @@ function ClusteringOptions() {
       </p>
       <p>
         <FormControl>
-          <FormLabel>Select clustering algorithm</FormLabel>
+          <FormLabel>Then, select clustering algorithm</FormLabel>
           <RadioGroup
             aria-labelledby="select clustering method"
             name="radio-buttons-group"
@@ -146,12 +168,15 @@ function ClusteringOptions() {
                   size="small"
                 />
               }
-              label="Nextstrain"
+              label="Treetime (recommended)"
             />
 
             <FormHelperText>
-              Nextstrain is a model-based method (recommended). <br />
-              <b>Must be pre-computed upstream (outside of Galago).</b>
+              <a href="https://academic.oup.com/ve/article/4/1/vex042/4794731">
+                Treetime
+              </a>{" "}
+              is a model-based method. <br />
+              Must be pre-computed upstream (outside of Galago).
             </FormHelperText>
             <FormControlLabel
               value="matutils"
@@ -166,8 +191,11 @@ function ClusteringOptions() {
               label="Introduction Weight Heuristic"
             />
             <FormHelperText>
-              <a href="https://academic.oup.com/ve/article/8/1/veac048/6609172">Introduction Weight</a> is a simple heuristic-based method. <br />
-              <b>Computed on demand (please be patient; 1 - 15 seconds)</b>
+              <a href="https://academic.oup.com/ve/article/8/1/veac048/6609172">
+                Introduction Weight
+              </a>{" "}
+              is a simple heuristic-based method. <br />
+              Computed on demand (1 - 15 sec)
             </FormHelperText>
           </RadioGroup>
         </FormControl>
