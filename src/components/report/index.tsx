@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { get_leaves, get_root } from "../../utils/treeMethods";
 import SamplingBias from "./sampleDistribTable";
 import { gisaidCounts } from "../../../data/gisaidCounts2022-06";
+import { SkeletonReport } from "./skeleton";
 
 export const Report = () => {
   //@ts-ignore
@@ -34,10 +35,7 @@ export const Report = () => {
           <Assumptions sidenote_start={8} />
         </>
       )}
-
-      {(!allDataPresent || !reportReady) && (
-        <h2>Select a clade on the left to generate a report</h2>
-      )}
+      {(!allDataPresent || !reportReady) && <SkeletonReport />}
     </div>
   );
 };
