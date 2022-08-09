@@ -329,15 +329,23 @@ export const CladeSelectionVizControls = (
               dispatch({ type: "mrca confirmed", data: state.previewMrca });
               dispatch({ type: "mrca previewed", data: null });
             }}
-            sx={{ backgroundColor: "#4f2379", fontSize: 14 }}
+            sx={{
+              backgroundColor: "#4f2379",
+              fontSize: 14,
+              "&:hover": {
+                backgroundColor: "#f2f0f0",
+                color: "#6D4F8A",
+              },
+            }}
           >
             Confirm
           </Button>
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <div style={{ position: "relative", top: -12 }}>
-          <FormControl>
+        <div>
+          {/* style={{ position: "relative", top: -12 }}> */}
+          <FormControl margin="dense">
             <React.Fragment key={"controlsDrawer"}>
               <IconButton
                 // disableElevation

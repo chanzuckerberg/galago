@@ -36,6 +36,10 @@ export const SamplesOfInterest = () => {
           });
         }}
         size="small"
+        sx={{
+          color: "#4f2379",
+          fontSize: 14,
+        }}
       />
       <br />
       <Button
@@ -46,6 +50,14 @@ export const SamplesOfInterest = () => {
         onClick={(e) => dispatch({ type: "sample submit button clicked" })}
         size="small"
         style={{ marginTop: 15 }}
+        sx={{
+          backgroundColor: "#4f2379",
+          fontSize: 14,
+          "&:hover": {
+            backgroundColor: "#f2f0f0",
+            color: "#6D4F8A",
+          },
+        }}
       >
         Highlight & Subset
       </Button>
