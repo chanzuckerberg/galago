@@ -35,7 +35,7 @@ export const CladeFilterDrawerClosed = (
     >
       <div style={{ marginLeft: "auto", marginRight: 0 }}>
         <IconButton onClick={() => dispatch({ type: "drawer toggled" })}>
-          <ChevronRight />
+          <ChevronRight style={{ fontSize: 32 }} />
         </IconButton>
       </div>
       <Divider variant="middle" style={{ margin: 10 }} />
