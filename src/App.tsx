@@ -15,7 +15,9 @@ export default function App() {
   const topSectionHeight = headerHeight + sectionHeaderHeight;
   const footerHeight = 50;
   const contentHeight = windowHeight - topSectionHeight - footerHeight;
-  const contentWidth = windowWidth - 50;
+  const contentWidth = state.drawerOpen
+    ? windowWidth - 50 - 290
+    : windowWidth - 50;
 
   const leftColWidth = contentWidth * 0.45;
   const rightColWidth = contentWidth * 0.45;

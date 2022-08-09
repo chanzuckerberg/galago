@@ -45,6 +45,7 @@ const defaultState = {
   clusteringMethod: "none", // string
   clusteringMetadataField: undefined, // string | undefined
   heatmapSelectedSampleNames: [], // string[]
+  drawerOpen: false,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -55,6 +56,10 @@ export const global = (state = defaultState, action: any) => {
 
     case "reset to default": {
       return defaultState;
+    }
+
+    case "drawer toggled": {
+      return { ...state, drawerOpen: !state.drawerOpen };
     }
 
     case "determined if internal node dates": {
