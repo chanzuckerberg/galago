@@ -1,6 +1,6 @@
 import { Tooltip, tooltipClasses } from "@mui/material";
 
-const tooltipProps = {
+export const tooltipProps = {
   tooltip: {
     sx: {
       fontSize: "16px",
@@ -19,7 +19,7 @@ type SidenoteProps = {
 const Sidenote = (props: SidenoteProps) => {
   const { contents, target } = props;
   return (
-    <Tooltip title={contents} componentsProps={tooltipProps}>
+    <Tooltip title={contents} componentsProps={tooltipProps} arrow>
       <span
         style={{
           // fontWeight: "bold",
