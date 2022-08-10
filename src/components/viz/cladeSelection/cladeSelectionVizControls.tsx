@@ -324,6 +324,11 @@ export const CladeSelectionVizControls = (
               borderColor: darkPurple,
               margin: 0,
               width: 50,
+              "&:hover": {
+                backgroundColor: "#f2f0f0",
+                color: "#6D4F8A",
+                borderColor: darkPurple,
+              },
             }}
             variant="outlined"
           >

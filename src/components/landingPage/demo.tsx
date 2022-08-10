@@ -2,6 +2,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 
+const darkPurple = "#4f2379";
+
 export const Demo = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,6 +21,13 @@ export const Demo = () => {
             navigate("/galago/app");
           }}
           size="large"
+          sx={{
+            backgroundColor: darkPurple,
+            "&:hover": {
+              backgroundColor: "#f2f0f0",
+              color: "#6D4F8A",
+            },
+          }}
         >
           Load Demo
         </Button>{" "}
