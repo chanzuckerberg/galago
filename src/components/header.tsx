@@ -1,7 +1,9 @@
-import { Alert, AlertTitle, Collapse } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { useWindowSize } from "@react-hook/window-size";
 import { useState } from "react";
+import Alert from "@mui/material/Alert/Alert";
+import AlertTitle from "@mui/material/AlertTitle/AlertTitle";
+import Collapse from "@mui/material/Collapse/Collapse";
 
 type HeaderProps = {
   sectionHeight: number;
