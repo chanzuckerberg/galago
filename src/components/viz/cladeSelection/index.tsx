@@ -66,13 +66,6 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
     )
     .range([scatterplotHeight - chartMargin, chartMargin]);
 
-  const checkIfPreviewSample = (sample: Node) => {
-    if (!state.previewMrca) {
-      return false;
-    }
-    return mrcaNameToSampleNames[state.previewMrca].includes(sample.name);
-  };
-
   const checkIfSampleOfInterest = (sample: Node) => {
     return state.samplesOfInterestNames.includes(sample.name);
   };
@@ -89,22 +82,9 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
     return currentMrcaSampleNames.includes(sample.name);
   };
 
-  const plotSampleOfInterest = (
-    sample: Node,
-    isPreviewMrcaSample: boolean,
-    isCurrentMrcaSample: boolean
-  ) => {
-    let color, strokeWidth;
-
-    if (state.previewMrca) {
-      // emphasize preview mrca samples, de-emphasize everything else
-      color = isCurrentMrcaSample ? darkPurple : "black";
-      strokeWidth = isPreviewMrcaSample ? 3 : 1;
-    } else {
-      // if non preview mrca, emphasize current mrca samples, all else neutral
-      color = isCurrentMrcaSample ? darkPurple : "black";
-      strokeWidth = isCurrentMrcaSample ? 3 : 1;
-    }
+  const plotSampleOfInterest = (sample: Node, isCurrentMrcaSample: boolean) => {
+    const color = isCurrentMrcaSample ? darkPurple : "black";
+    const strokeWidth = isCurrentMrcaSample ? 3 : 1;
 
     return (
       <g
@@ -136,35 +116,17 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
     );
   };
 
-  const plotOtherSample = (
-    sample: Node,
-    isPreviewMrcaSample: boolean,
-    isCurrentMrcaSample: boolean
-  ) => {
+  const plotOtherSample = (sample: Node, isCurrentMrcaSample: boolean) => {
     let radius, strokeWidth, color;
 
-    if (state.previewMrca) {
-      // emphasize preview mrca samples, de-emphasize everything else
-      if (isPreviewMrcaSample) {
-        radius = 3.5;
-        strokeWidth = 1;
-        color = isCurrentMrcaSample ? mediumPurple : lightestGray;
-      } else {
-        radius = 2;
-        strokeWidth = 0;
-        color = isCurrentMrcaSample ? mediumPurple : lightestGray;
-      }
+    if (isCurrentMrcaSample) {
+      radius = 3;
+      strokeWidth = 1;
+      color = mediumPurple;
     } else {
-      // if non preview mrca, emphasize current mrca samples, all else neutral
-      if (isCurrentMrcaSample) {
-        radius = 3;
-        strokeWidth = 1;
-        color = mediumPurple;
-      } else {
-        radius = 2.5;
-        strokeWidth = 0;
-        color = lightestGray;
-      }
+      radius = 2.5;
+      strokeWidth = 0;
+      color = lightestGray;
     }
 
     return (
@@ -183,18 +145,13 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
   };
 
   const plotSample = (sample: Node) => {
-    const isPreviewMrcaSample = checkIfPreviewSample(sample);
     const isSampleOfInterest = checkIfSampleOfInterest(sample);
     const isCurrentMrcaSample = checkIfCurrentMrcaSample(sample);
 
     if (isSampleOfInterest) {
-      return plotSampleOfInterest(
-        sample,
-        isPreviewMrcaSample,
-        isCurrentMrcaSample
-      );
+      return plotSampleOfInterest(sample, isCurrentMrcaSample);
     } else {
-      return plotOtherSample(sample, isPreviewMrcaSample, isCurrentMrcaSample);
+      return plotOtherSample(sample, isCurrentMrcaSample);
     }
   };
 
@@ -224,8 +181,8 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
         >
           {allSamples
             .sort((a: Node, b: Node) => {
-              let aVal = checkIfPreviewSample(a) + checkIfCurrentMrcaSample(a);
-              let bVal = checkIfPreviewSample(b) + checkIfCurrentMrcaSample(b);
+              let aVal = checkIfCurrentMrcaSample(a);
+              let bVal = checkIfCurrentMrcaSample(b);
               return aVal - bVal;
             })
             .map((sample) => plotSample(sample))}
