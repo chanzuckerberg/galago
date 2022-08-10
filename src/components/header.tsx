@@ -4,14 +4,17 @@ import { useState } from "react";
 import Alert from "@mui/material/Alert/Alert";
 import AlertTitle from "@mui/material/AlertTitle/AlertTitle";
 import Collapse from "@mui/material/Collapse/Collapse";
+const [windowWidth, windowHeight] = useWindowSize();
 
 type HeaderProps = {
-  sectionHeight: number;
-  sectionWidth: number;
+  sectionHeight?: number;
+  sectionWidth?: number;
 };
 const Header = (props: HeaderProps) => {
-  const { sectionHeight, sectionWidth } = props;
+  let { sectionHeight, sectionWidth } = props;
   const [showAlert, setShowAlert] = useState<boolean>(true);
+  sectionHeight ??= 100;
+  sectionWidth ??= windowWidth - 10;
 
   return (
     <div

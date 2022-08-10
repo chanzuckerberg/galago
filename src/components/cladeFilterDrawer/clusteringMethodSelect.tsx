@@ -19,13 +19,9 @@ import {
 import Sidenote, { tooltipProps } from "../formatters/sidenote";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-type ClusteringOptionsProps = {
-  drawerWidth: number;
-};
+type ClusteringOptionsProps = {};
 
 function ClusteringOptions(props: ClusteringOptionsProps) {
-  const { drawerWidth } = props;
-
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
   const metadataCensus = state.metadataCensus;
