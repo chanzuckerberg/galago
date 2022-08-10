@@ -15,7 +15,7 @@ export default function App() {
   const topSectionHeight = headerHeight + sectionHeaderHeight;
   const footerHeight = 50;
   const contentHeight = windowHeight - topSectionHeight - footerHeight;
-  const contentWidth = windowWidth - 50;
+  const contentWidth = windowWidth - 50 - 10;
 
   const leftColWidth = contentWidth * 0.45;
   const rightColWidth = contentWidth * 0.45;
@@ -25,7 +25,7 @@ export default function App() {
     <div>
       {/* <h1>Select a clade to instantly generate a report</h1> */}
       {/* left side bar */}
-      <Header sectionHeight={headerHeight} sectionWidth={windowWidth} />
+      <Header sectionHeight={headerHeight} sectionWidth={windowWidth - 10} />
       <div // all content
         style={{
           display: "flex",
