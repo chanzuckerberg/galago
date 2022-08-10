@@ -33,8 +33,8 @@ const Header = (props: HeaderProps) => {
         <Alert
           severity="info"
           style={{
-            width: 430,
-            height: 60,
+            width: 450,
+            height: 90,
             position: "absolute",
             top: 0,
             right: 0,
@@ -45,8 +45,13 @@ const Header = (props: HeaderProps) => {
           sx={{ backgroundColor: "#f2f0f0" }}
         >
           <AlertTitle>
-            <strong>Galago is in beta - we'd love your feedback!</strong>{" "}
+            <strong>
+              Galago is in alpha testing & may have bugs --
+              <br /> stable beta launching early Sept!
+            </strong>{" "}
+            <br />
             <span style={{}}>
+              We'd love your feedback!{" "}
               <a href="https://github.com/chanzuckerberg/galago/discussions">
                 Discussion board
               </a>{" "}
