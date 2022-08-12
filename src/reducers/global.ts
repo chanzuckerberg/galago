@@ -5,6 +5,7 @@ import {
   get_mrca,
   getNodeAttr,
   traverse_preorder,
+  determineIfInternalNodeDates,
 } from "../utils/treeMethods";
 import { ingestNextstrain } from "../utils/nextstrainAdapter";
 import { CladeDescription, caseDefFilter, Node } from "../d";
@@ -44,6 +45,8 @@ const defaultState = {
   clusteringMethod: "none", // string
   clusteringMetadataField: undefined, // string | undefined
   heatmapSelectedSampleNames: [], // string[]
+  cladeSliderValue: 0,
+  cladeSliderField: "div",
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -57,7 +60,11 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "determined if internal node dates": {
-      return { ...state, haveInternalNodeDates: action.data };
+      return {
+        ...state,
+        haveInternalNodeDates: action.data,
+        cladeSliderField: action.data ? "num_date" : "div",
+      };
     }
 
     case "view plot toggled": {
@@ -98,6 +105,8 @@ export const global = (state = defaultState, action: any) => {
         samplesOfInterest
       );
 
+      const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
+
       return {
         ...defaultState,
         tree: tree,
@@ -114,6 +123,7 @@ export const global = (state = defaultState, action: any) => {
         division: "California",
         loadReport: true,
         cladeDescription: cladeDescription,
+        cladeSliderField: cladeSliderField,
       };
     }
 
@@ -360,8 +370,15 @@ export const global = (state = defaultState, action: any) => {
             state.metadataEntries,
             state.metadataFieldToMatch
           );
+
+          const haveInternalNodeDates =
+            determineIfInternalNodeDates(updatedTree);
+
+          const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
           return {
             ...state,
+            haveInternalNodeDates: haveInternalNodeDates,
+            cladeSliderField: cladeSliderField,
             tree: updatedTree,
             loadReport: true,
           };
