@@ -121,6 +121,10 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...state,
         clusteringMetadataField: action.data,
+        mrcaOptions: state.tree
+          ? getMrcaOptions(state.tree, state.samplesOfInterest, [])
+          : [],
+        clusteringMethod: "none",
       };
     }
 
