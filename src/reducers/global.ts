@@ -5,6 +5,7 @@ import {
   get_mrca,
   getNodeAttr,
   traverse_preorder,
+  determineIfInternalNodeDates,
 } from "../utils/treeMethods";
 import { ingestNextstrain } from "../utils/nextstrainAdapter";
 import { CladeDescription, caseDefFilter, Node } from "../d";
@@ -19,6 +20,7 @@ import {
   zipMetadataToTree,
 } from "../utils/metadataUtils";
 import { describe_clade } from "../utils/describeClade";
+import { formatMrcaSliderOptionValue } from "../components/viz/cladeSelection/cladeSlider";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
@@ -44,6 +46,8 @@ const defaultState = {
   clusteringMethod: "none", // string
   clusteringMetadataField: undefined, // string | undefined
   heatmapSelectedSampleNames: [], // string[]
+  cladeSliderValue: 0,
+  cladeSliderField: "div",
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -57,7 +61,11 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "determined if internal node dates": {
-      return { ...state, haveInternalNodeDates: action.data };
+      return {
+        ...state,
+        haveInternalNodeDates: action.data,
+        cladeSliderField: action.data ? "num_date" : "div",
+      };
     }
 
     case "view plot toggled": {
@@ -66,6 +74,10 @@ export const global = (state = defaultState, action: any) => {
 
     case "heatmap selected samples changed": {
       return { ...state, heatmapSelectedSampleNames: action.data };
+    }
+
+    case "clade slider value changed": {
+      return { ...state, cladeSliderValue: action.data };
     }
 
     case "load demo": {
@@ -98,6 +110,8 @@ export const global = (state = defaultState, action: any) => {
         samplesOfInterest
       );
 
+      const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
+
       return {
         ...defaultState,
         tree: tree,
@@ -114,6 +128,8 @@ export const global = (state = defaultState, action: any) => {
         division: "California",
         loadReport: true,
         cladeDescription: cladeDescription,
+        cladeSliderField: cladeSliderField,
+        cladeSliderValue: formatMrcaSliderOptionValue(mrca, cladeSliderField),
       };
     }
 
@@ -121,6 +137,10 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...state,
         clusteringMetadataField: action.data,
+        mrcaOptions: state.tree
+          ? getMrcaOptions(state.tree, state.samplesOfInterest, [])
+          : [],
+        clusteringMethod: "none",
       };
     }
 
@@ -131,16 +151,47 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
+    // issue: handle the case where a currently selected mrca isn't included in the list of clades returned by the algo
     case "clustering results updated": {
       if (state.tree) {
+        const newMrcaOptions = getMrcaOptions(
+          state.tree,
+          state.samplesOfInterest,
+          action.data
+        );
+
+        const newMrcaOptionNames = newMrcaOptions.map(
+          (thisMrca: Node) => thisMrca.name
+        );
+        const newMrcaState =
+          //@ts-ignore
+          state.mrca && newMrcaOptionNames.includes(state.mrca.name)
+            ? {}
+            : {
+                mrca: newMrcaOptions[0],
+                cladeSliderValue: formatMrcaSliderOptionValue(
+                  newMrcaOptions[0],
+                  state.cladeSliderField
+                ),
+                cladeDescription: describe_clade(
+                  newMrcaOptions[0],
+                  {
+                    location: state.location,
+                    division: state.division,
+                    country: state.country,
+                    region: state.region,
+                  },
+                  [0, 2],
+                  1,
+                  state.samplesOfInterest
+                ),
+              };
+
         return {
           ...state,
           clusteringMrcas: action.data,
-          mrcaOptions: getMrcaOptions(
-            state.tree,
-            state.samplesOfInterest,
-            action.data
-          ),
+          mrcaOptions: newMrcaOptions,
+          ...newMrcaState,
         };
       } else {
         return state;
@@ -212,6 +263,7 @@ export const global = (state = defaultState, action: any) => {
     case "tree file uploaded": {
       const tree = action.data;
       const treeMetadata = treeMetadataCensus(tree);
+      const rootSliderValue = getNodeAttr(tree, state.cladeSliderField);
 
       return {
         ...state,
@@ -219,6 +271,11 @@ export const global = (state = defaultState, action: any) => {
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
+        cladeSliderValue: formatMrcaSliderOptionValue(
+          rootSliderValue,
+          state.cladeSliderField
+        ),
+        mrca: tree,
         metadataCensus: { ...state.metadataCensus, ...treeMetadata },
       };
     }
@@ -356,8 +413,21 @@ export const global = (state = defaultState, action: any) => {
             state.metadataEntries,
             state.metadataFieldToMatch
           );
+
+          const haveInternalNodeDates =
+            determineIfInternalNodeDates(updatedTree);
+
+          const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
+          const rootSliderValue = getNodeAttr(updatedTree, cladeSliderField);
           return {
             ...state,
+            haveInternalNodeDates: haveInternalNodeDates,
+            cladeSliderField: cladeSliderField,
+            cladeSliderValue: formatMrcaSliderOptionValue(
+              rootSliderValue,
+              cladeSliderField
+            ),
+            mrca: updatedTree,
             tree: updatedTree,
             loadReport: true,
           };

@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 //@ts-ignore
 import uuid from "react-uuid";
 import CladeSelectionVizControls from "./cladeSelectionVizControls";
-import CladeSelectionVizLegend from "./legend";
+import CladeSelectionVizLegend from "./scatterplotLegend";
 
 type CladeSelectionVizProps = {
   chartHeight: number;
