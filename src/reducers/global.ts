@@ -20,6 +20,7 @@ import {
   zipMetadataToTree,
 } from "../utils/metadataUtils";
 import { describe_clade } from "../utils/describeClade";
+import { formatMrcaSliderOptionValue } from "../components/viz/cladeSelection/cladeSlider";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
@@ -75,6 +76,10 @@ export const global = (state = defaultState, action: any) => {
       return { ...state, heatmapSelectedSampleNames: action.data };
     }
 
+    case "clade slider value changed": {
+      return { ...state, cladeSliderValue: action.data };
+    }
+
     case "load demo": {
       // TODO: this should all probably live in an thunk + action constructor instead of duplicating code from a bunch of individual reducers. But, they're all short and this gets us off the ground for now.
       const { tree, haveInternalNodeDates } = ingestNextstrain(demo_tree);
@@ -124,6 +129,7 @@ export const global = (state = defaultState, action: any) => {
         loadReport: true,
         cladeDescription: cladeDescription,
         cladeSliderField: cladeSliderField,
+        cladeSliderValue: formatMrcaSliderOptionValue(mrca, cladeSliderField),
       };
     }
 
@@ -226,6 +232,7 @@ export const global = (state = defaultState, action: any) => {
     case "tree file uploaded": {
       const tree = action.data;
       const treeMetadata = treeMetadataCensus(tree);
+      const rootSliderValue = getNodeAttr(tree, state.cladeSliderField);
 
       return {
         ...state,
@@ -233,6 +240,11 @@ export const global = (state = defaultState, action: any) => {
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
+        cladeSliderValue: formatMrcaSliderOptionValue(
+          rootSliderValue,
+          state.cladeSliderField
+        ),
+        mrca: tree,
         metadataCensus: { ...state.metadataCensus, ...treeMetadata },
       };
     }
@@ -375,10 +387,16 @@ export const global = (state = defaultState, action: any) => {
             determineIfInternalNodeDates(updatedTree);
 
           const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
+          const rootSliderValue = getNodeAttr(updatedTree, cladeSliderField);
           return {
             ...state,
             haveInternalNodeDates: haveInternalNodeDates,
             cladeSliderField: cladeSliderField,
+            cladeSliderValue: formatMrcaSliderOptionValue(
+              rootSliderValue,
+              cladeSliderField
+            ),
+            mrca: updatedTree,
             tree: updatedTree,
             loadReport: true,
           };
