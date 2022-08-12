@@ -151,16 +151,47 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
+    // issue: handle the case where a currently selected mrca isn't included in the list of clades returned by the algo
     case "clustering results updated": {
       if (state.tree) {
+        const newMrcaOptions = getMrcaOptions(
+          state.tree,
+          state.samplesOfInterest,
+          action.data
+        );
+
+        const newMrcaOptionNames = newMrcaOptions.map(
+          (thisMrca: Node) => thisMrca.name
+        );
+        const newMrcaState =
+          //@ts-ignore
+          state.mrca && newMrcaOptionNames.includes(state.mrca.name)
+            ? {}
+            : {
+                mrca: newMrcaOptions[0],
+                cladeSliderValue: formatMrcaSliderOptionValue(
+                  newMrcaOptions[0],
+                  state.cladeSliderField
+                ),
+                cladeDescription: describe_clade(
+                  newMrcaOptions[0],
+                  {
+                    location: state.location,
+                    division: state.division,
+                    country: state.country,
+                    region: state.region,
+                  },
+                  [0, 2],
+                  1,
+                  state.samplesOfInterest
+                ),
+              };
+
         return {
           ...state,
           clusteringMrcas: action.data,
-          mrcaOptions: getMrcaOptions(
-            state.tree,
-            state.samplesOfInterest,
-            action.data
-          ),
+          mrcaOptions: newMrcaOptions,
+          ...newMrcaState,
         };
       } else {
         return state;
