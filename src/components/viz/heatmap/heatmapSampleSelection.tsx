@@ -86,12 +86,7 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
         onClick={handleButtonClick}
         size="small"
         sx={{
-          color: "#6D4F8A",
           marginBottom: 1.5,
-          "&:hover": {
-            backgroundColor: "#f2f0f0",
-            color: "#6D4F8A",
-          },
         }}
       >
         {`Choose samples (${selectedOptions.length})`}

@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import ContingencyTable from "../../viz/contingencyTable";
 import { useWindowSize } from "@react-hook/window-size";
 import Sidenote from "../../formatters/sidenote";
+import Theme from "../../../theme";
 
 export const SitStat = () => {
   //@ts-ignore
@@ -64,7 +65,7 @@ export const SitStat = () => {
           style={{
             fontWeight: "bold",
             fontSize: 12,
-            color: "#4f2379",
+            color: Theme.palette.primary.main,
           }}
         >
           * The primary case most likely existed around{" "}

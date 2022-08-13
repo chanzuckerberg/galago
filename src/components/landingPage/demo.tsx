@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-
-const darkPurple = "#4f2379";
+import { Theme } from "../../theme";
+import ThemeProvider from "@mui/system/ThemeProvider";
 
 export const Demo = () => {
   const dispatch = useDispatch();
@@ -11,26 +11,21 @@ export const Demo = () => {
     <div className="reportSection">
       <h2>Demo with real-world outbreak data</h2>
       <p style={{ width: 200, margin: "auto" }}>
-        <Button
-          variant="contained"
-          name="loadDemo"
-          disableElevation
-          disableRipple
-          onClick={() => {
-            dispatch({ type: "load demo" });
-            navigate("/galago/app");
-          }}
-          size="large"
-          sx={{
-            backgroundColor: darkPurple,
-            "&:hover": {
-              backgroundColor: "#f2f0f0",
-              color: "#6D4F8A",
-            },
-          }}
-        >
-          Load Demo
-        </Button>{" "}
+        <ThemeProvider theme={Theme}>
+          <Button
+            variant="contained"
+            name="loadDemo"
+            disableElevation
+            disableRipple
+            onClick={() => {
+              dispatch({ type: "load demo" });
+              navigate("/galago/app");
+            }}
+            size="large"
+          >
+            Load Demo
+          </Button>{" "}
+        </ThemeProvider>
       </p>
       <p>
         Genomic epidemiology helped public health officials understand a

@@ -11,6 +11,7 @@ import {
   filterToIncludedSamples,
   getDefaultSampleSet,
 } from "../../../utils/filterHeatmapStrains";
+import Theme from "../../../theme";
 
 type heatmapProps = {
   chartWidth: number;
@@ -93,10 +94,8 @@ export const Heatmap = (props: heatmapProps) => {
     domain: [0, bucketSizeMax],
   });
 
-  const darkPurple = "#4f2379";
-  const lightPurple = "#d9cde3";
   const circleColorScale = scaleLinear<string>({
-    range: [darkPurple, lightPurple],
+    range: [Theme.palette.primary.dark, Theme.palette.primary.light],
     domain: [0, colorMax],
   });
 

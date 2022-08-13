@@ -48,6 +48,8 @@ const defaultState = {
   heatmapSelectedSampleNames: [], // string[]
   cladeSliderValue: 0,
   cladeSliderField: "div",
+  cacheStateOnFilterDrawerOpen: {},
+  filterDrawerOpen: false,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -58,6 +60,31 @@ export const global = (state = defaultState, action: any) => {
 
     case "reset to default": {
       return defaultState;
+    }
+
+    case "filter drawer changes cancelled": {
+      return {
+        ...state,
+        ...state.cacheStateOnFilterDrawerOpen, // overwrite state with what it was before the filter pane was opened
+        cacheStateOnFilterDrawerOpen: {}, // discard cached state
+        filterDrawerOpen: false,
+      };
+    }
+
+    case "filter drawer changes applied": {
+      return {
+        ...state,
+        cacheStateOnFilterDrawerOpen: {}, // just discard cached state
+        filterDrawerOpen: false,
+      };
+    }
+
+    case "filter drawer opened": {
+      return {
+        ...state,
+        cacheStateOnFilterDrawerOpen: state,
+        filterDrawerOpen: true,
+      };
     }
 
     case "determined if internal node dates": {

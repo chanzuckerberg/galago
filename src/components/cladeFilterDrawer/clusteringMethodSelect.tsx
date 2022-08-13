@@ -106,7 +106,7 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
             sx={{
               position: "relative",
               top: 5,
-              color: "#4f2379",
+              // color: "#4f2379",
               fontSize: 20,
             }}
           />

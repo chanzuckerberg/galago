@@ -25,8 +25,6 @@ export const Upload = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const darkPurple = "#4f2379";
-
   const [divisionOptions, setDivisionOptions] = useState<null | Array<string>>(
     null
   );
@@ -210,13 +208,6 @@ export const Upload = () => {
         onClick={(e) => {
           dispatch({ type: "upload submit button clicked" });
           navigate("/galago/app");
-        }}
-        sx={{
-          backgroundColor: darkPurple,
-          "&:hover": {
-            backgroundColor: "#f2f0f0",
-            color: "#6D4F8A",
-          },
         }}
         disabled={!state.division || !state.location || !state.tree}
       >
