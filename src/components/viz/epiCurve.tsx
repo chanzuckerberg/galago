@@ -30,6 +30,7 @@ import {
   getTimepoints,
   sortDates,
 } from "../../utils/dates";
+import { Theme } from "../../theme";
 
 type EpiCurveProps = {
   chartHeight: number;
@@ -37,18 +38,11 @@ type EpiCurveProps = {
   chartMargin: number;
 };
 
-const lightestGray = "rgba(220,220,220,1)";
-const mediumGray = "rgba(180,180,180,1)";
-const darkestGray = "rgba(80,80,80,1)";
-
-const darkPurple = "#4f2379";
-const mediumPurple = "#9475b3";
-const lightPurple = "#d9cde3";
-
 export const EpiCurve = (props: EpiCurveProps) => {
   // STATE
   //@ts-ignore
   const state = useSelector((state) => state.global);
+
   const [colorBy, setColorBy] = useState<"transmissions" | "geography">(
     "transmissions"
   );
@@ -181,7 +175,12 @@ export const EpiCurve = (props: EpiCurveProps) => {
 
   const colorScale = scaleOrdinal<string>({
     domain: keys,
-    range: [darkPurple, mediumPurple, lightPurple, lightestGray],
+    range: [
+      Theme.palette.primary.main,
+      Theme.palette.primary.light,
+      Theme.palette.primary.lighter,
+      Theme.palette.secondary.light,
+    ],
   });
 
   if (chartWidth < 10) return null;
@@ -299,21 +298,21 @@ export const EpiCurve = (props: EpiCurveProps) => {
           top={yMax + chartMargin}
           left={chartMargin / 2}
           scale={dateScale}
-          stroke={darkestGray}
-          tickStroke={darkestGray}
+          stroke={Theme.palette.secondary.main}
+          tickStroke={Theme.palette.secondary.main}
           tickValues={allDateBins}
           //@ts-ignore
           tickLabelProps={(tickLabel: string) => {
             if (tickLabel === allDateBins[0] && tmrca) {
               return {
-                fill: darkPurple,
+                fill: Theme.palette.primary.main,
                 fontSize: 12,
                 fontWeight: "bold",
                 textAnchor: "middle",
               };
             } else {
               return {
-                fill: mediumGray,
+                fill: Theme.palette.secondary.main,
                 fontSize: 11,
                 textAnchor: "middle",
               };
@@ -322,7 +321,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
           label={xLabel}
           //@ts-ignore
           labelProps={{
-            fill: mediumGray,
+            fill: Theme.palette.secondary.main,
             fontSize: 13,
             textAnchor: "middle",
           }}
@@ -332,9 +331,9 @@ export const EpiCurve = (props: EpiCurveProps) => {
           hideAxisLine={true}
           hideZero={true}
           hideTicks={true}
-          tickStroke={mediumGray}
+          tickStroke={Theme.palette.secondary.main}
           tickLabelProps={() => ({
-            fill: mediumGray,
+            fill: Theme.palette.secondary.main,
             fontSize: 10,
             textAnchor: "middle",
           })}
@@ -348,7 +347,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
           scale={countScale}
           width={xMax}
           height={yMax}
-          stroke={gridValues !== [] ? "white" : mediumGray}
+          stroke={gridValues !== [] ? "white" : Theme.palette.secondary.main}
           strokeOpacity={1}
           tickValues={gridValues}
         />

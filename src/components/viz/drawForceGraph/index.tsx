@@ -7,6 +7,7 @@ import DrawLabels from "./drawLabels";
 import ForceGraphLegend from "./drawLegend";
 import { initForceGraphData, initSimulation } from "../../../utils/forceGraph";
 import CircularProgress from "@mui/material/CircularProgress";
+import Theme from "../../../theme";
 
 type DrawTreeProps = {
   chartHeight: number;
@@ -20,9 +21,10 @@ export const ForceGraph = (props: DrawTreeProps) => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const colorScale: [string, string, string] = [
-    "#4f2379",
-    "#9475b3",
-    "#d9cde3",
+    Theme.palette.primary.main,
+    Theme.palette.primary.light,
+    //@ts-ignore
+    Theme.palette.primary.lighter,
   ];
 
   // links and nodes that d3 has finished finding positions for

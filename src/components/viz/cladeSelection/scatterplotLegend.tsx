@@ -1,17 +1,11 @@
 import ColorLensIcon from "@mui/icons-material/ColorLens";
+import Theme from "../../../theme";
 
 export const CladeSelectionVizLegend = () => {
-  /* colors in use */
-  // const lightestGray = "rgba(220,220,220,1)";
-  const mediumGray = "rgba(180,180,180,1)";
-  const darkGray = "rgba(130,130,130,1)";
-  const darkPurple = "#4f2379";
-  const mediumPurple = "#9475b3";
-
   return (
     <>
       <g id="interactive-sample-selection-legend" transform="translate(150,85)">
-        <circle cx="0" cy="7" r={3} fill={mediumGray} />
+        <circle cx="0" cy="7" r={3} fill={Theme.palette.secondary.main} />
         <text x="10" y="10" fontSize={14}>
           Other samples
         </text>
@@ -26,8 +20,8 @@ export const CladeSelectionVizLegend = () => {
           cx="0"
           cy="47"
           r={3}
-          fill={mediumPurple}
-          stroke={darkGray}
+          fill={Theme.palette.primary.light}
+          stroke={Theme.palette.secondary.dark}
           strokeWidth={1}
         />
         <text x="10" y="50" fontSize={14}>
@@ -39,7 +33,7 @@ export const CladeSelectionVizLegend = () => {
             y1="0"
             x2="4"
             y2="0"
-            stroke={darkPurple}
+            stroke={Theme.palette.primary.main}
             strokeWidth={3}
           />
           <line
@@ -47,7 +41,7 @@ export const CladeSelectionVizLegend = () => {
             y1="-4"
             x2="0"
             y2="4"
-            stroke={darkPurple}
+            stroke={Theme.palette.primary.main}
             strokeWidth={3}
           />
         </g>

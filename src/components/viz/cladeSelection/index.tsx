@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import uuid from "react-uuid";
 import CladeSelectionVizControls from "./cladeSelectionVizControls";
 import CladeSelectionVizLegend from "./scatterplotLegend";
+import { Theme } from "../../../theme";
 
 type CladeSelectionVizProps = {
   chartHeight: number;
@@ -39,13 +40,6 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
       //@ts-ignore
       (mrcaNameToSampleNames[n.name] = get_leaves(n).map((l) => l.name))
   );
-
-  /* colors in use */
-  const lightestGray = "rgba(220,220,220,1)";
-  const darkestGray = "rgba(80,80,80,1)";
-  const mediumPurple = "#9475b3";
-  const lightPurple = "#d9cde3";
-  const darkPurple = "#4f2379";
 
   // AXES
   const _xScaleTime = scaleTime()
@@ -83,7 +77,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
   };
 
   const plotSampleOfInterest = (sample: Node, isCurrentMrcaSample: boolean) => {
-    const color = isCurrentMrcaSample ? darkPurple : "black";
+    const color = isCurrentMrcaSample ? Theme.palette.primary : "black";
     const strokeWidth = isCurrentMrcaSample ? 3 : 1;
 
     return (
@@ -99,7 +93,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
           y1="0"
           x2="6"
           y2="0"
-          stroke={color} //getMetadataColor(sample)}
+          stroke={Theme.palette.primary.main} //getMetadataColor(sample)}
           strokeWidth={strokeWidth}
           key={`sampleOfInterest-${uuid()}`}
         />
@@ -108,7 +102,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
           y1="-6"
           x2="0"
           y2="6"
-          stroke={color} //getMetadataColor(sample)}
+          stroke={Theme.palette.primary.main} //getMetadataColor(sample)}
           strokeWidth={strokeWidth}
           key={`sampleOfInterest-${uuid()}`}
         />
@@ -122,11 +116,11 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
     if (isCurrentMrcaSample) {
       radius = 3;
       strokeWidth = 1;
-      color = mediumPurple;
+      color = Theme.palette.primary.light;
     } else {
       radius = 2.5;
       strokeWidth = 0;
-      color = lightestGray;
+      color = Theme.palette.secondary.light;
     }
 
     return (
@@ -137,7 +131,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
         r={radius}
         style={{
           fill: color,
-          stroke: darkestGray,
+          stroke: Theme.palette.secondary.dark,
           strokeWidth: strokeWidth,
         }}
       />

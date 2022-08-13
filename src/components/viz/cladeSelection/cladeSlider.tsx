@@ -8,6 +8,7 @@ import { FormControl, FormHelperText } from "@mui/material";
 import { useWindowSize } from "@react-hook/window-size";
 import { timeFormat } from "d3-time-format";
 import { extent } from "d3-array";
+import Theme from "../../../theme";
 
 type CladeSliderProps = {};
 
@@ -30,8 +31,6 @@ export const CladeSlider = (props: CladeSliderProps) => {
   //@ts-ignore
   const dispatch = useDispatch();
 
-  const darkPurple = "#4f2379";
-  const darkestGray = "rgba(80,80,80,1)";
   const wholeTreeMinMax = extent(traverse_preorder(state.tree), (n) =>
     getNodeAttr(n, state.cladeSliderField)
   );
@@ -91,20 +90,17 @@ export const CladeSlider = (props: CladeSliderProps) => {
         sx={{
           // width: sectionWidth - 100,
           "& .MuiSlider-thumb": {
-            color: darkPurple,
             opacity: 0.7,
           },
           "& .MuiSlider-rail": {
             color: "gray",
           },
           "& .MuiSlider-mark": {
-            color: darkestGray,
             height: 8,
             "&.MuiSlider-markActive": {
               opacity: 1.0,
               visible: true,
               height: 10,
-              color: darkestGray,
             },
           },
         }}

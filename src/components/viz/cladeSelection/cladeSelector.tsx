@@ -15,9 +15,6 @@ export const CladeSelector = (props?: CladeSelectorProps) => {
     (n: Node) => n.children.length >= 2
   );
 
-  const darkPurple = "#4f2379";
-  const darkestGray = "rgba(80,80,80,1)";
-
   // SELECTOR DATA UTILS
   let sliderValueMrcasMap: { [key: string]: Node[] } = {};
   allMrcas.forEach((mrca: Node) => {
