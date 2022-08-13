@@ -20,7 +20,7 @@ export const CladeSelectionVizControls = (
 
   //@ts-ignore
   const state = useSelector((state) => state.global);
-  // const theme = useTheme();
+  const dispatch = useDispatch();
 
   const getFilterButtonTooltipText = () => {
     const theme = useTheme();
@@ -61,7 +61,7 @@ export const CladeSelectionVizControls = (
           componentsProps={tooltipProps}
         >
           <Button
-            onClick={() => setDrawerOpen(true)}
+            onClick={() => dispatch({ type: "filter drawer opened" })}
             size="small"
             sx={{
               fontSize: 10,
@@ -73,11 +73,7 @@ export const CladeSelectionVizControls = (
             Search & filter
           </Button>
         </Tooltip>
-        <Drawer
-          anchor={"right"}
-          open={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
-        >
+        <Drawer anchor={"right"} open={state.filterDrawerOpen}>
           <div style={{ width: windowWidth * 0.4 }}>
             <CladeFilterDrawer />
           </div>
