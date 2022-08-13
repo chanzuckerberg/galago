@@ -178,6 +178,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
     range: [
       Theme.palette.primary.main,
       Theme.palette.primary.light,
+      //@ts-ignore
       Theme.palette.primary.lighter,
       Theme.palette.secondary.light,
     ],
