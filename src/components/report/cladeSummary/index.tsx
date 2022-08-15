@@ -16,21 +16,6 @@ export const SitStat = () => {
   const cladeDescription = state.cladeDescription;
   const [windowWidth, windowHeight] = useWindowSize();
 
-  const mrca_distances: { [key: string]: number } = Object.fromEntries(
-    cladeDescription.selected_samples
-      .concat(cladeDescription.unselected_samples_in_cluster)
-      .map((x: any) => [
-        x.name,
-        cladeDescription.mrca ? get_dist([x, cladeDescription.mrca]) : NaN,
-      ])
-  );
-  const n_mrca_matches: number = Object.keys(mrca_distances).filter(
-    (m) => mrca_distances[m] === 0
-  ).length;
-  const n_tertiary_cases: number = Object.keys(mrca_distances).filter(
-    (m) => mrca_distances[m] > cladeDescription.muts_per_trans_minmax[1]
-  ).length;
-
   return (
     <div>
       <h2>Genomic situation status</h2>
@@ -72,18 +57,6 @@ export const SitStat = () => {
           <FormatDate date={cladeDescription.mrca.node_attrs.num_date.value} />{" "}
         </span>
       )}
-      {/* <span style={{ fontSize: 12 }}>
-        {" "}
-        (95% CI{" "}
-        <FormatDate
-          date={cladeDescription.mrca.node_attrs.num_date.confidence[0]}
-        />{" "}
-        -{" "}
-        <FormatDate
-          date={cladeDescription.mrca.node_attrs.num_date.confidence[1]}
-        />
-        ).
-      </span> */}
       {state.samplesOfInterest.length > 0 && (
         <>
           <h5>

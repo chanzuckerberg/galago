@@ -64,7 +64,7 @@ export const Heatmap = (props: heatmapProps) => {
     let nMuts = d.dist;
     if (nMuts === 0) {
       return 0;
-    } else if (nMuts <= upper) {
+    } else if (nMuts <= upper * 2) {
       return 1.5;
     } else {
       return 3;
@@ -95,7 +95,8 @@ export const Heatmap = (props: heatmapProps) => {
   });
 
   const circleColorScale = scaleLinear<string>({
-    range: [Theme.palette.primary.dark, Theme.palette.primary.light],
+    //@ts-ignore
+    range: [Theme.palette.primary.main, Theme.palette.primary.lighter],
     domain: [0, colorMax],
   });
 

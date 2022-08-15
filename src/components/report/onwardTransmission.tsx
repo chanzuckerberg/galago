@@ -5,15 +5,12 @@ import { FormatDataPoint } from "../formatters/dataPoint";
 import { FormatStringArray } from "../formatters/stringArray";
 import { useSelector } from "react-redux";
 
-type OnwardTransmissionProps = {
-  sidenote_start: number;
-};
+type OnwardTransmissionProps = {};
 
 function OnwardTransmission(props: OnwardTransmissionProps) {
   //@ts-ignore
   const state = useSelector((state) => state.global);
 
-  const { sidenote_start } = props;
   const cladeDescription = state.cladeDescription;
   const all_clade_samples: Node[] = cladeDescription.selected_samples.concat(
     cladeDescription.unselected_samples_in_cluster
@@ -23,7 +20,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
     .filter(
       (x) =>
         get_dist([x, cladeDescription.mrca]) >
-        cladeDescription.muts_per_trans_minmax[1]
+        cladeDescription.muts_per_trans_minmax[1] * 2
     )
     .map((x) => x.name);
 
@@ -33,7 +30,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
       <p style={{ fontStyle: "italic" }}>
         Differentiating between a superspreader event (where one primary case
         transmits to multiple secondary cases) and onward transmission (here,
-        defined as tertiary or further downstream cases),{" "}
+        defined as 3 or more transmissions away from the primary case),{" "}
         <Sidenote
           target={"can be tricky"}
           contents={
@@ -55,7 +52,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
         body, generated as the pathogen replicates. This means that sometimes
         you may observe a few different genotypes which vary by
         <FormatDataPoint
-          value={`0 - ${cladeDescription.muts_per_trans_minmax[1]}`}
+          value={`${cladeDescription.muts_per_trans_minmax[0]} - ${cladeDescription.muts_per_trans_minmax[1]}`}
         />
         mutations being transmitted to secondary cases during the same
         superspreader event.
@@ -63,9 +60,10 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
       <p>
         It's usually reasonable to assume that samples with
         <FormatDataPoint
-          value={cladeDescription.muts_per_trans_minmax[1] + 1}
+          value={cladeDescription.muts_per_trans_minmax[1] * 2 + 1}
         />
-        + mutations represent tertiary or further downstream transmission.
+        + mutations are at least 3+ downstream transmissions away from the
+        primary case.
       </p>
       <div className="results">
         <p>

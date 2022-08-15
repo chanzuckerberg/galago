@@ -35,6 +35,15 @@ function CladeUniqueness() {
     cladeDescription.parent_for_cousins,
   ]);
 
+  let min_transmissions = "";
+  if (cladeDescription.muts_per_trans_minmax[0] === 0) {
+    min_transmissions = parentGrandparentDist > 0 ? "1" : "0";
+  } else {
+    min_transmissions = (
+      parentGrandparentDist / cladeDescription.muts_per_trans_minmax[0]
+    ).toFixed(0);
+  }
+
   return (
     <div className="reportSection">
       <h2>
@@ -53,12 +62,10 @@ function CladeUniqueness() {
         or at least{" "}
         <FormatDataPoint
           value={`
-            ${
-              parentGrandparentDist * cladeDescription.muts_per_trans_minmax[0]
-            } 
-            - ${
-              parentGrandparentDist * cladeDescription.muts_per_trans_minmax[1]
-            }`}
+            ${min_transmissions} 
+            - ${(
+              parentGrandparentDist / cladeDescription.muts_per_trans_minmax[1]
+            ).toFixed(0)}`}
         />{" "}
         transmissions.
       </p>
