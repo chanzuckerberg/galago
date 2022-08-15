@@ -29,7 +29,8 @@ export const Report = (props: ReportProps) => {
         overflowY: "scroll",
         overflowX: "hidden",
         marginRight: 30,
-        width: sectionWidth - 30,
+        paddingRight: 30,
+        width: sectionWidth,
         height: sectionHeight,
       }}
     >
@@ -40,7 +41,7 @@ export const Report = (props: ReportProps) => {
           <CladeDefinition sidenote_start={1} />
           <CladeUniqueness />
           <TMRCA sidenote_start={3} />
-          <OnwardTransmission sidenote_start={6} />
+          <OnwardTransmission />
           <GeoSubclades />
           <SamplingBias
             // @ts-ignore
