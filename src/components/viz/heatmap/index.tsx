@@ -64,7 +64,7 @@ export const Heatmap = (props: heatmapProps) => {
     let nMuts = d.dist;
     if (nMuts === 0) {
       return 0;
-    } else if (nMuts <= upper) {
+    } else if (nMuts <= upper * 2) {
       return 1.5;
     } else {
       return 3;

@@ -95,9 +95,11 @@ export const EpiCurve = (props: EpiCurveProps) => {
     colorBy === "transmissions"
       ? [
           "Identical to primary case",
-          `Secondary / tertiary case (+1 - ${state.cladeDescription.muts_per_trans_minmax[1]} muts)`,
+          `Secondary / tertiary case (+1 - ${
+            state.cladeDescription.muts_per_trans_minmax[1] * 2
+          } muts)`,
           `Tertiary+ case (${
-            state.cladeDescription.muts_per_trans_minmax[1] + 1
+            state.cladeDescription.muts_per_trans_minmax[1] * 2 + 1
           }+ muts)`,
         ]
       : [
@@ -112,7 +114,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
     const [lower, upper] = state.cladeDescription?.muts_per_trans_minmax;
     if (nMuts === 0) {
       return keys[0];
-    } else if (nMuts <= upper) {
+    } else if (nMuts <= upper * 2) {
       return keys[1];
     } else {
       return keys[2];

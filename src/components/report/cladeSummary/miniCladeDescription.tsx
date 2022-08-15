@@ -7,21 +7,25 @@ export const MiniCladeDescription = () => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
 
-  const clade_description = state.cladeDescription;
+  const cladeDescription = state.cladeDescription;
   const monophyleticSamplesOfInterest =
     state.samplesOfInterest.length > 0 &&
-    clade_description.unselected_samples_in_cluster.length == 0;
+    cladeDescription.unselected_samples_in_cluster.length == 0;
   const parentGrandparentDist = get_dist([
-    clade_description.mrca,
-    clade_description.parent_for_cousins,
+    cladeDescription.mrca,
+    cladeDescription.parent_for_cousins,
   ]);
   const clade_unique =
-    parentGrandparentDist > clade_description.muts_per_trans_minmax[1];
-  // const closest_cousin_dist: number = Math.min(
-  //   ...clade_description.cousins.map((c: Node) =>
-  //     get_dist([c, clade_description.mrca])
-  //   )
-  // );
+    parentGrandparentDist > cladeDescription.muts_per_trans_minmax[1];
+
+  let min_transmissions = "";
+  if (cladeDescription.muts_per_trans_minmax[0] === 0) {
+    min_transmissions = parentGrandparentDist > 0 ? "1" : "0";
+  } else {
+    min_transmissions = (
+      parentGrandparentDist / cladeDescription.muts_per_trans_minmax[0]
+    ).toFixed(0);
+  }
 
   return (
     // If they have samples of interest, describe the degree of overlap with their selected clade
@@ -37,11 +41,11 @@ export const MiniCladeDescription = () => {
         <p>
           Your
           <FormatDataPoint
-            value={clade_description.selected_samples.length}
+            value={cladeDescription.selected_samples.length}
           />{" "}
           selected samples are also closely related to
           <FormatDataPoint
-            value={clade_description.unselected_samples_in_cluster.length}
+            value={cladeDescription.unselected_samples_in_cluster.length}
           />{" "}
           other samples in this dataset.
         </p>
@@ -54,10 +58,10 @@ export const MiniCladeDescription = () => {
           <FormatDataPoint value={parentGrandparentDist} />
           mutations (~
           <FormatDataPoint
-            value={`${1} - ${
-              parentGrandparentDist *
+            value={`${min_transmissions} - ${(
+              parentGrandparentDist /
               state.cladeDescription.muts_per_trans_minmax[1]
-            }`}
+            ).toFixed(0)}`}
           />
           transmissions).
         </p>
@@ -67,10 +71,10 @@ export const MiniCladeDescription = () => {
           separated from its nearest neighbors by
           <FormatDataPoint value={parentGrandparentDist} /> mutations (~
           <FormatDataPoint
-            value={`${parentGrandparentDist * 1} - ${
-              parentGrandparentDist *
+            value={`${min_transmissions} - ${(
+              parentGrandparentDist /
               state.cladeDescription.muts_per_trans_minmax[1]
-            }`}
+            ).toFixed(0)}`}
           />
           transmissions).
         </p>
