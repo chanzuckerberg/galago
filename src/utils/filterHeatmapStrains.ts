@@ -1,6 +1,16 @@
 import { CladeDescription, Node } from "../d";
 import { traverse_preorder } from "./treeMethods";
 
+export const orderSamples = (mrca: Node, selectedSampleNames: string[]) => {
+  return traverse_preorder(mrca) // closest to mrca first
+    .filter(
+      (
+        n: Node // to be included
+      ) => selectedSampleNames.includes(n.name)
+    )
+    .map((n: Node) => n.name); // names only
+};
+
 export const getDefaultSampleSet = (
   cladeDescription: CladeDescription,
   maxSamples: number = 50
