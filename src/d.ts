@@ -22,19 +22,11 @@ export interface Node {
   };
 }
 
-export interface MutDistances {
-  strain: string;
-  distances: Array<{
-    strain: string;
-    dist: number;
-  }>;
-}
-
 export interface CladeDescription {
   selected_samples: Node[]; // samples of interest in this clade
   unselected_samples_in_cluster: Node[];
 
-  pairwiseDistances: Array<MutDistances>;
+  pairwiseDistances: any;
   muts_per_trans_minmax: number[];
 
   mrca: Node;

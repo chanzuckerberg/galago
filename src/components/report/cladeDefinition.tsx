@@ -56,8 +56,8 @@ function CladeDefinition(props: CladeDefinitionProps) {
       </p>
       <div style={{ margin: "auto" }}>
         <Heatmap
-          chartHeight={windowWidth * 0.3}
-          chartWidth={windowWidth * 0.3}
+          chartHeight={windowWidth * 0.35}
+          chartWidth={windowWidth * 0.35}
           chartMargin={60}
         />
       </div>
