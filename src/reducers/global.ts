@@ -196,6 +196,7 @@ export const global = (state = defaultState, action: any) => {
             ? {}
             : {
                 mrca: newMrcaOptions[0],
+                heatmapSelectedSampleNames: [],
                 cladeSliderValue: formatMrcaSliderOptionValue(
                   newMrcaOptions[0],
                   state.cladeSliderField
@@ -255,6 +256,7 @@ export const global = (state = defaultState, action: any) => {
         ...state,
         mrca: mrca,
         cladeDescription: cladeDescription,
+        heatmapSelectedSampleNames: [],
       };
     }
 
