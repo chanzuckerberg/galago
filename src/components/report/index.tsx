@@ -10,6 +10,7 @@ import { get_leaves, get_root } from "../../utils/treeMethods";
 import SamplingBias from "./sampleDistribTable";
 import { gisaidCounts } from "../../../data/gisaidCounts2022-06";
 import { SkeletonReport } from "./skeleton";
+import { useEffect, useState } from "react";
 
 type ReportProps = {
   sectionHeight: number;
@@ -20,8 +21,17 @@ export const Report = (props: ReportProps) => {
   const { sectionHeight, sectionWidth } = props;
   //@ts-ignore
   const state = useSelector((state) => state.global);
-  const allDataPresent = state.location && state.division && state.tree;
-  const reportReady = state.cladeDescription && state.tree;
+  const reportReady = state.cladeDescription;
+
+  const [animationFinished, setAnimationFinished] = useState<boolean>(false);
+
+  useEffect(() => {
+    setAnimationFinished(false);
+
+    setTimeout(() => {
+      setAnimationFinished(true);
+    }, 50);
+  }, [state.mrca.name]);
 
   return (
     <div
@@ -35,7 +45,7 @@ export const Report = (props: ReportProps) => {
       }}
     >
       {" "}
-      {allDataPresent && reportReady && (
+      {reportReady && animationFinished && (
         <>
           <SitStat />
           <CladeDefinition sidenote_start={1} />
@@ -51,7 +61,7 @@ export const Report = (props: ReportProps) => {
           <Assumptions sidenote_start={8} />
         </>
       )}
-      {(!allDataPresent || !reportReady) && <SkeletonReport />}
+      {(!animationFinished || !reportReady) && <SkeletonReport />}
     </div>
   );
 };

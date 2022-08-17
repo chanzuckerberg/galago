@@ -28,7 +28,47 @@ export const SkeletonReport = () => {
 
   return (
     <div>
-      <h2>Genomic situation status</h2>
+      <Skeleton
+        variant="text"
+        width={260}
+        height={40}
+        animation={false}
+        sx={{ animationDuration: "3s" }}
+      />
+      <Skeleton
+        variant="text"
+        width={190}
+        height={40}
+        animation={false}
+        sx={{ animationDuration: "3s" }}
+      />
+      <Skeleton
+        variant="rectangular"
+        height={145}
+        animation={false}
+        sx={{ animationDuration: "3s", marginBottom: 2 }}
+      />
+      <Skeleton
+        variant="rectangular"
+        height={265}
+        animation={false}
+        sx={{ animationDuration: "3s" }}
+      />
+      <Skeleton
+        variant="text"
+        width={375}
+        height={40}
+        animation={false}
+        sx={{ animationDuration: "3s" }}
+      />
+      <Skeleton
+        variant="text"
+        width={450}
+        height={40}
+        animation={false}
+        sx={{ animationDuration: "3s" }}
+      />
+      {/* <h2>Genomic situation status</h2>
       <Placeholder />
       <h2>How closely related are your selected samples to each other?</h2>
       <Placeholder />
@@ -58,7 +98,7 @@ export const SkeletonReport = () => {
       <Placeholder />
 
       <h2> What assumptions influence this report?</h2>
-      <Placeholder />
+      <Placeholder /> */}
     </div>
   );
 };
