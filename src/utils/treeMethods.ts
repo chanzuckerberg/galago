@@ -169,9 +169,13 @@ export const get_dist = (target_nodes: [Node, Node]) => {
   return dist;
 };
 
-export const calcPairwiseDistances = (target_nodes: Node[]) => {
+export const calcPairwiseDistances = (mrca: Node) => {
   // pairwise patristic distances; brute force implementation
 
+  const target_nodes = traverse_preorder(
+    mrca,
+    (n: Node) => n.children.length === 0
+  );
   let pairwise_dist: any = {};
 
   target_nodes.forEach((n: Node) => (pairwise_dist[n.name] = {}));
