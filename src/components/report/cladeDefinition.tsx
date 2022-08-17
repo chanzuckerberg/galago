@@ -58,7 +58,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
         <Heatmap
           chartHeight={windowWidth * 0.35}
           chartWidth={windowWidth * 0.35}
-          chartMargin={60}
+          chartMargin={65}
         />
       </div>
       <h5>Hierarchical clustering ("clades"):</h5>

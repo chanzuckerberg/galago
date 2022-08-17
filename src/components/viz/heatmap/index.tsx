@@ -20,16 +20,12 @@ export const Heatmap = (props: heatmapProps) => {
   const dispatch = useDispatch();
   const { chartWidth, chartHeight, chartMargin } = props;
   const maxSamples = 50; // TODO: make this responsive based on chartWidth
-
   const [hoveredPoint, setHoveredPoint] = useState<{
     xName: string;
     yName: string;
     value: number;
   } | null>(null);
-
-  const [orderedSamples, setOrderedSamples] = useState<string[]>(
-    state.heatmapSelectedSampleNames ? state.heatmapSelectedSampleNames : []
-  );
+  const dataReady = state.cladeDescription && state.heatmapSelectedSampleNames;
 
   useEffect(() => {
     const newDefaultSampleNames = getDefaultSampleSet(
@@ -40,30 +36,14 @@ export const Heatmap = (props: heatmapProps) => {
       type: "heatmap selected samples changed",
       data: newDefaultSampleNames,
     });
-  }, [state.mrca.name]);
-
-  useEffect(() => {
-    if (state.mrca && state.heatmapSelectedSampleNames) {
-      setOrderedSamples(
-        traverse_preorder(state.mrca) // closest to mrca first
-          .filter(
-            (
-              n: Node // to be included
-            ) => state.heatmapSelectedSampleNames.includes(n.name)
-          )
-          .map((n: Node) => n.name) // names only
-      );
-    } else {
-      setOrderedSamples([]);
-    }
-  }, [state.heatmapSelectedSampleNames]);
+  }, [state.cladeDescription.mrca.name]);
 
   // SCALES;
   const gap = 1;
 
   let radius =
     Math.min(...[chartWidth - 2 * chartMargin, chartHeight - 2 * chartMargin]) /
-    (orderedSamples.length * 2.5);
+    (state.heatmapSelectedSampleNames.length * 2.5);
 
   if (radius > 10) {
     radius = 15;
@@ -72,11 +52,14 @@ export const Heatmap = (props: heatmapProps) => {
   }
 
   const xScale = scaleLinear<number>({
-    domain: [0, orderedSamples.length * (radius * 2 + gap)],
+    domain: [0, state.heatmapSelectedSampleNames.length * (radius * 2 + gap)],
     range: [0, chartWidth - 2 * chartMargin], //-2*chartMargin?
   });
   const yScale = scaleLinear<number>({
-    domain: [0, (orderedSamples.length - 1) * (radius * 2 + gap)],
+    domain: [
+      0,
+      (state.heatmapSelectedSampleNames.length - 1) * (radius * 2 + gap),
+    ],
     range: [0, chartHeight - 2 * chartMargin], // -2*chartMargin?
   });
 
@@ -101,79 +84,82 @@ export const Heatmap = (props: heatmapProps) => {
         <HeatmapSampleSelection maxSamples={50} />
       </div>
 
-      {orderedSamples.length > 3 && (
+      {state.heatmapSelectedSampleNames.length > 3 && dataReady && (
         <svg width={chartWidth} height={chartHeight - 60}>
           <g id="heatmap circles">
-            {orderedSamples.map((xName, xidx) => {
-              return (
-                orderedSamples
-                  .slice(0, xidx)
-                  // .reverse()
-                  .map((yName, yidx: number) => (
-                    <g>
-                      <circle
-                        cx={
-                          chartWidth -
-                          (chartMargin + xScale(xidx * 2 * radius + gap))
-                        }
-                        cy={
-                          chartHeight -
-                          2 * chartMargin -
-                          yScale(yidx * 2 * radius + gap)
-                        }
-                        onMouseEnter={() => {
-                          setHoveredPoint({
-                            xName: xName,
-                            yName: yName,
-                            value:
-                              state.cladeDescription?.pairwiseDistances[xName][
-                                yName
-                              ],
-                          });
-                        }}
-                        onMouseLeave={() => setHoveredPoint(null)}
-                        fill={getColor(xName, yName)}
-                        r={radius}
-                      />
-                      {yidx === 0 && ( // x axis labels
-                        <text
-                          transform={`translate(${
+            {state.heatmapSelectedSampleNames.map(
+              (xName: string, xidx: number) => {
+                return (
+                  state.heatmapSelectedSampleNames
+                    .slice(0, xidx)
+                    // .reverse()
+                    .map((yName: string, yidx: number) => (
+                      <g>
+                        <circle
+                          cx={
                             chartWidth -
                             (chartMargin + xScale(xidx * 2 * radius + gap))
-                          }, ${
-                            chartHeight - 2 * chartMargin + radius + gap + 10
-                          })rotate(-90)`}
-                          fontSize={8}
-                          dominantBaseline="middle"
-                          textAnchor="end"
-                        >
-                          {xName}
-                        </text>
-                      )}
-                      {xidx === orderedSamples.length - 1 && ( // y-axis labels
-                        <text
-                          transform={`translate(${
-                            chartWidth -
-                            (chartMargin +
-                              xScale(xidx * 2 * radius + gap) +
-                              radius +
-                              8)
-                          }, ${
+                          }
+                          cy={
                             chartHeight -
                             2 * chartMargin -
                             yScale(yidx * 2 * radius + gap)
-                          })`}
-                          fontSize={8}
-                          textAnchor="end"
-                          dominantBaseline="middle"
-                        >
-                          {yName}
-                        </text>
-                      )}
-                    </g>
-                  ))
-              );
-            })}
+                          }
+                          onMouseEnter={() => {
+                            setHoveredPoint({
+                              xName: xName,
+                              yName: yName,
+                              value:
+                                state.cladeDescription?.pairwiseDistances[
+                                  xName
+                                ][yName],
+                            });
+                          }}
+                          onMouseLeave={() => setHoveredPoint(null)}
+                          fill={getColor(xName, yName)}
+                          r={radius}
+                        />
+                        {yidx === 0 && ( // x axis labels
+                          <text
+                            transform={`translate(${
+                              chartWidth -
+                              (chartMargin + xScale(xidx * 2 * radius + gap))
+                            }, ${
+                              chartHeight - 2 * chartMargin + radius + gap + 10
+                            })rotate(-90)`}
+                            fontSize={8}
+                            dominantBaseline="middle"
+                            textAnchor="end"
+                          >
+                            {xName}
+                          </text>
+                        )}
+                        {xidx ===
+                          state.heatmapSelectedSampleNames.length - 1 && ( // y-axis labels
+                          <text
+                            transform={`translate(${
+                              chartWidth -
+                              (chartMargin +
+                                xScale(xidx * 2 * radius + gap) +
+                                radius +
+                                8)
+                            }, ${
+                              chartHeight -
+                              2 * chartMargin -
+                              yScale(yidx * 2 * radius + gap)
+                            })`}
+                            fontSize={8}
+                            textAnchor="end"
+                            dominantBaseline="middle"
+                          >
+                            {yName}
+                          </text>
+                        )}
+                      </g>
+                    ))
+                );
+              }
+            )}
           </g>
           <g
             id="legend"

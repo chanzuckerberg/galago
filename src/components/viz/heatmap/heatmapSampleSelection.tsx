@@ -5,6 +5,7 @@ import Popper from "@mui/material/Popper";
 import { useState, useCallback, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import { orderSamples } from "../../../utils/filterHeatmapStrains";
 
 type heatmapSampleSelectionProps = {
   maxSamples: number;
@@ -65,7 +66,7 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
         state.heatmapSelectedSampleNames.includes(option.name)
     );
     setSelectedOptions(newSelectedOptions);
-  }, [state.heatmapSampleSelection]);
+  }, [state.mrca.name, state.heatmapSelectedSampleNames]);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     if (anchorEl && selectedOptions.length >= 2) {
@@ -74,7 +75,7 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
       );
       dispatch({
         type: "heatmap selected samples changed",
-        data: selectedOptionNames,
+        data: orderSamples(state.mrca, selectedOptionNames),
       });
     }
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -82,7 +83,6 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
 
   // POPPER STATE and HANDLERS
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popper" : undefined;
   const checkOptionDisabled = useCallback(
     (option: any) =>
       selectedOptions.length >= maxSamples &&
@@ -103,7 +103,7 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
         {`Choose samples (${state.heatmapSelectedSampleNames.length})`}
       </Button>
 
-      <Popper id={id} open={open} anchorEl={anchorEl}>
+      <Popper open={open} anchorEl={anchorEl}>
         <Box
           sx={{
             border: 1,

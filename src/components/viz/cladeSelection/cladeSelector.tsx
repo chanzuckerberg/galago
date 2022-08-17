@@ -41,7 +41,7 @@ export const CladeSelector = (props?: CladeSelectorProps) => {
       return [];
     } else {
       console.assert(
-        !Object.keys(sliderValueMrcasMap).includes(
+        Object.keys(sliderValueMrcasMap).includes(
           state.cladeSliderValue.toString()
         ),
         "Invalid slider value reached -- no mrcas match value!?"
