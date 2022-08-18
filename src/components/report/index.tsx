@@ -23,6 +23,16 @@ export const Report = (props: ReportProps) => {
   const state = useSelector((state) => state.global);
   const reportReady = state.cladeDescription;
 
+  const [animationFinished, setAnimationFinished] = useState<boolean>(false);
+
+  useEffect(() => {
+    setAnimationFinished(false);
+
+    setTimeout(() => {
+      setAnimationFinished(true);
+    }, 50);
+  }, [state.mrca.name]);
+
   return (
     <div
       style={{
