@@ -23,16 +23,6 @@ export const Report = (props: ReportProps) => {
   const state = useSelector((state) => state.global);
   const reportReady = state.cladeDescription;
 
-  const [animationFinished, setAnimationFinished] = useState<boolean>(false);
-
-  useEffect(() => {
-    setAnimationFinished(false);
-
-    setTimeout(() => {
-      setAnimationFinished(true);
-    }, 50);
-  }, [state.mrca.name]);
-
   return (
     <div
       style={{
@@ -45,7 +35,7 @@ export const Report = (props: ReportProps) => {
       }}
     >
       {" "}
-      {reportReady && animationFinished && (
+      {reportReady && (
         <>
           <SitStat />
           <CladeDefinition sidenote_start={1} />
@@ -61,7 +51,7 @@ export const Report = (props: ReportProps) => {
           <Assumptions sidenote_start={8} />
         </>
       )}
-      {(!animationFinished || !reportReady) && <SkeletonReport />}
+      {!reportReady && <SkeletonReport />}
     </div>
   );
 };

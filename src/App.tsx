@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
 import Report from "./components/report";
+import { useEffect, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function App() {
   //@ts-ignore
@@ -20,6 +22,16 @@ export default function App() {
   const leftColWidth = contentWidth * 0.45;
   const rightColWidth = contentWidth * 0.45;
   const showLayoutBorders = false;
+
+  const [animationFinished, setAnimationFinished] = useState<boolean>(false);
+
+  useEffect(() => {
+    setAnimationFinished(false);
+
+    setTimeout(() => {
+      setAnimationFinished(true);
+    }, 1000);
+  }, [state.mrca.name]);
 
   return (
     <div>
@@ -61,8 +73,23 @@ export default function App() {
             paddingRight: 30,
           }}
         >
-          <h5>AUTOMATICALLY GENERATED REPORT FOR SELECTED CLADE</h5>
-
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <h5>AUTOMATICALLY GENERATED REPORT FOR SELECTED CLADE</h5>
+            {!animationFinished && (
+              <div style={{ position: "relative", top: 20, left: 20 }}>
+                <CircularProgress
+                  variant="indeterminate"
+                  size={20}
+                  sx={{
+                    "& .MuiCircularProgress-circle": {
+                      // apply a new animation-duration to the `.bar` class
+                      animationDuration: "1000ms",
+                    },
+                  }}
+                />
+              </div>
+            )}
+          </div>
           <Report sectionHeight={contentHeight} sectionWidth={rightColWidth} />
         </div>
       </div>
