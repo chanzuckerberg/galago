@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
 import Report from "./components/report";
+import { useEffect, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function App() {
   //@ts-ignore
@@ -62,7 +64,6 @@ export default function App() {
           }}
         >
           <h5>AUTOMATICALLY GENERATED REPORT FOR SELECTED CLADE</h5>
-
           <Report sectionHeight={contentHeight} sectionWidth={rightColWidth} />
         </div>
       </div>
