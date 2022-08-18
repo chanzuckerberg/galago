@@ -30,7 +30,7 @@ export const Report = (props: ReportProps) => {
 
     setTimeout(() => {
       setAnimationFinished(true);
-    }, 50);
+    }, 500);
   }, [state.mrca.name]);
 
   return (
