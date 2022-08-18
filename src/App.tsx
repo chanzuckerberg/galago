@@ -23,16 +23,6 @@ export default function App() {
   const rightColWidth = contentWidth * 0.45;
   const showLayoutBorders = false;
 
-  const [animationFinished, setAnimationFinished] = useState<boolean>(false);
-
-  useEffect(() => {
-    setAnimationFinished(false);
-
-    setTimeout(() => {
-      setAnimationFinished(true);
-    }, 1000);
-  }, [state.mrca.name]);
-
   return (
     <div>
       {/* <h1>Select a clade to instantly generate a report</h1> */}
@@ -73,23 +63,7 @@ export default function App() {
             paddingRight: 30,
           }}
         >
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <h5>AUTOMATICALLY GENERATED REPORT FOR SELECTED CLADE</h5>
-            {!animationFinished && (
-              <div style={{ position: "relative", top: 20, left: 20 }}>
-                <CircularProgress
-                  variant="indeterminate"
-                  size={20}
-                  sx={{
-                    "& .MuiCircularProgress-circle": {
-                      // apply a new animation-duration to the `.bar` class
-                      animationDuration: "1000ms",
-                    },
-                  }}
-                />
-              </div>
-            )}
-          </div>
+          <h5>AUTOMATICALLY GENERATED REPORT FOR SELECTED CLADE</h5>
           <Report sectionHeight={contentHeight} sectionWidth={rightColWidth} />
         </div>
       </div>

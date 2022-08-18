@@ -45,7 +45,7 @@ export const Report = (props: ReportProps) => {
       }}
     >
       {" "}
-      {reportReady && (
+      {reportReady && animationFinished && (
         <>
           <SitStat />
           <CladeDefinition sidenote_start={1} />
@@ -61,7 +61,7 @@ export const Report = (props: ReportProps) => {
           <Assumptions sidenote_start={8} />
         </>
       )}
-      {!reportReady && <SkeletonReport />}
+      {(!reportReady || !animationFinished) && <SkeletonReport />}
     </div>
   );
 };
