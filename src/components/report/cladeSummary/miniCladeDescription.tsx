@@ -12,20 +12,10 @@ export const MiniCladeDescription = () => {
     state.samplesOfInterest.length > 0 &&
     cladeDescription.unselected_samples_in_cluster.length == 0;
   const parentGrandparentDist = get_dist([
-    cladeDescription.mrca,
+    state.mrca,
     cladeDescription.parent_for_cousins,
   ]);
-  const clade_unique =
-    parentGrandparentDist > cladeDescription.muts_per_trans_minmax[1];
-
-  let min_transmissions = "";
-  if (cladeDescription.muts_per_trans_minmax[0] === 0) {
-    min_transmissions = parentGrandparentDist > 0 ? "1" : "0";
-  } else {
-    min_transmissions = (
-      parentGrandparentDist / cladeDescription.muts_per_trans_minmax[0]
-    ).toFixed(0);
-  }
+  const clade_unique = parentGrandparentDist > state.mutsPerTransmissionMax;
 
   return (
     // If they have samples of interest, describe the degree of overlap with their selected clade
@@ -58,9 +48,8 @@ export const MiniCladeDescription = () => {
           <FormatDataPoint value={parentGrandparentDist} />
           mutations (~
           <FormatDataPoint
-            value={`${min_transmissions} - ${(
-              parentGrandparentDist /
-              state.cladeDescription.muts_per_trans_minmax[1]
+            value={`0 - ${(
+              parentGrandparentDist / state.mutsPerTransmissionMax
             ).toFixed(0)}`}
           />
           transmissions).
@@ -71,9 +60,8 @@ export const MiniCladeDescription = () => {
           separated from its nearest neighbors by
           <FormatDataPoint value={parentGrandparentDist} /> mutations (~
           <FormatDataPoint
-            value={`${min_transmissions} - ${(
-              parentGrandparentDist /
-              state.cladeDescription.muts_per_trans_minmax[1]
+            value={`0 - ${(
+              parentGrandparentDist / state.mutsPerTransmissionMax
             ).toFixed(0)}`}
           />
           transmissions).

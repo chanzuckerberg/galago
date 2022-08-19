@@ -50,6 +50,7 @@ const defaultState = {
   cladeSliderField: "div",
   cacheStateOnFilterDrawerOpen: {},
   filterDrawerOpen: false,
+  mutsPerTransmissionMax: 1,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -131,7 +132,6 @@ export const global = (state = defaultState, action: any) => {
           country: "USA",
           region: "North America",
         },
-        [0, 2],
         1,
         // @ts-ignore
         samplesOfInterest
@@ -209,7 +209,6 @@ export const global = (state = defaultState, action: any) => {
                     country: state.country,
                     region: state.region,
                   },
-                  [0, 2],
                   1,
                   state.samplesOfInterest
                 ),
@@ -246,7 +245,6 @@ export const global = (state = defaultState, action: any) => {
             country: state.country,
             region: state.region,
           },
-          [0, 2],
           1,
           state.samplesOfInterest
         );

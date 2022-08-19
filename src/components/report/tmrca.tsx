@@ -23,7 +23,7 @@ function TMRCA(props: CladeProps) {
   let mrca_distances: { [key: string]: number } = Object.fromEntries(
     all_samples.map((x) => [
       x.name,
-      cladeDescription.mrca ? get_dist([x, cladeDescription.mrca]) : NaN,
+      state.mrca ? get_dist([x, state.mrca]) : NaN,
     ])
   );
   let mrca_matches: string[] = Object.keys(mrca_distances).filter(
@@ -121,31 +121,24 @@ function TMRCA(props: CladeProps) {
           <span className="results">
             <p>
               This clade's primary case likely occurred
-              {cladeDescription.mrca &&
-              cladeDescription.mrca.node_attrs.num_date.confidence.length ===
-                2 ? (
+              {state.mrca &&
+              state.mrca.node_attrs.num_date.confidence.length === 2 ? (
                 <>
                   {" "}
                   between{" "}
                   <FormatDate
-                    date={
-                      cladeDescription.mrca.node_attrs.num_date.confidence[0]
-                    }
+                    date={state.mrca.node_attrs.num_date.confidence[0]}
                   />{" "}
                   and{" "}
                   <FormatDate
-                    date={
-                      cladeDescription.mrca.node_attrs.num_date.confidence[1]
-                    }
+                    date={state.mrca.node_attrs.num_date.confidence[1]}
                   />
                   (95% CI)
                 </>
               ) : (
                 <>
                   around{" "}
-                  <FormatDate
-                    date={cladeDescription.mrca.node_attrs.num_date.value}
-                  />
+                  <FormatDate date={state.mrca.node_attrs.num_date.value} />
                 </>
               )}
             </p>

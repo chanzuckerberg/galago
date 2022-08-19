@@ -27,9 +27,7 @@ export interface CladeDescription {
   unselected_samples_in_cluster: Node[];
 
   pairwiseDistances: any;
-  muts_per_trans_minmax: number[];
 
-  mrca: Node;
   parent_for_cousins: Node;
   min_muts_to_parent: number;
 

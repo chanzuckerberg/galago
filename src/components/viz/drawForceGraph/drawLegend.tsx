@@ -27,12 +27,8 @@ export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
   const drawColorScaleSegment = (color: string, i: number) => {
     const colorScaleLegends = [
       "Identical (0 muts)",
-      `1-2 transmissions\n(1 - ${
-        state.cladeDescription.muts_per_trans_minmax[1] * 2
-      } muts)`,
-      `3+ transmissions\n(${
-        state.cladeDescription.muts_per_trans_minmax[1] * 2 + 1
-      }+ muts)`,
+      `1-2 transmissions\n(1 - ${state.mutsPerTransmissionMax * 2} muts)`,
+      `3+ transmissions\n(${state.mutsPerTransmissionMax * 2 + 1}+ muts)`,
     ];
     return (
       <g key={`colorBarSegment-${i}`}>

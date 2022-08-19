@@ -128,7 +128,7 @@ export const DrawNodes = (props: DrawNodesProps) => {
           return drawSquare(
             //@ts-ignore
             forceNode,
-            state.cladeDescription.muts_per_trans_minmax,
+            state.mutsPerTransmissionMax,
             colorScale,
             radius,
             scaleX,
@@ -138,7 +138,7 @@ export const DrawNodes = (props: DrawNodesProps) => {
           return drawCircle(
             //@ts-ignore
             forceNode,
-            state.cladeDescription.muts_per_trans_minmax,
+            state.mutsPerTransmissionMax,
             colorScale,
             radius,
             scaleX,
