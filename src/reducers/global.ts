@@ -13,7 +13,10 @@ import demo_sample_names from "../../data/demo_sample_names";
 import { demoMetadata } from "../../data/demo_fake_metadata";
 import { demo_tree } from "../../data/demo_tree";
 import { getMrcaOptions } from "../utils/clusterMethods";
-import { get_location_input_options } from "../utils/geoInputOptions";
+import {
+  get_division_input_options,
+  get_location_input_options,
+} from "../utils/geoInputOptions";
 import {
   ingestCSVMetadata,
   treeMetadataCensus,
@@ -50,6 +53,8 @@ const defaultState = {
   cladeSliderField: "div",
   cacheStateOnFilterDrawerOpen: {},
   filterDrawerOpen: false,
+  uploadModalOpen: false,
+  divisionOptions: [],
   mutsPerTransmissionMax: 1,
 };
 
@@ -61,6 +66,10 @@ export const global = (state = defaultState, action: any) => {
 
     case "reset to default": {
       return defaultState;
+    }
+
+    case "upload modal toggled": {
+      return { ...state, uploadModalOpen: !state.uploadModalOpen };
     }
 
     case "filter drawer changes cancelled": {
@@ -289,12 +298,14 @@ export const global = (state = defaultState, action: any) => {
 
     case "tree file uploaded": {
       const tree = action.data;
+      const divisionOptions = get_division_input_options(tree, state.country);
       const treeMetadata = treeMetadataCensus(tree);
       const rootSliderValue = getNodeAttr(tree, state.cladeSliderField);
 
       return {
         ...state,
         tree: tree,
+        divisionOptions: divisionOptions,
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
