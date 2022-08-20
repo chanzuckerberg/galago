@@ -1,5 +1,5 @@
 import Header from "./components/header";
-import Footer from "./components/footer";
+import BigFoot from "./components/bigFoot";
 import { useSelector, useDispatch } from "react-redux";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
