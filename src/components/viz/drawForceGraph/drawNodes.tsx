@@ -19,7 +19,7 @@ const outlineColor = "black"; //"rgba(80,80,80,1)";
 
 const getColor = (
   forceNode: forceNode,
-  muts_per_trans_minmax: number[],
+  muts_per_trans_minmax: number,
   colorScale: [string, string, string]
 ) => {
   //@ts-ignore -- not sure why the `extend` works for forceLink but not forceNode in d.ts
@@ -29,7 +29,7 @@ const getColor = (
   } else if (
     //@ts-ignore
     forceNode.mrcaDist <=
-    muts_per_trans_minmax[1] * 2
+    muts_per_trans_minmax * 2
   ) {
     return colorScale[1];
   } else {
@@ -39,7 +39,7 @@ const getColor = (
 
 const drawCircle = (
   forceNode: forceNode,
-  muts_per_trans_minmax: number[],
+  muts_per_trans_minmax: number,
   colorScale: [string, string, string],
   radius: number,
   scaleX: Function,
@@ -63,7 +63,7 @@ const drawCircle = (
 
 const drawSquare = (
   forceNode: forceNode,
-  muts_per_trans_minmax: number[],
+  muts_per_trans_minmax: number,
   colorScale: [string, string, string],
   radius: number,
   scaleX: Function,
