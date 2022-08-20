@@ -23,6 +23,7 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
+import PathogenSelection from "./pathogenSelection";
 
 export const UploadModal = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
@@ -78,7 +79,7 @@ export const UploadModal = () => {
         <h3>Select pathogen (required)</h3>
 
         <p>
-          We use this to estimate the average number of mutations per
+          <PathogenSelection />
         </p>
         <h3>Select your location of interest (required)</h3>
         <p>

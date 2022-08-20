@@ -24,6 +24,7 @@ import {
 } from "../utils/metadataUtils";
 import { describe_clade } from "../utils/describeClade";
 import { formatMrcaSliderOptionValue } from "../components/viz/cladeSelection/cladeSlider";
+import { pathogenParameters } from "../utils/pathogenParameters";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
@@ -55,7 +56,8 @@ const defaultState = {
   filterDrawerOpen: false,
   uploadModalOpen: false,
   divisionOptions: [],
-  mutsPerTransmissionMax: 1,
+  pathogen: "",
+  mutsPerTransmissionMax: "",
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -66,6 +68,20 @@ export const global = (state = defaultState, action: any) => {
 
     case "reset to default": {
       return defaultState;
+    }
+
+    case "pathogen selected": {
+      return {
+        ...state,
+        pathogen: action.data,
+      };
+    }
+
+    case "mutsPerTransMax updated": {
+      return {
+        ...state,
+        mutsPerTransmissionMax: action.data,
+      };
     }
 
     case "upload modal toggled": {
