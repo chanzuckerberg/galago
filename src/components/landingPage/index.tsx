@@ -7,9 +7,9 @@ import { useWindowSize } from "@react-hook/window-size";
 
 export const LandingPage = () => {
   const [windowWidth, windowHeight] = useWindowSize();
-
+  const middleWidth = Math.min(windowWidth * 0.5, 1200);
   return (
-    <div style={{ maxWidth: windowWidth * 0.5, margin: "auto" }}>
+    <div style={{ maxWidth: middleWidth, margin: "auto" }}>
       <AboutGalago />
       <div
         style={{
@@ -18,11 +18,11 @@ export const LandingPage = () => {
           justifyContent: "space-between",
         }}
       >
-        <Demo />
-        <Upload />
+        <Demo sectionWidth={middleWidth * 0.43} />
+        <Upload sectionWidth={middleWidth * 0.43} />
       </div>
 
-      <div className="reportSection" style={{ marginBottom: 70 }}>
+      <div style={{ marginBottom: 30, marginTop: 30 }}>
         <ContactUs />
       </div>
       <Footer />

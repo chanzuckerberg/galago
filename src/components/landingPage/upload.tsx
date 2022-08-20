@@ -18,7 +18,11 @@ const modalStyle = {
   p: 4,
 };
 
-export const Upload = () => {
+type UploadProps = {
+  sectionWidth: number;
+};
+export const Upload = (props: UploadProps) => {
+  const { sectionWidth } = props;
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
@@ -26,6 +30,7 @@ export const Upload = () => {
   const loadTreeJson = (file: any) => {
     const fileReader = new FileReader();
     fileReader.readAsText(file, "application/JSON");
+    console.log("filereader looks like", fileReader);
     fileReader.onload = (event) => {
       console.log("loaded file!");
 
@@ -46,7 +51,18 @@ export const Upload = () => {
   };
 
   return (
-    <div className="reportSection" style={{ backgroundColor: "#f2f0f0" }}>
+    <div
+      style={{
+        backgroundColor: "#f2f0f0",
+        width: sectionWidth,
+        maxWidth: sectionWidth,
+        padding: 20,
+        marginTop: 30,
+        paddingTop: 20,
+        marginBottom: 20,
+        paddingBottom: 20,
+      }}
+    >
       <h2>Analyze your data</h2>
       <p>
         Use your own phylogenetic tree of pathogen genomes for analysis in
@@ -75,6 +91,7 @@ export const Upload = () => {
           onClick={() => {
             dispatch({ type: "upload modal toggled" });
           }}
+          size="large"
         >
           Get started
         </Button>

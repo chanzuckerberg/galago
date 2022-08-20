@@ -19,6 +19,7 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  InputLabel,
   MenuItem,
   Select,
 } from "@mui/material";
@@ -75,18 +76,16 @@ export const UploadModal = () => {
       <DialogTitle>Analyze your data in Galago</DialogTitle>
       <DialogContent>
         <h3>Select pathogen (required)</h3>
+
         <p>
           We use this to estimate the average number of mutations per
-          transmission.
-        </p>
-        <p>
-          <FormControl></FormControl>
         </p>
         <h3>Select your location of interest (required)</h3>
         <p>
           <FormControl>
-            <FormLabel>Select state/province</FormLabel>
+            <FormLabel>State / Province</FormLabel>
             <Select
+              variant="standard"
               id="divisionSelect"
               //@ts-ignore
               onChange={(e) => handleDivisionSelection(e.target.value)}
@@ -104,7 +103,7 @@ export const UploadModal = () => {
         {state.division && locationOptions && (
           <p>
             <FormControl>
-              <FormLabel>Select county/location</FormLabel>
+              <FormLabel>County / location</FormLabel>
               <Select
                 id="locationSelect"
                 //@ts-ignore

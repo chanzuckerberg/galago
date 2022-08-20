@@ -3,11 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { Theme } from "../../theme";
 
-export const Demo = () => {
+type DemoProps = {
+  sectionWidth: number;
+};
+
+export const Demo = (props: DemoProps) => {
+  const { sectionWidth } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   return (
-    <div className="reportSection" style={{ backgroundColor: "#f2f0f0" }}>
+    <div
+      style={{
+        backgroundColor: "#f2f0f0",
+        width: sectionWidth,
+        maxWidth: sectionWidth,
+        padding: 20,
+        marginTop: 30,
+        paddingTop: 20,
+        marginBottom: 20,
+        paddingBottom: 20,
+      }}
+    >
       <h2>Demo with real-world outbreak data</h2>
       <p>
         Genomic epidemiology helped public health officials understand a
@@ -18,7 +34,7 @@ export const Demo = () => {
           You can read more about this outbreak here.
         </a>
       </p>
-      <p style={{ width: 200, margin: "auto" }}>
+      <p style={{ width: 200 }}>
         <Button
           variant="contained"
           name="loadDemo"
