@@ -115,7 +115,7 @@ export const PathogenSelection = () => {
               <Tooltip
                 componentsProps={tooltipProps}
                 title={
-                  "We estimate this threshold using the pathogen-specific average number of mutations per serial interval and a poisson distribution to estimate the number of mutations such that P(cases are directly linked | N mutations between them) is <10%"
+                  "We estimate this threshold as the number of mutations such that P(cases are directly linked | N mutations between them) is <10%. This is based on a poisson distribution where lambda is the pathogen-specific average number of mutations per serial interval."
                 }
               >
                 <InfoOutlinedIcon
@@ -204,13 +204,6 @@ export const PathogenSelection = () => {
                   shrink: true,
                 }}
               />
-              {/* <Button
-              variant="text"
-              size="small"
-              sx={{ marginBottom: 0, paddingBottom: 0 }}
-            >
-              Calculate
-            </Button> */}
             </FormGroup>
           </FormControl>
         </div>
