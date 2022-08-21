@@ -7,7 +7,7 @@ import BigFoot from "../bigFoot";
 
 export const LandingPage = () => {
   const [windowWidth, windowHeight] = useWindowSize();
-  const middleWidth = Math.min(windowWidth * 0.5, 1200);
+  const middleWidth = Math.min(windowWidth * 0.66, 1200);
   return (
     <div>
       <div style={{ maxWidth: middleWidth, margin: "auto" }}>
