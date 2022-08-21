@@ -24,7 +24,6 @@ import {
 } from "../utils/metadataUtils";
 import { describe_clade } from "../utils/describeClade";
 import { formatMrcaSliderOptionValue } from "../components/viz/cladeSelection/cladeSlider";
-import { pathogenParameters } from "../utils/pathogenParameters";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
@@ -55,7 +54,7 @@ const defaultState = {
   cacheStateOnFilterDrawerOpen: {},
   filterDrawerOpen: false,
   uploadModalOpen: false,
-  divisionOptions: [],
+  divisionOptions: [""],
   pathogen: "",
   mutsPerTransmissionMax: "",
 };
@@ -74,6 +73,7 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...state,
         pathogen: action.data,
+        mutsPerTransmissionMax: "",
       };
     }
 
@@ -348,6 +348,7 @@ export const global = (state = defaultState, action: any) => {
         return {
           ...state,
           division: action.data,
+          location: "",
           locationOptions: newLocationOptions,
         };
       }
