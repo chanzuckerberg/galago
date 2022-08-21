@@ -1,5 +1,5 @@
 import Header from "./components/header";
-import BigFoot from "./components/bigFoot";
+import LittleFoot from "./components/littleFoot";
 import { useSelector, useDispatch } from "react-redux";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
@@ -67,8 +67,15 @@ export default function App() {
           <Report sectionHeight={contentHeight} sectionWidth={rightColWidth} />
         </div>
       </div>
-      <div style={{ width: 700, margin: "auto" }}>
-        <Footer />
+      <div
+        style={{
+          width: windowWidth,
+          height: 20,
+          position: "absolute",
+          bottom: 10,
+        }}
+      >
+        <LittleFoot />
       </div>
     </div>
   );
