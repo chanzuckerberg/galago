@@ -80,19 +80,31 @@ const BigFoot = () => {
             width: 600,
           }}
         >
-          <a href="" style={{ color: "white", textDecoration: "none" }}>
+          <a
+            href="https://help.czgenepi.org/hc/en-us/categories/6217716150804-Genomic-Epidemiology-Learning-Center"
+            style={{ color: "white", textDecoration: "none" }}
+          >
             Learning Center
           </a>
-          <a href="" style={{ color: "white", textDecoration: "none" }}>
+          <a
+            href="https://github.com/chanzuckerberg/galago/discussions"
+            style={{ color: "white", textDecoration: "none" }}
+          >
             Discussion Board
           </a>
-          <a href="" style={{ color: "white", textDecoration: "none" }}>
+          <a
+            href="mailto:galago@chanzuckerberg.com"
+            style={{ color: "white", textDecoration: "none" }}
+          >
             Contact Us
           </a>
-          <a href="" style={{ color: "white", textDecoration: "none" }}>
+          <a
+            href="https://github.com/chanzuckerberg/galago"
+            style={{ color: "white", textDecoration: "none" }}
+          >
             Github
           </a>
-          <a href="">
+          <a href="https://czgenepi.org/">
             <img
               src="https://github.com/chanzuckerberg/czgenepi/raw/trunk/src/frontend/src/common/images/logo_complete_white.svg"
               style={{ width: 100 }}
