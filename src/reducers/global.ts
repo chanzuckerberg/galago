@@ -313,10 +313,13 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "tree file uploaded": {
-      const tree = action.data;
+      const { tree, haveInternalNodeDates } = action.data;
+
       const divisionOptions = get_division_input_options(tree, state.country);
       const treeMetadata = treeMetadataCensus(tree);
-      const rootSliderValue = getNodeAttr(tree, state.cladeSliderField);
+
+      const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
+      const rootSliderValue = getNodeAttr(tree, cladeSliderField);
 
       return {
         ...state,
@@ -325,10 +328,8 @@ export const global = (state = defaultState, action: any) => {
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
-        cladeSliderValue: formatMrcaSliderOptionValue(
-          rootSliderValue,
-          state.cladeSliderField
-        ),
+        cladeSliderField: cladeSliderField,
+        cladeSliderValue: rootSliderValue,
         mrca: tree,
         metadataCensus: { ...state.metadataCensus, ...treeMetadata },
       };
