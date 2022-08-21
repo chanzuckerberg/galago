@@ -93,6 +93,7 @@ export const UploadModal = () => {
               style={{ width: 200 }}
               size="small"
               disabled={!state.divisionOptions}
+              value={state.division}
             >
               {state.divisionOptions &&
                 state.divisionOptions.map((division: string) => (
@@ -114,6 +115,8 @@ export const UploadModal = () => {
                     data: event.target.value,
                   });
                 }}
+                variant="standard"
+                value={state.location}
                 style={{ width: 200 }}
                 size="small"
               >
@@ -131,7 +134,6 @@ export const UploadModal = () => {
         <p>
           <FormControl>
             <Button
-              variant="outlined"
               component="label"
               disableElevation
               disableRipple
@@ -152,6 +154,7 @@ export const UploadModal = () => {
               </FormLabel>
               <Select
                 id="metadataKeySelect"
+                variant="standard"
                 //@ts-ignore
                 onChange={(e) =>
                   dispatch({
@@ -161,6 +164,7 @@ export const UploadModal = () => {
                 }
                 style={{ width: 200 }}
                 size="small"
+                value={state.metadataFieldToMatch}
               >
                 {metadataKeyOptions.map((key: string) => (
                   <MenuItem value={key}>{key}</MenuItem>
@@ -188,7 +192,7 @@ export const UploadModal = () => {
             !state.division ||
             !state.location ||
             !state.tree ||
-            !state.mutsPerTransMax
+            !state.mutsPerTransmissionMax
           }
         >
           Submit
