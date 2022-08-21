@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { get_division_input_options } from "../../utils/geoInputOptions";
 import { ingestNextstrain } from "../../utils/nextstrainAdapter";
 import { Node } from "../../d";
-import { Box, Button, Dialog, FormHelperText } from "@mui/material";
+import { Box, Button, Dialog, FormHelperText, Tooltip } from "@mui/material";
 import UploadModal from "./uploadModal";
 import Theme from "../../theme";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import { tooltipProps } from "../formatters/sidenote";
 
 const modalStyle = {
   position: "absolute" as "absolute",
@@ -31,21 +33,11 @@ export const Upload = (props: UploadProps) => {
   const loadTreeJson = (file: any) => {
     const fileReader = new FileReader();
     fileReader.readAsText(file, "application/JSON");
-    console.log("filereader looks like", fileReader);
     fileReader.onload = (event) => {
-      console.log("loaded file!");
-
       if (event?.target?.result && typeof event.target.result === "string") {
-        const { tree, haveInternalNodeDates } = ingestNextstrain(
-          JSON.parse(event.target.result)
-        );
         dispatch({
           type: "tree file uploaded",
-          data: tree,
-        });
-        dispatch({
-          type: "determined if internal node dates",
-          data: haveInternalNodeDates,
+          data: ingestNextstrain(JSON.parse(event.target.result)),
         });
       }
     };
@@ -72,7 +64,7 @@ export const Upload = (props: UploadProps) => {
         Galago. Galago runs entirely in the browser. This means that your data
         never leaves your computer and is never accessible to anyone else.
       </p>
-      <p>
+      <p style={{ marginTop: 40 }}>
         <Button
           variant="outlined"
           component="label"
@@ -84,11 +76,30 @@ export const Upload = (props: UploadProps) => {
         >
           Select tree JSON <input hidden type="file" />
         </Button>
+        <FormHelperText>
+          This must be in Nextstrain's JSON format{" "}
+          <Tooltip
+            componentsProps={tooltipProps}
+            title={
+              <>
+                If you need help generating a phylogenetic tree, head over to{" "}
+                <a href="https://czgenepi.org" style={{ color: "white" }}>
+                  CZ GEN EPI
+                </a>
+              </>
+            }
+          >
+            <InfoOutlined
+              color="primary"
+              style={{ fontSize: 16, position: "relative", top: 4 }}
+            />
+          </Tooltip>
+        </FormHelperText>
       </p>
       <p>
         <Button
           variant="contained"
-          // disabled={!state.tree}
+          disabled={!state.tree}
           disableElevation
           disableRipple
           onClick={() => {
