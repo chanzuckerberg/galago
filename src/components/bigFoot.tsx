@@ -78,6 +78,8 @@ const BigFoot = () => {
             flexDirection: "row",
             justifyContent: "space-evenly",
             width: 600,
+            position: "relative",
+            top: 12,
           }}
         >
           <a
