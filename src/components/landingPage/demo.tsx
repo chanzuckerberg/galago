@@ -14,7 +14,9 @@ export const Demo = (props: DemoProps) => {
   return (
     <div
       style={{
-        backgroundColor: "#f2f0f0",
+        //@ts-ignore
+        backgroundColor: Theme.palette.secondary.lighter,
+        borderRadius: 5,
         width: sectionWidth,
         maxWidth: sectionWidth,
         padding: 20,

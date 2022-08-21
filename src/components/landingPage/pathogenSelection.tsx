@@ -19,6 +19,7 @@ import { tooltipProps } from "../formatters/sidenote";
 import SettingsIcon from "@mui/icons-material/Settings";
 //@ts-ignore
 import uuid from "react-uuid";
+import Theme from "../../theme";
 
 export const PathogenSelection = () => {
   //@ts-ignore
@@ -100,7 +101,14 @@ export const PathogenSelection = () => {
         </FormControl>
       </p>
       {state.pathogen && showCalculator && (
-        <div style={{ backgroundColor: "#f2f0f0", padding: 15 }}>
+        //@ts-ignore
+        <div
+          style={{
+            //@ts-ignore
+            backgroundColor: Theme.palette.secondary.lighter,
+            padding: 15,
+          }}
+        >
           <FormControl>
             <FormLabel sx={{ width: 400 }}>
               Max N mutations between directly linked samples

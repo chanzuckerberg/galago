@@ -5,6 +5,7 @@ import { ingestNextstrain } from "../../utils/nextstrainAdapter";
 import { Node } from "../../d";
 import { Box, Button, Dialog, FormHelperText } from "@mui/material";
 import UploadModal from "./uploadModal";
+import Theme from "../../theme";
 
 const modalStyle = {
   position: "absolute" as "absolute",
@@ -53,9 +54,11 @@ export const Upload = (props: UploadProps) => {
   return (
     <div
       style={{
-        backgroundColor: "#f2f0f0",
+        //@ts-ignore
+        backgroundColor: Theme.palette.secondary.lighter,
         width: sectionWidth,
         maxWidth: sectionWidth,
+        borderRadius: 5,
         padding: 20,
         marginTop: 30,
         paddingTop: 20,
