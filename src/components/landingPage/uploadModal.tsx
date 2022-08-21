@@ -184,7 +184,12 @@ export const UploadModal = () => {
             dispatch({ type: "upload submit button clicked" });
             navigate("/galago/app");
           }}
-          disabled={!state.division || !state.location || !state.tree}
+          disabled={
+            !state.division ||
+            !state.location ||
+            !state.tree ||
+            !state.mutsPerTransMax
+          }
         >
           Submit
         </Button>
