@@ -18,6 +18,7 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
+import { PATH_TO_APP } from "../../routes";
 
 export const Upload = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
@@ -207,7 +208,7 @@ export const Upload = () => {
         disableRipple
         onClick={(e) => {
           dispatch({ type: "upload submit button clicked" });
-          navigate("/galago/app");
+          navigate(PATH_TO_APP);
         }}
         disabled={!state.division || !state.location || !state.tree}
       >
