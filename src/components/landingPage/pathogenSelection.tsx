@@ -115,7 +115,7 @@ export const PathogenSelection = () => {
               <Tooltip
                 componentsProps={tooltipProps}
                 title={
-                  "We estimate this threshold as the number of mutations such that P(cases are directly linked | N mutations between them) is <10%. This is based on a poisson distribution where lambda is the pathogen-specific average number of mutations per serial interval."
+                  "We estimate this threshold as the number of mutations such that P (N mutations | directly linked cases ) is <10%. This is based on a poisson distribution where lambda is the pathogen-specific average number of mutations per serial interval."
                 }
               >
                 <InfoOutlinedIcon
@@ -148,14 +148,13 @@ export const PathogenSelection = () => {
                 }
               }}
               error={
-                state.mutsPerTransmissionMax <= 0 ||
+                state.mutsPerTransmissionMax < 1 ||
                 state.mutsPerTransmissionMax > 9
               }
               sx={{ width: 100 }}
               InputLabelProps={{
                 shrink: true,
               }}
-              // style={{ width: 30 }}
             />
           </FormControl>{" "}
           <FormControl>
@@ -174,8 +173,7 @@ export const PathogenSelection = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                // error={}
-                // style={{ width: 30 }}
+                error={genomeLength < 1000 || genomeLength > 10000000}
               />
               <TextField
                 variant="standard"
@@ -189,6 +187,7 @@ export const PathogenSelection = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                error={serialInterval <= 0 || serialInterval > 1}
                 style={{ marginRight: 10 }}
               />
               <TextField
@@ -199,6 +198,7 @@ export const PathogenSelection = () => {
                 onChange={(event) => {
                   setSerialInterval(parseInt(event.target.value));
                 }}
+                error={serialInterval <= 0 || serialInterval > 1825}
                 size="small"
                 InputLabelProps={{
                   shrink: true,
