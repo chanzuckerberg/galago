@@ -1,12 +1,9 @@
 import { Node, CladeDescription } from "../d";
 import {
-  get_mrca,
   get_leaves,
   calcPairwiseDistances,
-  get_root,
   get_parent_for_cousins,
   getAttrChanges,
-  traverse_preorder,
 } from "./treeMethods";
 
 const catalog_subclades = (
@@ -55,7 +52,6 @@ export const describe_clade = (
     country: string;
     region?: string;
   },
-  muts_per_trans_minmax: number[],
   min_muts_to_parent: number,
   selected_samples: Array<Node> = []
 ) => {
@@ -68,10 +64,13 @@ export const describe_clade = (
     home_geo
   );
 
+  const clade_samples = get_leaves(mrca);
+
   let clade: CladeDescription = {
-    selected_samples: selected_samples,
-    mrca: mrca,
-    unselected_samples_in_cluster: get_leaves(mrca).filter(
+    selected_samples: selected_samples.filter((n: Node) =>
+      clade_samples.includes(n)
+    ),
+    unselected_samples_in_cluster: clade_samples.filter(
       (n) => !selected_samples.includes(n)
     ),
     parent_for_cousins: parent_for_cousins,
@@ -83,8 +82,7 @@ export const describe_clade = (
           )
         : [],
     home_geo: home_geo,
-    muts_per_trans_minmax: muts_per_trans_minmax,
-    pairwiseDistances: calcPairwiseDistances(get_leaves(mrca)),
+    pairwiseDistances: calcPairwiseDistances(mrca),
     subclade_geo: returned_subclade_geo,
     subclades: returned_subclades,
   };

@@ -1,9 +1,11 @@
 import Header from "./components/header";
-import Footer from "./components/footer";
+import LittleFoot from "./components/littleFoot";
 import { useSelector, useDispatch } from "react-redux";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
 import Report from "./components/report";
+import { useEffect, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function App() {
   //@ts-ignore
@@ -62,12 +64,18 @@ export default function App() {
           }}
         >
           <h5>AUTOMATICALLY GENERATED REPORT FOR SELECTED CLADE</h5>
-
           <Report sectionHeight={contentHeight} sectionWidth={rightColWidth} />
         </div>
       </div>
-      <div style={{ width: 700, margin: "auto" }}>
-        <Footer />
+      <div
+        style={{
+          width: windowWidth,
+          height: 20,
+          position: "absolute",
+          bottom: 10,
+        }}
+      >
+        <LittleFoot />
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import Popper from "@mui/material/Popper";
 import { useState, useCallback, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { MutDistances } from "../../../d";
+import { orderSamples } from "../../../utils/filterHeatmapStrains";
 
 type heatmapSampleSelectionProps = {
   maxSamples: number;
@@ -21,12 +21,16 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // OPTIONS SETUP & STATE
-  const getOptions = (rawData: Array<MutDistances>) => {
-    return rawData
-      .map((datum: MutDistances) => {
+  const getOptions = (
+    pairwiseDistances: any,
+    samplesOfInterestNames: string[]
+  ) => {
+    const strains = Object.keys(pairwiseDistances);
+    return strains
+      .map((strain: string) => {
         return {
-          name: datum.strain,
-          group: state.samplesOfInterestNames.includes(datum.strain)
+          name: strain,
+          group: samplesOfInterestNames.includes(strain)
             ? "Samples of interest"
             : "Other samples",
         };
@@ -36,7 +40,12 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
 
   const [options, setOptions] = useState<
     Array<{ name: string; group: string }>
-  >(getOptions(state.cladeDescription.pairwiseDistances));
+  >(
+    getOptions(
+      state.cladeDescription.pairwiseDistances,
+      state.cladeDescription.selected_samples
+    )
+  );
 
   const [selectedOptions, setSelectedOptions] = useState<
     Array<{ name: string; group: string }>
@@ -47,14 +56,17 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
   );
 
   useEffect(() => {
-    const newOptions = getOptions(state.cladeDescription.pairwiseDistances);
+    const newOptions = getOptions(
+      state.cladeDescription.pairwiseDistances,
+      state.cladeDescription.selected_samples
+    );
     setOptions(newOptions);
     const newSelectedOptions = newOptions.filter(
       (option: { name: string; group: string }) =>
         state.heatmapSelectedSampleNames.includes(option.name)
     );
     setSelectedOptions(newSelectedOptions);
-  }, [state.heatmapSampleSelection]);
+  }, [state.mrca.name, state.heatmapSelectedSampleNames]);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     if (anchorEl && selectedOptions.length >= 2) {
@@ -63,7 +75,7 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
       );
       dispatch({
         type: "heatmap selected samples changed",
-        data: selectedOptionNames,
+        data: orderSamples(state.mrca, selectedOptionNames),
       });
     }
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -71,7 +83,6 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
 
   // POPPER STATE and HANDLERS
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popper" : undefined;
   const checkOptionDisabled = useCallback(
     (option: any) =>
       selectedOptions.length >= maxSamples &&
@@ -89,10 +100,10 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
           marginBottom: 1.5,
         }}
       >
-        {`Choose samples (${selectedOptions.length})`}
+        {`Choose samples (${state.heatmapSelectedSampleNames.length})`}
       </Button>
 
-      <Popper id={id} open={open} anchorEl={anchorEl}>
+      <Popper open={open} anchorEl={anchorEl}>
         <Box
           sx={{
             border: 1,
@@ -101,12 +112,11 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
             bgcolor: "background.paper",
           }}
         >
-          <h5>Select up to 50 samples to visualize in the heatmap.</h5>
+          <h5>Select between 4 and 50 samples to visualize in the heatmap.</h5>
           <Autocomplete
             id="heatmap-sample-selection"
             value={selectedOptions}
             onChange={(event: any, newValue: any) => {
-              console.log("setting selected options to", newValue.length);
               setSelectedOptions(newValue);
             }}
             options={options}

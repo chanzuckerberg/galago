@@ -1,26 +1,29 @@
 import { useSelector } from "react-redux";
+import Theme from "../../../theme";
 
-type heatmapLegendProps = {
-  circleColorScale: any;
-};
+type heatmapLegendProps = {};
 
 export const heatmapLegend = (props: heatmapLegendProps) => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
-  const { circleColorScale } = props;
   const spacing = 5;
 
   return (
     <>
       <g>
-        <circle fill={circleColorScale(0)} r={spacing * 1.5} cx={0} cy={0} />
+        <circle
+          fill={Theme.palette.primary.main}
+          r={spacing * 1.5}
+          cx={0}
+          cy={0}
+        />
         <text fontSize={10} x={spacing * 3} y={0} dominantBaseline="middle">
-          "Identical (0 muts)"
+          Identical (0 muts)
         </text>
       </g>
       <g>
         <circle
-          fill={circleColorScale(1.5)}
+          fill={Theme.palette.primary.light}
           r={spacing * 1.5}
           cx={0}
           cy={spacing * 4}
@@ -32,12 +35,13 @@ export const heatmapLegend = (props: heatmapLegendProps) => {
           dominantBaseline="middle"
         >
           {`1-2 transmissions\n(1
-        - ${state.cladeDescription.muts_per_trans_minmax[1] * 2} muts)`}
+        - ${state.mutsPerTransmissionMax * 2} muts)`}
         </text>
       </g>
       <g>
         <circle
-          fill={circleColorScale(3)}
+          //@ts-ignore
+          fill={Theme.palette.primary.lighter}
           r={spacing * 1.5}
           cx={0}
           cy={spacing * 8}
@@ -48,9 +52,7 @@ export const heatmapLegend = (props: heatmapLegendProps) => {
           y={spacing * 8}
           dominantBaseline="middle"
         >
-          {`3+ transmissions (${
-            state.cladeDescription.muts_per_trans_minmax[1] * 2 + 1
-          }+ muts)`}
+          {`3+ transmissions (${state.mutsPerTransmissionMax * 2 + 1}+ muts)`}
         </text>
       </g>
     </>

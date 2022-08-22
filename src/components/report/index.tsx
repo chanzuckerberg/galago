@@ -10,6 +10,7 @@ import { get_leaves, get_root } from "../../utils/treeMethods";
 import SamplingBias from "./sampleDistribTable";
 import { gisaidCounts } from "../../../data/gisaidCounts2022-06";
 import { SkeletonReport } from "./skeleton";
+import { useEffect, useState } from "react";
 
 type ReportProps = {
   sectionHeight: number;
@@ -20,8 +21,17 @@ export const Report = (props: ReportProps) => {
   const { sectionHeight, sectionWidth } = props;
   //@ts-ignore
   const state = useSelector((state) => state.global);
-  const allDataPresent = state.location && state.division && state.tree;
-  const reportReady = state.cladeDescription && state.tree;
+  const reportReady = state.cladeDescription;
+
+  const [animationFinished, setAnimationFinished] = useState<boolean>(false);
+
+  useEffect(() => {
+    setAnimationFinished(false);
+
+    setTimeout(() => {
+      setAnimationFinished(true);
+    }, 500);
+  }, [state.mrca.name]);
 
   return (
     <div
@@ -29,18 +39,19 @@ export const Report = (props: ReportProps) => {
         overflowY: "scroll",
         overflowX: "hidden",
         marginRight: 30,
-        width: sectionWidth - 30,
+        paddingRight: 30,
+        width: sectionWidth,
         height: sectionHeight,
       }}
     >
       {" "}
-      {allDataPresent && reportReady && (
+      {reportReady && animationFinished && (
         <>
           <SitStat />
           <CladeDefinition sidenote_start={1} />
           <CladeUniqueness />
           <TMRCA sidenote_start={3} />
-          <OnwardTransmission sidenote_start={6} />
+          <OnwardTransmission />
           <GeoSubclades />
           <SamplingBias
             // @ts-ignore
@@ -50,7 +61,7 @@ export const Report = (props: ReportProps) => {
           <Assumptions sidenote_start={8} />
         </>
       )}
-      {(!allDataPresent || !reportReady) && <SkeletonReport />}
+      {(!reportReady || !animationFinished) && <SkeletonReport />}
     </div>
   );
 };

@@ -46,19 +46,15 @@ function CladeDefinition(props: CladeDefinitionProps) {
       <h5>Mutations:</h5>
       <p>
         We can use the average number of mutations per serial interval (
-        {
-          <FormatDataPoint
-            value={`${state.cladeDescription.muts_per_trans_minmax[0]} - ${state.cladeDescription.muts_per_trans_minmax[1]}`}
-          />
-        }
-        ) to get a rough estimate of the number of transmissions separating two
+        {<FormatDataPoint value={`0 - ${state.mutsPerTransmissionMax}`} />}) to
+        get a rough estimate of the number of transmissions separating two
         samples.
       </p>
       <div style={{ margin: "auto" }}>
         <Heatmap
-          chartHeight={windowWidth * 0.3}
-          chartWidth={windowWidth * 0.3}
-          chartMargin={60}
+          chartHeight={windowWidth * 0.35}
+          chartWidth={windowWidth * 0.35}
+          chartMargin={65}
         />
       </div>
       <h5>Hierarchical clustering ("clades"):</h5>

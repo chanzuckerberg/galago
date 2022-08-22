@@ -18,7 +18,7 @@ function CladeUniqueness() {
   ].sort();
 
   const cousin_distances: number[] = cladeDescription.cousins.map((c: Node) =>
-    get_dist([c, cladeDescription.mrca])
+    get_dist([c, state.mrca])
   );
 
   const local_cousins: Node[] = cladeDescription.cousins.filter(
@@ -31,7 +31,7 @@ function CladeUniqueness() {
     .sort((a, b) => a.getTime() - b.getTime());
 
   const parentGrandparentDist = get_dist([
-    cladeDescription.mrca,
+    state.mrca,
     cladeDescription.parent_for_cousins,
   ]);
 
@@ -53,12 +53,10 @@ function CladeUniqueness() {
         or at least{" "}
         <FormatDataPoint
           value={`
-            ${
-              parentGrandparentDist * cladeDescription.muts_per_trans_minmax[0]
-            } 
-            - ${
-              parentGrandparentDist * cladeDescription.muts_per_trans_minmax[1]
-            }`}
+            0 
+            - ${(parentGrandparentDist / state.mutsPerTransmissionMax).toFixed(
+              0
+            )}`}
         />{" "}
         transmissions.
       </p>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Alert from "@mui/material/Alert/Alert";
 import AlertTitle from "@mui/material/AlertTitle/AlertTitle";
 import Collapse from "@mui/material/Collapse/Collapse";
+import { Theme } from "../theme";
 
 type HeaderProps = {
   sectionHeight?: number;
@@ -42,7 +43,8 @@ const Header = (props: HeaderProps) => {
           onClose={() => {
             setShowAlert(false);
           }}
-          sx={{ backgroundColor: "#f2f0f0" }}
+          //@ts-ignore
+          sx={{ backgroundColor: Theme.palette.secondary.lighter }}
         >
           <AlertTitle>
             <strong>
