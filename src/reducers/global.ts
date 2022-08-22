@@ -323,7 +323,6 @@ export const global = (state = defaultState, action: any) => {
       const treeMetadata = treeMetadataCensus(tree);
 
       const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
-      const rootSliderValue = getNodeAttr(tree, cladeSliderField);
 
       return {
         ...state,
@@ -333,7 +332,7 @@ export const global = (state = defaultState, action: any) => {
           (node: Node) => node.children.length >= 2
         ),
         cladeSliderField: cladeSliderField,
-        cladeSliderValue: rootSliderValue,
+        cladeSliderValue: formatMrcaSliderOptionValue(tree, cladeSliderField),
         mrca: tree,
         metadataCensus: { ...state.metadataCensus, ...treeMetadata },
       };
