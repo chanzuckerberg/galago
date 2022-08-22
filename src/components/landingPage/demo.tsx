@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { Theme } from "../../theme";
+import { PATH_TO_APP } from "../../routes";
 
 type DemoProps = {
   sectionWidth: number;
@@ -46,7 +47,7 @@ export const Demo = (props: DemoProps) => {
           disableRipple
           onClick={() => {
             dispatch({ type: "load demo" });
-            navigate("/galago/app");
+            navigate(PATH_TO_APP);
           }}
           size="large"
         >

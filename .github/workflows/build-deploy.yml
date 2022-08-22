@@ -1,0 +1,37 @@
+name: Build and Deploy
+
+# Runs build and deploy whenever main is merged to or pushed to.
+# (...please don't push directly to main)
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Node/NPM
+        uses: actions/setup-node@v3
+        with:
+          # Just picked what we've been using in local dev work
+          node-version: 18
+      - name: Install node modules
+        # `npm ci` tells npm to install matching against package-lock file
+        run: npm ci
+      - name: Build app
+        env:
+          # This is not really a "secret", just a way to get per-repo env vars.
+          # Annoyingly (but reasonable), GitHub redacts this from logs, so you
+          # won't be able to see the build mode by reading the Action's logs.
+          GALAGO_VITE_BUILD_MODE: ${{ secrets.GALAGO_VITE_BUILD_MODE }}
+        # As configured in Aug 2022, `vite build` outputs to `dist` folder.
+        run: npm run build -- --mode $GALAGO_VITE_BUILD_MODE
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist # see above, default output folder for `vite build`
+          # By default, deploys branch to `gh-pages`, but let's be explicit
+          branch: gh-pages

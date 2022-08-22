@@ -24,6 +24,7 @@ import {
   Select,
 } from "@mui/material";
 import PathogenSelection from "./pathogenSelection";
+import { PATH_TO_APP } from "../../routes";
 
 export const UploadModal = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
@@ -186,7 +187,7 @@ export const UploadModal = () => {
           disableRipple
           onClick={(e) => {
             dispatch({ type: "upload submit button clicked" });
-            navigate("/galago/app");
+            navigate(PATH_TO_APP);
           }}
           disabled={
             !state.division ||
