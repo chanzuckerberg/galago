@@ -35,7 +35,7 @@ export const heatmapLegend = (props: heatmapLegendProps) => {
           dominantBaseline="middle"
         >
           {`1-2 transmissions\n(1
-        - ${state.cladeDescription.muts_per_trans_minmax[1] * 2} muts)`}
+        - ${state.mutsPerTransmissionMax * 2} muts)`}
         </text>
       </g>
       <g>
@@ -52,9 +52,7 @@ export const heatmapLegend = (props: heatmapLegendProps) => {
           y={spacing * 8}
           dominantBaseline="middle"
         >
-          {`3+ transmissions (${
-            state.cladeDescription.muts_per_trans_minmax[1] * 2 + 1
-          }+ muts)`}
+          {`3+ transmissions (${state.mutsPerTransmissionMax * 2 + 1}+ muts)`}
         </text>
       </g>
     </>

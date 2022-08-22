@@ -45,7 +45,7 @@ export const SitStat = () => {
         chartWidth={windowWidth * 0.35}
         chartMargin={60}
       />
-      {!isNaN(getNodeAttr(cladeDescription.mrca, "num_date")) && (
+      {!isNaN(getNodeAttr(state.mrca, "num_date")) && (
         <span
           style={{
             fontWeight: "bold",
@@ -54,7 +54,7 @@ export const SitStat = () => {
           }}
         >
           * The primary case most likely existed around{" "}
-          <FormatDate date={cladeDescription.mrca.node_attrs.num_date.value} />{" "}
+          <FormatDate date={state.mrca.node_attrs.num_date.value} />{" "}
         </span>
       )}
       {state.samplesOfInterest.length > 0 && (

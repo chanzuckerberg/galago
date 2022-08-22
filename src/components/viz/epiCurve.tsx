@@ -96,11 +96,9 @@ export const EpiCurve = (props: EpiCurveProps) => {
       ? [
           "Identical to primary case",
           `Secondary / tertiary case (+1 - ${
-            state.cladeDescription.muts_per_trans_minmax[1] * 2
+            state.mutsPerTransmissionMax * 2
           } muts)`,
-          `Tertiary+ case (${
-            state.cladeDescription.muts_per_trans_minmax[1] * 2 + 1
-          }+ muts)`,
+          `Tertiary+ case (${state.mutsPerTransmissionMax * 2 + 1}+ muts)`,
         ]
       : [
           state.location,
@@ -111,10 +109,10 @@ export const EpiCurve = (props: EpiCurveProps) => {
 
   const getTransmissions = (node: Node) => {
     const nMuts = get_dist([node, state.mrca]);
-    const [lower, upper] = state.cladeDescription?.muts_per_trans_minmax;
+    const threshold = state.mutsPerTransmissionMax;
     if (nMuts === 0) {
       return keys[0];
-    } else if (nMuts <= upper * 2) {
+    } else if (nMuts <= threshold * 2) {
       return keys[1];
     } else {
       return keys[2];

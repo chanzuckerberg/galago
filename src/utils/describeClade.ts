@@ -52,7 +52,6 @@ export const describe_clade = (
     country: string;
     region?: string;
   },
-  muts_per_trans_minmax: number[],
   min_muts_to_parent: number,
   selected_samples: Array<Node> = []
 ) => {
@@ -71,7 +70,6 @@ export const describe_clade = (
     selected_samples: selected_samples.filter((n: Node) =>
       clade_samples.includes(n)
     ),
-    mrca: mrca,
     unselected_samples_in_cluster: clade_samples.filter(
       (n) => !selected_samples.includes(n)
     ),
@@ -84,7 +82,6 @@ export const describe_clade = (
           )
         : [],
     home_geo: home_geo,
-    muts_per_trans_minmax: muts_per_trans_minmax,
     pairwiseDistances: calcPairwiseDistances(mrca),
     subclade_geo: returned_subclade_geo,
     subclades: returned_subclades,

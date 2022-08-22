@@ -36,7 +36,7 @@ export const Heatmap = (props: heatmapProps) => {
       type: "heatmap selected samples changed",
       data: newDefaultSampleNames,
     });
-  }, [state.cladeDescription.mrca.name]);
+  }, [state.mrca.name]);
 
   // SCALES;
   const gap = 1;
@@ -65,11 +65,11 @@ export const Heatmap = (props: heatmapProps) => {
 
   // PLOT
   const getColor = (xName: string, yName: string) => {
-    const [lower, upper] = state.cladeDescription?.muts_per_trans_minmax;
+    const threshold = state.cladeDescription?.muts_per_trans_minmax;
     const nMuts = state.cladeDescription?.pairwiseDistances[xName][yName];
     if (nMuts === 0) {
       return Theme.palette.primary.main;
-    } else if (nMuts <= upper * 2) {
+    } else if (nMuts <= threshold * 2) {
       return Theme.palette.primary.light;
     } else {
       //@ts-ignore

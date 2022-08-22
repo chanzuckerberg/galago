@@ -3,8 +3,7 @@ const AboutGalago = () => {
     <div>
       <h1>Welcome to Galago</h1>
       <h4>
-        Answer basic epidemiological questions using pathogen genomic data,{" "}
-        <br />
+        Answer basic epidemiological questions using pathogen genomic data,
         without having to become an expert in phylogenetics.
       </h4>
       <p>

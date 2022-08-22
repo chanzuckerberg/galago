@@ -1,4 +1,5 @@
 import { Skeleton } from "@mui/material";
+import { Theme } from "../../theme";
 
 export const SkeletonReport = () => {
   //@ts-ignore
@@ -12,7 +13,8 @@ export const SkeletonReport = () => {
           animation={"wave"}
           sx={{
             animationDuration: "50ms",
-            backgroundColor: "#f2f0f0",
+            //@ts-ignore
+            backgroundColor: Theme.palette.secondary.lighter,
           }}
         />
       </h2>
@@ -21,7 +23,11 @@ export const SkeletonReport = () => {
           variant="text"
           width={190}
           animation={"wave"}
-          sx={{ animationDuration: "50ms", backgroundColor: "#f2f0f0" }}
+          sx={{
+            animationDuration: "50ms",
+            //@ts-ignore
+            backgroundColor: Theme.palette.secondary.lighter,
+          }}
         />
       </h5>
       <p>
@@ -31,7 +37,8 @@ export const SkeletonReport = () => {
           animation={"wave"}
           sx={{
             animationDuration: "50ms",
-            backgroundColor: "#f2f0f0",
+            //@ts-ignore
+            backgroundColor: Theme.palette.secondary.lighter,
             marginBottom: 2,
           }}
         />
@@ -42,7 +49,11 @@ export const SkeletonReport = () => {
             variant="rectangular"
             height={285}
             animation={"wave"}
-            sx={{ animationDuration: "50ms", backgroundColor: "#f2f0f0" }}
+            sx={{
+              animationDuration: "50ms",
+              //@ts-ignore
+              backgroundColor: Theme.palette.secondary.lighter,
+            }}
           />
         </p>
         <p>
@@ -51,7 +62,11 @@ export const SkeletonReport = () => {
             width={375}
             height={40}
             animation={"wave"}
-            sx={{ animationDuration: "50ms", backgroundColor: "#f2f0f0" }}
+            sx={{
+              animationDuration: "50ms",
+              //@ts-ignore
+              backgroundColor: Theme.palette.secondary.lighter,
+            }}
           />
         </p>
       </div>

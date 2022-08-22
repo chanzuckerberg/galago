@@ -46,12 +46,8 @@ function CladeDefinition(props: CladeDefinitionProps) {
       <h5>Mutations:</h5>
       <p>
         We can use the average number of mutations per serial interval (
-        {
-          <FormatDataPoint
-            value={`${state.cladeDescription.muts_per_trans_minmax[0]} - ${state.cladeDescription.muts_per_trans_minmax[1]}`}
-          />
-        }
-        ) to get a rough estimate of the number of transmissions separating two
+        {<FormatDataPoint value={`0 - ${state.mutsPerTransmissionMax}`} />}) to
+        get a rough estimate of the number of transmissions separating two
         samples.
       </p>
       <div style={{ margin: "auto" }}>

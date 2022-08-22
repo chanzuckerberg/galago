@@ -17,11 +17,7 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
   );
 
   const tertiary_cases: string[] = all_clade_samples
-    .filter(
-      (x) =>
-        get_dist([x, cladeDescription.mrca]) >
-        cladeDescription.muts_per_trans_minmax[1] * 2
-    )
+    .filter((x) => get_dist([x, state.mrca]) > state.mutsPerTransmissionMax * 2)
     .map((x) => x.name);
 
   return (
@@ -51,19 +47,15 @@ function OnwardTransmission(props: OnwardTransmissionProps) {
         An infected case may have multiple pathogen genotypes present in their
         body, generated as the pathogen replicates. This means that sometimes
         you may observe a few different genotypes which vary by
-        <FormatDataPoint
-          value={`${cladeDescription.muts_per_trans_minmax[0]} - ${cladeDescription.muts_per_trans_minmax[1]}`}
-        />
+        <FormatDataPoint value={`0 - ${state.mutsPerTransmissionMax}`} />
         mutations being transmitted to secondary cases during the same
         superspreader event.
       </p>
       <p>
         It's usually reasonable to assume that samples with
-        <FormatDataPoint
-          value={cladeDescription.muts_per_trans_minmax[1] * 2 + 1}
-        />
-        + mutations are at least 3+ downstream transmissions away from the
-        primary case.
+        <FormatDataPoint value={state.mutsPerTransmissionMax * 2 + 1} />+
+        mutations are at least 3+ downstream transmissions away from the primary
+        case.
       </p>
       <div className="results">
         <p>

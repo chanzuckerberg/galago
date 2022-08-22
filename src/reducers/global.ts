@@ -13,7 +13,10 @@ import demo_sample_names from "../../data/demo_sample_names";
 import { demoMetadata } from "../../data/demo_fake_metadata";
 import { demo_tree } from "../../data/demo_tree";
 import { getMrcaOptions } from "../utils/clusterMethods";
-import { get_location_input_options } from "../utils/geoInputOptions";
+import {
+  get_division_input_options,
+  get_location_input_options,
+} from "../utils/geoInputOptions";
 import {
   ingestCSVMetadata,
   treeMetadataCensus,
@@ -50,6 +53,10 @@ const defaultState = {
   cladeSliderField: "div",
   cacheStateOnFilterDrawerOpen: {},
   filterDrawerOpen: false,
+  uploadModalOpen: false,
+  divisionOptions: [""],
+  pathogen: "",
+  mutsPerTransmissionMax: "",
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -60,6 +67,29 @@ export const global = (state = defaultState, action: any) => {
 
     case "reset to default": {
       return defaultState;
+    }
+
+    case "pathogen selected": {
+      return {
+        ...state,
+        pathogen: action.data,
+        mutsPerTransmissionMax: "",
+      };
+    }
+
+    case "mutsPerTransMax updated": {
+      return {
+        ...state,
+        mutsPerTransmissionMax: action.data,
+      };
+    }
+
+    case "upload modal opened": {
+      return { ...state, uploadModalOpen: true };
+    }
+
+    case "upload modal closed": {
+      return { ...state, uploadModalOpen: false };
     }
 
     case "filter drawer changes cancelled": {
@@ -131,7 +161,6 @@ export const global = (state = defaultState, action: any) => {
           country: "USA",
           region: "North America",
         },
-        [0, 2],
         1,
         // @ts-ignore
         samplesOfInterest
@@ -209,7 +238,6 @@ export const global = (state = defaultState, action: any) => {
                     country: state.country,
                     region: state.region,
                   },
-                  [0, 2],
                   1,
                   state.samplesOfInterest
                 ),
@@ -246,7 +274,6 @@ export const global = (state = defaultState, action: any) => {
             country: state.country,
             region: state.region,
           },
-          [0, 2],
           1,
           state.samplesOfInterest
         );
@@ -290,20 +317,23 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "tree file uploaded": {
-      const tree = action.data;
+      const { tree, haveInternalNodeDates } = action.data;
+
+      const divisionOptions = get_division_input_options(tree, state.country);
       const treeMetadata = treeMetadataCensus(tree);
-      const rootSliderValue = getNodeAttr(tree, state.cladeSliderField);
+
+      const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
+      const rootSliderValue = getNodeAttr(tree, cladeSliderField);
 
       return {
         ...state,
         tree: tree,
+        divisionOptions: divisionOptions,
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
-        cladeSliderValue: formatMrcaSliderOptionValue(
-          rootSliderValue,
-          state.cladeSliderField
-        ),
+        cladeSliderField: cladeSliderField,
+        cladeSliderValue: rootSliderValue,
         mrca: tree,
         metadataCensus: { ...state.metadataCensus, ...treeMetadata },
       };
@@ -322,6 +352,7 @@ export const global = (state = defaultState, action: any) => {
         return {
           ...state,
           division: action.data,
+          location: "",
           locationOptions: newLocationOptions,
         };
       }
