@@ -88,7 +88,7 @@ export const Upload = (props: UploadProps) => {
           disableElevation
           disableRipple
           onClick={() => {
-            dispatch({ type: "upload modal toggled" });
+            dispatch({ type: "upload modal opened" });
           }}
           size="large"
         >
@@ -97,7 +97,7 @@ export const Upload = (props: UploadProps) => {
       </p>
       <Dialog
         open={state.uploadModalOpen}
-        onClose={() => dispatch({ type: "upload modal toggled" })}
+        onClose={() => dispatch({ type: "upload modal closed" })}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >

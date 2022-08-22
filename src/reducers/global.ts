@@ -84,8 +84,12 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
-    case "upload modal toggled": {
-      return { ...state, uploadModalOpen: !state.uploadModalOpen };
+    case "upload modal opened": {
+      return { ...state, uploadModalOpen: true };
+    }
+
+    case "upload modal closed": {
+      return { ...state, uploadModalOpen: false };
     }
 
     case "filter drawer changes cancelled": {
