@@ -173,7 +173,10 @@ export const PathogenSelection = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                error={genomeLength < 1000 || genomeLength > 10000000}
+                error={
+                  genomeLength !== "" &&
+                  (genomeLength < 1000 || genomeLength > 10000000)
+                }
               />
               <TextField
                 variant="standard"
@@ -187,7 +190,10 @@ export const PathogenSelection = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                error={serialInterval <= 0 || serialInterval > 1}
+                error={
+                  subsPerSitePerYear !== "" &&
+                  (subsPerSitePerYear <= 0 || subsPerSitePerYear > 1)
+                }
                 style={{ marginRight: 10 }}
               />
               <TextField
@@ -198,7 +204,10 @@ export const PathogenSelection = () => {
                 onChange={(event) => {
                   setSerialInterval(parseInt(event.target.value));
                 }}
-                error={serialInterval <= 0 || serialInterval > 1825}
+                error={
+                  serialInterval !== "" &&
+                  (serialInterval <= 0 || serialInterval > 1825)
+                }
                 size="small"
                 InputLabelProps={{
                   shrink: true,
