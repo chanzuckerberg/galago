@@ -339,7 +339,10 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "location set": {
-      return { ...state, location: action.data };
+      return {
+        ...state,
+        location: action.data,
+      };
     }
 
     case "division set": {
@@ -465,7 +468,9 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "upload submit button clicked": {
-      if (state.tree && state.division && state.location) {
+      if (state.tree && state.division && state.location && state.mrca) {
+        let metadataStateUpdates: { [key: string]: any } = {};
+
         if (state.metadataEntries && state.metadataFieldToMatch && state.tree) {
           const updatedTree = zipMetadataToTree(
             state.tree,
@@ -477,25 +482,38 @@ export const global = (state = defaultState, action: any) => {
             determineIfInternalNodeDates(updatedTree);
 
           const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
-          const rootSliderValue = getNodeAttr(updatedTree, cladeSliderField);
-          return {
-            ...state,
+          metadataStateUpdates = {
             haveInternalNodeDates: haveInternalNodeDates,
             cladeSliderField: cladeSliderField,
             cladeSliderValue: formatMrcaSliderOptionValue(
-              rootSliderValue,
+              updatedTree,
               cladeSliderField
             ),
             mrca: updatedTree,
             tree: updatedTree,
             loadReport: true,
           };
-        } else {
-          return {
-            ...state,
-            loadReport: true,
-          };
         }
+
+        const cladeDescription = describe_clade(
+          metadataStateUpdates.mrca ? metadataStateUpdates.mrca : state.mrca,
+          {
+            location: state.location,
+            division: state.division,
+            country: state.country,
+            region: state.region,
+          },
+          1,
+          // @ts-ignore
+          state.samplesOfInterest
+        );
+
+        return {
+          ...state,
+          ...metadataStateUpdates,
+          cladeDescription: cladeDescription,
+          loadReport: true,
+        };
       }
     }
 
