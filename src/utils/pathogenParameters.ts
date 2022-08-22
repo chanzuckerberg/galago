@@ -57,6 +57,11 @@ export const pathogenParameters: {
 };
 
 const factorial = (x: number) => {
+  if (x < 0) {
+    return NaN;
+  } else if (x % 1 !== 0) {
+    x = Math.round(x);
+  }
   if (x === 0 || x === 1) return 1;
   for (var i = x - 1; i >= 1; i--) {
     x *= i;
