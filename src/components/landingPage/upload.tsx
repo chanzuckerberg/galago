@@ -1,25 +1,10 @@
-import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { get_division_input_options } from "../../utils/geoInputOptions";
 import { ingestNextstrain } from "../../utils/nextstrainAdapter";
-import { Node } from "../../d";
-import { Box, Button, Dialog, FormHelperText, Tooltip } from "@mui/material";
+import { Button, Dialog, FormHelperText, Tooltip } from "@mui/material";
 import UploadModal from "./uploadModal";
 import Theme from "../../theme";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import { tooltipProps } from "../formatters/sidenote";
-
-const modalStyle = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 type UploadProps = {
   sectionWidth: number;
