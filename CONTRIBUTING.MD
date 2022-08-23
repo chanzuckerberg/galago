@@ -1,5 +1,9 @@
 # Contribute
 
+## Important: make sure you're in the right repo!
+
+We have two `galago` repositories at CZI. `galago-labs` is only used for internal experimentation; [`galago` is where you want to be](https://github.com/chanzuckerberg/galago/blob/main/CONTRIBUTING.md) :\)
+
 ## Code of conduct
 
 To ensure a welcoming experience for our entire community, this project adheres to the Contributor Covenant [code of conduct](https://github.com/chanzuckerberg/.github/tree/master/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [opensource@chanzuckerberg.com](mailto:opensource@chanzuckerberg.com).
