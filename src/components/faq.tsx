@@ -1,0 +1,150 @@
+import { Tooltip } from "@mui/material";
+import Sidenote, { tooltipProps } from "./formatters/sidenote";
+
+export const FAQ = () => {
+  <div>
+    <h1>FAQs</h1>
+
+    <h3>Data interpretation is nuanced; why should I trust Galago?</h3>
+    <p>
+      We fully agree! That's why we've been very careful to only include
+      observations in Galago that are <i>definitionally</i> true -- that is,
+      they are based on objective, deterministic observations of the
+      phylogenetic tree. With the exception of the clustering algorithms, there
+      are no models running behind the scenes (which is why you won't find any
+      predictions or recommendations in Galago). You can read more about how we
+      make these observations <a href="">here</a>.{/* TODO */}
+    </p>
+    <p>
+      Throughout the text, we also call out explicitly where there are potential
+      alternative interpretations or sources of uncertainty. That said, we also
+      recognize that no interpretative tool is perfect. That's why we believe so
+      strongly in the importance of keeping Galago open-source: so the
+      scientific community can contribute to these reports as a living document
+      through a process of continual peer-review. We'd love to hear from you if
+      you'd like to contribute or start a discussion! (See below for details on
+      how to get started).
+    </p>
+
+    <h3>Is Galago really pathogen agnostic?</h3>
+    <p>
+      Yes, so long as the following conditions are true:
+      <ul>
+        <li>
+          <b>
+            You can reliably estimate the expected number of mutations per
+            transmission.
+          </b>{" "}
+          Don't worry -- we have provided default values for many common
+          pathogens. For other pathogens, we also provide a handy calculator
+          that can help you estimate this during upload. For the calculator, you
+          will need to know the serial interval, genome length, and average
+          substitution rate of your pathogen (these variables are usually
+          readily available in the literature). If you need help with this,
+          please get in touch -- we're happy to help you find these values and
+          then store them as defaults for other users to benefit from.
+        </li>
+        <li>
+          <b>There is no structural variation or recombination</b> in the
+          pathogen genomes used to create the tree. For most pathogens, this
+          isn’t usually an issue on outbreak timescales (days - months), but
+          there are exceptions; please consult with whomever generated your
+          phylogenetic tree for more information.
+        </li>
+      </ul>
+    </p>
+
+    <h3>What are Galago's requirements for phylogenetic trees?</h3>
+    <p>
+      <ul>
+        <li>
+          We currently only accept trees uploaded in Nextstrain’s JSON format
+          because this contains the metadata specified below and is consistent
+          with most genomic epi pipelines (if you’d like to suggest another
+          format, please let us know).
+        </li>
+        <li>
+          Samples in the tree should represent pathogen genomic sequences (one
+          sample per case).
+        </li>
+        <li>
+          Samples have been QC'd before your tree was built -- because Galago
+          only sees the tree, we can't comment on any potential QC issues with
+          the underlying samples (e.g., contamination). We recommend{" "}
+          <a href="https://clades.nextstrain.org/">Nextclade</a>
+          for QC of viral genomes.
+        </li>
+        <li>
+          Each sample in the tree should be labeled with the location and date
+          of collection, following Nextstrain’s semantics.
+        </li>
+        <li>
+          Branch lengths are in units of mutations (not substitutions per site).
+          If this is an issue for you, please get in touch; we're considering
+          adding an auto-conversion feature in the near future.
+        </li>
+      </ul>
+    </p>
+
+    <h3>How do I generate a phylogenetic tree in JSON format?</h3>
+    <p>
+      You can build a quick, approximate tree for SARS-CoV-2 samples using{" "}
+      <a href="https://genome.ucsc.edu/cgi-bin/hgPhyloPlace">USHeR</a>. For
+      other pathogens, you can use Nextstrain's{" "}
+      <a href="https://docs.nextstrain.org/projects/augur/en/stable/index.html">
+        augur
+      </a>{" "}
+      package to generate a tree using the command line.
+      <br />
+      <br />
+      You can also use <a href="https://czgenepi.org/">CZ GEN EPI</a> to
+      generate either or both of these types of trees. CZ GEN EPI is free and
+      open-source.
+    </p>
+
+    <h3>My data is sensitive! How can I be sure it is secure to use Galago?</h3>
+    <p>
+      Galago never stores or sends your data anywhere beyond your local computer
+      and web browser. Galago's architecture was designed with a "privacy-first"
+      mindset, such that it doesn't even have the ability to store or send data.
+      If you'd like, you're also welcome to use Galago offline by loading the
+      home page and then turning off your internet.
+    </p>
+
+    <h3>I have a bug report, idea or question! How do I let you know?</h3>
+    <p>
+      We would <i>love</i> to hear from you! We rely on user feedback to improve
+      Galago for everyone, and we read take every message seriously. For general
+      questions, you can either head over to the{" "}
+      <a href="https://github.com/chanzuckerberg/galago/discussions">
+        discussion board
+      </a>{" "}
+      or send us an <a href="mailto:galago@chanzuckerberg.com">email</a>.
+    </p>
+
+    <h3>I want to contribute to Galago's content or code; where do I start?</h3>
+    <p>
+      Hooray! You can head over to our contributing docs{" "}
+      <a href="https://github.com/chanzuckerberg/galago/blob/main/CONTRIBUTING.md">
+        here
+      </a>
+      .
+    </p>
+
+    <h3>What's next on your roadmap?</h3>
+    <p>
+      Galago is currently in beta testing, so right now we're focused on
+      learning from you, our users, and fixing any bugs that may come up. In the
+      future, we're considering adding features like:
+      <ul>
+        <li>Export to PDF</li>
+        <li>
+          Enabling you to set the "verbosity" of the report to show more or less
+          theory and detail.
+        </li>
+      </ul>
+    </p>
+  </div>;
+};
+
+export default FAQ;
