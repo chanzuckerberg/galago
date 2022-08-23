@@ -58,30 +58,37 @@ export const FAQ = () => {
     <p>
       <ul>
         <li>
-          We currently only accept trees uploaded in Nextstrain’s JSON format
+          We currently only accept trees uploaded in{" "}
+          <a href="https://docs.nextstrain.org/en/latest/reference/data-formats.html">
+            <b>Nextstrain’s JSON format</b>
+          </a>
           because this contains the metadata specified below and is consistent
           with most genomic epi pipelines (if you’d like to suggest another
           format, please let us know).
         </li>
         <li>
-          Samples in the tree should represent pathogen genomic sequences (one
-          sample per case).
+          Samples in the tree should represent{" "}
+          <b>pathogen genomic sequences (one sample per case)</b>.
         </li>
         <li>
-          Samples have been QC'd before your tree was built -- because Galago
-          only sees the tree, we can't comment on any potential QC issues with
-          the underlying samples (e.g., contamination). We recommend{" "}
+          <b>Samples have been QC'd</b> before your tree was built -- because
+          Galago only sees the tree, we can't comment on any potential QC issues
+          with the underlying samples (e.g., contamination). We recommend{" "}
           <a href="https://clades.nextstrain.org/">Nextclade</a>
           for QC of viral genomes.
         </li>
         <li>
-          Each sample in the tree should be labeled with the location and date
-          of collection, following Nextstrain’s semantics.
+          Each sample in the tree should be labeled with the{" "}
+          <b>location and date of collection</b>, following{" "}
+          <a href="https://docs.nextstrain.org/en/latest/reference/data-formats.html">
+            Nextstrain’s schema
+          </a>
+          .
         </li>
         <li>
-          Branch lengths are in units of mutations (not substitutions per site).
-          If this is an issue for you, please get in touch; we're considering
-          adding an auto-conversion feature in the near future.
+          <b>Branch lengths are in units of mutations</b> (not substitutions per
+          site). If this is an issue for you, please get in touch; we're
+          considering adding an auto-conversion feature in the near future.
         </li>
       </ul>
     </p>
@@ -102,13 +109,45 @@ export const FAQ = () => {
       open-source.
     </p>
 
+    <h3>What are Galago's requirements for metadata files?</h3>
+    <p>
+      <ul>
+        <li>
+          Metadata must be in a CSV or TSV format;{" "}
+          <a href="https://www.youtube.com/watch?v=FG_dsDvBSEM">
+            see this tutorial
+          </a>{" "}
+          on how to export data from excel in a compatible format.
+        </li>
+        <li>
+          One column must match the sample names in the tree; if you are using
+          CZ GEN EPI to generate your tree, you can download a template by
+          clicking "Download" and then "Private IDs (tsv)". Rows that do not
+          match a sample name in your tree will be discarded.
+        </li>
+        <li>
+          We only keep columns that are <b>text, dates, or numbers</b>.
+        </li>
+        <li>
+          We discard values that contain special characters, and expect{" "}
+          <b>one value per cell</b>.
+        </li>
+        <li>
+          For categorical values (i.e., text) there must be{" "}
+          <b>no more than 100 unique values </b>
+          in the file (e.g., 100 unique locations, facility codes, etc). Columns
+          with more than 100 unique values will be discarded.
+        </li>
+      </ul>
+    </p>
+
     <h3>My data is sensitive! How can I be sure it is secure to use Galago?</h3>
     <p>
       Galago never stores or sends your data anywhere beyond your local computer
       and web browser. Galago's architecture was designed with a "privacy-first"
-      mindset, such that it doesn't even have the ability to store or send data.
-      If you'd like, you're also welcome to use Galago offline by loading the
-      home page and then turning off your internet.
+      mindset, such that it doesn't even have the <i>ability</i> to store or
+      send data. If you'd like, you're also welcome to use Galago offline by
+      loading the home page and then turning off your internet.
     </p>
 
     <h3>I have a bug report, idea or question! How do I let you know?</h3>
@@ -141,6 +180,10 @@ export const FAQ = () => {
         <li>
           Enabling you to set the "verbosity" of the report to show more or less
           theory and detail.
+        </li>
+        <li>
+          Weaving information from the metadata CSV into the report (e.g.,
+          coloring visualizations by metadata).
         </li>
       </ul>
     </p>
