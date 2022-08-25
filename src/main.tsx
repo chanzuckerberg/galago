@@ -9,7 +9,7 @@ import { store } from "./reducers/store";
 import LandingPageRoute from "./routes/landingPageRoute";
 import { ThemeProvider } from "@emotion/react";
 import { Theme } from "./theme";
-import { PATH_TO_HOMEPAGE, PATH_TO_APP } from "./routes";
+import { ROUTES } from "./routes";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -17,8 +17,8 @@ ReactDOM.render(
       <ThemeProvider theme={Theme}>
         <BrowserRouter>
           <Routes>
-            <Route path={PATH_TO_HOMEPAGE} element={<LandingPageRoute />} />
-            <Route path={PATH_TO_APP} element={<App />} />
+            <Route path={ROUTES.HOMEPAGE} element={<LandingPageRoute />} />
+            <Route path={ROUTES.APP} element={<App />} />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
