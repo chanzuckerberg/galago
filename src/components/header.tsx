@@ -72,7 +72,10 @@ const Header = (props: HeaderProps) => {
           margin: 0,
         }}
       >
-        Galago
+        <img
+          src="https://github.com/chanzuckerberg/galago-labs/raw/main/src/images/galago-logo.svg"
+          height={50}
+        />
       </div>
       <Helmet>
         <meta charSet="utf-8" />
