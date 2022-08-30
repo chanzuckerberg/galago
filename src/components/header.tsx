@@ -66,13 +66,13 @@ const Header = (props: HeaderProps) => {
       <div
         style={{
           position: "absolute",
-          left: 20,
-          top: 20,
+          left: 0,
+          top: 0,
           fontSize: 24,
           margin: 0,
         }}
       >
-        Galago
+        <img src="src/images/galago-logo.svg" height={50} />
       </div>
       <Helmet>
         <meta charSet="utf-8" />
