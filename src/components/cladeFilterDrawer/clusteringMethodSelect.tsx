@@ -92,7 +92,7 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
   return (
     <div>
       <h2>
-        Metadata-based clustering{" "}
+        Filter to clades where metadata (e.g., location) changes{" "}
         <Tooltip
           title={`Clustering algorithms help identify interesting
             clades to inspect based on where in the tree metadata attributes
@@ -115,7 +115,7 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
       <p>
         <FormControl>
           <FormLabel id="demo-radio-buttons-group-label">
-            First, select metadata field to cluster on
+            Select metadata field to cluster on
           </FormLabel>
           <Select
             id="metadataFieldSelect"
@@ -137,65 +137,67 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
           </Select>
         </FormControl>
       </p>
-      <p>
-        <FormControl>
-          <FormLabel>Then, select clustering algorithm</FormLabel>
-          <RadioGroup
-            aria-labelledby="select clustering method"
-            name="radio-buttons-group"
-            onChange={(e, v: string) =>
-              //@ts-ignore
-              handleClusterMethod(v)
-            }
-            value={state.clusteringMethod}
-          >
-            <FormControlLabel
-              value="none"
-              control={<Radio size="small" />}
-              label="None"
-            />
-            <FormControlLabel
-              value="nextstrain"
-              control={
-                <Radio
-                  disabled={
-                    !checkNextstrainValidity(state.clusteringMetadataField)
-                  }
-                  size="small"
-                />
+      {state.clusteringMetadataField && (
+        <p>
+          <FormControl>
+            <FormLabel>Select clustering algorithm</FormLabel>
+            <RadioGroup
+              aria-labelledby="select clustering method"
+              name="radio-buttons-group"
+              onChange={(e, v: string) =>
+                //@ts-ignore
+                handleClusterMethod(v)
               }
-              label="Treetime (recommended)"
-            />
+              value={state.clusteringMethod}
+            >
+              <FormControlLabel
+                value="none"
+                control={<Radio size="small" />}
+                label="None"
+              />
+              <FormControlLabel
+                value="nextstrain"
+                control={
+                  <Radio
+                    disabled={
+                      !checkNextstrainValidity(state.clusteringMetadataField)
+                    }
+                    size="small"
+                  />
+                }
+                label="Treetime (recommended)"
+              />
 
-            <FormHelperText>
-              <a href="https://academic.oup.com/ve/article/4/1/vex042/4794731">
-                Treetime
-              </a>{" "}
-              is a model-based method. <br />
-              Must be pre-computed upstream (outside of Galago).
-            </FormHelperText>
-            <FormControlLabel
-              value="matutils"
-              control={
-                <Radio
-                  disabled={
-                    !checkMatutilsValidity(state.clusteringMetadataField)
-                  }
-                  size="small"
-                />
-              }
-              label="Introduction Weight Heuristic"
-            />
-            <FormHelperText>
-              <a href="https://academic.oup.com/ve/article/8/1/veac048/6609172">
-                Introduction Weight
-              </a>{" "}
-              is a simple heuristic-based method. <br />
-              Computed on demand (1 - 15 sec)
-            </FormHelperText>
-          </RadioGroup>
-        </FormControl>
-      </p>
+              <FormHelperText>
+                <a href="https://academic.oup.com/ve/article/4/1/vex042/4794731">
+                  Treetime
+                </a>{" "}
+                is a model-based method. <br />
+                Must be pre-computed upstream (outside of Galago).
+              </FormHelperText>
+              <FormControlLabel
+                value="matutils"
+                control={
+                  <Radio
+                    disabled={
+                      !checkMatutilsValidity(state.clusteringMetadataField)
+                    }
+                    size="small"
+                  />
+                }
+                label="Introduction Weight Heuristic"
+              />
+              <FormHelperText>
+                <a href="https://academic.oup.com/ve/article/8/1/veac048/6609172">
+                  Introduction Weight
+                </a>{" "}
+                is a simple heuristic-based method. <br />
+                Computed on demand (1 - 15 sec)
+              </FormHelperText>
+            </RadioGroup>
+          </FormControl>
+        </p>
+      )}
     </div>
   );
 }
