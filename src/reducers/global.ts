@@ -171,6 +171,7 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...defaultState,
         tree: tree,
+        pathogen: "sarscov2",
         haveInternalNodeDates: haveInternalNodeDates,
         metadataEntries: tidyMetadata,
         metadataCensus: { ...treeMetadata, ...metadataCensus },
