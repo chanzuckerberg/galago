@@ -73,7 +73,7 @@ export const CladeSelectionVizControls = (
             Search & filter
           </Button>
         </Tooltip>
-        <Drawer anchor={"right"} open={state.filterDrawerOpen} hideBackdrop>
+        <Drawer anchor={"right"} open={state.filterDrawerOpen}>
           <div style={{ width: windowWidth * 0.5 }}>
             <CladeFilterDrawer />
           </div>
