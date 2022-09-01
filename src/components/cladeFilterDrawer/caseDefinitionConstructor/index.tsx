@@ -13,11 +13,18 @@ import {
 } from "../../../utils/caseDefinitionFilters";
 import { get_leaves } from "../../../utils/treeMethods";
 
-export const CaseDefinitionConstructor = () => {
+type CaseDefinitionConstructorProps = {
+  setCaseDefOpen: Function;
+};
+
+export const CaseDefinitionConstructor = (
+  props: CaseDefinitionConstructorProps
+) => {
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
+  const { setCaseDefOpen } = props;
 
   const [newSamplesMatchingCaseDef, setNewSamplesMatchingCaseDef] = useState<
     Node[]
@@ -88,7 +95,7 @@ export const CaseDefinitionConstructor = () => {
               return opt.label === value.label;
             }}
             renderInput={(params) => (
-              <TextField {...params} label="Select metadata" />
+              <TextField {...params} label="Select metadata field" />
             )}
           />
         </div>
@@ -124,6 +131,7 @@ export const CaseDefinitionConstructor = () => {
               type: "case definition submitted",
               data: newSamplesMatchingCaseDef,
             });
+            setCaseDefOpen(false);
           }}
           size="small"
           disabled={newSamplesMatchingCaseDef.length < 1}
@@ -136,6 +144,7 @@ export const CaseDefinitionConstructor = () => {
           onClick={() => {
             setSelectedFields([]);
             dispatch({ type: "case definition filters cleared" });
+            setCaseDefOpen(false);
           }}
         >
           CANCEL
