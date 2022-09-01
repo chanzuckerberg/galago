@@ -9,11 +9,13 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import {
+  Autocomplete,
   FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
   RadioGroup,
+  TextField,
   Tooltip,
 } from "@mui/material";
 import Sidenote, { tooltipProps } from "../formatters/sidenote";
@@ -106,9 +108,9 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
             sx={{
               position: "relative",
               top: 5,
-              // color: "#4f2379",
               fontSize: 20,
             }}
+            color="primary"
           />
         </Tooltip>
       </h2>
@@ -117,28 +119,26 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
           For example, cluster based on "location" to filter to clades which
           represent an introduction from one location to another.
         </FormLabel>
+      </p>
+      <p>
         <FormControl>
-          <FormLabel id="demo-radio-buttons-group-label">
-            Select metadata field to cluster on
-          </FormLabel>
-          <Select
+          <Autocomplete
             id="metadataFieldSelect"
             //@ts-ignore
-            onChange={(event) => {
+            onChange={(event, newValue) => {
               dispatch({
                 type: "clustering metadata field selected",
-                data: event.target.value,
+                data: newValue,
               });
             }}
+            options={allFields}
             style={{ width: 200 }}
             size="small"
-            defaultValue="Select a metadata field"
             value={state.clusteringMetadataField}
-          >
-            {allFields.map((field: string) => {
-              return <MenuItem value={field}>{field}</MenuItem>;
-            })}
-          </Select>
+            renderInput={(params) => (
+              <TextField {...params} label="Select metadata field" />
+            )}
+          />
         </FormControl>
       </p>
       {state.clusteringMetadataField && (
