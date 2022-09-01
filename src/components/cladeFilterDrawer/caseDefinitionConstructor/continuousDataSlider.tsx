@@ -20,7 +20,7 @@ export const ContinuousDataSlider = (props: ContinuousDataSliderProps) => {
   return (
     <FormControl
       margin="dense"
-      style={{ position: "relative", margin: "auto" }}
+      style={{ position: "relative", margin: "auto", left: 15 }}
     >
       <FormLabel>{field}</FormLabel>
       <Slider
