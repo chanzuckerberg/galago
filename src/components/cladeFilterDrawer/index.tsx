@@ -33,14 +33,15 @@ export const CladeFilterDrawer = () => {
         style={{
           position: "fixed",
           bottom: 0,
-          left: totalWidth,
+          left: totalWidth + 15,
           paddingLeft: marginWidth,
           height: 40,
-          width: totalWidth,
+          width: totalWidth - 15,
           paddingTop: 10,
           paddingBottom: 10,
           backgroundColor: "white",
           borderTop: "1px solid lightGray",
+          zIndex: 100000,
         }}
       >
           <Tooltip
