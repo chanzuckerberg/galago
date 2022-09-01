@@ -92,7 +92,9 @@ export const SamplesOfInterest = () => {
           ADD BY CASE DEFINITION
         </Button>
       )}
-      {caseDefOpen && <CaseDefinitionConstructor />}
+      {caseDefOpen && (
+        <CaseDefinitionConstructor setCaseDefOpen={setCaseDefOpen} />
+      )}
     </div>
   );
 };
