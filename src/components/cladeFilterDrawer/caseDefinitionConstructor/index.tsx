@@ -95,7 +95,7 @@ export const CaseDefinitionConstructor = (
               return opt.label === value.label;
             }}
             renderInput={(params) => (
-              <TextField {...params} label="Select metadata" />
+              <TextField {...params} label="Select metadata field" />
             )}
           />
         </div>

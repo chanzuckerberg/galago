@@ -23,52 +23,52 @@ export const CladeFilterDrawer = () => {
       }}
     >
       <div>
-        <h1>Filter clades</h1>
+        <h1>Filter clades (preview on the left)</h1>
         <ClusteringOptions />
         <Divider variant="middle" style={{ margin: 30 }} />
 
-        <SamplesOfInterest />
-      </div>
-      <div
-        style={{
-          position: "fixed",
-          bottom: 10,
-          right: 50,
-          display: "flex",
-          flexDirection: "row",
-          width: 130,
-          justifyContent: "space-between",
-        }}
-      >
-        <Tooltip
-          title="Apply new filters (previewed to the left)"
-          componentsProps={tooltipProps}
-          arrow
+        <div
+          style={{
+            position: "fixed",
+            bottom: 10,
+            right: 50,
+            display: "flex",
+            flexDirection: "row",
+            width: 130,
+            justifyContent: "space-between",
+          }}
         >
-          <Fab
-            variant="extended"
-            size="large"
-            color="primary"
-            aria-label="apply"
-            onClick={() => {
-              dispatch({ type: "filter drawer changes applied" });
-            }}
+          <Tooltip
+            title="Apply new filters (previewed to the left)"
+            componentsProps={tooltipProps}
+            arrow
           >
-            Apply
-          </Fab>
-        </Tooltip>
-        <Tooltip title="Discard changes" componentsProps={tooltipProps} arrow>
-          <Fab
-            size="small"
-            color="secondary"
-            aria-label="cancel"
-            onClick={() => {
-              dispatch({ type: "filter drawer changes cancelled" });
-            }}
-          >
-            <ClearIcon />
-          </Fab>
-        </Tooltip>
+            <Fab
+              variant="extended"
+              size="large"
+              color="primary"
+              aria-label="apply"
+              onClick={() => {
+                dispatch({ type: "filter drawer changes applied" });
+              }}
+            >
+              Apply
+            </Fab>
+          </Tooltip>
+          <Tooltip title="Discard changes" componentsProps={tooltipProps} arrow>
+            <Fab
+              size="small"
+              color="secondary"
+              aria-label="cancel"
+              onClick={() => {
+                dispatch({ type: "filter drawer changes cancelled" });
+              }}
+            >
+              <ClearIcon />
+            </Fab>
+          </Tooltip>
+        </div>
+        <SamplesOfInterest />
       </div>
     </div>
   );

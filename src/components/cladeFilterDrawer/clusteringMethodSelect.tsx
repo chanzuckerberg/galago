@@ -92,7 +92,7 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
   return (
     <div>
       <h2>
-        Filter to clades where metadata (e.g., location) changes{" "}
+        Filter to clades where metadata changes{" "}
         <Tooltip
           title={`Clustering algorithms help identify interesting
             clades to inspect based on where in the tree metadata attributes
@@ -113,6 +113,10 @@ function ClusteringOptions(props: ClusteringOptionsProps) {
         </Tooltip>
       </h2>
       <p>
+        <FormLabel>
+          For example, cluster based on "location" to filter to clades which
+          represent an introduction from one location to another.
+        </FormLabel>
         <FormControl>
           <FormLabel id="demo-radio-buttons-group-label">
             Select metadata field to cluster on
