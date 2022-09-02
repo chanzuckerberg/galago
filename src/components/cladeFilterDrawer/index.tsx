@@ -15,7 +15,7 @@ export const CladeFilterDrawer = () => {
   const state = useSelector((state) => state.global)
 
   const totalWidth = windowWidth * 0.5;
-  const contentWidth = windowWidth * 0.33;
+  const contentWidth = Math.max(windowWidth * 0.4);
   const marginWidth = (totalWidth - contentWidth)/2
 
   return (
@@ -23,7 +23,8 @@ export const CladeFilterDrawer = () => {
     <Drawer anchor={"right"} open={state.filterDrawerOpen}>
     <div style={{ width: totalWidth}}>
       <div style={{width: contentWidth, margin: "auto", paddingBottom: 100}}>
-      <h1>Filter clades (preview on the left)</h1>
+      <h1 style={{marginBottom: 0, paddingBottom: 0}}>Filter clades</h1>
+      <h2> Preview shown on the left</h2>
       <Divider variant="middle" style={{ margin: 30 }} />
         <ClusteringOptions />
         <Divider variant="middle" style={{ margin: 30 }} />
@@ -33,14 +34,15 @@ export const CladeFilterDrawer = () => {
         style={{
           position: "fixed",
           bottom: 0,
-          left: totalWidth,
+          left: totalWidth + 15,
           paddingLeft: marginWidth,
           height: 40,
-          width: totalWidth,
+          width: totalWidth - 15,
           paddingTop: 10,
           paddingBottom: 10,
           backgroundColor: "white",
           borderTop: "1px solid lightGray",
+          zIndex: 100000,
         }}
       >
           <Tooltip
