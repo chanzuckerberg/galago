@@ -75,13 +75,15 @@ export const CaseDefinitionConstructor = (
         style={{
           display: "flex",
           flexDirection: "row",
+          
         }}
       >
-        <div style={{ position: "relative", left: 0, width: "50%" }}>
+        <div style={{ position: "relative", margin: "auto", width: "40%" }}>
           <Autocomplete
             multiple
             id="tags-outlined"
-            style={{ paddingTop: 15, width: 250 }}
+            style={{ paddingTop: 15 }}
+            fullWidth
             options={validFields}
             getOptionLabel={(option: any) => option.label}
             limitTags={5}
@@ -103,9 +105,9 @@ export const CaseDefinitionConstructor = (
         <div
           style={{
             position: "relative",
-            left: 0,
             top: 5,
-            width: "50%",
+            width: "40%",
+            margin: "auto"
           }}
         >
           {selectedFields &&

@@ -20,12 +20,13 @@ export const ContinuousDataSlider = (props: ContinuousDataSliderProps) => {
   return (
     <FormControl
       margin="dense"
-      style={{ position: "relative", margin: "auto", left: 15 }}
+      fullWidth
+      style={{ position: "relative", margin: "auto"}}
     >
       <FormLabel>{field}</FormLabel>
       <Slider
         size="small"
-        style={{ width: "13em" }}
+        // style={{ width: "13em" }}
         defaultValue={range}
         //   value={[1, 4]}
         onChange={(e) => {

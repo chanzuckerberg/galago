@@ -24,13 +24,14 @@ export const CategoricalDataSelector = (
   return (
     <Autocomplete
       multiple
-      style={{ width: "15em", marginTop: 10 }}
+      style={{marginTop: 10 }}
       id="tags-outlined"
       options={options}
       getOptionLabel={(option: any) => option.label}
       limitTags={5}
       disableCloseOnSelect
       size="small"
+      fullWidth={true}
       // BUG: set is a temp workaround for the fact that filterSelectedOptions doesn't work such that the same variable can be selected more than once
       filterSelectedOptions
       onChange={(event: any, newValue: any) => {
