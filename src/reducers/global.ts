@@ -1,3 +1,4 @@
+import { ACTION_TYPES } from "./actionTypes";
 import {
   get_leaves,
   get_root,
@@ -56,6 +57,13 @@ const defaultState = {
   divisionOptions: [""],
   pathogen: "",
   mutsPerTransmissionMax: "",
+  fetchData: { // Everything around process of fetching data from external URL
+    fetchInProcess: false, // App is fetching data (takes a few seconds)
+    targetUrl: "", // URL we were given to fetch
+    errorDuringFetch: false, // Was there an error around fetch process
+    errorMessage: "", // If error, human-readable message about the error.
+    displayError: false, // Should we display error about fetch to user?
+  },
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -336,6 +344,73 @@ export const global = (state = defaultState, action: any) => {
         cladeSliderValue: formatMrcaSliderOptionValue(tree, cladeSliderField),
         mrca: tree,
         metadataCensus: { ...state.metadataCensus, ...treeMetadata },
+      };
+    }
+
+    case ACTION_TYPES.FETCH_TREE_DATA_STARTED: {
+      const { targetUrl } = action;
+      return {
+        ...state,
+        fetchData: {
+          ...state.fetchData,
+          fetchInProcess: true,
+          targetUrl,
+        },
+      };
+    }
+
+    case ACTION_TYPES.FETCH_TREE_DATA_SUCCEEDED: {
+      // Almost entirely a copy of type "tree file uploaded"
+      // Just adds tracking fetch and auto-open of upload modal
+      const { tree, haveInternalNodeDates } = action.data;
+      const divisionOptions = get_division_input_options(tree, state.country);
+      const treeMetadata = treeMetadataCensus(tree);
+      const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
+      return {
+        ...state,
+        tree: tree,
+        divisionOptions: divisionOptions,
+        mrcaOptions: traverse_preorder(tree).filter(
+          (node: Node) => node.children.length >= 2
+        ),
+        cladeSliderField: cladeSliderField,
+        cladeSliderValue: formatMrcaSliderOptionValue(tree, cladeSliderField),
+        mrca: tree,
+        metadataCensus: { ...state.metadataCensus, ...treeMetadata },
+        // Added portion for Fetch aspect starts here
+        uploadModalOpen: true,
+        fetchData: {
+          ...state.fetchData,
+          fetchInProcess: false,
+        },
+      };
+    }
+
+    case ACTION_TYPES.FETCH_TREE_DATA_FAILED: {
+      const { errorMessage } = action;
+      return {
+        ...state,
+        fetchData: {
+          ...state.fetchData,
+          fetchInProcess: false,
+          errorDuringFetch: true,
+          errorMessage,
+          displayError: true,
+        },
+      };
+    }
+
+    case ACTION_TYPES.FETCH_TREE_NO_URL_SPECIFIED: {
+      const { errorMessage } = action;
+      return {
+        ...state,
+        fetchData: {
+          ...state.fetchData,
+          fetchInProcess: false,
+          errorDuringFetch: true,
+          errorMessage,
+          displayError: true,
+        },
       };
     }
 
