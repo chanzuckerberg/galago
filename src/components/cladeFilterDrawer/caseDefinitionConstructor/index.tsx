@@ -75,7 +75,6 @@ export const CaseDefinitionConstructor = (
         style={{
           display: "flex",
           flexDirection: "row",
-          
         }}
       >
         <div style={{ position: "relative", margin: "auto", width: "40%" }}>
@@ -107,7 +106,7 @@ export const CaseDefinitionConstructor = (
             position: "relative",
             top: 5,
             width: "40%",
-            margin: "auto"
+            margin: "auto",
           }}
         >
           {selectedFields &&

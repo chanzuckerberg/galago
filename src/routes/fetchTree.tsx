@@ -31,10 +31,11 @@ async function handleDataFetch(targetUrl: string, dispatch: Function) {
   try {
     response = await axios.get(targetUrl);
   } catch {
-    const errorMessage = `Attempted to fetch data from URL: ${targetUrl}, but `
-      + "there was a problem with fetching the data. Please confirm "
-      + "the URL is publicly accessible and has the appropriate CORS policy "
-      + "in place. You may want to look in your browser console."
+    const errorMessage =
+      `Attempted to fetch data from URL: ${targetUrl}, but ` +
+      "there was a problem with fetching the data. Please confirm " +
+      "the URL is publicly accessible and has the appropriate CORS policy " +
+      "in place. You may want to look in your browser console.";
     dispatch({
       type: ACTION_TYPES.FETCH_TREE_DATA_FAILED,
       errorMessage,
@@ -73,18 +74,16 @@ const FetchTree = () => {
       handleDataFetch(targetUrl, dispatch);
     } else {
       // Showed up at /fetch, but no URL given after that. Can't do anything.
-      const errorMessage = "On route for fetching external data, but no "
-        + "URL found to fetch data from. Please double-check your link.";
+      const errorMessage =
+        "On route for fetching external data, but no " +
+        "URL found to fetch data from. Please double-check your link.";
       dispatch({
         type: ACTION_TYPES.FETCH_TREE_NO_URL_SPECIFIED,
         errorMessage,
       });
     }
-
   }, []);
-  return (
-    <LandingPageRoute />
-  );
+  return <LandingPageRoute />;
 };
 
 export default FetchTree;

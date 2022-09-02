@@ -24,7 +24,7 @@ export default function App() {
   const showLayoutBorders = false;
 
   return (
-    <div style={{overflowX: "hidden", overflowY: "hidden"}}>
+    <div style={{ overflowX: "hidden", overflowY: "hidden" }}>
       {/* <h1>Select a clade to instantly generate a report</h1> */}
       {/* left side bar */}
       <Header sectionHeight={headerHeight} sectionWidth={windowWidth - 10} />

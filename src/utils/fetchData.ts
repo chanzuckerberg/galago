@@ -56,17 +56,19 @@ function schemifyUrl(rawUrl: string): string {
  * test where this would get called as part of it, look into "mocking window"
  * for javascript testing.
  */
-export function getUrlToFetch(): string  {
+export function getUrlToFetch(): string {
   const href = window.location.href; // Entire browser URL
   const fetchDeclarationIdx = href.indexOf(ROUTES.FETCH_DATA);
-  if (fetchDeclarationIdx === -1) { // Fetch path not found
+  if (fetchDeclarationIdx === -1) {
+    // Fetch path not found
     return "";
   }
   // Above tells us where fetch path starts in href. To get the URL, we need to
   // skip to its end and then also go 1 farther to pass by the trailing `/`.
   const fetchUrlIdx = fetchDeclarationIdx + ROUTES.FETCH_DATA.length + 1;
   const fetchUrl = href.slice(fetchUrlIdx);
-  if (fetchUrl === "") { // Fetch path found, but nothing given for data URL
+  if (fetchUrl === "") {
+    // Fetch path found, but nothing given for data URL
     return "";
   }
   return schemifyUrl(fetchUrl);

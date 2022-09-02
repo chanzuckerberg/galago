@@ -12,39 +12,40 @@ export const CladeFilterDrawer = () => {
   const [windowWidth, windowHeight] = useWindowSize();
   const dispatch = useDispatch();
   //@ts-ignore
-  const state = useSelector((state) => state.global)
+  const state = useSelector((state) => state.global);
 
   const totalWidth = windowWidth * 0.5;
   const contentWidth = Math.max(windowWidth * 0.4);
-  const marginWidth = (totalWidth - contentWidth)/2
+  const marginWidth = (totalWidth - contentWidth) / 2;
 
   return (
-
     <Drawer anchor={"right"} open={state.filterDrawerOpen}>
-    <div style={{ width: totalWidth}}>
-      <div style={{width: contentWidth, margin: "auto", paddingBottom: 100}}>
-      <h1 style={{marginBottom: 0, paddingBottom: 0}}>Filter clades</h1>
-      <h2> Preview shown on the left</h2>
-      <Divider variant="middle" style={{ margin: 30 }} />
-        <ClusteringOptions />
-        <Divider variant="middle" style={{ margin: 30 }} />
-        <SamplesOfInterest />
-      </div>
-      <div
-        style={{
-          position: "fixed",
-          bottom: 0,
-          left: totalWidth + 15,
-          paddingLeft: marginWidth,
-          height: 40,
-          width: totalWidth - 15,
-          paddingTop: 10,
-          paddingBottom: 10,
-          backgroundColor: "white",
-          borderTop: "1px solid lightGray",
-          zIndex: 100000,
-        }}
-      >
+      <div style={{ width: totalWidth }}>
+        <div
+          style={{ width: contentWidth, margin: "auto", paddingBottom: 100 }}
+        >
+          <h1 style={{ marginBottom: 0, paddingBottom: 0 }}>Filter clades</h1>
+          <h2> Preview shown on the left</h2>
+          <Divider variant="middle" style={{ margin: 30 }} />
+          <ClusteringOptions />
+          <Divider variant="middle" style={{ margin: 30 }} />
+          <SamplesOfInterest />
+        </div>
+        <div
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: totalWidth + 15,
+            paddingLeft: marginWidth,
+            height: 40,
+            width: totalWidth - 15,
+            paddingTop: 10,
+            paddingBottom: 10,
+            backgroundColor: "white",
+            borderTop: "1px solid lightGray",
+            zIndex: 100000,
+          }}
+        >
           <Tooltip
             title="Apply new filters (previewed to the left)"
             componentsProps={tooltipProps}
@@ -58,7 +59,7 @@ export const CladeFilterDrawer = () => {
               onClick={() => {
                 dispatch({ type: "filter drawer changes applied" });
               }}
-              sx={{ paddingLeft: 5, paddingRight: 5, marginRight: 3}}
+              sx={{ paddingLeft: 5, paddingRight: 5, marginRight: 3 }}
             >
               Apply
             </Button>
@@ -76,7 +77,7 @@ export const CladeFilterDrawer = () => {
               CANCEL
             </Button>
           </Tooltip>
-          </div>
+        </div>
       </div>
     </Drawer>
   );

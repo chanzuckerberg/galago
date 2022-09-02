@@ -87,7 +87,7 @@ export const CladeSelectionVizControls = (
       >
         <CladeSelector />
       </div>
-      <CladeFilterDrawer/>
+      <CladeFilterDrawer />
     </div>
   );
 };

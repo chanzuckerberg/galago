@@ -57,7 +57,8 @@ const defaultState = {
   divisionOptions: [""],
   pathogen: "",
   mutsPerTransmissionMax: "",
-  fetchData: { // Everything around process of fetching data from external URL
+  fetchData: {
+    // Everything around process of fetching data from external URL
     fetchInProcess: false, // App is fetching data (takes a few seconds)
     targetUrl: "", // URL we were given to fetch
     errorDuringFetch: false, // Was there an error around fetch process

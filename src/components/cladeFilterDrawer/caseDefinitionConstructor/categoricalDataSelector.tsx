@@ -24,7 +24,7 @@ export const CategoricalDataSelector = (
   return (
     <Autocomplete
       multiple
-      style={{marginTop: 10 }}
+      style={{ marginTop: 10 }}
       id="tags-outlined"
       options={options}
       getOptionLabel={(option: any) => option.label}
