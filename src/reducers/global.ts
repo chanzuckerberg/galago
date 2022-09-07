@@ -362,6 +362,16 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
+    case ACTION_TYPES.FETCH_ERROR_MSG_CLEAR: {
+      return {
+        ...state,
+        fetchData: {
+          ...state.fetchData,
+          displayError: false,
+        },
+      };
+    }
+
     case ACTION_TYPES.FETCH_TREE_DATA_SUCCEEDED: {
       // Almost entirely a copy of type "tree file uploaded"
       // Just adds tracking fetch and auto-open of upload modal

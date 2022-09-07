@@ -9,4 +9,5 @@ export enum ACTION_TYPES {
   FETCH_TREE_DATA_SUCCEEDED = "fetch tree data succeeded",
   FETCH_TREE_DATA_FAILED = "fetch tree data failed",
   FETCH_TREE_NO_URL_SPECIFIED = "fetch tree no url specified",
+  FETCH_ERROR_MSG_CLEAR = "fetch error message cleared",
 }

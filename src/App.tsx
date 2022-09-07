@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
 import Report from "./components/report";
-import { useEffect, useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
 
 export default function App() {
   //@ts-ignore

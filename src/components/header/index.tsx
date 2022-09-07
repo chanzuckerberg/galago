@@ -1,10 +1,8 @@
 import { Helmet } from "react-helmet";
 import { useWindowSize } from "@react-hook/window-size";
-import { useState } from "react";
-import Alert from "@mui/material/Alert/Alert";
-import AlertTitle from "@mui/material/AlertTitle/AlertTitle";
-import Collapse from "@mui/material/Collapse/Collapse";
-import { Theme } from "../theme";
+import { FetchError } from "./fetchError";
+import { BetaBanner } from "./betaBanner";
+import StagingBanner from "./stagingBanner";
 
 type HeaderProps = {
   sectionHeight?: number;
@@ -13,7 +11,6 @@ type HeaderProps = {
 
 const Header = (props: HeaderProps) => {
   let { sectionHeight, sectionWidth } = props;
-  const [showAlert, setShowAlert] = useState<boolean>(true);
   const [windowWidth, windowHeight] = useWindowSize();
 
   sectionHeight ??= 100;
@@ -24,44 +21,13 @@ const Header = (props: HeaderProps) => {
       style={{
         width: sectionWidth,
         height: sectionHeight,
-        // border: "1px solid pink",
         position: "relative",
         top: 0,
-        left: 0,
       }}
     >
-      <Collapse in={showAlert}>
-        <Alert
-          severity="info"
-          style={{
-            width: 450,
-            height: 90,
-            position: "absolute",
-            top: 0,
-            right: 0,
-          }}
-          onClose={() => {
-            setShowAlert(false);
-          }}
-          //@ts-ignore
-          sx={{ backgroundColor: Theme.palette.secondary.lighter }}
-        >
-          <AlertTitle>
-            <strong>
-              Galago is in alpha testing & may have bugs --
-              <br /> stable beta launching early Sept!
-            </strong>{" "}
-            <br />
-            <span style={{}}>
-              We'd love your feedback!{" "}
-              <a href="https://github.com/chanzuckerberg/galago/discussions">
-                Discussion board
-              </a>{" "}
-              - <a href="mailto:galago@chanzuckerberg.com">Email.</a>
-            </span>
-          </AlertTitle>
-        </Alert>
-      </Collapse>
+      {/* {state.onStaging ? <StagingBanner /> : <BetaBanner />} */}
+      <BetaBanner />
+      <FetchError />
 
       <div
         style={{
