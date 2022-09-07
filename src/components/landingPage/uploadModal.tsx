@@ -77,6 +77,8 @@ export const UploadModal = () => {
     <>
       <DialogTitle>Analyze your data in Galago</DialogTitle>
       <DialogContent>
+        <h3>Tree uploaded</h3>
+        <FormLabel>{state.treeTitle}</FormLabel>
         <h3>Select pathogen (required)</h3>
 
         <p>
@@ -129,9 +131,9 @@ export const UploadModal = () => {
           </p>
         )}
         <h3>Upload sample metadata, e.g. a line list (optional)</h3>
-        <p>
+        <FormLabel>
           If provided, epi metadata helps you identify more meaningful clusters.
-        </p>
+        </FormLabel>
         <p>
           <FormControl>
             <Button

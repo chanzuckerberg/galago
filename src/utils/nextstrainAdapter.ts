@@ -77,7 +77,8 @@ export const ingestNextstrain = (nextstrain_json: NSJSON) => {
   assignTipCount(tree);
   describeTree(tree); // just a console log sense check
   return {
-    tree: tree,
+    tree,
+    treeTitle: nextstrain_json.meta.title,
     haveInternalNodeDates: determineIfInternalNodeDates(tree),
   };
 };

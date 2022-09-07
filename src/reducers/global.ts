@@ -65,6 +65,7 @@ const defaultState = {
     errorMessage: "", // If error, human-readable message about the error.
     displayError: false, // Should we display error about fetch to user?
   },
+  treeTitle: "",
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -327,7 +328,7 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "tree file uploaded": {
-      const { tree, haveInternalNodeDates } = action.data;
+      const { tree, treeTitle, haveInternalNodeDates } = action.data;
 
       const divisionOptions = get_division_input_options(tree, state.country);
       const treeMetadata = treeMetadataCensus(tree);
@@ -336,12 +337,13 @@ export const global = (state = defaultState, action: any) => {
 
       return {
         ...state,
-        tree: tree,
-        divisionOptions: divisionOptions,
+        tree,
+        treeTitle,
+        divisionOptions,
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
-        cladeSliderField: cladeSliderField,
+        cladeSliderField,
         cladeSliderValue: formatMrcaSliderOptionValue(tree, cladeSliderField),
         mrca: tree,
         metadataCensus: { ...state.metadataCensus, ...treeMetadata },

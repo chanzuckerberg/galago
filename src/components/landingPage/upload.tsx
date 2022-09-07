@@ -49,18 +49,32 @@ export const Upload = (props: UploadProps) => {
         Galago. Galago runs entirely in the browser. This means that your data
         never leaves your computer and is never accessible to anyone else.
       </p>
-      <p style={{ marginTop: 40 }}>
-        <Button
-          variant="outlined"
-          component="label"
-          disableElevation
-          disableRipple
-          onChange={(event: any) => {
-            loadTreeJson(event.target.files[0]);
-          }}
-        >
-          Select tree JSON <input hidden type="file" />
-        </Button>
+      <div style={{ marginTop: 67 }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Button
+            variant="outlined"
+            component="label"
+            disableElevation
+            disableRipple
+            onChange={(event: any) => {
+              loadTreeJson(event.target.files[0]);
+            }}
+          >
+            Select tree JSON <input hidden type="file" />
+          </Button>
+          {state.treeTitle && (
+            <span
+              style={{
+                fontSize: 10,
+                maxWidth: sectionWidth / 2,
+                paddingLeft: 10,
+                paddingTop: 2,
+              }}
+            >
+              {state.treeTitle}
+            </span>
+          )}
+        </div>
         <FormHelperText>
           This must be in Nextstrain's JSON format{" "}
           <Tooltip
@@ -80,7 +94,7 @@ export const Upload = (props: UploadProps) => {
             />
           </Tooltip>
         </FormHelperText>
-      </p>
+      </div>
       <p>
         <Button
           variant="contained"
