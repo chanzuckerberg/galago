@@ -4,7 +4,10 @@ import axios from "axios";
 import { getUrlToFetch } from "../utils/fetchData";
 import LandingPageRoute from "./landingPageRoute";
 import { ACTION_TYPES } from "../reducers/actionTypes";
-import { ingestNextstrain } from "../utils/nextstrainAdapter";
+import {
+  ingestNextstrain,
+  validateNextstrainJson,
+} from "../utils/nextstrainAdapter";
 
 /**
  * Handles fetching external tree JSON and loading it into app.
@@ -39,13 +42,16 @@ async function handleDataFetch(targetUrl: string, dispatch: Function) {
     return; // Can't progress since fetch failed.
   }
 
-  // TODO Should have some kind of sanity check that we got a Nextstrain tree.
-  // If it fails sanity check, kick off an error message about malformed.
-  const ingestedNextstrain = ingestNextstrain(response.data);
-  dispatch({
-    type: ACTION_TYPES.FETCH_TREE_DATA_SUCCEEDED,
-    data: ingestedNextstrain,
-  });
+  try {
+    validateNextstrainJson(response.data);
+    const ingestedNextstrain = ingestNextstrain(response.data);
+    dispatch({
+      type: ACTION_TYPES.FETCH_TREE_DATA_SUCCEEDED,
+      data: ingestedNextstrain,
+    });
+  } catch {
+    dispatch({ type: ACTION_TYPES.SHOW_TREE_FORMAT_ERROR });
+  }
 }
 
 /**

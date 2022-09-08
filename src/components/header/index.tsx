@@ -1,8 +1,9 @@
 import { Helmet } from "react-helmet";
 import { useWindowSize } from "@react-hook/window-size";
-import { FetchError } from "./fetchError";
+import { FetchError } from "./fetchErrorBanner";
 import { BetaBanner } from "./betaBanner";
 import StagingBanner from "./stagingBanner";
+import InvalidJsonErrorBanner from "./invalidJsonBanner";
 
 type HeaderProps = {
   sectionHeight?: number;
@@ -28,6 +29,7 @@ const Header = (props: HeaderProps) => {
       {/* {state.onStaging ? <StagingBanner /> : <BetaBanner />} */}
       <BetaBanner />
       <FetchError />
+      <InvalidJsonErrorBanner />
 
       <div
         style={{

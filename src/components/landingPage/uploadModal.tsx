@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  get_division_input_options,
-  get_location_input_options,
-} from "../../utils/geoInputOptions";
-import { ingestNextstrain } from "../../utils/nextstrainAdapter";
-import { Node } from "../../d";
+import { get_location_input_options } from "../../utils/geoInputOptions";
+
 //@ts-ignore
 import { parse } from "papaparse";
 import { ingestCSVMetadata } from "../../utils/metadataUtils";
