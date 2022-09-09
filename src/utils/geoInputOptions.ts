@@ -10,10 +10,10 @@ const tidy_values = (values: string[]) => {
 export const get_location_input_options = (tree: Node, division: string) => {
   const all_samples = get_leaves(tree);
   const samples_from_division = all_samples.filter(
-    (s) => s.node_attrs["division"]["value"] === division
+    (s) => getNodeAttr(s, "division") === division
   );
   const location_options = tidy_values(
-    samples_from_division.map((s) => s.node_attrs["location"]["value"])
+    samples_from_division.map((s) => getNodeAttr(s, "location"))
   );
   return location_options;
 };
@@ -21,7 +21,7 @@ export const get_location_input_options = (tree: Node, division: string) => {
 export const get_division_input_options = (tree: Node, country: string) => {
   const all_samples = get_leaves(tree);
   const samples_from_country = all_samples.filter(
-    (s) => s.node_attrs["country"]["value"] === country
+    (s) => getNodeAttr(s, "country") === country
   );
   const division_options = tidy_values(
     samples_from_country.map((s) => {

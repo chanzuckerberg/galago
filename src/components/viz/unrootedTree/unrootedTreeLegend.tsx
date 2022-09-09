@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
 
-type ForceGraphLegendProps = {
+type UnrootedTreeLegendProps = {
   colorScale: string[];
 };
 
-export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
+export const UnrootedTreeLegend = (props: UnrootedTreeLegendProps) => {
   const { colorScale } = props;
   const legendWidth = 195;
   const legendHeight = 160;
@@ -55,50 +55,58 @@ export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
 
   return (
     <g id="force-graph-legend">
-      <rect
-        x={0}
-        y={0}
-        width={legendWidth}
-        height={legendHeight}
-        fill="white"
-        opacity={0.8}
-      />
-      {colorScale.map((cs, i) => drawColorScaleSegment(cs, i))}
-      <text x={paddingX} y={paddingY} fontSize={10}>
-        Distance from putative primary case
-      </text>
-      <rect
-        x={paddingX}
-        y={markerStartY}
-        width={glyphWidth}
-        height={glyphWidth}
-        fill={"lightGray"}
-        stroke="darkGray"
-      />
-      <text
-        x={textX}
-        y={markerStartY + glyphHeight / 2}
-        fontSize={10}
-        dominantBaseline="middle"
-      >
-        Your samples of interest
-      </text>
-      <circle
-        cx={glyphCenterX}
-        cy={markerStartY + glyphHeight + paddingY}
-        r={glyphWidth / 1.85}
-        fill="lightGray"
-        stroke="darkGray"
-      />
-      <text
-        x={textX}
-        y={markerStartY + glyphHeight + paddingY}
-        dominantBaseline="middle"
-        fontSize={10}
-      >
-        Other samples
-      </text>
-      <line
+      <g id="color-bar">
+        <rect
+          x={0}
+          y={0}
+          width={legendWidth}
+          height={legendHeight}
+          fill="white"
+          opacity={0.8}
+        />
+        {colorScale.map((cs, i) => drawColorScaleSegment(cs, i))}
+        <text x={paddingX} y={paddingY} fontSize={10}>
+          Distance from putative primary case
+        </text>
+      </g>
+      <g id="primary-case">
+        <rect
+          x={paddingX}
+          y={markerStartY}
+          width={glyphWidth}
+          height={glyphWidth}
+          fill={"lightGray"}
+          stroke="darkGray"
+        />
+        <text
+          x={textX}
+          y={markerStartY + glyphHeight / 2}
+          fontSize={10}
+          dominantBaseline="middle"
+        >
+          Includes sample(s) of interest
+        </text>
+      </g>
+      <g id="other samples">
+        <circle
+          cx={glyphCenterX}
+          cy={markerStartY + glyphHeight + paddingY}
+          r={glyphWidth / 1.85}
+          fill="lightGray"
+          stroke="darkGray"
+        />
+
+        <text
+          x={textX}
+          y={markerStartY + glyphHeight + paddingY}
+          dominantBaseline="middle"
+          fontSize={10}
+        >
+          Other samples
+        </text>
+      </g>
+
+      {/* <line
         x1={paddingX}
         x2={paddingX + tickBarLength}
         y1={tickBarStartY}
@@ -125,8 +133,8 @@ export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
         y1={tickBarStartY + glyphHeight / 2}
         y2={tickBarStartY - glyphHeight / 2}
         stroke="darkgray"
-      />
-      <text
+      /> */}
+      {/* <text
         x={paddingX}
         y={tickBarStartY + glyphHeight + paddingY}
         dominantBaseline="bottom"
@@ -134,10 +142,10 @@ export const ForceGraphLegend = (props: ForceGraphLegendProps) => {
         width={tickBarLength}
       >
         Ticks each 1 mutation
-      </text>
+      </text> */}
       {/* <line x1={}/> */}
     </g>
   );
 };
 
-export default ForceGraphLegend;
+export default UnrootedTreeLegend;

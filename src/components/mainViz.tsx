@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { ForceGraph } from "./viz/drawForceGraph";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
+import UnrootedTree from "./viz/unrootedTree";
 
 type MainVizProps = {
   sectionHeight: number;
@@ -46,7 +47,7 @@ export const MainViz = (props: MainVizProps) => {
         }}
       >
         {viewPlot === "forceGraph" && state.mrca ? (
-          <ForceGraph
+          <UnrootedTree
             chartWidth={chartWidth}
             chartHeight={chartHeight}
             chartMargin={chartMargin}
