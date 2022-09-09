@@ -17,7 +17,7 @@ export const GenericErrorBanner = (props: GenericErrorBannerProps) => {
   console.log(errorType, state.showErrorMessages);
   if (!Object.keys(state.showErrorMessages).includes(errorType)) {
     console.warn(
-      "WARNING: error banner trying to render, but error type not specified in `Errors.ts` and/or `showErrorMessages` global state",
+      "WARNING: error banner trying to render, but error type not specified in `errorTypes.ts` and/or `showErrorMessages` global state",
       errorType
     );
     return <></>;
