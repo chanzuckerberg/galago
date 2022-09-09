@@ -3,7 +3,13 @@ import { ACTION_TYPES } from "../reducers/actionTypes";
 export const errorTypes: {
   [key: string]: { title: string; content: string; onClose: string };
 } = {
-  fileTooBig: {
+  metadataFileTooBig: {
+    title: "Uh oh. That metadata file is too big",
+    content:
+      "Please choose a metadata file that is <15MB. If this is a repeated issue for you, please get in touch!",
+    onClose: ACTION_TYPES.CLEAR_METADATA_FILE_SIZE_ERROR,
+  },
+  treeFileTooBig: {
     title: "Uh oh. That tree file is too big",
     content:
       "Please choose a tree file that is <15MB. If this is a repeated issue for you, please get in touch!",

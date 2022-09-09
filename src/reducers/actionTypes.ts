@@ -12,4 +12,7 @@ export enum ACTION_TYPES {
   FETCH_ERROR_MSG_CLEAR = "fetch error message cleared",
   SHOW_TREE_FORMAT_ERROR = "show tree format error",
   CLEAR_TREE_FORMAT_ERROR = "clear tree format error",
+  SHOW_TREE_FILE_SIZE_ERROR = "show file size error",
+  SHOW_METADATA_FILE_SIZE_ERROR = "show metadata file size error",
+  CLEAR_METADATA_FILE_SIZE_ERROR = "clear metadata file size error",
 }

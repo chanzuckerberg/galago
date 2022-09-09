@@ -69,7 +69,8 @@ const defaultState = {
   },
   treeTitle: "",
   showErrorMessages: {
-    fileTooBig: false,
+    metadataFileTooBig: false,
+    treeFileTooBig: false,
     invalidJson: false,
     fetchUrlMissing: false,
     fetchInvalidFile: false,
@@ -84,6 +85,30 @@ export const global = (state = defaultState, action: any) => {
 
     case "reset to default": {
       return defaultState;
+    }
+
+    case ACTION_TYPES.SHOW_TREE_FILE_SIZE_ERROR: {
+      return {
+        ...state,
+        showErrorMessages: {
+          invalidJson: false,
+          fileTooBig: true,
+          fetchUrlMissing: false,
+          fetchInvalidFile: false,
+        },
+        tree: null,
+        treeTitle: "JSON too big",
+      };
+    }
+
+    case ACTION_TYPES.CLEAR_METADATA_FILE_SIZE_ERROR: {
+      return {
+        ...state,
+        showErrorMessages: {
+          ...state.showErrorMessages,
+          metadataFileTooBig: false,
+        },
+      };
     }
 
     case ACTION_TYPES.SHOW_TREE_FORMAT_ERROR: {
