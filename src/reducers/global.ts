@@ -49,7 +49,7 @@ const defaultState = {
   caseDefFilters: {},
   loadReport: false,
   cladeDescription: null,
-  viewPlot: "scatter", // "scatter" | "forceGraph"
+  viewPlot: "scatter", // "scatter" | "unrootedTree"
   clusteringMethod: "none", // string
   clusteringMetadataField: undefined, // string | undefined
   heatmapSelectedSampleNames: [], // string[]
