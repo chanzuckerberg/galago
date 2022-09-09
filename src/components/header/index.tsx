@@ -4,6 +4,7 @@ import { FetchError } from "./fetchErrorBanner";
 import { BetaBanner } from "./betaBanner";
 import StagingBanner from "./stagingBanner";
 import InvalidJsonErrorBanner from "./invalidJsonBanner";
+import { isAppRunningInStaging } from "src/utils/staging";
 
 type HeaderProps = {
   sectionHeight?: number;
@@ -26,8 +27,7 @@ const Header = (props: HeaderProps) => {
         top: 0,
       }}
     >
-      {/* {state.onStaging ? <StagingBanner /> : <BetaBanner />} */}
-      <BetaBanner />
+      {isAppRunningInStaging() ? <StagingBanner /> : <BetaBanner />}
       <FetchError />
       <InvalidJsonErrorBanner />
 
