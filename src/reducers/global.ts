@@ -66,11 +66,14 @@ const defaultState = {
     fetchInProcess: false, // App is fetching data (takes a few seconds)
     targetUrl: "", // URL we were given to fetch
     errorDuringFetch: false, // Was there an error around fetch process
-    errorMessage: "", // If error, human-readable message about the error.
-    displayError: false, // Should we display error about fetch to user?
   },
   treeTitle: "",
-  showTreeFormatError: false,
+  showErrorMessages: {
+    fileTooBig: false,
+    invalidJson: false,
+    fetchUrlMissing: false,
+    fetchInvalidFile: false,
+  },
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -86,7 +89,12 @@ export const global = (state = defaultState, action: any) => {
     case ACTION_TYPES.SHOW_TREE_FORMAT_ERROR: {
       return {
         ...state,
-        showTreeFormatError: true,
+        showErrorMessages: {
+          invalidJson: true,
+          fileTooBig: false,
+          fetchUrlMissing: false,
+          fetchInvalidFile: false,
+        },
         tree: null,
         treeTitle: "Invalid JSON",
       };
@@ -95,7 +103,10 @@ export const global = (state = defaultState, action: any) => {
     case ACTION_TYPES.CLEAR_TREE_FORMAT_ERROR: {
       return {
         ...state,
-        showTreeFormatError: false,
+        showErrorMessages: {
+          ...state.showErrorMessages,
+          invalidJson: false,
+        },
         treeTitle: "",
       };
     }
@@ -371,7 +382,12 @@ export const global = (state = defaultState, action: any) => {
         tree,
         treeTitle,
         divisionOptions,
-        showTreeFormatError: false,
+        showErrorMessages: {
+          fileTooBig: false,
+          invalidJson: false,
+          fetchUrlMissing: false,
+          fetchInvalidFile: false,
+        },
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
@@ -390,6 +406,12 @@ export const global = (state = defaultState, action: any) => {
       const { targetUrl } = action;
       return {
         ...state,
+        showErrorMessages: {
+          invalidJson: false,
+          fileTooBig: false,
+          fetchUrlMissing: false,
+          fetchInvalidFile: false,
+        },
         fetchData: {
           ...state.fetchData,
           fetchInProcess: true,
@@ -401,9 +423,10 @@ export const global = (state = defaultState, action: any) => {
     case ACTION_TYPES.FETCH_ERROR_MSG_CLEAR: {
       return {
         ...state,
-        fetchData: {
-          ...state.fetchData,
-          displayError: false,
+        showErrorMessage: {
+          ...state.showErrorMessages,
+          fetchUrlMissing: false,
+          fetchInvalidFile: false,
         },
       };
     }
@@ -419,7 +442,12 @@ export const global = (state = defaultState, action: any) => {
         ...state,
         tree: tree,
         treeTitle: treeTitle,
-        showTreeFormatError: false,
+        showErrorMessages: {
+          invalidJson: false,
+          fileTooBig: false,
+          fetchUrlMissing: false,
+          fetchInvalidFile: false,
+        },
         divisionOptions: divisionOptions,
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
@@ -433,36 +461,40 @@ export const global = (state = defaultState, action: any) => {
         fetchData: {
           ...state.fetchData,
           fetchInProcess: false,
-          displayError: false,
         },
       };
     }
 
     case ACTION_TYPES.FETCH_TREE_DATA_FAILED: {
-      const { errorMessage } = action;
       return {
         ...state,
-        showTreeFormatError: false,
+        showErrorMessages: {
+          invalidJson: false,
+          fileTooBig: false,
+          fetchUrlMissing: false,
+          fetchInvalidFile: true,
+        },
         fetchData: {
           ...state.fetchData,
           fetchInProcess: false,
           errorDuringFetch: true,
-          errorMessage,
-          displayError: true,
         },
       };
     }
 
     case ACTION_TYPES.FETCH_TREE_NO_URL_SPECIFIED: {
-      const { errorMessage } = action;
       return {
         ...state,
+        showErrorMessages: {
+          fileTooBig: false,
+          invalidJson: false,
+          fetchUrlMissing: true,
+          fetchInvalidFile: false,
+        },
         fetchData: {
           ...state.fetchData,
           fetchInProcess: false,
           errorDuringFetch: true,
-          errorMessage,
-          displayError: true,
         },
       };
     }

@@ -1,9 +1,9 @@
 import { Helmet } from "react-helmet";
 import { useWindowSize } from "@react-hook/window-size";
-import { FetchError } from "./fetchErrorBanner";
 import { BetaBanner } from "./betaBanner";
-import StagingBanner from "./stagingBanner";
-import InvalidJsonErrorBanner from "./invalidJsonBanner";
+import { useSelector } from "react-redux";
+import { GenericErrorBanner } from "./genericErrorBanner";
+// import StagingBanner from "./stagingBanner";
 
 type HeaderProps = {
   sectionHeight?: number;
@@ -11,11 +11,21 @@ type HeaderProps = {
 };
 
 const Header = (props: HeaderProps) => {
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
   let { sectionHeight, sectionWidth } = props;
   const [windowWidth, windowHeight] = useWindowSize();
 
   sectionHeight ??= 100;
   sectionWidth ??= windowWidth - 10;
+
+  const errorTypesToDisplay = Object.keys(state.showErrorMessages).filter(
+    (errorType: string) => state.showErrorMessages[errorType] === true
+  );
+  console.log(
+    "header rerendered and thinks we should display these errors",
+    errorTypesToDisplay
+  );
 
   return (
     <div
@@ -26,10 +36,14 @@ const Header = (props: HeaderProps) => {
         top: 0,
       }}
     >
+      {/* TODO: similarly refactor generic info alert messages into a centralized util file
+        and corresponding piece of global state; use this to set the `top` attribute passed to error alerts below.
+      */}
       {/* {state.onStaging ? <StagingBanner /> : <BetaBanner />} */}
       <BetaBanner />
-      <FetchError />
-      <InvalidJsonErrorBanner />
+      {errorTypesToDisplay.forEach((errorType: string, i: number) => (
+        <GenericErrorBanner errorType={errorType} top={95 + 100 * i} />
+      ))}
 
       <div
         style={{
