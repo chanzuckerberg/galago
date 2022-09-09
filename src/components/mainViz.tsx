@@ -1,8 +1,6 @@
 import { useSelector } from "react-redux";
 import { CladeSelectionViz } from "./viz/cladeSelection";
-import { useWindowSize } from "@react-hook/window-size";
 import { useDispatch } from "react-redux";
-import { ForceGraph } from "./viz/drawForceGraph";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import UnrootedTree from "./viz/unrootedTree";
@@ -17,7 +15,7 @@ export const MainViz = (props: MainVizProps) => {
   const state = useSelector((state) => state.global);
   const { sectionHeight, sectionWidth } = props;
   const dispatch = useDispatch();
-  const viewPlot: "scatter" | "forceGraph" = state.viewPlot;
+  const viewPlot: "scatter" | "unrootedTree" = state.viewPlot;
 
   const plotToggleHeight = 50;
 
@@ -46,7 +44,7 @@ export const MainViz = (props: MainVizProps) => {
           border: showLayoutBorders ? "1px solid purple" : "none",
         }}
       >
-        {viewPlot === "forceGraph" && state.mrca ? (
+        {viewPlot === "unrootedTree" && state.mrca ? (
           <UnrootedTree
             chartWidth={chartWidth}
             chartHeight={chartHeight}
@@ -80,7 +78,11 @@ export const MainViz = (props: MainVizProps) => {
           <ToggleButton value="scatter" disableRipple>
             Scatterplot of all clades
           </ToggleButton>
-          <ToggleButton value="forceGraph" disabled={!state.mrca} disableRipple>
+          <ToggleButton
+            value="unrootedTree"
+            disabled={!state.mrca}
+            disableRipple
+          >
             Network diagram for selected clade
           </ToggleButton>
         </ToggleButtonGroup>

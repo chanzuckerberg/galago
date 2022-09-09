@@ -54,7 +54,7 @@ export const UnrootedTreeLegend = (props: UnrootedTreeLegendProps) => {
   };
 
   return (
-    <g id="force-graph-legend">
+    <g id="unrooted-tree-legend">
       <g id="color-bar">
         <rect
           x={0}
@@ -143,7 +143,6 @@ export const UnrootedTreeLegend = (props: UnrootedTreeLegendProps) => {
       >
         Ticks each 1 mutation
       </text> */}
-      {/* <line x1={}/> */}
     </g>
   );
 };
