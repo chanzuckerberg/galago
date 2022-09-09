@@ -8,7 +8,7 @@ type GenericErrorBannerProps = {
 };
 
 export const GenericErrorBanner = (props: GenericErrorBannerProps) => {
-  console.log("in the right component");
+  console.log("in the right component"); // BUG this never fires!?
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();

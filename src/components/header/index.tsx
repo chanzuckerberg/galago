@@ -23,6 +23,7 @@ const Header = (props: HeaderProps) => {
     (errorType: string) => state.showErrorMessages[errorType] === true
   );
   console.log(
+    // this is correct
     "header rerendered and thinks we should display these errors",
     errorTypesToDisplay
   );
@@ -42,6 +43,8 @@ const Header = (props: HeaderProps) => {
       {/* {state.onStaging ? <StagingBanner /> : <BetaBanner />} */}
       <BetaBanner />
       {errorTypesToDisplay.forEach((errorType: string, i: number) => (
+        // a console log here confirms this fires for the right error type(s)
+        // TODO: but, mysteriously, the banner component never fires!?
         <GenericErrorBanner errorType={errorType} top={95 + 100 * i} />
       ))}
 
