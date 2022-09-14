@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
 import Report from "./components/report";
-import { useEffect, useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
 
 export default function App() {
   //@ts-ignore
@@ -24,7 +22,7 @@ export default function App() {
   const showLayoutBorders = false;
 
   return (
-    <div>
+    <div style={{ overflowX: "hidden", overflowY: "hidden" }}>
       {/* <h1>Select a clade to instantly generate a report</h1> */}
       {/* left side bar */}
       <Header sectionHeight={headerHeight} sectionWidth={windowWidth - 10} />

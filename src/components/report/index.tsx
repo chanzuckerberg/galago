@@ -53,11 +53,14 @@ export const Report = (props: ReportProps) => {
           <TMRCA sidenote_start={3} />
           <OnwardTransmission />
           <GeoSubclades />
-          <SamplingBias
-            // @ts-ignore
-            gisaidCounts={gisaidCounts}
-            sidenote_start={7}
-          />
+          {state.pathogen === "sarscov2" && (
+            // TODO: rewrite this to still be accurate and valuable for pathogens w/o reference data available
+            <SamplingBias
+              // @ts-ignore
+              gisaidCounts={gisaidCounts}
+              sidenote_start={7}
+            />
+          )}
           <Assumptions sidenote_start={8} />
         </>
       )}

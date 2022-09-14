@@ -25,7 +25,7 @@ export const CladeSelectionVizLegend = () => {
           strokeWidth={1}
         />
         <text x="10" y="50" fontSize={14}>
-          Samples in active cluster
+          Other samples in active cluster
         </text>
         <g transform={`translate(0,66.5)`}>
           <line

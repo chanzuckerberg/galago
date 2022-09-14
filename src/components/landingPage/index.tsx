@@ -8,9 +8,20 @@ import BigFoot from "../bigFoot";
 export const LandingPage = () => {
   const [windowWidth, windowHeight] = useWindowSize();
   const middleWidth = Math.min(windowWidth * 0.66, 1200);
+  const headerHeight = 100;
+  const footerHeight = 130;
+  const contentMarginBottom = 50;
   return (
     <div>
-      <div style={{ maxWidth: middleWidth, margin: "auto" }}>
+      <div
+        style={{
+          maxWidth: middleWidth,
+          margin: "auto",
+          minHeight:
+            windowHeight - (footerHeight + headerHeight + contentMarginBottom),
+          marginBottom: contentMarginBottom,
+        }}
+      >
         <AboutGalago />
         <div
           style={{

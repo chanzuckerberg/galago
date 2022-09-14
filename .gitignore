@@ -8,3 +8,5 @@ stub_data
 *.ipynb
 .vscode
 data/*.json
+# Below line is temporary while we want to make specific json public for dev
+!data/temp_dev_demo_tree.json

@@ -2,9 +2,8 @@
 name: Suggestion or feature request
 about: Suggest an idea for this project
 title: "[Suggestion]"
-labels: ''
-assignees: ''
-
+labels: ""
+assignees: ""
 ---
 
 **Describe the improvement you'd like to see**

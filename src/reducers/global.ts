@@ -1,3 +1,4 @@
+import { ACTION_TYPES } from "./actionTypes";
 import {
   get_leaves,
   get_root,
@@ -24,6 +25,10 @@ import {
 } from "../utils/metadataUtils";
 import { describe_clade } from "../utils/describeClade";
 import { formatMrcaSliderOptionValue } from "../components/viz/cladeSelection/cladeSlider";
+import {
+  calcMutsPerTransmissionMax,
+  pathogenParameters,
+} from "../utils/pathogenParameters";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
@@ -42,10 +47,9 @@ const defaultState = {
   metadataEntries: [],
   metadataFieldToMatch: "",
   caseDefFilters: {},
-  samplesMatchingCaseDef: [],
   loadReport: false,
   cladeDescription: null,
-  viewPlot: "scatter", // "scatter" | "forceGraph"
+  viewPlot: "scatter", // "scatter" | "unrootedTree"
   clusteringMethod: "none", // string
   clusteringMetadataField: undefined, // string | undefined
   heatmapSelectedSampleNames: [], // string[]
@@ -57,6 +61,16 @@ const defaultState = {
   divisionOptions: [""],
   pathogen: "",
   mutsPerTransmissionMax: "",
+  fetchData: {
+    // Everything around process of fetching data from external URL
+    fetchInProcess: false, // App is fetching data (takes a few seconds)
+    targetUrl: "", // URL we were given to fetch
+    errorDuringFetch: false, // Was there an error around fetch process
+    errorMessage: "", // If error, human-readable message about the error.
+    displayError: false, // Should we display error about fetch to user?
+  },
+  treeTitle: "",
+  showTreeFormatError: false,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -67,6 +81,23 @@ export const global = (state = defaultState, action: any) => {
 
     case "reset to default": {
       return defaultState;
+    }
+
+    case ACTION_TYPES.SHOW_TREE_FORMAT_ERROR: {
+      return {
+        ...state,
+        showTreeFormatError: true,
+        tree: null,
+        treeTitle: "Invalid JSON",
+      };
+    }
+
+    case ACTION_TYPES.CLEAR_TREE_FORMAT_ERROR: {
+      return {
+        ...state,
+        showTreeFormatError: false,
+        treeTitle: "",
+      };
     }
 
     case "pathogen selected": {
@@ -109,6 +140,7 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
+    // TODO: only cache the fields that could be altered in this drawer
     case "filter drawer opened": {
       return {
         ...state,
@@ -138,7 +170,6 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "load demo": {
-      // TODO: this should all probably live in an thunk + action constructor instead of duplicating code from a bunch of individual reducers. But, they're all short and this gets us off the ground for now.
       const { tree, haveInternalNodeDates } = ingestNextstrain(demo_tree);
       const treeMetadata = treeMetadataCensus(tree);
       const samplesOfInterestNames = demo_sample_names
@@ -168,23 +199,34 @@ export const global = (state = defaultState, action: any) => {
 
       const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
 
+      const sc2Parameters: any = pathogenParameters["sarscov2"];
+      const mutsPerTransmissionMax = calcMutsPerTransmissionMax(
+        sc2Parameters["genomeLength"],
+        sc2Parameters["subsPerSitePerYear"],
+        sc2Parameters["serialInterval"]
+      );
+
       return {
         ...defaultState,
         tree: tree,
-        haveInternalNodeDates: haveInternalNodeDates,
+        showTreeFormatError: false,
+        fetchData: { displayError: false },
+        pathogen: "sarscov2",
+        mutsPerTransmissionMax,
+        haveInternalNodeDates,
         metadataEntries: tidyMetadata,
         metadataCensus: { ...treeMetadata, ...metadataCensus },
         metadataFieldToMatch: "sample id",
-        samplesOfInterestNames: samplesOfInterestNames,
-        samplesOfInterest: samplesOfInterest,
-        mrca: mrca,
+        samplesOfInterestNames,
+        samplesOfInterest,
+        mrca,
         //@ts-ignore -- we already check for null samples on the line above
         mrcaOptions: getMrcaOptions(tree, samplesOfInterest, []),
         location: "Humboldt County",
         division: "California",
         loadReport: true,
-        cladeDescription: cladeDescription,
-        cladeSliderField: cladeSliderField,
+        cladeDescription,
+        cladeSliderField,
         cladeSliderValue: formatMrcaSliderOptionValue(mrca, cladeSliderField),
       };
     }
@@ -317,7 +359,7 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "tree file uploaded": {
-      const { tree, haveInternalNodeDates } = action.data;
+      const { tree, treeTitle, haveInternalNodeDates } = action.data;
 
       const divisionOptions = get_division_input_options(tree, state.country);
       const treeMetadata = treeMetadataCensus(tree);
@@ -326,7 +368,58 @@ export const global = (state = defaultState, action: any) => {
 
       return {
         ...state,
+        tree,
+        treeTitle,
+        divisionOptions,
+        showTreeFormatError: false,
+        mrcaOptions: traverse_preorder(tree).filter(
+          (node: Node) => node.children.length >= 2
+        ),
+        cladeSliderField,
+        cladeSliderValue: formatMrcaSliderOptionValue(tree, cladeSliderField),
+        mrca: tree,
+        metadataCensus: { ...state.metadataCensus, ...treeMetadata },
+        fetchData: {
+          // edge case -- tried to fetch, errored, then uploaded manually -- clear fetch state including errors
+          ...defaultState.fetchData,
+        },
+      };
+    }
+
+    case ACTION_TYPES.FETCH_TREE_DATA_STARTED: {
+      const { targetUrl } = action;
+      return {
+        ...state,
+        fetchData: {
+          ...state.fetchData,
+          fetchInProcess: true,
+          targetUrl,
+        },
+      };
+    }
+
+    case ACTION_TYPES.FETCH_ERROR_MSG_CLEAR: {
+      return {
+        ...state,
+        fetchData: {
+          ...state.fetchData,
+          displayError: false,
+        },
+      };
+    }
+
+    case ACTION_TYPES.FETCH_TREE_DATA_SUCCEEDED: {
+      // Almost entirely a copy of type "tree file uploaded"
+      // Just adds tracking fetch and auto-open of upload modal
+      const { tree, haveInternalNodeDates, treeTitle } = action.data;
+      const divisionOptions = get_division_input_options(tree, state.country);
+      const treeMetadata = treeMetadataCensus(tree);
+      const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
+      return {
+        ...state,
         tree: tree,
+        treeTitle: treeTitle,
+        showTreeFormatError: false,
         divisionOptions: divisionOptions,
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
@@ -335,6 +428,42 @@ export const global = (state = defaultState, action: any) => {
         cladeSliderValue: formatMrcaSliderOptionValue(tree, cladeSliderField),
         mrca: tree,
         metadataCensus: { ...state.metadataCensus, ...treeMetadata },
+        // Added portion for Fetch aspect starts here
+        uploadModalOpen: true,
+        fetchData: {
+          ...state.fetchData,
+          fetchInProcess: false,
+          displayError: false,
+        },
+      };
+    }
+
+    case ACTION_TYPES.FETCH_TREE_DATA_FAILED: {
+      const { errorMessage } = action;
+      return {
+        ...state,
+        showTreeFormatError: false,
+        fetchData: {
+          ...state.fetchData,
+          fetchInProcess: false,
+          errorDuringFetch: true,
+          errorMessage,
+          displayError: true,
+        },
+      };
+    }
+
+    case ACTION_TYPES.FETCH_TREE_NO_URL_SPECIFIED: {
+      const { errorMessage } = action;
+      return {
+        ...state,
+        fetchData: {
+          ...state.fetchData,
+          fetchInProcess: false,
+          errorDuringFetch: true,
+          errorMessage,
+          displayError: true,
+        },
       };
     }
 
@@ -379,6 +508,10 @@ export const global = (state = defaultState, action: any) => {
       }
     }
 
+    case "case definition filters cleared": {
+      return { ...state, caseDefFilters: {} };
+    }
+
     case "case definition filters updated": {
       const newFilter = action.data;
       const field = newFilter.field;
@@ -389,7 +522,7 @@ export const global = (state = defaultState, action: any) => {
       if (newFilter.dataType === "continuous") {
         if (
           //@ts-ignore
-          state.metadataCensus[field]["min"] === newFilter["max"] &&
+          state.metadataCensus[field]["min"] === newFilter["min"] &&
           //@ts-ignore
           state.metadataCensus[field]["max"] === newFilter["max"]
         ) {
@@ -416,55 +549,13 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "case definition submitted": {
-      if (state.tree && state.caseDefFilters) {
-        let matchingSamples: Node[] = get_leaves(state.tree);
-        if (Object.keys(state.caseDefFilters).length === 0) {
-          return { ...state, samplesMatchingCaseDef: matchingSamples };
-        }
-
-        for (let i = 0; i < Object.entries(state.caseDefFilters).length; i++) {
-          let thisFilter = Object.entries(state.caseDefFilters)[i];
-
-          //@ts-ignore
-          if (thisFilter[1]["dataType"] === "categorical") {
-            //@ts-ignore
-            matchingSamples = matchingSamples.filter((n: Node) =>
-              //@ts-ignore
-              thisFilter[1]["acceptedValues"].includes(
-                getNodeAttr(n, thisFilter[0])
-              )
-            );
-          } else {
-            //@ts-ignore
-            matchingSamples = matchingSamples.filter(
-              (n: Node) =>
-                //@ts-ignore
-                getNodeAttr(n, thisFilter[0]) <= thisFilter[1]["max"] &&
-                getNodeAttr(
-                  n,
-                  //@ts-ignore
-                  thisFilter[0]
-                  //@ts-ignore
-                ) >= thisFilter[1]["min"]
-            );
-          }
-        }
-
-        matchingSamples = matchingSamples.filter(
-          //@ts-ignore - wtf is this one
-          (n: Node) => !state.samplesOfInterestNames.includes(n.name)
-        );
-        const matchingSampleNames = matchingSamples.map((n: Node) => n.name);
-
-        return {
-          ...state,
-          //@ts-ignore
-          samplesOfInterest: state.samplesOfInterest.concat(matchingSamples),
-          samplesOfInterestNames:
-            //@ts-ignore
-            state.samplesOfInterestNames.concat(matchingSampleNames),
-        };
-      }
+      return {
+        ...state,
+        samplesOfInterest: state.samplesOfInterest.concat(action.data),
+        samplesOfInterestNames: state.samplesOfInterestNames.concat(
+          action.data.map((n: Node) => n.name)
+        ),
+      };
     }
 
     case "upload submit button clicked": {

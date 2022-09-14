@@ -1,70 +1,85 @@
 import SamplesOfInterest from "./samplesOfInterest";
-import CaseDefinitionConstructor from "./caseDefinitionConstructor";
 import ClusteringOptions from "./clusteringMethodSelect";
 import { useWindowSize } from "@react-hook/window-size";
 import Divider from "@mui/material/Divider";
-import Fab from "@mui/material/Fab";
-import ClearIcon from "@mui/icons-material/Clear";
 import Tooltip from "@mui/material/Tooltip";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { tooltipProps } from "../formatters/sidenote";
+import Button from "@mui/material/Button";
+import Drawer from "@mui/material/Drawer";
 
 export const CladeFilterDrawer = () => {
   const [windowWidth, windowHeight] = useWindowSize();
   const dispatch = useDispatch();
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
+
+  const totalWidth = windowWidth * 0.5;
+  const contentWidth = Math.max(windowWidth * 0.4);
+  const marginWidth = (totalWidth - contentWidth) / 2;
 
   return (
-    <div style={{ width: windowWidth * 0.3, margin: "auto", marginTop: 50 }}>
-      <div
-        style={{
-          position: "fixed",
-          bottom: 10,
-          right: 50,
-          display: "flex",
-          flexDirection: "row",
-          width: 130,
-          justifyContent: "space-between",
-        }}
-      >
-        <Tooltip
-          title="Apply new filters (previewed to the left)"
-          componentsProps={tooltipProps}
-          arrow
+    <Drawer anchor={"right"} open={state.filterDrawerOpen}>
+      <div style={{ width: totalWidth }}>
+        <div
+          style={{ width: contentWidth, margin: "auto", paddingBottom: 100 }}
         >
-          <Fab
-            variant="extended"
-            size="large"
-            color="primary"
-            aria-label="apply"
-            onClick={() => {
-              dispatch({ type: "filter drawer changes applied" });
-            }}
+          <h1 style={{ marginBottom: 0, paddingBottom: 0 }}>Filter clades</h1>
+          <h2> Preview shown on the left</h2>
+          <Divider variant="middle" style={{ margin: 30 }} />
+          <ClusteringOptions />
+          <Divider variant="middle" style={{ margin: 30 }} />
+          <SamplesOfInterest />
+        </div>
+        <div
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: totalWidth + 15,
+            paddingLeft: marginWidth,
+            height: 40,
+            width: totalWidth - 15,
+            paddingTop: 10,
+            paddingBottom: 10,
+            backgroundColor: "white",
+            borderTop: "1px solid lightGray",
+            zIndex: 100000,
+          }}
+        >
+          <Tooltip
+            title="Apply new filters (previewed to the left)"
+            componentsProps={tooltipProps}
+            arrow
           >
-            Apply
-          </Fab>
-        </Tooltip>
-        <Tooltip title="Discard changes" componentsProps={tooltipProps} arrow>
-          <Fab
-            size="small"
-            color="secondary"
-            aria-label="cancel"
-            onClick={() => {
-              dispatch({ type: "filter drawer changes cancelled" });
-            }}
-          >
-            <ClearIcon />
-          </Fab>
-        </Tooltip>
+            <Button
+              variant="contained"
+              size="large"
+              color="primary"
+              aria-label="apply"
+              onClick={() => {
+                dispatch({ type: "filter drawer changes applied" });
+              }}
+              sx={{ paddingLeft: 5, paddingRight: 5, marginRight: 3 }}
+            >
+              Apply
+            </Button>
+          </Tooltip>
+          <Tooltip title="Discard changes" componentsProps={tooltipProps} arrow>
+            <Button
+              variant="text"
+              size="large"
+              color="primary"
+              aria-label="cancel"
+              onClick={() => {
+                dispatch({ type: "filter drawer changes cancelled" });
+              }}
+            >
+              CANCEL
+            </Button>
+          </Tooltip>
+        </div>
       </div>
-      <div>
-        <h1>Filter & Suggest Clades</h1>
-        <ClusteringOptions />
-        <Divider variant="middle" style={{ margin: 30 }} />
-
-        <SamplesOfInterest />
-        <CaseDefinitionConstructor />
-      </div>
-    </div>
+    </Drawer>
   );
 };
 

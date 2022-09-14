@@ -18,5 +18,10 @@
  */
 export enum ROUTES {
   HOMEPAGE = "/",
+  // Intent of FETCH_DATA is to provide wildcard catch for subpath after it.
+  // For instance, `galago.com/fetch/https://example.com/somejson` is pointing
+  // to the URL `https://example.com/somejson` as what needs to be fetched.
+  // This is accomplished by using a nested "*" wildcard path in our router.
+  FETCH_DATA = "/fetch",
   APP = "/app",
 }
