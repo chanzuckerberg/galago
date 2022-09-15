@@ -2,7 +2,6 @@ import { Helmet } from "react-helmet";
 import { useWindowSize } from "@react-hook/window-size";
 import { BetaBanner } from "./betaBanner";
 import StagingBanner from "./stagingBanner";
-import InvalidJsonErrorBanner from "./invalidJsonBanner";
 import { isAppRunningInStaging } from "src/utils/staging";
 import { useSelector } from "react-redux";
 import { GenericErrorBanner } from "./genericErrorBanner";
@@ -25,11 +24,6 @@ const Header = (props: HeaderProps) => {
   const errorTypesToDisplay = Object.keys(state.showErrorMessages).filter(
     (errorType: string) => state.showErrorMessages[errorType] === true
   );
-  console.log(
-    // this is correct
-    "header rerendered and thinks we should display these errors",
-    errorTypesToDisplay
-  );
 
   return (
     <div
@@ -40,18 +34,13 @@ const Header = (props: HeaderProps) => {
         top: 0,
       }}
     >
-      {isAppRunningInStaging() ? <StagingBanner /> : <BetaBanner />}
-      <FetchError />
-      <InvalidJsonErrorBanner />
       {/* TODO: similarly refactor generic info alert messages into a centralized util file
         and corresponding piece of global state; use this to set the `top` attribute passed to error alerts below.
       */}
-      {/* {state.onStaging ? <StagingBanner /> : <BetaBanner />} */}
-      <BetaBanner />
-      {errorTypesToDisplay.forEach((errorType: string, i: number) => (
-        // a console log here confirms this fires for the right error type(s)
-        // TODO: but, mysteriously, the banner component never fires!?
-        <GenericErrorBanner errorType={errorType} top={95 + 100 * i} />
+      {isAppRunningInStaging() ? <StagingBanner /> : <BetaBanner />}
+
+      {errorTypesToDisplay.map((errorType: string, i: number) => (
+        <GenericErrorBanner errorType={errorType} top={95 + 110 * i} />
       ))}
 
       <div
