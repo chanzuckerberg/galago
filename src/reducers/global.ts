@@ -92,7 +92,8 @@ export const global = (state = defaultState, action: any) => {
         ...state,
         showErrorMessages: {
           invalidJson: false,
-          fileTooBig: true,
+          treeFileTooBig: true,
+          metadataFileTooBig: false,
           fetchUrlMissing: false,
           fetchInvalidFile: false,
         },
@@ -116,7 +117,8 @@ export const global = (state = defaultState, action: any) => {
         ...state,
         showErrorMessages: {
           invalidJson: true,
-          fileTooBig: false,
+          treeFileTooBig: false,
+          metadataFileTooBig: false,
           fetchUrlMissing: false,
           fetchInvalidFile: false,
         },
@@ -408,7 +410,8 @@ export const global = (state = defaultState, action: any) => {
         treeTitle,
         divisionOptions,
         showErrorMessages: {
-          fileTooBig: false,
+          treeFileTooBig: false,
+          metadataFileTooBig: false,
           invalidJson: false,
           fetchUrlMissing: false,
           fetchInvalidFile: false,
@@ -433,7 +436,8 @@ export const global = (state = defaultState, action: any) => {
         ...state,
         showErrorMessages: {
           invalidJson: false,
-          fileTooBig: false,
+          treeFileTooBig: false,
+          metadataFileTooBig: false,
           fetchUrlMissing: false,
           fetchInvalidFile: false,
         },
@@ -469,7 +473,8 @@ export const global = (state = defaultState, action: any) => {
         treeTitle: treeTitle,
         showErrorMessages: {
           invalidJson: false,
-          fileTooBig: false,
+          treeFileTooBig: false,
+          metadataFileTooBig: false,
           fetchUrlMissing: false,
           fetchInvalidFile: false,
         },
@@ -495,7 +500,8 @@ export const global = (state = defaultState, action: any) => {
         ...state,
         showErrorMessages: {
           invalidJson: false,
-          fileTooBig: false,
+          treeFileTooBig: false,
+          metadataFileTooBig: false,
           fetchUrlMissing: false,
           fetchInvalidFile: true,
         },
@@ -511,7 +517,8 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...state,
         showErrorMessages: {
-          fileTooBig: false,
+          treeFileTooBig: false,
+          metadataFileTooBig: false,
           invalidJson: false,
           fetchUrlMissing: true,
           fetchInvalidFile: false,
