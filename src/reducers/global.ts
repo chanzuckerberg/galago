@@ -29,6 +29,7 @@ import {
   calcMutsPerTransmissionMax,
   pathogenParameters,
 } from "../utils/pathogenParameters";
+import { showErrorDefaults } from "src/utils/errorTypes";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
@@ -68,13 +69,7 @@ const defaultState = {
     errorDuringFetch: false, // Was there an error around fetch process
   },
   treeTitle: "",
-  showErrorMessages: {
-    metadataFileTooBig: false,
-    treeFileTooBig: false,
-    invalidJson: false,
-    fetchUrlMissing: false,
-    fetchInvalidFile: false,
-  },
+  showErrorMessages: showErrorDefaults,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -90,12 +85,16 @@ export const global = (state = defaultState, action: any) => {
     case ACTION_TYPES.SHOW_TREE_FILE_SIZE_ERROR: {
       return {
         ...state,
+        // should be the only tree or fetch-related error
         showErrorMessages: {
-          invalidJson: false,
-          treeFileTooBig: true,
-          metadataFileTooBig: false,
-          fetchUrlMissing: false,
-          fetchInvalidFile: false,
+          ...state.showErrorMessages,
+          treeErrors: {
+            ...showErrorDefaults.treeErrors,
+            treeFileTooBig: true,
+          },
+          fetchErrors: {
+            ...showErrorDefaults.fetchErrors,
+          },
         },
         tree: null,
         treeTitle: "JSON too big",
@@ -105,9 +104,14 @@ export const global = (state = defaultState, action: any) => {
     case ACTION_TYPES.CLEAR_METADATA_FILE_SIZE_ERROR: {
       return {
         ...state,
+
+        // clear only this metadata-related error
         showErrorMessages: {
           ...state.showErrorMessages,
-          metadataFileTooBig: false,
+          metadataErrors: {
+            ...state.showErrorMessages.metadataErrors,
+            metadataFileTooBig: false,
+          },
         },
       };
     }
@@ -116,23 +120,30 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...state,
         showErrorMessages: {
-          invalidJson: true,
-          treeFileTooBig: false,
-          metadataFileTooBig: false,
-          fetchUrlMissing: false,
-          fetchInvalidFile: false,
+          // should be the only tree or fetch-related error
+          ...state.showErrorMessages,
+          treeErrors: {
+            ...showErrorDefaults.treeErrors,
+            invalidJson: true,
+          },
+          fetchErrors: {
+            ...showErrorDefaults.fetchErrors,
+          },
         },
         tree: null,
         treeTitle: "Invalid JSON",
       };
     }
 
-    case ACTION_TYPES.CLEAR_TREE_FORMAT_ERROR: {
+    case ACTION_TYPES.CLEAR_TREE_ERROR: {
       return {
         ...state,
+        // clear only this error
         showErrorMessages: {
           ...state.showErrorMessages,
-          invalidJson: false,
+          treeErrors: {
+            ...showErrorDefaults.treeErrors,
+          },
         },
         treeTitle: "",
       };
@@ -410,11 +421,10 @@ export const global = (state = defaultState, action: any) => {
         treeTitle,
         divisionOptions,
         showErrorMessages: {
-          treeFileTooBig: false,
-          metadataFileTooBig: false,
-          invalidJson: false,
-          fetchUrlMissing: false,
-          fetchInvalidFile: false,
+          // successful tree upload should clear all tree and fetch errors
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: { ...showErrorDefaults.fetchErrors },
         },
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
@@ -435,11 +445,10 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...state,
         showErrorMessages: {
-          invalidJson: false,
-          treeFileTooBig: false,
-          metadataFileTooBig: false,
-          fetchUrlMissing: false,
-          fetchInvalidFile: false,
+          // should clear all tree and fetch errors
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: { ...showErrorDefaults.fetchErrors },
         },
         fetchData: {
           ...state.fetchData,
@@ -452,10 +461,9 @@ export const global = (state = defaultState, action: any) => {
     case ACTION_TYPES.FETCH_ERROR_MSG_CLEAR: {
       return {
         ...state,
-        showErrorMessage: {
+        showErrorMessages: {
           ...state.showErrorMessages,
-          fetchUrlMissing: false,
-          fetchInvalidFile: false,
+          fetchErrors: { ...showErrorDefaults.fetchErrors },
         },
       };
     }
@@ -472,11 +480,10 @@ export const global = (state = defaultState, action: any) => {
         tree: tree,
         treeTitle: treeTitle,
         showErrorMessages: {
-          invalidJson: false,
-          treeFileTooBig: false,
-          metadataFileTooBig: false,
-          fetchUrlMissing: false,
-          fetchInvalidFile: false,
+          // should clear all tree and fetch errors
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: { ...showErrorDefaults.fetchErrors },
         },
         divisionOptions: divisionOptions,
         mrcaOptions: traverse_preorder(tree).filter(
@@ -499,11 +506,13 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...state,
         showErrorMessages: {
-          invalidJson: false,
-          treeFileTooBig: false,
-          metadataFileTooBig: false,
-          fetchUrlMissing: false,
-          fetchInvalidFile: true,
+          // should be the only tree and/or fetch error
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: {
+            ...showErrorDefaults.fetchErrors,
+            fetchInvalidFile: true,
+          },
         },
         fetchData: {
           ...state.fetchData,
@@ -517,11 +526,13 @@ export const global = (state = defaultState, action: any) => {
       return {
         ...state,
         showErrorMessages: {
-          treeFileTooBig: false,
-          metadataFileTooBig: false,
-          invalidJson: false,
-          fetchUrlMissing: true,
-          fetchInvalidFile: false,
+          // should be the only tree and/or fetch error
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: {
+            ...showErrorDefaults.fetchErrors,
+            fetchUrlMissing: true,
+          },
         },
         fetchData: {
           ...state.fetchData,

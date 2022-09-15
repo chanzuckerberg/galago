@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { errorTypes } from "../../utils/errorTypes";
 
 type GenericErrorBannerProps = {
+  errorCategory: string;
   errorType: string;
   top: number;
 };
@@ -11,13 +12,13 @@ export const GenericErrorBanner = (props: GenericErrorBannerProps) => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
-  const { errorType, top } = props;
+  const { errorCategory, errorType, top } = props;
 
   try {
-    const { title, content, onClose } = errorTypes[errorType];
+    const { title, content, onClose } = errorTypes[errorCategory][errorType];
 
     return (
-      <Collapse in={state.showErrorMessages[errorType]}>
+      <Collapse in={state.showErrorMessages[errorCategory][errorType]}>
         <Alert
           severity="error"
           style={{
@@ -41,6 +42,7 @@ export const GenericErrorBanner = (props: GenericErrorBannerProps) => {
   } catch {
     console.warn(
       "WARNING: error banner trying to render, but error type not specified in `errorTypes.ts` and/or `showErrorMessages` global state",
+      errorCategory,
       errorType
     );
     return <></>;

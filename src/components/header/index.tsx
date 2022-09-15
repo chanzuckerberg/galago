@@ -21,8 +21,23 @@ const Header = (props: HeaderProps) => {
   sectionHeight ??= 100;
   sectionWidth ??= windowWidth - 10;
 
-  const errorTypesToDisplay = Object.keys(state.showErrorMessages).filter(
-    (errorType: string) => state.showErrorMessages[errorType] === true
+  let errorTypesToDisplay: Array<[string, string]> = [];
+  // for each error category
+  Object.keys(state.showErrorMessages).forEach((errorCategory: string) => {
+    // for each error type in the category
+    Object.keys(state.showErrorMessages[errorCategory]).forEach(
+      (errorType: string) => {
+        // pull out the ones that are true
+        if (state.showErrorMessages[errorCategory][errorType] === true) {
+          errorTypesToDisplay.push([errorCategory, errorType]);
+        }
+      }
+    );
+  });
+  console.log(
+    "should show errors",
+    errorTypesToDisplay,
+    state.showErrorMessages
   );
 
   return (
@@ -39,9 +54,15 @@ const Header = (props: HeaderProps) => {
       */}
       {isAppRunningInStaging() ? <StagingBanner /> : <BetaBanner />}
 
-      {errorTypesToDisplay.map((errorType: string, i: number) => (
-        <GenericErrorBanner errorType={errorType} top={95 + 110 * i} />
-      ))}
+      {errorTypesToDisplay.map((error: [string, string], i: number) => {
+        return (
+          <GenericErrorBanner
+            errorCategory={error[0]}
+            errorType={error[1]}
+            top={95 + 110 * i}
+          />
+        );
+      })}
 
       <div
         style={{
