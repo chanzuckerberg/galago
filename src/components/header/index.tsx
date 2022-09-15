@@ -1,6 +1,9 @@
 import { Helmet } from "react-helmet";
 import { useWindowSize } from "@react-hook/window-size";
 import { BetaBanner } from "./betaBanner";
+import StagingBanner from "./stagingBanner";
+import InvalidJsonErrorBanner from "./invalidJsonBanner";
+import { isAppRunningInStaging } from "src/utils/staging";
 import { useSelector } from "react-redux";
 import { GenericErrorBanner } from "./genericErrorBanner";
 // import StagingBanner from "./stagingBanner";
@@ -37,6 +40,9 @@ const Header = (props: HeaderProps) => {
         top: 0,
       }}
     >
+      {isAppRunningInStaging() ? <StagingBanner /> : <BetaBanner />}
+      <FetchError />
+      <InvalidJsonErrorBanner />
       {/* TODO: similarly refactor generic info alert messages into a centralized util file
         and corresponding piece of global state; use this to set the `top` attribute passed to error alerts below.
       */}
