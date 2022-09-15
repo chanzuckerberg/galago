@@ -8,44 +8,43 @@ type GenericErrorBannerProps = {
 };
 
 export const GenericErrorBanner = (props: GenericErrorBannerProps) => {
-  console.log("in the right component"); // BUG this never fires!?
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
   const { errorType, top } = props;
 
-  console.log(errorType, state.showErrorMessages);
-  if (!Object.keys(state.showErrorMessages).includes(errorType)) {
+  try {
+    const { title, content, onClose } = errorTypes[errorType];
+
+    return (
+      <Collapse in={state.showErrorMessages[errorType]}>
+        <Alert
+          severity="error"
+          style={{
+            width: 450,
+            height: 110,
+            position: "absolute",
+            top: top,
+            right: 0,
+          }}
+          onClose={() => {
+            dispatch({ type: onClose });
+          }}
+        >
+          <AlertTitle>
+            <strong>{title}</strong>
+          </AlertTitle>
+          <span>{content}</span>
+        </Alert>
+      </Collapse>
+    );
+  } catch {
     console.warn(
       "WARNING: error banner trying to render, but error type not specified in `errorTypes.ts` and/or `showErrorMessages` global state",
       errorType
     );
     return <></>;
   }
-
-  const { title, content, onClose } = errorTypes[errorType];
-  return (
-    <Collapse in={state.showErrorMessages[errorType]}>
-      <Alert
-        severity="error"
-        style={{
-          width: 450,
-          height: 90,
-          position: "absolute",
-          top: top,
-          right: 0,
-        }}
-        onClose={() => {
-          dispatch({ type: onClose });
-        }}
-      >
-        <AlertTitle>
-          <strong>{title}</strong>
-        </AlertTitle>
-        <span>{content}</span>
-      </Alert>
-    </Collapse>
-  );
 };
 
 // export default GenericErrorBanner;
