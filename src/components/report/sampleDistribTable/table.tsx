@@ -1,9 +1,5 @@
 import { Node, GISAIDRecord, CladeDescription, HomeGeo } from "../../../d";
-import {
-  getNodeCounts,
-  getGisaidCounts,
-  GeoLevels,
-} from "../../../utils/countSamples";
+import { GeoLevels } from "../../../utils/countSamples";
 import { useSelector } from "react-redux";
 import TableRow from "./row";
 import TextCell from "./textCell";
@@ -11,18 +7,16 @@ import TextCell from "./textCell";
 export type DataLevels = "gisaid" | "dataset" | "clade";
 
 interface SampleTableProps {
-  gisaidCounts: GISAIDRecord[];
-  minMonth: number;
-  minYear: number;
-  maxMonth: number;
-  maxYear: number;
+  gisaidRecords: GISAIDRecord[];
+  minDate: Date;
+  maxDate: Date;
 }
 
 function SampleDistributionTable(props: SampleTableProps) {
   //@ts-ignore
   const state = useSelector((state) => state.global);
 
-  const { gisaidCounts, minMonth, minYear, maxMonth, maxYear } = props;
+  const { gisaidRecords, minDate, maxDate } = props;
   const geoLevels: Array<GeoLevels> = ["location", "division", "country"];
 
   const row_labels = {
@@ -63,14 +57,12 @@ function SampleDistributionTable(props: SampleTableProps) {
       </div>
       {geoLevels.map((geo, i) => (
         <TableRow
-          gisaidCounts={gisaidCounts}
+          gisaidRecords={gisaidRecords}
           geoLevel={geo}
           label={row_labels[geo]}
           key={i}
-          minMonth={minMonth}
-          minYear={minYear}
-          maxMonth={maxMonth}
-          maxYear={maxYear}
+          minDate={minDate}
+          maxDate={maxDate}
         />
       ))}
     </div>

@@ -57,7 +57,7 @@ export const Report = (props: ReportProps) => {
             // TODO: rewrite this to still be accurate and valuable for pathogens w/o reference data available
             <SamplingBias
               // @ts-ignore
-              gisaidCounts={gisaidCounts}
+              gisaidRecords={gisaidCounts}
               sidenote_start={7}
             />
           )}

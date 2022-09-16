@@ -1,124 +1,110 @@
+import { getFormControlLabelUtilityClasses } from "@mui/material";
 import { Node, GISAIDRecord, HomeGeo } from "../d";
 import { getNodeAttr } from "./treeMethods";
 
 export type GeoLevels = "location" | "division" | "country";
 
-export const getNodeCounts = (
-  nodes: Node[],
-  geoLevel: GeoLevels,
+const matchesGeography = (
+  type: "gisaid" | "node",
   homeGeo: HomeGeo,
-  minYear: number,
-  minMonth: number,
-  maxYear: number,
-  maxMonth: number
+  geoLevel: string,
+  gisaidRecord?: GISAIDRecord,
+  node?: Node
 ) => {
-  let filteredNodes: Node[] = [];
+  let location, division, country;
 
-  if (geoLevel === "location") {
-    // same county
-    filteredNodes = nodes.filter((n: Node) => {
-      const date = getNodeAttr(n, "num_date");
-      const nodeMonth = date.getMonth();
-      const nodeYear = date.getFullYear();
-      return (
-        getNodeAttr(n, "country") === homeGeo.country &&
-        getNodeAttr(n, "division") === homeGeo.division &&
-        getNodeAttr(n, "location") === homeGeo.location &&
-        nodeYear <= maxYear &&
-        nodeYear >= minYear &&
-        nodeMonth <= maxMonth &&
-        nodeMonth >= minMonth
-      );
-    });
-  } else if (geoLevel === "division") {
-    // same state diff county
-    filteredNodes = nodes.filter((n: Node) => {
-      const date = getNodeAttr(n, "num_date");
-      const nodeMonth = date.getMonth() + 1; // indexing
-      const nodeYear = date.getFullYear();
-
-      return (
-        getNodeAttr(n, "country") === homeGeo.country &&
-        getNodeAttr(n, "division") === homeGeo.division &&
-        getNodeAttr(n, "location") !== homeGeo.location &&
-        nodeYear <= maxYear &&
-        nodeYear >= minYear &&
-        nodeMonth <= maxMonth &&
-        nodeMonth >= minMonth
-      );
-    });
-  } else if (geoLevel === "country") {
-    // same county
-    filteredNodes = nodes.filter((n: Node) => {
-      const date = getNodeAttr(n, "num_date");
-      const nodeMonth = date.getMonth();
-      const nodeYear = date.getFullYear();
-
-      return (
-        getNodeAttr(n, "country") === homeGeo.country &&
-        getNodeAttr(n, "division") !== homeGeo.division &&
-        getNodeAttr(n, "location") !== homeGeo.location &&
-        nodeYear <= maxYear &&
-        nodeYear >= minYear &&
-        nodeMonth <= maxMonth &&
-        nodeMonth >= minMonth
-      );
-    });
+  // fetch data differently dependent on record type
+  if (type === "gisaid" && gisaidRecord) {
+    location = gisaidRecord.location;
+    division = gisaidRecord.division;
+    country = gisaidRecord.country;
+  } else if (type === "node" && node) {
+    location = getNodeAttr(node, "location");
+    division = getNodeAttr(node, "division");
+    country = getNodeAttr(node, "country");
+  } else {
+    console.warn("ERROR: malformed input to matchesGeography");
+    return false;
   }
-  return filteredNodes.length;
+
+  // return boolean based on what level of geographic match we require / exclude
+  switch (geoLevel) {
+    case "location": {
+      return (
+        location === homeGeo.location &&
+        division === homeGeo.division &&
+        country === homeGeo.country
+      );
+    }
+    case "division": {
+      return (
+        // other locations in state
+        location !== homeGeo.location &&
+        division === homeGeo.division &&
+        country === homeGeo.country
+      );
+    }
+    case "country": {
+      return (
+        // other states in country
+        location !== homeGeo.location &&
+        division !== homeGeo.division &&
+        country === homeGeo.country
+      );
+    }
+  }
 };
 
-export const getGisaidCounts = (
-  gisaidRecords: GISAIDRecord[],
-  geoLevel: GeoLevels,
-  homeGeo: HomeGeo,
-  minYear: number,
-  minMonth: number,
-  maxYear: number,
-  maxMonth: number
+const matchesDateRange = (
+  type: "gisaid" | "node",
+  minDate: Date,
+  maxDate: Date,
+  gisaidRecord?: GISAIDRecord,
+  node?: Node
 ) => {
-  let filteredGisaidRecords: GISAIDRecord[] = [];
+  let date: Date;
 
-  if (geoLevel === "location") {
-    // same county
-    filteredGisaidRecords = gisaidRecords.filter(
-      (gr: GISAIDRecord) =>
-        gr.country === homeGeo.country &&
-        gr.division === homeGeo.division &&
-        gr.location === homeGeo.location &&
-        gr.year <= maxYear &&
-        gr.year >= minYear &&
-        gr.month - 1 <= maxMonth && // -1 for indexing (pandas dates are 1-idx; tsc dates are 0-idx)
-        gr.month - 1 >= minMonth
-    );
-  } else if (geoLevel === "division") {
-    // same state, different counties
-    filteredGisaidRecords = gisaidRecords.filter(
-      (gr: GISAIDRecord) =>
-        gr.country === homeGeo.country &&
-        gr.division === homeGeo.division &&
-        gr.location !== homeGeo.location &&
-        gr.year <= maxYear &&
-        gr.year >= minYear &&
-        gr.month - 1 <= maxMonth &&
-        gr.month - 1 >= minMonth
-    );
-  } else if (geoLevel === "country") {
-    // same country, different states
-    filteredGisaidRecords = gisaidRecords.filter(
-      (gr: GISAIDRecord) =>
-        gr.country === homeGeo.country &&
-        gr.division !== homeGeo.division &&
-        gr.location !== homeGeo.location &&
-        gr.year <= maxYear &&
-        gr.year >= minYear &&
-        gr.month - 1 <= maxMonth &&
-        gr.month - 1 >= minMonth
-    );
+  if (type === "gisaid" && gisaidRecord) {
+    date = new Date(Date.parse(`${gisaidRecord.year}-${gisaidRecord.month}`));
+  } else if (type === "node" && node) {
+    date = getNodeAttr(node, "num_date");
+  } else {
+    console.warn("ERROR: malformed input to matchesDateRange");
+    return false;
   }
-  let total = 0;
-  for (let i = 0; i < filteredGisaidRecords.length; i++) {
-    total += filteredGisaidRecords[i]["count"];
+
+  return date >= minDate && date <= maxDate;
+};
+
+export const getCount = (
+  type: "node" | "gisaid",
+  geoLevel: string,
+  homeGeo: HomeGeo,
+  minDate: Date,
+  maxDate: Date,
+  gisaidRecords?: GISAIDRecord[],
+  nodes?: Node[]
+) => {
+  if (type === "gisaid" && gisaidRecords) {
+    const filteredRecords = gisaidRecords.filter(
+      (record: GISAIDRecord) =>
+        matchesGeography("gisaid", homeGeo, geoLevel, record) &&
+        matchesDateRange("gisaid", minDate, maxDate, record)
+    );
+
+    let total = 0;
+    for (let i = 0; i < filteredRecords.length; i++) {
+      total += filteredRecords[i]["count"];
+    }
+    return total;
+  } else if (type === "node" && nodes) {
+    const filteredNodes = nodes.filter(
+      (node: Node) =>
+        matchesGeography("node", homeGeo, geoLevel, undefined, node) &&
+        matchesDateRange("node", minDate, maxDate, undefined, node)
+    );
+    return filteredNodes.length;
+  } else {
+    throw new Error("Malformed input to getCount");
   }
-  return total;
 };
