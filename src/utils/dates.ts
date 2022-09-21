@@ -4,8 +4,8 @@ export const sortDates = (dates: Date[]) => {
 
 export const getDateRange = (dates: Date[]) => {
   const sortedDates = sortDates(dates);
-  const minDate = sortedDates[0];
-  const maxDate = sortedDates.slice(-1)[0];
+  const minDate = new Date(sortedDates[0]);
+  const maxDate = new Date(sortedDates.slice(-1)[0]);
   return {
     minDate: minDate,
     maxDate: maxDate,
@@ -16,8 +16,8 @@ export const getDateRange = (dates: Date[]) => {
 export const binWeeklyDate = (date: Date) => {
   // return the Saturday week ending date
   // "epi weeks" end on Saturdays per CDC
-  const offsetToNextSaturday = 6 - date.getDay();
   const nextSaturdayDate = new Date(date);
+  const offsetToNextSaturday = 6 - nextSaturdayDate.getDay();
   nextSaturdayDate.setDate(nextSaturdayDate.getDate() + offsetToNextSaturday);
   return nextSaturdayDate;
 };
@@ -71,6 +71,7 @@ export const numericToDateObject = (numDate: number) => {
   const nDays = fracPart * nDaysInYear;
   const date = new Date(year, 0, 1);
   date.setDate(date.getDate() + nDays);
+
   return date;
 };
 
