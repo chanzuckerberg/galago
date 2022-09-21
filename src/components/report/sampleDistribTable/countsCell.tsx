@@ -18,7 +18,7 @@ const CountsCell = (props: CountsCellProps) => {
   const state = useSelector((state) => state.global);
   const { gisaidRecords, geoLevel, dataLevel, minDate, maxDate, key } = props;
 
-  let data, count;
+  let count;
 
   if (dataLevel === "gisaid") {
     count = getCount(

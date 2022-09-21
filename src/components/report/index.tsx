@@ -8,7 +8,7 @@ import TMRCA from "./tmrca";
 import { useSelector } from "react-redux";
 import { get_leaves, get_root } from "../../utils/treeMethods";
 import SamplingBias from "./sampleDistribTable";
-import { gisaidCounts } from "../../../data/gisaidCounts2022-06";
+import { gisaidCounts } from "../../../data/gisaidCounts2022-09";
 import { SkeletonReport } from "./skeleton";
 import { useEffect, useState } from "react";
 
