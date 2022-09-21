@@ -21,6 +21,8 @@ import {
 } from "@mui/material";
 import PathogenSelection from "./pathogenSelection";
 import { ROUTES } from "../../routes";
+import { maxFileSize } from "../../utils/dataIngest";
+import { ACTION_TYPES } from "../../reducers/actionTypes";
 
 export const UploadModal = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
@@ -41,6 +43,10 @@ export const UploadModal = () => {
   };
 
   const handleMetadataUpload = (file: any) => {
+    if (file.size > maxFileSize) {
+      dispatch({ type: ACTION_TYPES.SHOW_METADATA_FILE_SIZE_ERROR });
+      return;
+    }
     const runOnUpload = (results: any, file: any) => {
       const { tidyMetadata, metadataCensus } = ingestCSVMetadata(results.data);
       dispatch({

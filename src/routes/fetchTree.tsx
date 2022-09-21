@@ -8,6 +8,7 @@ import {
   ingestNextstrain,
   validateNextstrainJson,
 } from "../utils/nextstrainAdapter";
+import { maxFileSize } from "../utils/dataIngest";
 
 /**
  * Handles fetching external tree JSON and loading it into app.
@@ -32,12 +33,10 @@ import {
 async function handleDataFetch(targetUrl: string, dispatch: Function) {
   let response; // Here because of `try` block scope.
   try {
-    response = await axios.get(targetUrl);
+    response = await axios.get(targetUrl, { maxBodyLength: maxFileSize });
   } catch {
-    const errorMessage = `We weren't able to import your tree data. Please confirm this URL is correct and publicly accessible: ${targetUrl}`;
     dispatch({
       type: ACTION_TYPES.FETCH_TREE_DATA_FAILED,
-      errorMessage,
     });
     return; // Can't progress since fetch failed.
   }
@@ -76,11 +75,8 @@ const FetchTree = () => {
       handleDataFetch(targetUrl, dispatch);
     } else {
       // Showed up at /fetch, but no URL given after that. Can't do anything.
-      const errorMessage =
-        "We didn't receive a URL to fetch your tree json from. Please check your URL or upload your file directly below.";
       dispatch({
         type: ACTION_TYPES.FETCH_TREE_NO_URL_SPECIFIED,
-        errorMessage,
       });
     }
   }, []);

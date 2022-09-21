@@ -9,6 +9,7 @@ import Theme from "../../theme";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import { tooltipProps } from "../formatters/sidenote";
 import { ACTION_TYPES } from "../../reducers/actionTypes";
+import { maxFileSize } from "../../utils/dataIngest";
 
 type UploadProps = {
   sectionWidth: number;
@@ -20,6 +21,10 @@ export const Upload = (props: UploadProps) => {
   const dispatch = useDispatch();
 
   const loadTreeJson = (file: any) => {
+    if (file.size > maxFileSize) {
+      dispatch({ type: ACTION_TYPES.SHOW_TREE_FILE_SIZE_ERROR });
+      return;
+    }
     const fileReader = new FileReader();
     fileReader.readAsText(file, "application/JSON");
     fileReader.onload = (event) => {
