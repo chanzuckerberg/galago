@@ -10,6 +10,7 @@ interface SamplingBiasProps {
 import Sidenote from "../../formatters/sidenote";
 import { FormatDataPoint } from "../../formatters/dataPoint";
 import { getDateRange } from "src/utils/dates";
+import { FormHelperText } from "@mui/material";
 
 function SamplingBias(props: SamplingBiasProps) {
   //@ts-ignore
@@ -116,6 +117,9 @@ function SamplingBias(props: SamplingBiasProps) {
           minDate={minDate}
           maxDate={maxDate}
         />
+        <FormHelperText>
+          Public data counts pulled from GISAID on 2020-09-20
+        </FormHelperText>
       </div>
     </div>
   );
