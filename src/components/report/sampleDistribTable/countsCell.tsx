@@ -20,42 +20,35 @@ const CountsCell = (props: CountsCellProps) => {
 
   let data, count;
 
-  switch (dataLevel) {
-    case "gisaid": {
-      data = gisaidRecords;
-      count = getCount(
-        "gisaid",
-        geoLevel,
-        state.cladeDescription.home_geo,
-        minDate,
-        maxDate,
-        data
-      );
-    }
-    case "dataset": {
-      data = get_leaves(state.tree);
-      count = getCount(
-        "node",
-        geoLevel,
-        state.cladeDescription.home_geo,
-        minDate,
-        maxDate,
-        undefined,
-        data
-      );
-    }
-    case "clade": {
-      data = get_leaves(state.mrca);
-      count = getCount(
-        "node",
-        geoLevel,
-        state.cladeDescription.home_geo,
-        minDate,
-        maxDate,
-        undefined,
-        data
-      );
-    }
+  if (dataLevel === "gisaid") {
+    count = getCount(
+      "gisaid",
+      geoLevel,
+      state.cladeDescription.home_geo,
+      minDate,
+      maxDate,
+      gisaidRecords
+    );
+  } else if (dataLevel === "dataset") {
+    count = getCount(
+      "node",
+      geoLevel,
+      state.cladeDescription.home_geo,
+      minDate,
+      maxDate,
+      undefined,
+      get_leaves(state.tree)
+    );
+  } else {
+    count = getCount(
+      "node",
+      geoLevel,
+      state.cladeDescription.home_geo,
+      minDate,
+      maxDate,
+      undefined,
+      get_leaves(state.mrca)
+    );
   }
 
   return (
