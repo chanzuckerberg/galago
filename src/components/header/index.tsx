@@ -5,7 +5,6 @@ import StagingBanner from "./stagingBanner";
 import { isAppRunningInStaging } from "src/utils/staging";
 import { useSelector } from "react-redux";
 import { GenericErrorBanner } from "./genericErrorBanner";
-// import StagingBanner from "./stagingBanner";
 
 type HeaderProps = {
   sectionHeight?: number;

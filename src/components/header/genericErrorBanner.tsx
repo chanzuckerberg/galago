@@ -45,8 +45,8 @@ export const GenericErrorBanner = (props: GenericErrorBannerProps) => {
       errorCategory,
       errorType
     );
-    return <></>;
+    return null;
   }
 };
 
-// export default GenericErrorBanner;
+export default GenericErrorBanner;
