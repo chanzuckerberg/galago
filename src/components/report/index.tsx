@@ -58,7 +58,6 @@ export const Report = (props: ReportProps) => {
             <SamplingBias
               // @ts-ignore
               gisaidRecords={gisaidCounts}
-              sidenote_start={7}
             />
           )}
           <Assumptions sidenote_start={8} />
