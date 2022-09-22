@@ -1,69 +1,53 @@
 import { Node, GISAIDRecord, HomeGeo } from "../../../d";
-import {
-  GeoLevels,
-  getGisaidCounts,
-  getNodeCounts,
-} from "../../../utils/countSamples";
+import { GeoLevels, getCount } from "../../../utils/countSamples";
 import { useSelector } from "react-redux";
-import { get_leaves } from "../../../utils/treeMethods";
+import { get_leaves, traverse_preorder } from "../../../utils/treeMethods";
 import { DataLevels } from "./table";
 
 type CountsCellProps = {
-  gisaidCounts: GISAIDRecord[];
+  gisaidRecords: GISAIDRecord[];
   geoLevel: GeoLevels;
   dataLevel: DataLevels;
-  minMonth: number;
-  minYear: number;
-  maxMonth: number;
-  maxYear: number;
+  minDate: Date;
+  maxDate: Date;
   key: string;
 };
 
 const CountsCell = (props: CountsCellProps) => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
-  const {
-    gisaidCounts,
-    geoLevel,
-    dataLevel,
-    minYear,
-    minMonth,
-    maxYear,
-    maxMonth,
-    key,
-  } = props;
+  const { gisaidRecords, geoLevel, dataLevel, minDate, maxDate, key } = props;
 
-  let counts = NaN;
+  let count;
 
   if (dataLevel === "gisaid") {
-    counts = getGisaidCounts(
-      gisaidCounts,
+    count = getCount(
+      "gisaid",
       geoLevel,
       state.cladeDescription.home_geo,
-      minYear,
-      minMonth,
-      maxYear,
-      maxMonth
+      minDate,
+      maxDate,
+      gisaidRecords
     );
   } else if (dataLevel === "dataset") {
-    counts = getNodeCounts(
-      get_leaves(state.tree),
+    count = getCount(
+      "node",
       geoLevel,
       state.cladeDescription.home_geo,
-      minYear,
-      minMonth,
-      maxYear,
-      maxMonth
+      minDate,
+      maxDate,
+      undefined,
+      get_leaves(state.tree)
     );
   } else {
-    counts = getNodeCounts(
-      get_leaves(state.mrca),
+    count = getCount(
+      "node",
       geoLevel,
       state.cladeDescription.home_geo,
-      minYear,
-      minMonth,
-      maxYear,
-      maxMonth
+      minDate,
+      maxDate,
+      undefined,
+      get_leaves(state.mrca)
     );
   }
 
@@ -78,7 +62,7 @@ const CountsCell = (props: CountsCellProps) => {
       }}
       key={key}
     >
-      {counts.toLocaleString("en-US")}
+      {count.toLocaleString("en-US")}
     </p>
   );
 };
