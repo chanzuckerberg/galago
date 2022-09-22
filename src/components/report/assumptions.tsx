@@ -30,7 +30,7 @@ function Assumptions(props: AssumptionsProps) {
             />{" "}
             that occurs with each transmission ranges between{" "}
             <span className="dataPoint">
-              0 - {cladeDescription.mutsPerTransmissionMax}
+              0 - {state.mutsPerTransmissionMax}
             </span>
           </li>
           <br />

@@ -1,10 +1,10 @@
 import { Helmet } from "react-helmet";
 import { useWindowSize } from "@react-hook/window-size";
-import { FetchError } from "./fetchErrorBanner";
 import { BetaBanner } from "./betaBanner";
 import StagingBanner from "./stagingBanner";
-import InvalidJsonErrorBanner from "./invalidJsonBanner";
 import { isAppRunningInStaging } from "src/utils/staging";
+import { useSelector } from "react-redux";
+import { GenericErrorBanner } from "./genericErrorBanner";
 
 type HeaderProps = {
   sectionHeight?: number;
@@ -12,11 +12,32 @@ type HeaderProps = {
 };
 
 const Header = (props: HeaderProps) => {
+  //@ts-ignore
+  const state = useSelector((state) => state.global);
   let { sectionHeight, sectionWidth } = props;
   const [windowWidth, windowHeight] = useWindowSize();
 
   sectionHeight ??= 100;
   sectionWidth ??= windowWidth - 10;
+
+  let errorTypesToDisplay: Array<[string, string]> = [];
+  // for each error category
+  Object.keys(state.showErrorMessages).forEach((errorCategory: string) => {
+    // for each error type in the category
+    Object.keys(state.showErrorMessages[errorCategory]).forEach(
+      (errorType: string) => {
+        // pull out the ones that are true
+        if (state.showErrorMessages[errorCategory][errorType] === true) {
+          errorTypesToDisplay.push([errorCategory, errorType]);
+        }
+      }
+    );
+  });
+  console.log(
+    "should show errors",
+    errorTypesToDisplay,
+    state.showErrorMessages
+  );
 
   return (
     <div
@@ -27,9 +48,20 @@ const Header = (props: HeaderProps) => {
         top: 0,
       }}
     >
+      {/* TODO: similarly refactor generic info alert messages into a centralized util file
+        and corresponding piece of global state; use this to set the `top` attribute passed to error alerts below.
+      */}
       {isAppRunningInStaging() ? <StagingBanner /> : <BetaBanner />}
-      <FetchError />
-      <InvalidJsonErrorBanner />
+
+      {errorTypesToDisplay.map((error: [string, string], i: number) => {
+        return (
+          <GenericErrorBanner
+            errorCategory={error[0]}
+            errorType={error[1]}
+            top={95 + 110 * i}
+          />
+        );
+      })}
 
       <div
         style={{

@@ -29,6 +29,7 @@ import {
   calcMutsPerTransmissionMax,
   pathogenParameters,
 } from "../utils/pathogenParameters";
+import { showErrorDefaults } from "src/utils/errorTypes";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
@@ -66,11 +67,9 @@ const defaultState = {
     fetchInProcess: false, // App is fetching data (takes a few seconds)
     targetUrl: "", // URL we were given to fetch
     errorDuringFetch: false, // Was there an error around fetch process
-    errorMessage: "", // If error, human-readable message about the error.
-    displayError: false, // Should we display error about fetch to user?
   },
   treeTitle: "",
-  showTreeFormatError: false,
+  showErrorMessages: showErrorDefaults,
 };
 
 export const global = (state = defaultState, action: any) => {
@@ -83,19 +82,69 @@ export const global = (state = defaultState, action: any) => {
       return defaultState;
     }
 
+    case ACTION_TYPES.SHOW_TREE_FILE_SIZE_ERROR: {
+      return {
+        ...state,
+        // should be the only tree or fetch-related error
+        showErrorMessages: {
+          ...state.showErrorMessages,
+          treeErrors: {
+            ...showErrorDefaults.treeErrors,
+            treeFileTooBig: true,
+          },
+          fetchErrors: {
+            ...showErrorDefaults.fetchErrors,
+          },
+        },
+        tree: null,
+        treeTitle: "JSON too big",
+      };
+    }
+
+    case ACTION_TYPES.CLEAR_METADATA_FILE_SIZE_ERROR: {
+      return {
+        ...state,
+
+        // clear only this metadata-related error
+        showErrorMessages: {
+          ...state.showErrorMessages,
+          metadataErrors: {
+            ...state.showErrorMessages.metadataErrors,
+            metadataFileTooBig: false,
+          },
+        },
+      };
+    }
+
     case ACTION_TYPES.SHOW_TREE_FORMAT_ERROR: {
       return {
         ...state,
-        showTreeFormatError: true,
+        showErrorMessages: {
+          // should be the only tree or fetch-related error
+          ...state.showErrorMessages,
+          treeErrors: {
+            ...showErrorDefaults.treeErrors,
+            invalidJson: true,
+          },
+          fetchErrors: {
+            ...showErrorDefaults.fetchErrors,
+          },
+        },
         tree: null,
         treeTitle: "Invalid JSON",
       };
     }
 
-    case ACTION_TYPES.CLEAR_TREE_FORMAT_ERROR: {
+    case ACTION_TYPES.CLEAR_TREE_ERROR: {
       return {
         ...state,
-        showTreeFormatError: false,
+        // clear only this error
+        showErrorMessages: {
+          ...state.showErrorMessages,
+          treeErrors: {
+            ...showErrorDefaults.treeErrors,
+          },
+        },
         treeTitle: "",
       };
     }
@@ -371,7 +420,12 @@ export const global = (state = defaultState, action: any) => {
         tree,
         treeTitle,
         divisionOptions,
-        showTreeFormatError: false,
+        showErrorMessages: {
+          // successful tree upload should clear all tree and fetch errors
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: { ...showErrorDefaults.fetchErrors },
+        },
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
@@ -390,6 +444,12 @@ export const global = (state = defaultState, action: any) => {
       const { targetUrl } = action;
       return {
         ...state,
+        showErrorMessages: {
+          // should clear all tree and fetch errors
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: { ...showErrorDefaults.fetchErrors },
+        },
         fetchData: {
           ...state.fetchData,
           fetchInProcess: true,
@@ -401,9 +461,9 @@ export const global = (state = defaultState, action: any) => {
     case ACTION_TYPES.FETCH_ERROR_MSG_CLEAR: {
       return {
         ...state,
-        fetchData: {
-          ...state.fetchData,
-          displayError: false,
+        showErrorMessages: {
+          ...state.showErrorMessages,
+          fetchErrors: { ...showErrorDefaults.fetchErrors },
         },
       };
     }
@@ -419,7 +479,12 @@ export const global = (state = defaultState, action: any) => {
         ...state,
         tree: tree,
         treeTitle: treeTitle,
-        showTreeFormatError: false,
+        showErrorMessages: {
+          // should clear all tree and fetch errors
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: { ...showErrorDefaults.fetchErrors },
+        },
         divisionOptions: divisionOptions,
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
@@ -433,36 +498,46 @@ export const global = (state = defaultState, action: any) => {
         fetchData: {
           ...state.fetchData,
           fetchInProcess: false,
-          displayError: false,
         },
       };
     }
 
     case ACTION_TYPES.FETCH_TREE_DATA_FAILED: {
-      const { errorMessage } = action;
       return {
         ...state,
-        showTreeFormatError: false,
+        showErrorMessages: {
+          // should be the only tree and/or fetch error
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: {
+            ...showErrorDefaults.fetchErrors,
+            fetchInvalidFile: true,
+          },
+        },
         fetchData: {
           ...state.fetchData,
           fetchInProcess: false,
           errorDuringFetch: true,
-          errorMessage,
-          displayError: true,
         },
       };
     }
 
     case ACTION_TYPES.FETCH_TREE_NO_URL_SPECIFIED: {
-      const { errorMessage } = action;
       return {
         ...state,
+        showErrorMessages: {
+          // should be the only tree and/or fetch error
+          ...state.showErrorMessages,
+          treeErrors: { ...showErrorDefaults.treeErrors },
+          fetchErrors: {
+            ...showErrorDefaults.fetchErrors,
+            fetchUrlMissing: true,
+          },
+        },
         fetchData: {
           ...state.fetchData,
           fetchInProcess: false,
           errorDuringFetch: true,
-          errorMessage,
-          displayError: true,
         },
       };
     }

@@ -28,6 +28,10 @@ jobs:
           echo Setting up Vite env vars file
           echo "$GALAGO_VITE_ENV_VARS" > .env
       - name: Build app
+        # Saw issues with build running out of memory in GitHub Actions
+        # Resolve per https://github.com/actions/runner-images/issues/70
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
         # As configured in Aug 2022, `vite build` outputs to `dist` folder.
         run: npm run build
       - name: Deploy to GitHub Pages
