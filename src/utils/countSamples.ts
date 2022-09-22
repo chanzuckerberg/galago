@@ -78,7 +78,7 @@ const matchesDateRange = (
 
 export const getCount = (
   type: "node" | "gisaid",
-  geoLevel: string,
+  geoLevel: GeoLevels,
   homeGeo: HomeGeo,
   minDate: Date,
   maxDate: Date,
