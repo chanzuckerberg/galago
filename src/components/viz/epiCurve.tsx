@@ -1,15 +1,11 @@
-import * as d3 from "d3";
-import { Label, Connector, CircleSubject, Annotation } from "@visx/annotation";
-import { LinePath } from "@visx/shape";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import React, { useState } from "react";
 import { BarStack } from "@visx/shape";
-import { SeriesPoint } from "@visx/shape/lib/types";
 import { Group } from "@visx/group";
 import { GridRows } from "@visx/grid";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
-import { timeParse, timeFormat } from "d3-time-format";
+import { timeFormat } from "d3-time-format";
 // import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { LegendOrdinal } from "@visx/legend";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -22,7 +18,7 @@ import {
   traverse_preorder,
 } from "../../utils/treeMethods";
 import { Node } from "../../d";
-import { color, range, scaleTime } from "d3";
+import { range } from "d3";
 import {
   binMonthlyDate,
   binWeeklyDate,
@@ -231,18 +227,25 @@ export const EpiCurve = (props: EpiCurveProps) => {
         borderWidth: 2,
       }}
     >
-      <div style={{ position: "absolute", top: 0 }}>
+      <div style={{ position: "relative", top: 10, left: 20 }}>
         <ToggleButtonGroup
           value={colorBy}
           exclusive
           onChange={handleColorbySelection}
           aria-label="color by"
-          size="small"
         >
-          <ToggleButton value="transmissions" aria-label="transmissions">
+          <ToggleButton
+            value="transmissions"
+            aria-label="transmissions"
+            style={{ width: 30, height: 30 }}
+          >
             <TimelineIcon />
           </ToggleButton>
-          <ToggleButton value="geography" aria-label="geography">
+          <ToggleButton
+            value="geography"
+            aria-label="geography"
+            style={{ width: 30, height: 30 }}
+          >
             <MapIcon />
           </ToggleButton>
         </ToggleButtonGroup>
@@ -348,7 +351,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
           scale={countScale}
           width={xMax}
           height={yMax}
-          stroke={gridValues !== [] ? "white" : Theme.palette.secondary.main}
+          stroke={"white"}
           strokeOpacity={1}
           tickValues={gridValues}
         />
