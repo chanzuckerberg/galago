@@ -2,7 +2,7 @@ import { Node } from "../../../d";
 import { get_leaves, traverse_preorder } from "../../../utils/treeMethods";
 import { scaleLinear, extent, scaleTime, symbolCross } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 //@ts-ignore
 import uuid from "react-uuid";
 import CladeSelectionVizControls from "./cladeSelectionVizControls";

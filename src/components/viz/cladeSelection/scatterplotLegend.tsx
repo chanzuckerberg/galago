@@ -1,4 +1,3 @@
-import ColorLensIcon from "@mui/icons-material/ColorLens";
 import Theme from "../../../theme";
 import { useState } from "react";
 
