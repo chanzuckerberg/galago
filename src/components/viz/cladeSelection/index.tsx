@@ -181,7 +181,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
             })
             .map((sample) => plotSample(sample))}
 
-          <CladeSelectionVizLegend />
+          <CladeSelectionVizLegend smallWindow={chartHeight < 200} />
           <AxisLeft
             strokeWidth={0}
             left={chartMargin * 2}
