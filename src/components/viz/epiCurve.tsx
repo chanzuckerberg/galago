@@ -223,49 +223,48 @@ export const EpiCurve = (props: EpiCurveProps) => {
       style={{
         position: "relative",
         width: chartWidth,
-        borderColor: "red",
-        borderWidth: 2,
       }}
     >
-      <div style={{ position: "relative", top: 10, left: 20 }}>
-        <ToggleButtonGroup
-          value={colorBy}
-          exclusive
-          onChange={handleColorbySelection}
-          aria-label="color by"
-        >
-          <ToggleButton
-            value="transmissions"
-            aria-label="transmissions"
-            style={{ width: 30, height: 30 }}
-          >
-            <TimelineIcon />
-          </ToggleButton>
-          <ToggleButton
-            value="geography"
-            aria-label="geography"
-            style={{ width: 30, height: 30 }}
-          >
-            <MapIcon />
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </div>
       <div
         style={{
-          position: "absolute",
-          top: chartMargin / 2 - 10,
-          left: 60,
-          width: "100%",
           display: "flex",
-          justifyContent: "center",
-          fontSize: "11px",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          width: chartWidth,
         }}
       >
-        <LegendOrdinal
-          scale={colorScale}
-          direction="row"
-          labelMargin="0 15px 0 0"
-        />
+        <div style={{ width: 60 }}>
+          <ToggleButtonGroup
+            value={colorBy}
+            exclusive
+            onChange={handleColorbySelection}
+            aria-label="color by"
+          >
+            <ToggleButton
+              value="transmissions"
+              aria-label="transmissions"
+              style={{ width: 30, height: 30 }}
+            >
+              <TimelineIcon />
+            </ToggleButton>
+            <ToggleButton
+              value="geography"
+              aria-label="geography"
+              style={{ width: 30, height: 30 }}
+            >
+              <MapIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div
+          style={{
+            fontSize: "11px",
+            width: chartWidth - 80,
+            position: "relative",
+          }}
+        >
+          <LegendOrdinal scale={colorScale} direction="row" />
+        </div>
       </div>
 
       <svg width={chartWidth} height={chartHeight - 50}>
