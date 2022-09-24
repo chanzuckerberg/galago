@@ -16,7 +16,7 @@ export const CladeSelectionVizLegend = (
       {legendOpen ? (
         <g
           id="interactive-sample-selection-legend"
-          transform="translate(150,85)"
+          transform="translate(100,50)"
         >
           <text y={-10} onClick={() => setLegendOpen(false)}>
             Legend &#9650;
@@ -68,7 +68,7 @@ export const CladeSelectionVizLegend = (
       ) : (
         <g
           id="interactive-sample-selection-legend"
-          transform="translate(150,85)"
+          transform="translate(100,50)"
         >
           <text y={-10} onClick={() => setLegendOpen(true)}>
             Legend &#9660;
