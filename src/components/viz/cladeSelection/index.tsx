@@ -8,6 +8,7 @@ import uuid from "react-uuid";
 import CladeSelectionVizControls from "./cladeSelectionVizControls";
 import CladeSelectionVizLegend from "./scatterplotLegend";
 import { Theme } from "../../../theme";
+import { timeFormat } from "d3-time-format";
 
 type CladeSelectionVizProps = {
   chartHeight: number;
@@ -193,6 +194,8 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
             top={scatterplotHeight - chartMargin}
             scale={_xScaleTime}
             numTicks={9}
+            //@ts-ignore
+            tickFormat={(tick: Date) => timeFormat("%m/%y")(tick)}
           />
         </svg>
       </div>

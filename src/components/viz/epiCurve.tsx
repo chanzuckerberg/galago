@@ -73,7 +73,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
     return binDate(getNodeAttr(node, "num_date"));
   };
 
-  let dateFormatString = binScale === "monthly" ? "%b" : "%b %d";
+  let dateFormatString = binScale === "monthly" ? "%m/%y" : "%d/%m/%y";
 
   const formatDate = (date: Date) => {
     return timeFormat(dateFormatString)(date);
