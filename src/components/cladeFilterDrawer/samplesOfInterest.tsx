@@ -5,16 +5,40 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import { tooltipProps } from "../formatters/sidenote";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { FormControl, FormControlLabel, FormLabel } from "@mui/material";
+import {
+  Autocomplete,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import CaseDefinitionConstructor from "./caseDefinitionConstructor";
+import { get_leaves, traverse_preorder } from "src/utils/treeMethods";
+import { Node } from "src/d";
 
 export const SamplesOfInterest = () => {
   const dispatch = useDispatch();
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
+  const allSamples = get_leaves(state.tree);
+  let namesToSamples: { [key: string]: Node } = {};
+  allSamples.forEach((n: Node) => (namesToSamples[n.name] = n));
+  const allSampleNames = Object.keys(allSamples);
 
+  const stringToNames = (inputString: string) => {
+    const inputNames = inputString
+      .split(/[\s\t,]+/)
+      .map((splitString: string) => splitString.replace(/[\s\t,]+/, "").trim());
+
+    const validInputNames = inputNames.filter((name: string) =>
+      allSampleNames.includes(name)
+    );
+
+    return validInputNames;
+  };
+
+  const [inputValue, setInputValue] = useState("");
   const [caseDefOpen, setCaseDefOpen] = useState<boolean>(false);
 
   return (
@@ -54,18 +78,54 @@ export const SamplesOfInterest = () => {
           </Button>
         </div>
       </div>
-      <TextField
+      <Autocomplete
         id="selectedSamples"
-        placeholder="SampleName1, SampleName2, ..."
-        multiline
-        rows={4}
-        fullWidth={true}
-        value={state.samplesOfInterestNames.join(", ")}
-        onChange={(e) => {
+        multiple
+        freeSolo
+        options={allSamples}
+        //@ts-ignore
+        getOptionLabel={(option: Node) => option.name}
+        renderInput={(params) => (
+          <TextField {...params} label="Sample1, Sample2, ..." />
+        )}
+        inputValue={inputValue}
+        value={state.samplesOfInterest}
+        onInputChange={(event, newInputString) => {
+          console.log("NEW INPUT VALUE", newInputString);
+          setInputValue(newInputString);
+          const validInputNames = stringToNames(newInputString);
           dispatch({
-            type: "sample names string changed",
-            data: e.target.value,
+            type: "samples of interest names changed",
+            data: validInputNames,
           });
+        }}
+        onChange={(event, newValues) => {
+          let newSamplesOfInterest: Node[] = [];
+
+          newValues.forEach((value: string | Node) => {
+            if (typeof value === "string") {
+              const names = stringToNames(value);
+              newSamplesOfInterest.concat(
+                names.map((name: string) => namesToSamples[name])
+              );
+            } else {
+              newSamplesOfInterest.push(value);
+            }
+          });
+
+          const newSamplesOfInterestNames = newSamplesOfInterest.map(
+            (node: Node) => node.name
+          );
+
+          dispatch({
+            type: "samples of interest names changed",
+            data: newSamplesOfInterestNames,
+          });
+          dispatch({
+            type: "samples of interest changed",
+            data: newSamplesOfInterest,
+          });
+          setInputValue(state.samplesOfInterestNames);
         }}
         size="small"
         sx={{

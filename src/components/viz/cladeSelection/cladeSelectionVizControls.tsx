@@ -78,7 +78,7 @@ export const CladeSelectionVizControls = (
         id="clade selection slider"
         style={{ width: sectionWidth - 275, flexShrink: 0 }}
       >
-        <CladeSlider />
+        {/* <CladeSlider /> */}
       </div>
 
       <div
