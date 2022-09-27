@@ -1,13 +1,17 @@
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 type UnrootedTreeLegendProps = {
   colorScale: string[];
+  smallWindow: boolean;
 };
 
 export const UnrootedTreeLegend = (props: UnrootedTreeLegendProps) => {
-  const { colorScale } = props;
+  const { colorScale, smallWindow } = props;
+  const [legendOpen, setLegendOpen] = useState(!smallWindow);
+
   const legendWidth = 195;
-  const legendHeight = 160;
+  const legendHeight = legendOpen ? 160 : 50;
   //@ts-ignore
   const state = useSelector((state) => state.global);
 
@@ -54,59 +58,63 @@ export const UnrootedTreeLegend = (props: UnrootedTreeLegendProps) => {
   };
 
   return (
-    <g id="unrooted-tree-legend">
-      <g id="color-bar">
-        <rect
-          x={0}
-          y={0}
-          width={legendWidth}
-          height={legendHeight}
-          fill="white"
-          opacity={0.8}
-        />
-        {colorScale.map((cs, i) => drawColorScaleSegment(cs, i))}
-        <text x={paddingX} y={paddingY} fontSize={10}>
-          Distance from putative primary case
-        </text>
-      </g>
-      <g id="primary-case">
-        <rect
-          x={paddingX}
-          y={markerStartY}
-          width={glyphWidth}
-          height={glyphWidth}
-          fill={"lightGray"}
-          stroke="darkGray"
-        />
-        <text
-          x={textX}
-          y={markerStartY + glyphHeight / 2}
-          fontSize={10}
-          dominantBaseline="middle"
-        >
-          Includes sample(s) of interest
-        </text>
-      </g>
-      <g id="other samples">
-        <circle
-          cx={glyphCenterX}
-          cy={markerStartY + glyphHeight + paddingY}
-          r={glyphWidth / 1.85}
-          fill="lightGray"
-          stroke="darkGray"
-        />
+    <>
+      {legendOpen ? (
+        <g id="unrooted-tree-legend" transform="translate(35,35)">
+          <g id="color-bar">
+            <rect
+              y={-25} // cheating -- offset for including title
+              width={legendWidth}
+              height={legendHeight + 25}
+              fill="white"
+              opacity={0.8}
+            />
+            <text y={-10} onClick={() => setLegendOpen(false)}>
+              Legend &#9650;
+            </text>
+            {colorScale.map((cs, i) => drawColorScaleSegment(cs, i))}
+            <text x={paddingX} y={paddingY} fontSize={10}>
+              Distance from putative primary case
+            </text>
+          </g>
+          <g id="primary-case">
+            <rect
+              x={paddingX}
+              y={markerStartY}
+              width={glyphWidth}
+              height={glyphWidth}
+              fill={"lightGray"}
+              stroke="darkGray"
+            />
+            <text
+              x={textX}
+              y={markerStartY + glyphHeight / 2}
+              fontSize={10}
+              dominantBaseline="middle"
+            >
+              Includes sample(s) of interest
+            </text>
+          </g>
+          <g id="other samples">
+            <circle
+              cx={glyphCenterX}
+              cy={markerStartY + glyphHeight + paddingY}
+              r={glyphWidth / 1.85}
+              fill="lightGray"
+              stroke="darkGray"
+            />
 
-        <text
-          x={textX}
-          y={markerStartY + glyphHeight + paddingY}
-          dominantBaseline="middle"
-          fontSize={10}
-        >
-          Other samples
-        </text>
-      </g>
+            <text
+              x={textX}
+              y={markerStartY + glyphHeight + paddingY}
+              dominantBaseline="middle"
+              fontSize={10}
+            >
+              Other samples
+            </text>
+          </g>
 
-      {/* <line
+          {/* <line
         x1={paddingX}
         x2={paddingX + tickBarLength}
         y1={tickBarStartY}
@@ -134,7 +142,7 @@ export const UnrootedTreeLegend = (props: UnrootedTreeLegendProps) => {
         y2={tickBarStartY - glyphHeight / 2}
         stroke="darkgray"
       /> */}
-      {/* <text
+          {/* <text
         x={paddingX}
         y={tickBarStartY + glyphHeight + paddingY}
         dominantBaseline="bottom"
@@ -143,7 +151,22 @@ export const UnrootedTreeLegend = (props: UnrootedTreeLegendProps) => {
       >
         Ticks each 1 mutation
       </text> */}
-    </g>
+        </g>
+      ) : (
+        <g transform="translate(35,35)">
+          <rect
+            y={-25} // cheating -- offset for including title
+            width={80}
+            height={25}
+            fill="white"
+            opacity={0.8}
+          />
+          <text y={-10} onClick={() => setLegendOpen(true)}>
+            Legend &#9660;
+          </text>
+        </g>
+      )}
+    </>
   );
 };
 
