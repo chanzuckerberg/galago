@@ -22,23 +22,75 @@ export const SamplesOfInterest = () => {
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
   const allSamples = get_leaves(state.tree);
-  let namesToSamples: { [key: string]: Node } = {};
-  allSamples.forEach((n: Node) => (namesToSamples[n.name] = n));
-  const allSampleNames = Object.keys(allSamples);
+  let namesToNodes: { [key: string]: Node } = {};
+  allSamples.forEach((n: Node) => (namesToNodes[n.name.toLowerCase()] = n));
+  const allSampleNames = Object.keys(namesToNodes);
 
   const stringToNames = (inputString: string) => {
-    const inputNames = inputString
+    const splitStrings = inputString
       .split(/[\s\t,]+/)
-      .map((splitString: string) => splitString.replace(/[\s\t,]+/, "").trim());
+      .map((splitString: string) =>
+        splitString
+          .replace(/[\s\t,]+/, "")
+          .trim()
+          .toLowerCase()
+      );
 
-    const validInputNames = inputNames.filter((name: string) =>
+    // console.log("split strings", splitStrings);
+    // console.log("allsamplenames", allSampleNames.sort());
+
+    const validInputNames = splitStrings.filter((name: string) =>
       allSampleNames.includes(name)
     );
 
-    return validInputNames;
+    const cruft = splitStrings.filter(
+      (str: string) => !allSampleNames.includes(str)
+    );
+
+    return { validInputNames, cruft };
   };
 
   const [inputValue, setInputValue] = useState("");
+  // const handleInputValueChange = (newInputString: string) => {
+  //   const timeoutId = setTimeout(() => {
+  //     const { validInputNames, cruft } = stringToNames(newInputString);
+  //     if (validInputNames) {
+  //       dispatch({
+  //         type: "samples of interest changed",
+  //         data: validInputNames.map((name: string) => namesToNodes[name]),
+  //       });
+  //       // console.log("valid names parsed", validInputNames);
+  //     }
+  //     if (cruft) {
+  //       setInputValue(cruft.join(", "));
+  //     }
+  //   }, 100);
+  //   return () => clearTimeout(timeoutId);
+  // };
+
+  const handleValueChange = (newValues: Array<string | Node>) => {
+    let newSamplesOfInterest: Node[] = [];
+    let allCruft: string[] = [];
+
+    newValues.forEach((value: string | Node) => {
+      if (typeof value === "string") {
+        const { validInputNames, cruft } = stringToNames(value);
+        newSamplesOfInterest = newSamplesOfInterest.concat(
+          validInputNames.map((name: string) => namesToNodes[name])
+        );
+        allCruft = allCruft.concat(cruft);
+      } else {
+        newSamplesOfInterest.push(value);
+      }
+    });
+
+    dispatch({
+      type: "samples of interest changed",
+      data: newSamplesOfInterest,
+    });
+    setInputValue(allCruft.join(" "));
+  };
+
   const [caseDefOpen, setCaseDefOpen] = useState<boolean>(false);
 
   return (
@@ -82,51 +134,32 @@ export const SamplesOfInterest = () => {
         id="selectedSamples"
         multiple
         freeSolo
+        filterSelectedOptions
+        // options (and value) are Nodes
         options={allSamples}
-        //@ts-ignore
-        getOptionLabel={(option: Node) => option.name}
-        renderInput={(params) => (
-          <TextField {...params} label="Sample1, Sample2, ..." />
-        )}
-        inputValue={inputValue}
         value={state.samplesOfInterest}
+        getOptionLabel={(option: Node | string) => {
+          if (typeof option === "string") {
+            return option;
+          } else {
+            return option.name;
+          }
+        }}
+        onChange={(event, newValues) => {
+          console.log("NEW VALUE", newValues);
+          handleValueChange(newValues);
+        }}
+        // input value is a string that we then want to parse
+        inputValue={inputValue}
         onInputChange={(event, newInputString) => {
           console.log("NEW INPUT VALUE", newInputString);
           setInputValue(newInputString);
-          const validInputNames = stringToNames(newInputString);
-          dispatch({
-            type: "samples of interest names changed",
-            data: validInputNames,
-          });
+
+          // handleInputValueChange(newInputString);
         }}
-        onChange={(event, newValues) => {
-          let newSamplesOfInterest: Node[] = [];
-
-          newValues.forEach((value: string | Node) => {
-            if (typeof value === "string") {
-              const names = stringToNames(value);
-              newSamplesOfInterest.concat(
-                names.map((name: string) => namesToSamples[name])
-              );
-            } else {
-              newSamplesOfInterest.push(value);
-            }
-          });
-
-          const newSamplesOfInterestNames = newSamplesOfInterest.map(
-            (node: Node) => node.name
-          );
-
-          dispatch({
-            type: "samples of interest names changed",
-            data: newSamplesOfInterestNames,
-          });
-          dispatch({
-            type: "samples of interest changed",
-            data: newSamplesOfInterest,
-          });
-          setInputValue(state.samplesOfInterestNames);
-        }}
+        renderInput={(params) => (
+          <TextField {...params} label="Sample1, Sample2, ..." />
+        )}
         size="small"
         sx={{
           fontSize: 14,

@@ -387,9 +387,13 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "samples of interest changed": {
+      if (!state.tree) {
+        return state;
+      }
       const newSamplesOfInterest = action.data;
       return {
         ...state,
+        samplesOfInterestNames: newSamplesOfInterest.map((n: Node) => n.name),
         samplesOfInterest: newSamplesOfInterest,
         mrcaOptions: getMrcaOptions(
           state.tree,
