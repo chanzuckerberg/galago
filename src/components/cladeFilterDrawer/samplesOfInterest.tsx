@@ -119,7 +119,10 @@ export const SamplesOfInterest = () => {
           setInputValue(newInputString);
         }}
         renderInput={(params) => (
-          <TextField {...params} label="Sample1, Sample2, ..." />
+          <TextField
+            {...params}
+            label="Select or type sample names, then press 'Enter'"
+          />
         )}
         size="small"
         sx={{
