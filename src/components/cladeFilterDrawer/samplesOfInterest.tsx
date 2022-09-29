@@ -2,79 +2,46 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import { tooltipProps } from "../formatters/sidenote";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import {
-  Autocomplete,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-} from "@mui/material";
+import { Autocomplete, FormLabel } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import CaseDefinitionConstructor from "./caseDefinitionConstructor";
-import { get_leaves, traverse_preorder } from "src/utils/treeMethods";
+import { get_leaves } from "src/utils/treeMethods";
 import { Node } from "src/d";
+import { stringToNames } from "src/utils/samplesOfInterestSelection";
 
 export const SamplesOfInterest = () => {
   const dispatch = useDispatch();
   // @ts-ignore -- TODO: figure out how to add types to state
   const state = useSelector((state) => state.global);
+  // raw string input to autocomplete's textfield child component
+  const [inputValue, setInputValue] = useState("");
+  const [caseDefOpen, setCaseDefOpen] = useState<boolean>(false);
+
+  // prep data
   const allSamples = get_leaves(state.tree);
   let namesToNodes: { [key: string]: Node } = {};
   allSamples.forEach((n: Node) => (namesToNodes[n.name.toLowerCase()] = n));
-  const allSampleNames = Object.keys(namesToNodes);
-
-  const stringToNames = (inputString: string) => {
-    const splitStrings = inputString
-      .split(/[\s\t,]+/)
-      .map((splitString: string) =>
-        splitString
-          .replace(/[\s\t,]+/, "")
-          .trim()
-          .toLowerCase()
-      );
-
-    // console.log("split strings", splitStrings);
-    // console.log("allsamplenames", allSampleNames.sort());
-
-    const validInputNames = splitStrings.filter((name: string) =>
-      allSampleNames.includes(name)
-    );
-
-    const cruft = splitStrings.filter(
-      (str: string) => !allSampleNames.includes(str)
-    );
-
-    return { validInputNames, cruft };
-  };
-
-  const [inputValue, setInputValue] = useState("");
-  // const handleInputValueChange = (newInputString: string) => {
-  //   const timeoutId = setTimeout(() => {
-  //     const { validInputNames, cruft } = stringToNames(newInputString);
-  //     if (validInputNames) {
-  //       dispatch({
-  //         type: "samples of interest changed",
-  //         data: validInputNames.map((name: string) => namesToNodes[name]),
-  //       });
-  //       // console.log("valid names parsed", validInputNames);
-  //     }
-  //     if (cruft) {
-  //       setInputValue(cruft.join(", "));
-  //     }
-  //   }, 100);
-  //   return () => clearTimeout(timeoutId);
-  // };
 
   const handleValueChange = (newValues: Array<string | Node>) => {
+    /* fires whenever 
+    (1) the user selects from the autocomplete list
+    (2) the user types and hits 'enter'
+    (3) state.samplesOfInterest changes for any other reason
+
+    goal is to update state.samplesOfInterest (and state.samplesOfInterestNames) 
+    with any valid node names that come in as text, while retaining any invalid strings 
+    (i.e., not a real node name) as raw inputValue text in the Textfield component in 
+    case the user wants to fix a typo, etc
+    */
+
     let newSamplesOfInterest: Node[] = [];
     let allCruft: string[] = [];
 
     newValues.forEach((value: string | Node) => {
       if (typeof value === "string") {
-        const { validInputNames, cruft } = stringToNames(value);
+        // splits on whitespace or comma, separates out valid node names
+        const { validInputNames, cruft } = stringToNames(value, namesToNodes);
         newSamplesOfInterest = newSamplesOfInterest.concat(
           validInputNames.map((name: string) => namesToNodes[name])
         );
@@ -90,8 +57,6 @@ export const SamplesOfInterest = () => {
     });
     setInputValue(allCruft.join(" "));
   };
-
-  const [caseDefOpen, setCaseDefOpen] = useState<boolean>(false);
 
   return (
     <div>
@@ -122,8 +87,7 @@ export const SamplesOfInterest = () => {
             color="primary"
             disabled={state.samplesOfInterestNames === ""}
             onClick={() => {
-              dispatch({ type: "sample names string changed", data: "" });
-              dispatch({ type: "sample submit button clicked" });
+              dispatch({ type: "samples of interest changed", data: [] });
             }}
           >
             CLEAR ALL
@@ -135,6 +99,7 @@ export const SamplesOfInterest = () => {
         multiple
         freeSolo
         filterSelectedOptions
+        limitTags={50}
         // options (and value) are Nodes
         options={allSamples}
         value={state.samplesOfInterest}
@@ -146,16 +111,12 @@ export const SamplesOfInterest = () => {
           }
         }}
         onChange={(event, newValues) => {
-          console.log("NEW VALUE", newValues);
           handleValueChange(newValues);
         }}
-        // input value is a string that we then want to parse
+        // handle inputValue separately from value so that we can do nice things like split on delimiters to accommodate copy/paste, retain invalid string fragments, etc.
         inputValue={inputValue}
         onInputChange={(event, newInputString) => {
-          console.log("NEW INPUT VALUE", newInputString);
           setInputValue(newInputString);
-
-          // handleInputValueChange(newInputString);
         }}
         renderInput={(params) => (
           <TextField {...params} label="Sample1, Sample2, ..." />

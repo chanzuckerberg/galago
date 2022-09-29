@@ -15,15 +15,12 @@ export const CladeSelectionVizControls = (
   props: CladeSelectionVizControlsProps
 ) => {
   const { sectionWidth } = props;
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-  const [windowWidth, windowHeight] = useWindowSize();
 
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
 
   const getFilterButtonTooltipText = () => {
-    const theme = useTheme();
     if (state.samplesOfInterestNames.length || state.clusteringMethod) {
       return `Samples of interest: ${state.samplesOfInterestNames.length}  |
   Clustering: ${state.clusteringMethod ? state.clusteringMethod : "none"}
@@ -78,7 +75,7 @@ export const CladeSelectionVizControls = (
         id="clade selection slider"
         style={{ width: sectionWidth - 275, flexShrink: 0 }}
       >
-        {/* <CladeSlider /> */}
+        <CladeSlider />
       </div>
 
       <div
