@@ -43,7 +43,7 @@ export const fieldIsValid = (fieldSummary: any) => {
   if (fieldSummary["dataType"] == "categorical") {
     return (
       fieldSummary["uniqueValues"].length <= 100 &&
-      fieldSummary["uniqueValues"].length >= 2
+      fieldSummary["uniqueValues"].length >= 1
     );
   } else {
     return (

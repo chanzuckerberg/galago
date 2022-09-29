@@ -19,6 +19,7 @@ type CladeSelectionVizProps = {
 export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
   const { chartHeight, chartWidth, chartMargin } = props;
   const controlsHeight = 70;
+  const smallWindow = chartHeight < 200;
   const scatterplotHeight = chartHeight - controlsHeight;
   const showLayoutBorders = false;
 
@@ -182,7 +183,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
             })
             .map((sample) => plotSample(sample))}
 
-          <CladeSelectionVizLegend smallWindow={chartHeight < 200} />
+          <CladeSelectionVizLegend smallWindow={smallWindow} />
           <AxisLeft
             strokeWidth={0}
             left={chartMargin * 2}
@@ -195,7 +196,9 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
             scale={_xScaleTime}
             numTicks={9}
             //@ts-ignore
-            tickFormat={(tick: Date) => timeFormat("%m/%y")(tick)}
+            tickFormat={(tick: Date) =>
+              timeFormat(smallWindow ? "%y-%m" : "%Y-%m")(tick)
+            }
           />
         </svg>
       </div>

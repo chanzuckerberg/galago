@@ -192,9 +192,12 @@ export const global = (state = defaultState, action: any) => {
 
     // TODO: only cache the fields that could be altered in this drawer
     case "filter drawer opened": {
+      // exclude the big pieces of data and clone the rest
+      const { tree, metadataCensus, metadataEntries, ...cacheState } = state;
+
       return {
         ...state,
-        cacheStateOnFilterDrawerOpen: state,
+        cacheStateOnFilterDrawerOpen: cacheState,
         filterDrawerOpen: true,
       };
     }
@@ -379,33 +382,26 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
-    case "sample names string changed": {
-      const input_string: string = action.data;
-      const sample_names: string[] = input_string
-        .split(/[,\s]+/)
-        .map((s: string) => s.trim());
-      return { ...state, samplesOfInterestNames: sample_names };
+    case "samples of interest names changed": {
+      return { ...state, samplesOfInterestNames: action.data };
     }
 
-    case "sample submit button clicked": {
-      if (state.samplesOfInterestNames && state.tree) {
-        let all_leaves = get_leaves(get_root(state.tree));
-        const newSamplesOfInterest = state.samplesOfInterestNames
-          .map((n: string) => find_leaf_by_name(n, all_leaves))
-          .filter((n: Node | null) => n !== null);
-        return {
-          ...state,
-          samplesOfInterest: newSamplesOfInterest,
-          mrcaOptions: getMrcaOptions(
-            state.tree,
-            //@ts-ignore - we already filter out null values above
-            newSamplesOfInterest,
-            state.clusteringMrcas
-          ),
-        };
-      } else {
+    case "samples of interest changed": {
+      if (!state.tree) {
         return state;
       }
+      const newSamplesOfInterest = action.data;
+      return {
+        ...state,
+        samplesOfInterestNames: newSamplesOfInterest.map((n: Node) => n.name),
+        samplesOfInterest: newSamplesOfInterest,
+        mrcaOptions: getMrcaOptions(
+          state.tree,
+          //@ts-ignore - we already filter out null values above
+          newSamplesOfInterest,
+          state.clusteringMrcas
+        ),
+      };
     }
 
     case "tree file uploaded": {
