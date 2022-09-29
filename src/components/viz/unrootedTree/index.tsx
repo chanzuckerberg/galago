@@ -81,7 +81,10 @@ export const unrootedTree = (props: unrootedTreeProps) => {
             scaleDomainR={scaleDomainR}
             tooltip={tooltip}
           />
-          <UnrootedTreeLegend colorScale={colorScale} />
+          <UnrootedTreeLegend
+            colorScale={colorScale}
+            smallWindow={chartHeight < 200}
+          />
         </svg>
       )}
       {ready && tooltip.tooltipOpen && tooltip.tooltipData && (

@@ -33,7 +33,6 @@ export const CladeSelector = (props?: CladeSelectorProps) => {
     const tipCount = getNodeAttr(mrca, "tipCount");
     const niceName = mrca.name.replace("NODE_", "Clade ");
     return niceName;
-    // return tipCount ? `${niceName} (${tipCount} samples)` : niceName;
   };
 
   const formatSelectorOptions = () => {

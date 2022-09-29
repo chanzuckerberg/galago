@@ -86,7 +86,6 @@ export const CladeSlider = (props: CladeSliderProps) => {
       <Slider
         //@ts-ignore
         sx={{
-          // width: sectionWidth - 100,
           "& .MuiSlider-thumb": {
             opacity: 0.7,
           },
