@@ -1,44 +1,27 @@
 /**
  * Contains all routes / paths for the application.
  *
- * Generally, at the bottom of this file you can find the `PATH_` you want
- * for any app route. Right now, I think that will be enough, but there
- * might be some edge case down the road that makes us need to export
- * the ROUTES and getRoutePath for direct use in a component. If that happens,
- * not an issue to export them and generate paths dynamically.
+ * For any dev writing route interactions, you can just import ROUTES then
+ * refer to the needed route with, eg, `ROUTES.APP`, etc, etc. If you need
+ * to add a new route, add it here first then use that import in whatever
+ * routing code you're writing. You should -- unless absolutely necessary --
+ * avoid directly writing a raw string of the route somewhere in code; instead
+ * route strings should just be pointing at the various values in ROUTES here.
  *
- * Because of how we currently handle deploying the same code to different
- * repos -- a forked "Staging" repo and a "Prod" repo -- we need a little bit
- * of fanciness to avoid the static site aspect of GitHub Pages breaking
- * depending on which repo we're deploying from.
+ * In the past, this file required more complexity because we were serving
+ * the app via GitHub Pages but /not/ using a custom domain. This made it
+ * necessary to dynamically configure the `base` path part of the URL, which
+ * then meant we had to abstract away building our routes out of that base
+ * path plus the "real" value in ROUTES. If we ever have to go back to that
+ * approach, look at commit SHA `0c4f251c` for this file, `vite.config.ts` and
+ * the GitHub workflow itself `.github/workflows/build-deployment.yml`.
  */
-enum ROUTES {
+export enum ROUTES {
   HOMEPAGE = "/",
+  // Intent of FETCH_DATA is to provide wildcard catch for subpath after it.
+  // For instance, `galago.com/fetch/https://example.com/somejson` is pointing
+  // to the URL `https://example.com/somejson` as what needs to be fetched.
+  // This is accomplished by using a nested "*" wildcard path in our router.
+  FETCH_DATA = "/fetch",
   APP = "/app",
 }
-
-// BASE_URL from vite always includes trailing slash. Chop that off so our
-// routes can have the prefixed slash to make them easier for devs to read.
-// `import.meta.env.BASE_URL` is interpolated by vite, see docs:
-//   https://vitejs.dev/guide/env-and-mode.html
-const BASE_URL = import.meta.env.BASE_URL;
-const BASE_WITHOUT_TRAILING_SLASH = BASE_URL.slice(0, -1);
-
-
-/**
- * Gets the appropriate path for a given route.
- *
- * Necessary due to how GitHub Pages and base URL works. This abstracts all
- * that away so we can just set the appropriate base URL in our vite config
- * based on the GitHub repo our GH Page is connected to, then use this func
- * plus the `ROUTES` above to generate all the app routes.
- *
- * When we move to a custom domain for our GH Pages, this might get broken
- * and we can just go to directly using our ROUTES values in app.
- */
-function getRoutePath(route: ROUTES) {
-  return BASE_WITHOUT_TRAILING_SLASH + route;
-}
-
-export const PATH_TO_HOMEPAGE = getRoutePath(ROUTES.HOMEPAGE);
-export const PATH_TO_APP = getRoutePath(ROUTES.APP);

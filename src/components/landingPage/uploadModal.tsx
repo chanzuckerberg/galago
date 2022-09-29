@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  get_division_input_options,
-  get_location_input_options,
-} from "../../utils/geoInputOptions";
-import { ingestNextstrain } from "../../utils/nextstrainAdapter";
-import { Node } from "../../d";
+import { get_location_input_options } from "../../utils/geoInputOptions";
+
 //@ts-ignore
 import { parse } from "papaparse";
 import { ingestCSVMetadata } from "../../utils/metadataUtils";
@@ -24,7 +20,9 @@ import {
   Select,
 } from "@mui/material";
 import PathogenSelection from "./pathogenSelection";
-import { PATH_TO_APP } from "../../routes";
+import { ROUTES } from "../../routes";
+import { maxFileSize } from "../../utils/dataIngest";
+import { ACTION_TYPES } from "../../reducers/actionTypes";
 
 export const UploadModal = () => {
   // @ts-ignore -- one day I will learn how to `type` all my state variables, but that day is not today
@@ -45,6 +43,10 @@ export const UploadModal = () => {
   };
 
   const handleMetadataUpload = (file: any) => {
+    if (file.size > maxFileSize) {
+      dispatch({ type: ACTION_TYPES.SHOW_METADATA_FILE_SIZE_ERROR });
+      return;
+    }
     const runOnUpload = (results: any, file: any) => {
       const { tidyMetadata, metadataCensus } = ingestCSVMetadata(results.data);
       dispatch({
@@ -77,6 +79,8 @@ export const UploadModal = () => {
     <>
       <DialogTitle>Analyze your data in Galago</DialogTitle>
       <DialogContent>
+        <h3>Tree uploaded</h3>
+        <FormLabel>{state.treeTitle}</FormLabel>
         <h3>Select pathogen (required)</h3>
 
         <p>
@@ -129,9 +133,9 @@ export const UploadModal = () => {
           </p>
         )}
         <h3>Upload sample metadata, e.g. a line list (optional)</h3>
-        <p>
+        <FormLabel>
           If provided, epi metadata helps you identify more meaningful clusters.
-        </p>
+        </FormLabel>
         <p>
           <FormControl>
             <Button
@@ -187,7 +191,7 @@ export const UploadModal = () => {
           disableRipple
           onClick={(e) => {
             dispatch({ type: "upload submit button clicked" });
-            navigate(PATH_TO_APP);
+            navigate(ROUTES.APP);
           }}
           disabled={
             !state.division ||

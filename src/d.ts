@@ -81,17 +81,6 @@ export interface caseDefFilter {
   acceptedValues?: Array<string>;
 }
 
-export interface forceNode extends SimulationNodeDatum {
-  id: string;
-  mrcaDist: number;
-  isLeaf: boolean;
-  isPolytomy: boolean;
-}
-
-export interface forceLink extends SimulationLinkDatum<forceNode> {
-  distance: number;
-}
-
 export interface papaParseMetadataEntry {
   [key: string]: any;
 }

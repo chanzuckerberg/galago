@@ -14,10 +14,7 @@ const BigFoot = () => {
         flexDirection: "row",
         justifyContent: "space-between",
         padding: 20,
-        marginTop: 50,
-        marginLeft: 0,
-        marginRight: 0,
-        marginBottom: 0,
+        margin: 0,
         borderRadius: 5,
       }}
     >

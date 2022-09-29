@@ -8,7 +8,7 @@ import TMRCA from "./tmrca";
 import { useSelector } from "react-redux";
 import { get_leaves, get_root } from "../../utils/treeMethods";
 import SamplingBias from "./sampleDistribTable";
-import { gisaidCounts } from "../../../data/gisaidCounts2022-06";
+import { gisaidCounts } from "../../../data/gisaidCounts2022-09";
 import { SkeletonReport } from "./skeleton";
 import { useEffect, useState } from "react";
 
@@ -53,11 +53,13 @@ export const Report = (props: ReportProps) => {
           <TMRCA sidenote_start={3} />
           <OnwardTransmission />
           <GeoSubclades />
-          <SamplingBias
-            // @ts-ignore
-            gisaidCounts={gisaidCounts}
-            sidenote_start={7}
-          />
+          {state.pathogen === "sarscov2" && (
+            // TODO: rewrite this to still be accurate and valuable for pathogens w/o reference data available
+            <SamplingBias
+              // @ts-ignore
+              gisaidRecords={gisaidCounts}
+            />
+          )}
           <Assumptions sidenote_start={8} />
         </>
       )}

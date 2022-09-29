@@ -72,12 +72,40 @@ export const initializeTree = (node: NSNode, parent: Node | "root") => {
   return newNode;
 };
 
+export const validateNextstrainJson = (nextstrainJSON: NSJSON) => {
+  // top level must have at least `tree` and `meta` as objects
+  if (
+    !(
+      Object.keys(nextstrainJSON).includes("tree") &&
+      Object.keys(nextstrainJSON).includes("meta")
+    )
+  ) {
+    throw new Error("tree json missing top level key");
+  }
+  const tree = nextstrainJSON.tree;
+  if (
+    // root node must have a name and children
+    !Object.keys(tree).includes("children") ||
+    !Object.keys(tree).includes("name")
+  ) {
+    throw new Error("tree json root node missing name and/or children");
+  }
+  if (
+    // all of the root node's children must have a name (might be tips which in nextstrain's schema do not have a `children` attribute)
+    //@ts-ignore
+    !tree.children.every((ch: NSNode) => Object.keys(ch).includes("name"))
+  ) {
+    throw new Error("tree json root node's child(ren) missing name");
+  }
+};
+
 export const ingestNextstrain = (nextstrain_json: NSJSON) => {
   const tree: Node = initializeTree(nextstrain_json.tree, "root"); // root has no parent
   assignTipCount(tree);
   describeTree(tree); // just a console log sense check
   return {
-    tree: tree,
+    tree,
+    treeTitle: nextstrain_json.meta.title,
     haveInternalNodeDates: determineIfInternalNodeDates(tree),
   };
 };

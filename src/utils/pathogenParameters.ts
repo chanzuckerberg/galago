@@ -83,7 +83,7 @@ export const calcMutsPerTransmissionMax = (
   genomeLength: number,
   subsPerSitePerYear: number,
   serialInterval: number,
-  threshold: 0.9
+  threshold = 0.9
 ) => {
   const subsPerGenomePerYear = subsPerSitePerYear * genomeLength;
   const subsPerTransmission = (subsPerGenomePerYear / 365) * serialInterval;

@@ -1,15 +1,56 @@
 import Header from "./components/header";
 import LittleFoot from "./components/littleFoot";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useWindowSize } from "@react-hook/window-size";
 import MainViz from "./components/mainViz";
 import Report from "./components/report";
-import { useEffect, useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
+import { ROUTES } from "src/routes";
+import { useEffect } from "react";
 
 export default function App() {
+  /**
+   * If user directly navigates to `App` route via URL, need to redirect home.
+   *
+   * The App route/component assumes that the user has loaded a tree. If there
+   * is no tree and we try to render App, downstream components blow up.
+   * To avoid this, we do a simple check to make sure that the `tree` value
+   * in Redux is truth-y: we do have a tree. If we have a tree, proceed as
+   * expected. If we do not have a tree, render `null` for this component
+   * and let the `useEffect` catch the missing tree and redirect to homepage.
+   *
+   * Developer NOTE: It's possible this approach introduces a race condition.
+   * If we push the user to the `App` component while the tree is being parsed
+   * async, we might have a tree that is about to finish being loaded, but the
+   * redirect process kicks off before tree load completes and we can never
+   * manage to land on `App`. In my [Vince] testing, I have not been able to
+   * get any problem like that to show up, but if such a problem does appear
+   * down the road, here's a way to fix:
+   * - Choose a sane timeout (2-5sec) for how a very slow tree load.
+   * - Keep same useEffect logic, but put the `navigate` into a `setTimeout`
+   *   based on sane timeout.
+   * - If tree completes load before timeout is up, cancel the timeout in an
+   *   `else` branch below (useEffect will fire again when the `tree` changes).
+   * - If the tree has not loaded by timeout, navigate kicks off.
+   * Like I said though, I haven't been able to make the race conditon show up.
+   * I /think/ that right now the heavy tree parsing stuff happens before the
+   * redux dispatch (which is async), so the actual redux reducer is very fast
+   * compared to the route change, so we're safe. But if we move more of the
+   * parsing into the reducer, we might be able to slow down that portion so
+   * much that the route change beats out the redux state change. Nonetheless,
+   * I think it's best to leave it with the easier approach below until we
+   * actually see an issue with it (and we may never see such an issue!).
+   */
   //@ts-ignore
-  const state = useSelector((state) => state.global);
+  const stateTree = useSelector((state) => state.global.tree);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!stateTree) {
+      // Ack, `App` will break without a tree, let's get outta here!
+      navigate(ROUTES.HOMEPAGE);
+    }
+  }, [stateTree]);
+
   const [windowWidth, windowHeight] = useWindowSize();
 
   const headerHeight = 100;
@@ -23,8 +64,8 @@ export default function App() {
   const rightColWidth = contentWidth * 0.45;
   const showLayoutBorders = false;
 
-  return (
-    <div>
+  return stateTree ? (
+    <div style={{ overflowX: "hidden", overflowY: "hidden" }}>
       {/* <h1>Select a clade to instantly generate a report</h1> */}
       {/* left side bar */}
       <Header sectionHeight={headerHeight} sectionWidth={windowWidth - 10} />
@@ -78,5 +119,5 @@ export default function App() {
         <LittleFoot />
       </div>
     </div>
-  );
+  ) : null;
 }

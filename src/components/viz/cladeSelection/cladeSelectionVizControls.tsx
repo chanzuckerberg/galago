@@ -1,9 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Drawer, Tooltip, useTheme } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import CladeFilterDrawer from "../../cladeFilterDrawer";
-import { useWindowSize } from "@react-hook/window-size";
 import { tooltipProps } from "../../formatters/sidenote";
-import { useState } from "react";
 import CladeSelector from "./cladeSelector";
 import CladeSlider from "./cladeSlider";
 
@@ -15,15 +13,12 @@ export const CladeSelectionVizControls = (
   props: CladeSelectionVizControlsProps
 ) => {
   const { sectionWidth } = props;
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-  const [windowWidth, windowHeight] = useWindowSize();
 
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
 
   const getFilterButtonTooltipText = () => {
-    const theme = useTheme();
     if (state.samplesOfInterestNames.length || state.clusteringMethod) {
       return `Samples of interest: ${state.samplesOfInterestNames.length}  |
   Clustering: ${state.clusteringMethod ? state.clusteringMethod : "none"}
@@ -45,7 +40,6 @@ export const CladeSelectionVizControls = (
         justifyContent: "space-evenly",
         position: "relative",
         width: sectionWidth,
-        // paddingLeft: 25,
         // border: "1px solid purple",
       }}
     >
@@ -66,18 +60,12 @@ export const CladeSelectionVizControls = (
             sx={{
               fontSize: 10,
               margin: 0,
-              // width: 50,
             }}
             variant="contained"
           >
             Search & filter
           </Button>
         </Tooltip>
-        <Drawer anchor={"right"} open={state.filterDrawerOpen}>
-          <div style={{ width: windowWidth * 0.4 }}>
-            <CladeFilterDrawer />
-          </div>
-        </Drawer>
       </div>
       <div
         id="clade selection slider"
@@ -92,6 +80,7 @@ export const CladeSelectionVizControls = (
       >
         <CladeSelector />
       </div>
+      <CladeFilterDrawer />
     </div>
   );
 };

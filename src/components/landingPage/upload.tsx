@@ -1,10 +1,15 @@
 import { useSelector, useDispatch } from "react-redux";
-import { ingestNextstrain } from "../../utils/nextstrainAdapter";
+import {
+  ingestNextstrain,
+  validateNextstrainJson,
+} from "../../utils/nextstrainAdapter";
 import { Button, Dialog, FormHelperText, Tooltip } from "@mui/material";
 import UploadModal from "./uploadModal";
 import Theme from "../../theme";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import { tooltipProps } from "../formatters/sidenote";
+import { ACTION_TYPES } from "../../reducers/actionTypes";
+import { maxFileSize } from "../../utils/dataIngest";
 
 type UploadProps = {
   sectionWidth: number;
@@ -16,14 +21,24 @@ export const Upload = (props: UploadProps) => {
   const dispatch = useDispatch();
 
   const loadTreeJson = (file: any) => {
+    if (file.size > maxFileSize) {
+      dispatch({ type: ACTION_TYPES.SHOW_TREE_FILE_SIZE_ERROR });
+      return;
+    }
     const fileReader = new FileReader();
     fileReader.readAsText(file, "application/JSON");
     fileReader.onload = (event) => {
       if (event?.target?.result && typeof event.target.result === "string") {
-        dispatch({
-          type: "tree file uploaded",
-          data: ingestNextstrain(JSON.parse(event.target.result)),
-        });
+        try {
+          const jsonString = JSON.parse(event.target.result);
+          validateNextstrainJson(jsonString);
+          dispatch({
+            type: "tree file uploaded",
+            data: ingestNextstrain(JSON.parse(event.target.result)),
+          });
+        } catch {
+          dispatch({ type: ACTION_TYPES.SHOW_TREE_FORMAT_ERROR });
+        }
       }
     };
   };
@@ -49,18 +64,32 @@ export const Upload = (props: UploadProps) => {
         Galago. Galago runs entirely in the browser. This means that your data
         never leaves your computer and is never accessible to anyone else.
       </p>
-      <p style={{ marginTop: 40 }}>
-        <Button
-          variant="outlined"
-          component="label"
-          disableElevation
-          disableRipple
-          onChange={(event: any) => {
-            loadTreeJson(event.target.files[0]);
-          }}
-        >
-          Select tree JSON <input hidden type="file" />
-        </Button>
+      <div style={{ marginTop: 67 }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Button
+            variant="outlined"
+            component="label"
+            disableElevation
+            disableRipple
+            onChange={(event: any) => {
+              loadTreeJson(event.target.files[0]);
+            }}
+          >
+            Select tree JSON <input hidden type="file" />
+          </Button>
+          {state.treeTitle && (
+            <span
+              style={{
+                fontSize: 10,
+                maxWidth: sectionWidth / 2,
+                paddingLeft: 10,
+                paddingTop: 2,
+              }}
+            >
+              {state.treeTitle}
+            </span>
+          )}
+        </div>
         <FormHelperText>
           This must be in Nextstrain's JSON format{" "}
           <Tooltip
@@ -80,7 +109,7 @@ export const Upload = (props: UploadProps) => {
             />
           </Tooltip>
         </FormHelperText>
-      </p>
+      </div>
       <p>
         <Button
           variant="contained"

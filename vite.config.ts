@@ -1,8 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-const STAGING_KEYWORD = "staging"; // Running in galago-labs
-
 /**
  * Generate config for vite. Docs -- https://vitejs.dev/config/
  *
@@ -11,20 +9,18 @@ const STAGING_KEYWORD = "staging"; // Running in galago-labs
  * to have the config accept a function that takes `mode` (and other args if
  * desired) and returns the config after any logic is done.
  *
- * This is necessary because our staging and prod versions of the app get
- * served from different URLs so we inject that here. We are relying on the
- * fact that we explicitly know the names of the Prod and Staging repos. If
- * we needed to truly generalize, would want to set from some kind of real
- * env var that GitHub Action passes by introspecting the repo name. But
- * also possible that having custom domain names will make all this unneeded.
+ * Currently, this is not needed for us and we're fine with a static config.
+ * However, when we were serving the app via GitHub Pages but /not/ using a
+ * custom domain, it was necessary to dynamically configure the `base` path
+ * part of the URL. If we ever have to go back to this approach, look at
+ * commit SHA `0c4f251c` for this file, `src/routes/index.ts`, and the GitHub
+ * workflow itself `.github/workflows/build-deployment.yml`.
  */
-export default defineConfig(({mode}) => {
-  let basePath = "/galago/";
-  if (mode.toLowerCase() === STAGING_KEYWORD) {
-    basePath = "/galago-labs/";
-  }
-  return {
-    plugins: [react()],
-    base: basePath,
-  };
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      src: "/src",
+    },
+  },
 });

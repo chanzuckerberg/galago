@@ -350,7 +350,7 @@ export const describeTree = (node: Node, get_root_first: boolean = false) => {
 export const assignTipCount = (tree: Node) => {
   // WARNING: IMPURE FUNCTION
 
-  const allNodes = traverse_postorder(tree).reverse();
+  const allNodes = traverse_preorder(tree).reverse();
 
   allNodes.forEach((n: Node) => {
     if (n.children.length === 0) {

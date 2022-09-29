@@ -5,10 +5,8 @@ import { Node } from "../../../d";
 import { useEffect, useState } from "react";
 import { dateObjectToNumeric } from "../../../utils/dates";
 import { FormControl, FormHelperText } from "@mui/material";
-import { useWindowSize } from "@react-hook/window-size";
 import { timeFormat } from "d3-time-format";
 import { extent } from "d3-array";
-import Theme from "../../../theme";
 
 type CladeSliderProps = {};
 
@@ -88,7 +86,6 @@ export const CladeSlider = (props: CladeSliderProps) => {
       <Slider
         //@ts-ignore
         sx={{
-          // width: sectionWidth - 100,
           "& .MuiSlider-thumb": {
             opacity: 0.7,
           },

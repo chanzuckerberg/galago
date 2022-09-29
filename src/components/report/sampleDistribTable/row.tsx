@@ -1,4 +1,4 @@
-import { Node, GISAIDRecord, CladeDescription } from "../../../d";
+import { GISAIDRecord } from "../../../d";
 import { GeoLevels } from "../../../utils/countSamples";
 import { DataLevels } from "./table";
 
@@ -8,26 +8,17 @@ import CountsCell from "./countsCell";
 //@ts-ignore
 import uuid from "react-uuid";
 
-const TableRow = (props: {
-  gisaidCounts: Array<GISAIDRecord>;
+type TableRowProps = {
+  gisaidRecords: Array<GISAIDRecord>;
   geoLevel: GeoLevels;
   label: string;
   key: any;
-  minMonth: number;
-  minYear: number;
-  maxMonth: number;
-  maxYear: number;
-}) => {
-  const {
-    gisaidCounts,
-    geoLevel,
-    label,
-    key,
-    minMonth,
-    minYear,
-    maxMonth,
-    maxYear,
-  } = props;
+  minDate: Date;
+  maxDate: Date;
+};
+
+const TableRow = (props: TableRowProps) => {
+  const { gisaidRecords, geoLevel, label, key, minDate, maxDate } = props;
   const dataLevels: Array<DataLevels> = ["gisaid", "dataset", "clade"];
 
   return (
@@ -43,13 +34,11 @@ const TableRow = (props: {
       <TextCell text={label} />
       {dataLevels.map((dl) => (
         <CountsCell
-          gisaidCounts={gisaidCounts}
+          gisaidRecords={gisaidRecords}
           geoLevel={geoLevel}
           dataLevel={dl}
-          minMonth={minMonth}
-          minYear={minYear}
-          maxMonth={maxMonth}
-          maxYear={maxYear}
+          minDate={minDate}
+          maxDate={maxDate}
           key={`countsCell-${uuid()}`}
         />
       ))}
