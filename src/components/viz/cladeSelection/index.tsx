@@ -19,7 +19,7 @@ type CladeSelectionVizProps = {
 export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
   const { chartHeight, chartWidth, chartMargin } = props;
   const controlsHeight = 70;
-  const smallWindow = chartHeight < 200;
+  const smallWindow = chartHeight < 350 || chartWidth < 675;
   const scatterplotHeight = chartHeight - controlsHeight;
   const showLayoutBorders = false;
 
