@@ -62,14 +62,8 @@ export const Methods = () => {
       Importantly, this value can be quite variable based on the epidemiological
       setting, which is why we always provide a range.
     </p>
-    <h4></h4>
-    <h4>Representatitive sampling</h4>
-    <p>
-      GISAID metadata exists as a large data dump, which cannot be ingested
-      directly in a performant way or checked into the repo per their ToS. To
-      get around this, we run a script beforehand to tally sequences by recency
-      and location and use these counts as input data.
-    </p>
+    <h4>Sampling bias</h4>
+    <p></p>
   </div>;
 };
 

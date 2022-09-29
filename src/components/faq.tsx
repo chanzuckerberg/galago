@@ -95,7 +95,8 @@ export const FAQ = () => {
 
     <h3>How do I generate a phylogenetic tree in JSON format?</h3>
     <p>
-      You can build a quick, approximate tree for SARS-CoV-2 samples using{" "}
+      You can build a quick, approximate tree for SARS-CoV-2 or monkeypox
+      samples using{" "}
       <a href="https://genome.ucsc.edu/cgi-bin/hgPhyloPlace">USHeR</a>. For
       other pathogens, you can use Nextstrain's{" "}
       <a href="https://docs.nextstrain.org/projects/augur/en/stable/index.html">
