@@ -73,7 +73,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
     return binDate(getNodeAttr(node, "num_date"));
   };
 
-  let dateFormatString = binScale === "monthly" ? "%m/%y" : "%d/%m/%y";
+  let dateFormatString = binScale === "monthly" ? "%Y-%m" : "%y-%m-%d";
 
   const formatDate = (date: Date) => {
     return timeFormat(dateFormatString)(date);
@@ -267,7 +267,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
         </div>
       </div>
 
-      <svg width={chartWidth} height={chartHeight - 50}>
+      <svg width={chartWidth + chartMargin} height={chartHeight - 50}>
         {/* BUG / hack solution - SVG height is overly tall, but decreasing svg height squishes the actual elements in it */}
         <Group top={chartMargin} left={chartMargin / 2}>
           <BarStack
