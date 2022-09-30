@@ -16,6 +16,8 @@ import { ThemeProvider } from "@emotion/react";
 import { Theme } from "./theme";
 import { ROUTES } from "./routes";
 import PlausibleInitializer from "./components/PlausibleInitializer";
+import MethodsRoute from "./routes/methodsRoute";
+import FaqRoute from "./routes/faqRoute";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -29,6 +31,8 @@ ReactDOM.render(
               <Route path="*" element={<FetchTree />} />
             </Route>
             <Route path={ROUTES.APP} element={<App />} />
+            <Route path={ROUTES.METHODS} element={<MethodsRoute />} />
+            <Route path={ROUTES.FAQ} element={<FaqRoute />} />
           </Routes>
         </HashRouter>
       </ThemeProvider>

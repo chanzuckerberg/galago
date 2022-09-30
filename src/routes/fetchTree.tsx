@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { getUrlToFetch } from "../utils/fetchData";
+import { getTargetUrlAndParams, GalagoParams } from "../utils/fetchData";
 import LandingPageRoute from "./landingPageRoute";
 import { ACTION_TYPES } from "../reducers/actionTypes";
 import {
@@ -30,7 +30,11 @@ import { maxFileSize } from "../utils/dataIngest";
  * need a way to know which json type we're trying to ingest. Maybe we could
  * determine it from structure of json and auto-choose?
  */
-async function handleDataFetch(targetUrl: string, dispatch: Function) {
+async function handleDataFetch(
+  targetUrl: string,
+  galagoParams: GalagoParams,
+  dispatch: Function
+) {
   let response; // Here because of `try` block scope.
   try {
     response = await axios.get(targetUrl, { maxBodyLength: maxFileSize });
@@ -47,6 +51,7 @@ async function handleDataFetch(targetUrl: string, dispatch: Function) {
     dispatch({
       type: ACTION_TYPES.FETCH_TREE_DATA_SUCCEEDED,
       data: ingestedNextstrain,
+      galagoParams, // reducer handles interpretation and usage of params
     });
   } catch {
     dispatch({ type: ACTION_TYPES.SHOW_TREE_FORMAT_ERROR });
@@ -65,14 +70,14 @@ const FetchTree = () => {
 
   // Fires off when page mounts to handle process of fetching external JSON.
   useEffect(() => {
-    const targetUrl = getUrlToFetch();
+    const { targetUrl, galagoParams } = getTargetUrlAndParams();
     if (targetUrl) {
       dispatch({
         type: ACTION_TYPES.FETCH_TREE_DATA_STARTED,
         targetUrl,
       });
       // If successful, will load data into tree and open modal for next step
-      handleDataFetch(targetUrl, dispatch);
+      handleDataFetch(targetUrl, galagoParams, dispatch);
     } else {
       // Showed up at /fetch, but no URL given after that. Can't do anything.
       dispatch({

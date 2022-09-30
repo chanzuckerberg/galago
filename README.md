@@ -16,6 +16,16 @@ https://galago.czgenepi.org/#/fetch/example.com/sometree.json
 
 The above example would load Galago using the tree file specified at `https://example.com/sometree.json`. When no `http[s]` schema is present in the given URL, it automatically assumes it is an `https` schema. If you would like to specify the schema, you can enter it in the URL. For example, `https://galago.czgenepi.org/#/fetch/http://example.com/another/tree/route` would also be valid.
 
+### Specifying additional details about public data source
+
+In addition to fetching a publicly available JSON tree via the `fetch` path, you can specify additional, **optional** pieces of information about the tree through the use of [search (AKA query) params](https://en.wikipedia.org/wiki/Query_string). For example:
+
+```
+https://galago.czgenepi.org/#/fetch/example.com/sometree.json?galagoPathogen=sarscov2&galagoMrca=Node47
+```
+
+This feature is still under active development. You can read more about its usage and what params are currently implemented by reading the [source code documentation](/src/utils/fetchData.ts) where it's implemented.
+
 ## Development Process
 
 ```

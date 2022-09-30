@@ -30,6 +30,7 @@ import {
   pathogenParameters,
 } from "../utils/pathogenParameters";
 import { showErrorDefaults } from "src/utils/errorTypes";
+import { GalagoParams } from "src/utils/fetchData";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
@@ -191,9 +192,12 @@ export const global = (state = defaultState, action: any) => {
 
     // TODO: only cache the fields that could be altered in this drawer
     case "filter drawer opened": {
+      // exclude the big pieces of data and clone the rest
+      const { tree, metadataCensus, metadataEntries, ...cacheState } = state;
+
       return {
         ...state,
-        cacheStateOnFilterDrawerOpen: state,
+        cacheStateOnFilterDrawerOpen: cacheState,
         filterDrawerOpen: true,
       };
     }
@@ -378,33 +382,26 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
-    case "sample names string changed": {
-      const input_string: string = action.data;
-      const sample_names: string[] = input_string
-        .split(/[,\s]+/)
-        .map((s: string) => s.trim());
-      return { ...state, samplesOfInterestNames: sample_names };
+    case "samples of interest names changed": {
+      return { ...state, samplesOfInterestNames: action.data };
     }
 
-    case "sample submit button clicked": {
-      if (state.samplesOfInterestNames && state.tree) {
-        let all_leaves = get_leaves(get_root(state.tree));
-        const newSamplesOfInterest = state.samplesOfInterestNames
-          .map((n: string) => find_leaf_by_name(n, all_leaves))
-          .filter((n: Node | null) => n !== null);
-        return {
-          ...state,
-          samplesOfInterest: newSamplesOfInterest,
-          mrcaOptions: getMrcaOptions(
-            state.tree,
-            //@ts-ignore - we already filter out null values above
-            newSamplesOfInterest,
-            state.clusteringMrcas
-          ),
-        };
-      } else {
+    case "samples of interest changed": {
+      if (!state.tree) {
         return state;
       }
+      const newSamplesOfInterest = action.data;
+      return {
+        ...state,
+        samplesOfInterestNames: newSamplesOfInterest.map((n: Node) => n.name),
+        samplesOfInterest: newSamplesOfInterest,
+        mrcaOptions: getMrcaOptions(
+          state.tree,
+          //@ts-ignore - we already filter out null values above
+          newSamplesOfInterest,
+          state.clusteringMrcas
+        ),
+      };
     }
 
     case "tree file uploaded": {
@@ -469,12 +466,20 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case ACTION_TYPES.FETCH_TREE_DATA_SUCCEEDED: {
-      // Almost entirely a copy of type "tree file uploaded"
-      // Just adds tracking fetch and auto-open of upload modal
+      // Primarily a copy of type "tree file uploaded", but fetch specific.
+      // Handles query params, auto-open of upload modal, and fetch completion
       const { tree, haveInternalNodeDates, treeTitle } = action.data;
+      const {
+        pathogen: pathogenParam,
+        // mrca: mrcaParam, TODO Uncomment and use when ready to handle
+      } = action.galagoParams as GalagoParams;
       const divisionOptions = get_division_input_options(tree, state.country);
       const treeMetadata = treeMetadataCensus(tree);
       const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
+
+      const lowercasedPathogen = pathogenParam
+        ? pathogenParam.toLowerCase()
+        : "";
       return {
         ...state,
         tree: tree,
@@ -491,10 +496,13 @@ export const global = (state = defaultState, action: any) => {
         ),
         cladeSliderField: cladeSliderField,
         cladeSliderValue: formatMrcaSliderOptionValue(tree, cladeSliderField),
-        mrca: tree,
+        mrca: tree, // TODO should be informed by mrcaParam from search params
         metadataCensus: { ...state.metadataCensus, ...treeMetadata },
         // Added portion for Fetch aspect starts here
         uploadModalOpen: true,
+        pathogen: Object.keys(pathogenParameters).includes(lowercasedPathogen)
+          ? lowercasedPathogen
+          : "other",
         fetchData: {
           ...state.fetchData,
           fetchInProcess: false,

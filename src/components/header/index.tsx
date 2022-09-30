@@ -33,11 +33,6 @@ const Header = (props: HeaderProps) => {
       }
     );
   });
-  console.log(
-    "should show errors",
-    errorTypesToDisplay,
-    state.showErrorMessages
-  );
 
   return (
     <div

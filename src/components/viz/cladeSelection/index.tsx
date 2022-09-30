@@ -2,12 +2,13 @@ import { Node } from "../../../d";
 import { get_leaves, traverse_preorder } from "../../../utils/treeMethods";
 import { scaleLinear, extent, scaleTime, symbolCross } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 //@ts-ignore
 import uuid from "react-uuid";
 import CladeSelectionVizControls from "./cladeSelectionVizControls";
 import CladeSelectionVizLegend from "./scatterplotLegend";
 import { Theme } from "../../../theme";
+import { timeFormat } from "d3-time-format";
 
 type CladeSelectionVizProps = {
   chartHeight: number;
@@ -18,6 +19,7 @@ type CladeSelectionVizProps = {
 export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
   const { chartHeight, chartWidth, chartMargin } = props;
   const controlsHeight = 70;
+  const smallWindow = chartHeight < 350 || chartWidth < 675;
   const scatterplotHeight = chartHeight - controlsHeight;
   const showLayoutBorders = false;
 
@@ -181,7 +183,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
             })
             .map((sample) => plotSample(sample))}
 
-          <CladeSelectionVizLegend />
+          <CladeSelectionVizLegend smallWindow={smallWindow} />
           <AxisLeft
             strokeWidth={0}
             left={chartMargin * 2}
@@ -193,6 +195,10 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
             top={scatterplotHeight - chartMargin}
             scale={_xScaleTime}
             numTicks={9}
+            //@ts-ignore
+            tickFormat={(tick: Date) =>
+              timeFormat(smallWindow ? "%y-%m" : "%Y-%m")(tick)
+            }
           />
         </svg>
       </div>
