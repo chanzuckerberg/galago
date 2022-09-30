@@ -233,29 +233,32 @@ export const EpiCurve = (props: EpiCurveProps) => {
           width: chartWidth,
         }}
       >
-        <div style={{ width: 60 }}>
-          <ToggleButtonGroup
-            value={colorBy}
-            exclusive
-            onChange={handleColorbySelection}
-            aria-label="color by"
-          >
-            <ToggleButton
-              value="transmissions"
-              aria-label="transmissions"
-              style={{ width: 30, height: 30 }}
+        {/* TODO: soften this requirement, show whatever geo bins are available */}
+        {state.location && state.division && state.country && (
+          <div style={{ width: 60 }}>
+            <ToggleButtonGroup
+              value={colorBy}
+              exclusive
+              onChange={handleColorbySelection}
+              aria-label="color by"
             >
-              <TimelineIcon />
-            </ToggleButton>
-            <ToggleButton
-              value="geography"
-              aria-label="geography"
-              style={{ width: 30, height: 30 }}
-            >
-              <MapIcon />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </div>
+              <ToggleButton
+                value="transmissions"
+                aria-label="transmissions"
+                style={{ width: 30, height: 30 }}
+              >
+                <TimelineIcon />
+              </ToggleButton>
+              <ToggleButton
+                value="geography"
+                aria-label="geography"
+                style={{ width: 30, height: 30 }}
+              >
+                <MapIcon />
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        )}
         <div
           style={{
             fontSize: "11px",
