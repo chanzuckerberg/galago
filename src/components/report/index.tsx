@@ -48,13 +48,14 @@ export const Report = (props: ReportProps) => {
       {reportReady && animationFinished && (
         <>
           <SitStat />
-          <CladeDefinition sidenote_start={1} />
+          <CladeDefinition />
           <CladeUniqueness />
-          <TMRCA sidenote_start={3} />
+          <TMRCA />
           <OnwardTransmission />
           <GeoSubclades />
-          {state.pathogen === "sarscov2" && (
+          {state.pathogen === "sarscov2" && state.location && (
             // TODO: rewrite this to still be accurate and valuable for pathogens w/o reference data available
+            // TODO: soften geo requirement, show whatever geo bins we do have
             <SamplingBias
               // @ts-ignore
               gisaidRecords={gisaidCounts}

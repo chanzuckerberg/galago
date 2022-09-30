@@ -7,12 +7,9 @@ import { getNodeAttr } from "../../utils/treeMethods";
 import { useWindowSize } from "@react-hook/window-size";
 import { Heatmap } from "../viz/heatmap";
 
-interface CladeDefinitionProps {
-  sidenote_start: number;
-}
+interface CladeDefinitionProps {}
 
 function CladeDefinition(props: CladeDefinitionProps) {
-  const { sidenote_start } = props;
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const [windowWidth, windowHeight] = useWindowSize();
@@ -22,10 +19,18 @@ function CladeDefinition(props: CladeDefinitionProps) {
   const all_samples = cladeDescription.selected_samples.concat(
     cladeDescription.unselected_samples_in_cluster
   );
-  const all_local_samples = all_samples.filter(
-    (n: Node) =>
-      getNodeAttr(n, "location") == cladeDescription.home_geo.location
-  );
+
+  let localSamples = [];
+
+  // TODO: soften geo requirement, use whatever resolution we have
+  if (state.country && state.division && state.location) {
+    localSamples = all_samples.filter(
+      (n: Node) =>
+        getNodeAttr(n, "country") === state.country &&
+        getNodeAttr(n, "division") === state.division &&
+        getNodeAttr(n, "location") === state.location
+    );
+  }
 
   // let lineage_counts = {};
   // cladeDescription.selected_samples.forEach((s) => {
@@ -78,7 +83,7 @@ function CladeDefinition(props: CladeDefinitionProps) {
         {/* if the user has specified samples of interest, give the makeup of 'interesting' vs 'other' samples in this clade */}
         {cladeDescription.selected_samples && // we have samples of interest -- and no other samples -- in this clade
           !cladeDescription.unselected_samples_in_cluster &&
-          ` Your selected samples form their own clade without any other samples from this dataset.`}
+          ` Your samples of interest form their own clade without any other samples from this dataset.`}
         {cladeDescription.selected_samples && // mix of both samples of interest and other samples in this clade
           cladeDescription.unselected_samples_in_cluster && (
             <>
@@ -107,13 +112,11 @@ function CladeDefinition(props: CladeDefinitionProps) {
             .concat(cladeDescription.selected_samples)
             .map((n: Node) => getNodeAttr(n, "location"))}
         />
-        {all_local_samples && (
+        {localSamples.length > 0 && (
           <>
-            The <FormatDataPoint value={all_local_samples.length} />
-            samples from {cladeDescription.home_geo.location} are:
-            <FormatStringArray
-              values={all_local_samples.map((s: Node) => s.name)}
-            />
+            The <FormatDataPoint value={localSamples.length} />
+            samples from {state.location} are:
+            <FormatStringArray values={localSamples.map((s: Node) => s.name)} />
           </>
         )}
       </p>

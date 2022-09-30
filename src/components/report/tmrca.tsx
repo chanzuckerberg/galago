@@ -5,16 +5,12 @@ import { FormatDate } from "../formatters/date";
 import { FormatStringArray } from "../formatters/stringArray";
 import { useSelector } from "react-redux";
 
-type CladeProps = {
-  sidenote_start: number;
-};
+type CladeProps = {};
 
 function TMRCA(props: CladeProps) {
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const cladeDescription = state.cladeDescription;
-
-  const { sidenote_start } = props;
 
   const all_samples: Node[] = cladeDescription.selected_samples.concat(
     cladeDescription.unselected_samples_in_cluster

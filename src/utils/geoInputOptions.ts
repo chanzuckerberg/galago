@@ -7,13 +7,25 @@ const tidy_values = (values: string[]) => {
   return [...unique_values].filter((v) => !null_values.includes(v)).sort();
 };
 
-export const get_location_input_options = (tree: Node, division: string) => {
+export const get_country_input_options = (tree: Node) => {
+  return tidy_values(
+    get_leaves(tree).map((leaf: Node) => getNodeAttr(leaf, "country"))
+  );
+};
+
+export const get_location_input_options = (
+  tree: Node,
+  division: string,
+  country: string
+) => {
   const all_samples = get_leaves(tree);
-  const samples_from_division = all_samples.filter(
-    (s) => getNodeAttr(s, "division") === division
+  const samples_from_country_division = all_samples.filter(
+    (s) =>
+      getNodeAttr(s, "division") === division &&
+      getNodeAttr(s, "country") === country
   );
   const location_options = tidy_values(
-    samples_from_division.map((s) => getNodeAttr(s, "location"))
+    samples_from_country_division.map((s) => getNodeAttr(s, "location"))
   );
   return location_options;
 };
