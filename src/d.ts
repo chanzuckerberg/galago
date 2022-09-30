@@ -22,33 +22,29 @@ export interface Node {
   };
 }
 
+export type HomeGeo = {
+  location: string;
+  division: string;
+  country: string;
+};
+
+export type PairwiseDistances = {
+  [key: string]: { [key: string]: number };
+};
+
 export interface CladeDescription {
   selected_samples: Node[]; // samples of interest in this clade
   unselected_samples_in_cluster: Node[];
-
-  pairwiseDistances: any;
 
   parent_for_cousins: Node;
   min_muts_to_parent: number;
 
   cousins: Node[];
 
-  home_geo?: {
-    // user input
-    location: string;
-    division: string;
-    country: string;
-    region?: string;
-  };
+  home_geo?: HomeGeo;
   subclade_geo?: string | null;
   subclades?: Node[];
 }
-
-export type HomeGeo = {
-  location: string;
-  division: string;
-  country: string;
-};
 
 export interface GISAIDRecord {
   year: number;

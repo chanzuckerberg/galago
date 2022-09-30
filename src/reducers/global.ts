@@ -241,14 +241,14 @@ export const global = (state = defaultState, action: any) => {
 
       const cladeDescription = describe_clade(
         mrca,
+        1,
+        // @ts-ignore
+        samplesOfInterest,
         {
           location: "Humboldt County",
           division: "California",
           country: "USA",
-        },
-        1,
-        // @ts-ignore
-        samplesOfInterest
+        }
       );
 
       const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
@@ -328,13 +328,13 @@ export const global = (state = defaultState, action: any) => {
                 ),
                 cladeDescription: describe_clade(
                   newMrcaOptions[0],
+                  1,
+                  state.samplesOfInterest,
                   {
                     location: state.location,
                     division: state.division,
                     country: state.country,
-                  },
-                  1,
-                  state.samplesOfInterest
+                  }
                 ),
               };
 
@@ -360,17 +360,12 @@ export const global = (state = defaultState, action: any) => {
       }
 
       let cladeDescription: null | CladeDescription = state.cladeDescription;
-      if (state.tree && state.location && state.division) {
-        cladeDescription = describe_clade(
-          mrca,
-          {
-            location: state.location,
-            division: state.division,
-            country: state.country,
-          },
-          1,
-          state.samplesOfInterest
-        );
+      if (state.tree && state.mrca) {
+        cladeDescription = describe_clade(mrca, 1, state.samplesOfInterest, {
+          location: state.location,
+          division: state.division,
+          country: state.country,
+        });
       }
 
       return {
@@ -657,7 +652,7 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "upload submit button clicked": {
-      if (state.tree && state.division && state.location && state.mrca) {
+      if (state.tree && state.mrca) {
         let metadataStateUpdates: { [key: string]: any } = {};
 
         if (state.metadataEntries && state.metadataFieldToMatch && state.tree) {
@@ -686,14 +681,14 @@ export const global = (state = defaultState, action: any) => {
 
         const cladeDescription = describe_clade(
           metadataStateUpdates.mrca ? metadataStateUpdates.mrca : state.mrca,
+          1,
+          // @ts-ignore
+          state.samplesOfInterest,
           {
             location: state.location,
             division: state.division,
             country: state.country,
-          },
-          1,
-          // @ts-ignore
-          state.samplesOfInterest
+          }
         );
 
         return {
