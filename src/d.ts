@@ -14,9 +14,9 @@ export interface Node {
     // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
     div: number;
     tipCount: number;
-    location: { value: string };
-    country: { value: string };
-    region: { value: string };
+    location?: { value: string };
+    country?: { value: string };
+    region?: { value: string };
     num_date: { value: Date; confidence: Array<Date> };
     [key: string]: any;
   };
@@ -33,15 +33,15 @@ export interface CladeDescription {
 
   cousins: Node[];
 
-  home_geo: {
+  home_geo?: {
     // user input
     location: string;
     division: string;
     country: string;
     region?: string;
   };
-  subclade_geo: string | null;
-  subclades: Node[];
+  subclade_geo?: string | null;
+  subclades?: Node[];
 }
 
 export type HomeGeo = {

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { get_location_input_options } from "../../utils/geoInputOptions";
 
 //@ts-ignore
 import { parse } from "papaparse";
@@ -8,6 +7,7 @@ import { ingestCSVMetadata } from "../../utils/metadataUtils";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -30,17 +30,10 @@ export const UploadModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [locationOptions, setLocationOptions] = useState<null | Array<string>>(
-    null
-  );
   const [metadataKeyOptions, setMetadataKeyOptions] = useState<null | string[]>(
     null
   );
-
-  const handleDivisionSelection = (division: string) => {
-    dispatch({ type: "division set", data: division });
-    setLocationOptions(get_location_input_options(state.tree, division));
-  };
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleMetadataUpload = (file: any) => {
     if (file.size > maxFileSize) {
@@ -84,30 +77,65 @@ export const UploadModal = () => {
         <h3>Select pathogen (required)</h3>
 
         <p>
-          <PathogenSelection />
+          <PathogenSelection loading={loading} />
         </p>
-        <h3>Select your location of interest (required)</h3>
-        <p>
-          <FormControl>
-            <FormLabel>State / Province</FormLabel>
-            <Select
-              variant="standard"
-              id="divisionSelect"
-              //@ts-ignore
-              onChange={(e) => handleDivisionSelection(e.target.value)}
-              style={{ width: 200 }}
-              size="small"
-              disabled={!state.divisionOptions}
-              value={state.division}
-            >
-              {state.divisionOptions &&
-                state.divisionOptions.map((division: string) => (
-                  <MenuItem value={division}>{division}</MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-        </p>
-        {state.division && locationOptions && (
+        {state.tree && state.countryOptions && (
+          <>
+            <h3>Select your location of interest (optional)</h3>
+            <FormLabel>
+              Setting your location of interest enables you to highlight samples
+              from this location and identify pathogen movement between
+              locations.
+            </FormLabel>
+            <p>
+              <FormControl>
+                <FormLabel>Country</FormLabel>
+                <Select
+                  variant="standard"
+                  id="countrySelect"
+                  //@ts-ignore
+                  onChange={(e) =>
+                    dispatch({ type: "country set", data: e.target.value })
+                  }
+                  style={{ width: 200 }}
+                  size="small"
+                  disabled={!state.countryOptions || loading}
+                  value={state.country}
+                >
+                  {state.countryOptions &&
+                    state.countryOptions.map((country: string) => (
+                      <MenuItem value={country}>{country}</MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </p>
+          </>
+        )}
+        {state.country && state.divisionOptions && (
+          <p>
+            <FormControl>
+              <FormLabel>State / Province</FormLabel>
+              <Select
+                variant="standard"
+                id="divisionSelect"
+                //@ts-ignore
+                onChange={(e) =>
+                  dispatch({ type: "division set", data: e.target.value })
+                }
+                style={{ width: 200 }}
+                size="small"
+                disabled={!state.divisionOptions || loading}
+                value={state.division}
+              >
+                {state.divisionOptions &&
+                  state.divisionOptions.map((division: string) => (
+                    <MenuItem value={division}>{division}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </p>
+        )}
+        {state.country && state.division && state.locationOptions && (
           <p>
             <FormControl>
               <FormLabel>County / location</FormLabel>
@@ -120,18 +148,20 @@ export const UploadModal = () => {
                     data: event.target.value,
                   });
                 }}
+                disabled={!state.locationOptions || loading}
                 variant="standard"
                 value={state.location}
                 style={{ width: 200 }}
                 size="small"
               >
-                {locationOptions.map((loc: string) => (
+                {state.locationOptions.map((loc: string) => (
                   <MenuItem value={loc}>{loc}</MenuItem>
                 ))}
               </Select>
             </FormControl>
           </p>
         )}
+
         <h3>Upload sample metadata, e.g. a line list (optional)</h3>
         <FormLabel>
           If provided, epi metadata helps you identify more meaningful clusters.
@@ -146,6 +176,7 @@ export const UploadModal = () => {
                 handleMetadataUpload(event.target.files[0]);
               }}
               style={{ width: 225 }}
+              disabled={loading}
             >
               Select metadata CSV <input hidden type="file" />
             </Button>
@@ -170,6 +201,7 @@ export const UploadModal = () => {
                 style={{ width: 200 }}
                 size="small"
                 value={state.metadataFieldToMatch}
+                disabled={loading}
               >
                 {metadataKeyOptions.map((key: string) => (
                   <MenuItem value={key}>{key}</MenuItem>
@@ -190,16 +222,18 @@ export const UploadModal = () => {
           disableElevation
           disableRipple
           onClick={(e) => {
+            setLoading(true);
             dispatch({ type: "upload submit button clicked" });
             navigate(ROUTES.APP);
           }}
-          disabled={
-            !state.division ||
-            !state.location ||
-            !state.tree ||
-            !state.mutsPerTransmissionMax
-          }
+          disabled={!state.tree || !state.mutsPerTransmissionMax}
         >
+          {loading && (
+            <CircularProgress
+              size={20}
+              sx={{ color: "white", marginRight: 1 }}
+            />
+          )}
           Submit
         </Button>
       </DialogActions>

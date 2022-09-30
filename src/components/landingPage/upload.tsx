@@ -64,7 +64,7 @@ export const Upload = (props: UploadProps) => {
         Galago. Galago runs entirely in the browser. This means that your data
         never leaves your computer and is never accessible to anyone else.
       </p>
-      <div style={{ marginTop: 67 }}>
+      <div style={{ marginTop: 40 }}>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Button
             variant="outlined"
