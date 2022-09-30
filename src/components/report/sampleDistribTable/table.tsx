@@ -20,9 +20,9 @@ function SampleDistributionTable(props: SampleTableProps) {
   const geoLevels: Array<GeoLevels> = ["location", "division", "country"];
 
   const row_labels = {
-    location: state.cladeDescription.home_geo.location,
-    division: `Other ${state.cladeDescription.home_geo.division} counties`,
-    country: `Other ${state.cladeDescription.home_geo.country} states`,
+    location: state.location,
+    division: `Other ${state.division} counties`,
+    country: `Other ${state.country} states`,
   };
 
   const column_labels = ["", "All public data", "This dataset", "This clade"];
