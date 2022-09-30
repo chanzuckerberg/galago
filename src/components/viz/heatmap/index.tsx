@@ -25,22 +25,23 @@ export const Heatmap = (props: heatmapProps) => {
     yName: string;
     value: number;
   } | null>(null);
-  const dataReady = state.cladeDescription && state.heatmapSelectedSampleNames;
-
-  const [pairwiseDistances, setPairwiseDistances] = useState<PairwiseDistances>(
-    {}
-  );
+  const [pairwiseDistances, setPairwiseDistances] =
+    useState<PairwiseDistances>();
+  const dataReady =
+    state.cladeDescription &&
+    state.heatmapSelectedSampleNames &&
+    pairwiseDistances;
 
   useEffect(() => {
     const newDefaultSamples = getDefaultSampleSet(
       state.cladeDescription,
       maxSamples
     );
+    setPairwiseDistances(calcPairwiseDistances(newDefaultSamples));
     dispatch({
       type: "heatmap selected samples changed",
       data: newDefaultSamples.map((sample: Node) => sample.name),
     });
-    setPairwiseDistances(calcPairwiseDistances(newDefaultSamples));
   }, [state.mrca.name]);
 
   // SCALES;
