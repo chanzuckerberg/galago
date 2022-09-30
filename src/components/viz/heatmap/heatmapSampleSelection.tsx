@@ -6,6 +6,7 @@ import { useState, useCallback, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { orderSamples } from "../../../utils/filterHeatmapStrains";
+import { Node } from "src/d";
 
 type heatmapSampleSelectionProps = {
   maxSamples: number;
@@ -22,10 +23,10 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
 
   // OPTIONS SETUP & STATE
   const getOptions = (
-    pairwiseDistances: any,
+    cladeSamples: Node[],
     samplesOfInterestNames: string[]
   ) => {
-    const strains = Object.keys(pairwiseDistances);
+    const strains = cladeSamples.map((s: Node) => s.name);
     return strains
       .map((strain: string) => {
         return {
@@ -42,7 +43,9 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
     Array<{ name: string; group: string }>
   >(
     getOptions(
-      state.cladeDescription.pairwiseDistances,
+      state.cladeDescription.selected_samples.concat(
+        state.cladeDescription.unselected_samples_in_cluster
+      ),
       state.cladeDescription.selected_samples
     )
   );
@@ -57,7 +60,9 @@ export const HeatmapSampleSelection = (props: heatmapSampleSelectionProps) => {
 
   useEffect(() => {
     const newOptions = getOptions(
-      state.cladeDescription.pairwiseDistances,
+      state.cladeDescription.selected_samples.concat(
+        state.cladeDescription.unselected_samples_in_cluster
+      ),
       state.cladeDescription.selected_samples
     );
     setOptions(newOptions);

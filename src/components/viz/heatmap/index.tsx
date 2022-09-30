@@ -5,8 +5,8 @@ import HeatmapSampleSelection from "./heatmapSampleSelection";
 import { useEffect, useState } from "react";
 import { getDefaultSampleSet } from "../../../utils/filterHeatmapStrains";
 import Theme from "../../../theme";
-import { traverse_preorder } from "../../../utils/treeMethods";
-import { Node } from "../../../d";
+import { calcPairwiseDistances } from "../../../utils/treeMethods";
+import { Node, PairwiseDistances } from "../../../d";
 
 type heatmapProps = {
   chartWidth: number;
@@ -27,15 +27,20 @@ export const Heatmap = (props: heatmapProps) => {
   } | null>(null);
   const dataReady = state.cladeDescription && state.heatmapSelectedSampleNames;
 
+  const [pairwiseDistances, setPairwiseDistances] = useState<PairwiseDistances>(
+    {}
+  );
+
   useEffect(() => {
-    const newDefaultSampleNames = getDefaultSampleSet(
+    const newDefaultSamples = getDefaultSampleSet(
       state.cladeDescription,
       maxSamples
     );
     dispatch({
       type: "heatmap selected samples changed",
-      data: newDefaultSampleNames,
+      data: newDefaultSamples.map((sample: Node) => sample.name),
     });
+    setPairwiseDistances(calcPairwiseDistances(newDefaultSamples));
   }, [state.mrca.name]);
 
   // SCALES;
@@ -66,7 +71,7 @@ export const Heatmap = (props: heatmapProps) => {
   // PLOT
   const getColor = (xName: string, yName: string) => {
     const threshold = state.cladeDescription?.muts_per_trans_minmax;
-    const nMuts = state.cladeDescription?.pairwiseDistances[xName][yName];
+    const nMuts = pairwiseDistances[xName][yName];
     if (nMuts === 0) {
       return Theme.palette.primary.main;
     } else if (nMuts <= threshold * 2) {
@@ -109,10 +114,7 @@ export const Heatmap = (props: heatmapProps) => {
                             setHoveredPoint({
                               xName: xName,
                               yName: yName,
-                              value:
-                                state.cladeDescription?.pairwiseDistances[
-                                  xName
-                                ][yName],
+                              value: pairwiseDistances[xName][yName],
                             });
                           }}
                           onMouseLeave={() => setHoveredPoint(null)}
