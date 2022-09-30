@@ -278,6 +278,7 @@ export const global = (state = defaultState, action: any) => {
         mrcaOptions: getMrcaOptions(tree, samplesOfInterest, []),
         location: "Humboldt County",
         division: "California",
+        country: "USA",
         loadReport: true,
         cladeDescription,
         cladeSliderField,
