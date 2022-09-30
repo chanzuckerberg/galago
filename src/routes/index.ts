@@ -24,4 +24,6 @@ export enum ROUTES {
   // This is accomplished by using a nested "*" wildcard path in our router.
   FETCH_DATA = "/fetch",
   APP = "/app",
+  METHODS = "/methods",
+  FAQ = "/faq",
 }

@@ -1,4 +1,6 @@
 import Divider from "@mui/material/Divider";
+import { Link } from "react-router-dom";
+import { ROUTES } from "src/routes";
 
 const BigFoot = () => {
   return (
@@ -74,36 +76,65 @@ const BigFoot = () => {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-evenly",
-            width: 600,
+            width: 700,
+            maxWidth: 700,
             position: "relative",
             top: 12,
           }}
         >
+          <Link
+            target="_blank"
+            rel="noreferrer noopener"
+            style={{ color: "white", textDecoration: "none" }}
+            to={ROUTES.FAQ}
+          >
+            FAQs
+          </Link>
+          <Link
+            target="_blank"
+            rel="noreferrer noopener"
+            style={{ color: "white", textDecoration: "none" }}
+            to={ROUTES.METHODS}
+          >
+            Methods
+          </Link>
           <a
+            target="_blank"
+            rel="noreferrer noopener"
             href="https://help.czgenepi.org/hc/en-us/categories/6217716150804-Genomic-Epidemiology-Learning-Center"
             style={{ color: "white", textDecoration: "none" }}
           >
             Learning Center
           </a>
           <a
+            target="_blank"
+            rel="noreferrer noopener"
             href="https://github.com/chanzuckerberg/galago/discussions"
             style={{ color: "white", textDecoration: "none" }}
           >
             Discussion Board
           </a>
           <a
+            target="_blank"
+            rel="noreferrer noopener"
             href="mailto:galago@chanzuckerberg.com"
             style={{ color: "white", textDecoration: "none" }}
           >
             Contact Us
           </a>
           <a
+            target="_blank"
+            rel="noreferrer noopener"
             href="https://github.com/chanzuckerberg/galago"
             style={{ color: "white", textDecoration: "none" }}
           >
             Github
           </a>
-          <a href="https://czgenepi.org/">
+          <a
+            target="_blank"
+            rel="noreferrer noopener"
+            href="https://czgenepi.org/"
+          >
             <img
               src="https://github.com/chanzuckerberg/czgenepi/raw/trunk/src/frontend/src/common/images/logo_complete_white.svg"
               style={{ width: 100 }}
