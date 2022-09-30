@@ -72,7 +72,7 @@ export const Heatmap = (props: heatmapProps) => {
   // PLOT
   const getColor = (xName: string, yName: string) => {
     const threshold = state.cladeDescription?.muts_per_trans_minmax;
-    const nMuts = pairwiseDistances[xName][yName];
+    const nMuts = pairwiseDistances ? pairwiseDistances[xName][yName] : NaN;
     if (nMuts === 0) {
       return Theme.palette.primary.main;
     } else if (nMuts <= threshold * 2) {
