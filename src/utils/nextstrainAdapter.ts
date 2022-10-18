@@ -1,5 +1,5 @@
 import { Node } from "../d";
-import { numericToDateObject } from "./dates";
+import { numericToDateObject, parseDateString } from "./dates";
 import {
   assignTipCount,
   describeTree,
@@ -25,6 +25,39 @@ export interface NSJSON {
   tree: NSNode;
 }
 
+const parseDateAttrs = (tmpNode: NSNode) => {
+  let _date: {
+    value: Date | number;
+    confidence: Array<Date | number>;
+  } = { value: NaN, confidence: [NaN, NaN] };
+
+  if (
+    !tmpNode.node_attrs ||
+    (!Object.keys(tmpNode.node_attrs).includes("date") &&
+      !Object.keys(tmpNode.node_attrs).includes("num_date"))
+  ) {
+    return _date;
+  }
+
+  let dateAttr = Object.keys(tmpNode.node_attrs).includes("date")
+    ? "date"
+    : "num_date";
+
+  _date.value =
+    dateAttr === "date"
+      ? parseDateString(tmpNode.node_attrs.date.value)
+      : numericToDateObject(tmpNode.node_attrs.num_date.value);
+
+  if (tmpNode.node_attrs[dateAttr].confidence) {
+    _date.confidence =
+      dateAttr === "date"
+        ? tmpNode.node_attrs[dateAttr].confidence.map(parseDateString)
+        : tmpNode.node_attrs[dateAttr].confidence.map(numericToDateObject);
+  }
+
+  return _date;
+};
+
 export const NSNodeToNode = (node: NSNode, parent: Node | "root") => {
   let tmpNode: any = { ...node };
 
@@ -42,17 +75,7 @@ export const NSNodeToNode = (node: NSNode, parent: Node | "root") => {
     (attr) => (tmpNode.node_attrs[attr] ??= { value: "unknown" })
   );
 
-  // convert dates
-  tmpNode.node_attrs.num_date ??= {};
-  tmpNode.node_attrs.num_date.value = tmpNode.node_attrs.num_date.value
-    ? numericToDateObject(tmpNode.node_attrs.num_date.value)
-    : NaN;
-  tmpNode.node_attrs.num_date.confidence = tmpNode.node_attrs.num_date
-    .confidence
-    ? tmpNode.node_attrs.num_date.confidence.map((n: number) =>
-        numericToDateObject(n)
-      )
-    : [NaN, NaN];
+  tmpNode.node_attrs["num_date"] = parseDateAttrs(tmpNode);
 
   const newNode: Node = { ...tmpNode };
   return newNode;

@@ -1,5 +1,9 @@
 import { Node } from "../../../d";
-import { get_leaves, traverse_preorder } from "../../../utils/treeMethods";
+import {
+  getNodeAttr,
+  get_leaves,
+  traverse_preorder,
+} from "../../../utils/treeMethods";
 import { scaleLinear, extent, scaleTime, symbolCross } from "d3";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { useSelector } from "react-redux";
@@ -30,7 +34,7 @@ export const CladeSelectionViz = (props: CladeSelectionVizProps) => {
   // DATA SETUP
   const allNodes = traverse_preorder(state.tree);
   const allSamples: Array<Node> = allNodes.filter(
-    (n) => n.children.length === 0
+    (n) => n.children.length === 0 && getNodeAttr(n, "num_date")
   );
   allSamples.sort((sample1: Node, sample2: Node) => {
     return state.samplesOfInterestNames.includes(sample1.name) ? 1 : -1;

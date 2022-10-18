@@ -46,7 +46,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
 
   // DATES
   const samples = traverse_preorder(state.mrca)
-    .filter((n: Node) => n.children.length === 0)
+    .filter((n: Node) => n.children.length === 0 && getNodeAttr(n, "num_date"))
     .sort(
       (a, b) =>
         getNodeAttr(a, "num_date").getTime() -
