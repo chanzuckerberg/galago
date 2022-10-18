@@ -75,6 +75,15 @@ export const numericToDateObject = (numDate: number) => {
   return date;
 };
 
+export const parseDateString = (dateString: string) => {
+  const date = new Date(dateString);
+  if (date.toString() === "Invalid Date") {
+    return NaN;
+  } else {
+    return date;
+  }
+};
+
 export const dateObjectToNumeric = (date: Date) => {
   /* Beware: for `Date`, months are 0-indexed, days are 1-indexed */
   const year = date.getFullYear();
