@@ -8,9 +8,11 @@ function GeoSublades() {
   const state = useSelector((state) => state.global);
   const cladeDescription = state.cladeDescription;
 
-  const no_data = cladeDescription.subclade_geo === null;
+  const no_data =
+    cladeDescription.subclade_geo === undefined ||
+    cladeDescription.subclades === undefined;
   if (no_data) {
-    return <></>;
+    return null;
   }
 
   const geo_monophyletic =

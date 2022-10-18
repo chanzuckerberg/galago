@@ -14,34 +14,12 @@ export interface Node {
     // values we care about are typed explicitly; other arbitrary values may also be present but not required or typed
     div: number;
     tipCount: number;
-    location: { value: string };
-    country: { value: string };
-    region: { value: string };
+    location?: { value: string };
+    country?: { value: string };
+    region?: { value: string };
     num_date: { value: Date; confidence: Array<Date> };
     [key: string]: any;
   };
-}
-
-export interface CladeDescription {
-  selected_samples: Node[]; // samples of interest in this clade
-  unselected_samples_in_cluster: Node[];
-
-  pairwiseDistances: any;
-
-  parent_for_cousins: Node;
-  min_muts_to_parent: number;
-
-  cousins: Node[];
-
-  home_geo: {
-    // user input
-    location: string;
-    division: string;
-    country: string;
-    region?: string;
-  };
-  subclade_geo: string | null;
-  subclades: Node[];
 }
 
 export type HomeGeo = {
@@ -49,6 +27,24 @@ export type HomeGeo = {
   division: string;
   country: string;
 };
+
+export type PairwiseDistances = {
+  [key: string]: { [key: string]: number };
+};
+
+export interface CladeDescription {
+  selected_samples: Node[]; // samples of interest in this clade
+  unselected_samples_in_cluster: Node[];
+
+  parent_for_cousins: Node;
+  min_muts_to_parent: number;
+
+  cousins: Node[];
+
+  home_geo?: HomeGeo;
+  subclade_geo?: string | null;
+  subclades?: Node[];
+}
 
 export interface GISAIDRecord {
   year: number;

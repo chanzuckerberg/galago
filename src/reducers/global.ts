@@ -15,6 +15,7 @@ import { demoMetadata } from "../../data/demo_fake_metadata";
 import { demo_tree } from "../../data/demo_tree";
 import { getMrcaOptions } from "../utils/clusterMethods";
 import {
+  get_country_input_options,
   get_division_input_options,
   get_location_input_options,
 } from "../utils/geoInputOptions";
@@ -40,10 +41,6 @@ const defaultState = {
   clusteringMrcas: [], // Node objects that are suggested as relevant by the clustering algo (if any)
   tree: null, // root Node of the entire tree (only changes if json changes)
   haveInternalNodeDates: undefined,
-  location: "",
-  division: "",
-  country: "USA",
-  region: "North America",
   testValue: 0,
   metadataCensus: {},
   metadataEntries: [],
@@ -60,7 +57,12 @@ const defaultState = {
   cacheStateOnFilterDrawerOpen: {},
   filterDrawerOpen: false,
   uploadModalOpen: false,
+  location: "",
+  division: "",
+  country: "",
+  countryOptions: [""],
   divisionOptions: [""],
+  locationOptions: [""],
   pathogen: "",
   mutsPerTransmissionMax: "",
   fetchData: {
@@ -239,15 +241,14 @@ export const global = (state = defaultState, action: any) => {
 
       const cladeDescription = describe_clade(
         mrca,
+        1,
+        // @ts-ignore
+        samplesOfInterest,
         {
           location: "Humboldt County",
           division: "California",
           country: "USA",
-          region: "North America",
-        },
-        1,
-        // @ts-ignore
-        samplesOfInterest
+        }
       );
 
       const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
@@ -277,6 +278,7 @@ export const global = (state = defaultState, action: any) => {
         mrcaOptions: getMrcaOptions(tree, samplesOfInterest, []),
         location: "Humboldt County",
         division: "California",
+        country: "USA",
         loadReport: true,
         cladeDescription,
         cladeSliderField,
@@ -327,14 +329,13 @@ export const global = (state = defaultState, action: any) => {
                 ),
                 cladeDescription: describe_clade(
                   newMrcaOptions[0],
+                  1,
+                  state.samplesOfInterest,
                   {
                     location: state.location,
                     division: state.division,
                     country: state.country,
-                    region: state.region,
-                  },
-                  1,
-                  state.samplesOfInterest
+                  }
                 ),
               };
 
@@ -360,18 +361,12 @@ export const global = (state = defaultState, action: any) => {
       }
 
       let cladeDescription: null | CladeDescription = state.cladeDescription;
-      if (state.tree && state.location && state.division) {
-        cladeDescription = describe_clade(
-          mrca,
-          {
-            location: state.location,
-            division: state.division,
-            country: state.country,
-            region: state.region,
-          },
-          1,
-          state.samplesOfInterest
-        );
+      if (state.tree && state.mrca) {
+        cladeDescription = describe_clade(mrca, 1, state.samplesOfInterest, {
+          location: state.location,
+          division: state.division,
+          country: state.country,
+        });
       }
 
       return {
@@ -407,7 +402,7 @@ export const global = (state = defaultState, action: any) => {
     case "tree file uploaded": {
       const { tree, treeTitle, haveInternalNodeDates } = action.data;
 
-      const divisionOptions = get_division_input_options(tree, state.country);
+      const countryOptions = get_country_input_options(tree);
       const treeMetadata = treeMetadataCensus(tree);
 
       const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
@@ -416,7 +411,7 @@ export const global = (state = defaultState, action: any) => {
         ...state,
         tree,
         treeTitle,
-        divisionOptions,
+        countryOptions,
         showErrorMessages: {
           // successful tree upload should clear all tree and fetch errors
           ...state.showErrorMessages,
@@ -473,7 +468,7 @@ export const global = (state = defaultState, action: any) => {
         pathogen: pathogenParam,
         // mrca: mrcaParam, TODO Uncomment and use when ready to handle
       } = action.galagoParams as GalagoParams;
-      const divisionOptions = get_division_input_options(tree, state.country);
+      const countryOptions = get_country_input_options(tree);
       const treeMetadata = treeMetadataCensus(tree);
       const cladeSliderField = haveInternalNodeDates ? "num_date" : "div";
 
@@ -490,7 +485,7 @@ export const global = (state = defaultState, action: any) => {
           treeErrors: { ...showErrorDefaults.treeErrors },
           fetchErrors: { ...showErrorDefaults.fetchErrors },
         },
-        divisionOptions: divisionOptions,
+        countryOptions: countryOptions,
         mrcaOptions: traverse_preorder(tree).filter(
           (node: Node) => node.children.length >= 2
         ),
@@ -550,18 +545,28 @@ export const global = (state = defaultState, action: any) => {
       };
     }
 
-    case "location set": {
-      return {
-        ...state,
-        location: action.data,
-      };
+    case "country set": {
+      if (state.tree) {
+        const newDivisionOptions = get_division_input_options(
+          state.tree,
+          action.data
+        );
+        return {
+          ...state,
+          country: action.data,
+          division: "",
+          divisionOptions: newDivisionOptions,
+          location: "",
+        };
+      }
     }
 
     case "division set": {
-      if (state.tree) {
+      if (state.tree && state.country) {
         const newLocationOptions = get_location_input_options(
           state.tree,
-          action.data
+          action.data,
+          state.country
         );
         return {
           ...state,
@@ -572,6 +577,12 @@ export const global = (state = defaultState, action: any) => {
       }
     }
 
+    case "location set": {
+      return {
+        ...state,
+        location: action.data,
+      };
+    }
     case "metadata uploaded and parsed": {
       const { tidyMetadata, metadataCensus } = action.data;
 
@@ -642,7 +653,7 @@ export const global = (state = defaultState, action: any) => {
     }
 
     case "upload submit button clicked": {
-      if (state.tree && state.division && state.location && state.mrca) {
+      if (state.tree && state.mrca) {
         let metadataStateUpdates: { [key: string]: any } = {};
 
         if (state.metadataEntries && state.metadataFieldToMatch && state.tree) {
@@ -671,15 +682,14 @@ export const global = (state = defaultState, action: any) => {
 
         const cladeDescription = describe_clade(
           metadataStateUpdates.mrca ? metadataStateUpdates.mrca : state.mrca,
+          1,
+          // @ts-ignore
+          state.samplesOfInterest,
           {
             location: state.location,
             division: state.division,
             country: state.country,
-            region: state.region,
-          },
-          1,
-          // @ts-ignore
-          state.samplesOfInterest
+          }
         );
 
         return {

@@ -21,10 +21,15 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import uuid from "react-uuid";
 import Theme from "../../theme";
 
-export const PathogenSelection = () => {
+type PathogenSelectionProps = {
+  loading: boolean;
+};
+
+export const PathogenSelection = (props: PathogenSelectionProps) => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
+  const { loading } = props;
 
   const [showCalculator, setShowCalculator] = useState<boolean>(false);
   const [genomeLength, setGenomeLength] = useState<number | "">("");
@@ -81,6 +86,7 @@ export const PathogenSelection = () => {
               }}
               label="Pathogen"
               style={{ width: 125 }}
+              disabled={loading}
             >
               {Object.keys(pathogenParameters).map((pathogen) => {
                 return (
@@ -155,6 +161,7 @@ export const PathogenSelection = () => {
               InputLabelProps={{
                 shrink: true,
               }}
+              disabled={loading}
             />
           </FormControl>{" "}
           <FormControl>
@@ -177,6 +184,7 @@ export const PathogenSelection = () => {
                   genomeLength !== "" &&
                   (genomeLength < 1000 || genomeLength > 10000000)
                 }
+                disabled={loading}
               />
               <TextField
                 variant="standard"
@@ -195,6 +203,7 @@ export const PathogenSelection = () => {
                   (subsPerSitePerYear <= 0 || subsPerSitePerYear > 1)
                 }
                 style={{ marginRight: 10 }}
+                disabled={loading}
               />
               <TextField
                 variant="standard"
@@ -212,6 +221,7 @@ export const PathogenSelection = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                disabled={loading}
               />
             </FormGroup>
           </FormControl>

@@ -21,10 +21,17 @@ function CladeUniqueness() {
     get_dist([c, state.mrca])
   );
 
-  const local_cousins: Node[] = cladeDescription.cousins.filter(
-    (c: Node) =>
-      c.node_attrs.location.value === cladeDescription.home_geo.location
-  );
+  let local_cousins: Node[] = [];
+
+  //TODO: soften geo requirement, use whatever data we have
+  if (state.location) {
+    local_cousins = cladeDescription.cousins.filter(
+      (c: Node) =>
+        getNodeAttr(c, "country") === state.country &&
+        getNodeAttr(c, "division") === state.division &&
+        getNodeAttr(c, "location") === state.location
+    );
+  }
 
   const local_cousin_dates: Array<Date> = local_cousins
     .map((a) => a.node_attrs.num_date.value)
@@ -72,29 +79,34 @@ function CladeUniqueness() {
         co-located, you may want to consider expanding the scope of your
         investigation.{" "}
       </p>
-      <p className="results">
-        In this dataset, the samples most closely related to your clade of
-        interest include <FormatDataPoint value={local_cousins.length} /> other
-        samples from{" "}
-        <FormatDataPoint value={cladeDescription.home_geo.location} />
-        {local_cousins.length > 0 ? (
-          <>
-            , dated between <FormatDate date={local_cousin_dates[0]} /> and{" "}
-            <FormatDate date={local_cousin_dates.slice(-1)[0]} />
-            :
-            <FormatStringArray values={local_cousins.map((s) => s.name)} />
-          </>
-        ) : (
-          <>.</>
+      {state.location && local_cousins.length > 0 && (
+        <p className="results">
+          In this dataset, the samples most closely related to your clade of
+          interest include <FormatDataPoint value={local_cousins.length} />{" "}
+          other samples from{" "}
+          <FormatDataPoint value={cladeDescription.home_geo.location} />, dated
+          between <FormatDate date={local_cousin_dates[0]} /> and{" "}
+          <FormatDate date={local_cousin_dates.slice(-1)[0]} />:{" "}
+          <FormatStringArray values={local_cousins.map((s) => s.name)} />
+        </p>
+      )}
+      {state.location &&
+        cladeDescription.cousins.length - local_cousins.length > 1 && (
+          <p>
+            There are also{" "}
+            <FormatDataPoint
+              value={cladeDescription.cousins.length - local_cousins.length}
+            />{" "}
+            closely related samples from these locations:
+            <FormatStringArray values={cousin_locations} />
+          </p>
         )}
-      </p>
-      {cladeDescription.cousins.length - local_cousins.length > 1 && (
+      {!state.location && (
         <p>
-          There are also{" "}
-          <FormatDataPoint
-            value={cladeDescription.cousins.length - local_cousins.length}
-          />{" "}
-          closely related samples from these locations:
+          In this dataset, the samples most closely related to your clade of
+          interest include{" "}
+          <FormatDataPoint value={cladeDescription.cousins.length} /> other
+          samples from these locations:{" "}
           <FormatStringArray values={cousin_locations} />
         </p>
       )}
