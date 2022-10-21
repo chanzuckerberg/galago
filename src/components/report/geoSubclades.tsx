@@ -70,46 +70,7 @@ function GeoSublades() {
             number of transmissions between locations that have contributed to
             your clade of interest.
           </p>
-
-          <p className="results">
-            {/* {no_data &&
-          "While there are samples within your clade from other locations, we aren't able to report on specific transmissions between locations because this was not inferred by Nextstrain upstream."} */}
-
-            {!no_data && geo_monophyletic && (
-              <>
-                All of the samples in this clade are from the same{" "}
-                <FormatDataPoint value={cladeDescription.subclade_geo} />; we do
-                not see evidence of multiple introductions to{" "}
-                <FormatDataPoint
-                  //@ts-ignore
-                  value={
-                    cladeDescription.home_geo[cladeDescription.subclade_geo]
-                  }
-                />
-                <br />
-                <br />
-                Thus, it is plausible that these samples were all the result of
-                a single introduction, followed by local spread.
-              </>
-            )}
-
-            {!no_data && !geo_monophyletic && (
-              <>
-                At least{" "}
-                <FormatDataPoint value={cladeDescription.subclades.length} />{" "}
-                transmission(s) between{" "}
-                <FormatDataPoint
-                  value={
-                    //@ts-ignore
-                    cladeDescription["home_geo"][cladeDescription.subclade_geo]
-                  }
-                />{" "}
-                and these locations have contributed to this clade:{" "}
-                <FormatStringArray values={subclade_locations} />
-              </>
-            )}
-          </p>
-          <p>
+          <p className="theory">
             As always, the strength of this evidence depends on how
             representative your dataset is (see below).
           </p>
