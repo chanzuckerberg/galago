@@ -3,6 +3,7 @@ import {
   get_leaves,
   get_parent_for_cousins,
   getAttrChanges,
+  get_dist,
 } from "./treeMethods";
 
 const catalog_subclades = (
@@ -42,6 +43,17 @@ const catalog_subclades = (
   };
 };
 
+const getMrcaDistances = (clade: Node) => {
+  const leaves = get_leaves(clade);
+
+  let mrca_distances: { [key: string]: number } = {};
+
+  leaves.forEach((leaf) => {
+    mrca_distances[leaf.name] = get_dist([leaf, clade]);
+  });
+  return mrca_distances;
+};
+
 export const describe_clade = (
   mrca: Node,
   min_muts_to_parent: number,
@@ -68,6 +80,7 @@ export const describe_clade = (
     ),
     parent_for_cousins: parent_for_cousins,
     min_muts_to_parent: min_muts_to_parent,
+    mrca_distances: getMrcaDistances(mrca),
     cousins:
       mrca && parent_for_cousins
         ? get_leaves(parent_for_cousins).filter(

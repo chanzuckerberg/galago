@@ -21,6 +21,13 @@ function CladeDefinition(props: CladeDefinitionProps) {
   );
 
   let localSamples = [];
+  let maxMrcaDist = 0;
+  Object.keys(cladeDescription.mrca_distances).forEach((sample) => {
+    maxMrcaDist = Math.max(
+      maxMrcaDist,
+      cladeDescription.mrca_distances[sample]
+    );
+  });
 
   // TODO: soften geo requirement, use whatever resolution we have
   if (state.country && state.division && state.location) {

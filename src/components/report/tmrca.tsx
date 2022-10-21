@@ -22,15 +22,9 @@ function TMRCA(props: CladeProps) {
     cladeDescription.unselected_samples_in_cluster
   );
 
-  let mrca_distances: { [key: string]: number } = Object.fromEntries(
-    all_samples.map((x) => [
-      x.name,
-      state.mrca ? get_dist([x, state.mrca]) : NaN,
-    ])
-  );
-  let mrca_matches: string[] = Object.keys(mrca_distances).filter(
-    (m) => mrca_distances[m] === 0
-  );
+  let mrca_matches: string[] = Object.keys(
+    cladeDescription.mrca_distances
+  ).filter((m) => cladeDescription.mrca_distances[m] === 0);
 
   return (
     <div className="reportSection">

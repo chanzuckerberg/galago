@@ -155,7 +155,7 @@ export const get_dist = (target_nodes: [Node, Node]) => {
   const mp = get_path(target_nodes);
   const mrca = mp["mrca"];
   const path = mp["path"];
-  let dist = 0;
+  let dist: number = 0;
 
   for (let i = 0; i < path.length; i++) {
     if (
@@ -377,4 +377,26 @@ export const determineIfInternalNodeDates = (tree: Node) => {
     }
   }
   return haveNodeDates;
+};
+
+export const findPolytomies = (tree: Node) => {
+  const leaves = get_leaves(tree);
+  let polytomies: { [key: string]: Node[] } = {};
+
+  leaves.forEach((leaf: Node) => {
+    if (
+      Object.keys(leaf.branch_attrs).includes("length") &&
+      leaf.branch_attrs.length === 0 &&
+      leaf.parent
+    ) {
+      if (!Object.keys(polytomies).includes(leaf.parent.name)) {
+        polytomies[leaf.parent.name] = [];
+      }
+      polytomies[leaf.parent.name].push(leaf);
+    }
+  });
+
+  console.log(polytomies);
+
+  return Object.values(polytomies).filter((p: Node[]) => p.length > 1);
 };
