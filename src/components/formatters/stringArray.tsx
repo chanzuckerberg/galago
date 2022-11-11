@@ -1,3 +1,5 @@
+import { FormatDataPoint } from "./dataPoint";
+
 type stringArrayProps = {
   values: string[];
   includeUnknown?: boolean;
@@ -6,16 +8,22 @@ type stringArrayProps = {
 
 export const FormatStringArray = (props: stringArrayProps) => {
   let { values, includeUnknown, makeUnique } = props;
-  includeUnknown = includeUnknown === undefined ? true : includeUnknown;
-  makeUnique = makeUnique === undefined ? true : makeUnique;
+
+  includeUnknown ??= false;
+  makeUnique ??= true;
+
   const unknownValues = [undefined, null, "unknown", "?", "", NaN];
   values = includeUnknown
     ? values
-    : values.filter((v) => unknownValues.includes(v));
+    : values.filter((v) => !unknownValues.includes(v));
 
   values = makeUnique ? [...new Set(values)] : values;
 
   values.sort();
+
+  if (values.length === 1) {
+    return <FormatDataPoint value={values[0]} />;
+  }
 
   return (
     <blockquote className="dataPoint">

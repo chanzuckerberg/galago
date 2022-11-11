@@ -39,6 +39,8 @@ export interface CladeDescription {
   parent_for_cousins: Node;
   min_muts_to_parent: number;
 
+  mrca_distances: { [key: string]: number };
+
   cousins: Node[];
 
   home_geo?: HomeGeo;

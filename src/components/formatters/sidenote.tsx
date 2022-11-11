@@ -1,4 +1,4 @@
-import { Tooltip, tooltipClasses } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import Theme from "../../theme";
 
 export const tooltipProps = {
