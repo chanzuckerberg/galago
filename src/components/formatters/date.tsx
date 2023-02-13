@@ -4,7 +4,9 @@ type formatDateProps = {
 
 export const FormatDate = (props: formatDateProps) => {
   const { date } = props;
-  return (
-    <span className="dataPoint">{date.toISOString().substring(0, 10)}</span>
-  );
+  let formattedDate = "";
+  try {
+    formattedDate = date.toISOString().substring(0, 10);
+  } catch (e) {}
+  return <span className="dataPoint">{formattedDate}</span>;
 };
