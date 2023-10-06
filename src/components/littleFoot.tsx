@@ -18,7 +18,7 @@ const LittleFoot = () => {
     >
       <div style={{ fontSize: 12 }}>
         <b>Galago | </b>a little tree explorer made with &hearts; by the CZ GEN
-        EPI team &#11825; Code: MIT licensed &#11825; Content: CC0 licensed
+        EPI team &#11825; Free and open: MIT & CC0 licenses
       </div>
       <div
         style={{

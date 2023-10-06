@@ -35,8 +35,8 @@ export const SitStat = () => {
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <div>
             <EpiCurve
-              chartHeight={windowWidth * 0.15}
-              chartWidth={windowWidth * 0.35}
+              chartHeight={Math.max(windowWidth * 0.15, 200)}
+              chartWidth={Math.max(windowWidth * 0.35, 150)}
               chartMargin={60}
             />
             {!isNaN(getNodeAttr(state.mrca, "num_date")) && (
