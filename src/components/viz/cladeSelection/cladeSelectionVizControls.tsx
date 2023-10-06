@@ -1,9 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Tooltip } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import CladeFilterDrawer from "../../cladeFilterDrawer";
 import { tooltipProps } from "../../formatters/sidenote";
-import CladeSelector from "./cladeSelector";
-import CladeSlider from "./cladeSlider";
+import CladeCaption from "./cladeCaption";
+import MoveUpIcon from "@mui/icons-material/MoveUp";
+import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
+import { dateObjectToNumeric } from "src/utils/dates";
 
 type CladeSelectionVizControlsProps = {
   sectionWidth: number;
@@ -18,68 +20,92 @@ export const CladeSelectionVizControls = (
   const state = useSelector((state) => state.global);
   const dispatch = useDispatch();
 
-  const getFilterButtonTooltipText = () => {
-    if (state.samplesOfInterestNames.length || state.clusteringMethod) {
-      return `Samples of interest: ${state.samplesOfInterestNames.length}  |
-  Clustering: ${state.clusteringMethod ? state.clusteringMethod : "none"}
-  ${
-    state.clusteringMetadataField && state.clusterMethod
-      ? "on " + state.metadataField
-      : ""
-  }`;
-    } else {
-      return "Locate samples of interest and filter clades";
-    }
-  };
-
   return (
     <div
+      id="clade selection viz controls"
       style={{
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-evenly",
+        justifyContent: "space-between",
         position: "relative",
         width: sectionWidth,
-        // border: "1px solid purple",
       }}
     >
       <div
-        id="clade filter drawer toggle button"
+        id="left-controls"
         style={{
-          position: "relative",
-          top: 11,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
         }}
       >
+        <div id="clade filter drawer toggle button">
+          <Tooltip
+            title={"Locate samples of interest and filter clades"}
+            componentsProps={tooltipProps}
+          >
+            <Button
+              onClick={() => dispatch({ type: "filter drawer opened" })}
+              sx={{
+                margin: 0,
+                minWidth: 125,
+              }}
+              variant="contained"
+            >
+              Search & filter
+            </Button>
+          </Tooltip>
+        </div>
+        <div
+          id="clade caption"
+          style={{ width: 225, position: "relative", top: -25, marginLeft: 25 }}
+        >
+          <CladeCaption />
+        </div>
+      </div>
+      <div id="zoom controls" style={{ minWidth: 125 }}>
         <Tooltip
-          title={getFilterButtonTooltipText()}
+          title={"Zoom out one level (to parent clade)"}
           componentsProps={tooltipProps}
         >
-          <Button
-            onClick={() => dispatch({ type: "filter drawer opened" })}
-            size="small"
+          <IconButton
+            size="large"
+            onClick={() =>
+              dispatch({
+                type: "mrca selected",
+                data: state.mrca.parent?.name,
+              })
+            }
             sx={{
-              fontSize: 10,
               margin: 0,
+              color: !state.mrca.parent ? "gray" : "black",
             }}
-            variant="contained"
+            disabled={!state.mrca.parent}
           >
-            Search & filter
-          </Button>
+            <MoveUpIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title={"Zoom out (to root)"} componentsProps={tooltipProps}>
+          <IconButton
+            onClick={() =>
+              dispatch({
+                type: "mrca selected",
+                data: state.tree.name,
+              })
+            }
+            size="large"
+            sx={{
+              margin: 0,
+              color: state.tree.name === state.mrca.name ? "gray" : "black",
+            }}
+            disabled={state.tree.name === state.mrca.name}
+          >
+            <ZoomOutMapIcon />
+          </IconButton>
         </Tooltip>
       </div>
-      <div
-        id="clade selection slider"
-        style={{ width: sectionWidth - 275, flexShrink: 0 }}
-      >
-        <CladeSlider />
-      </div>
 
-      <div
-        id="clade selection dropdown"
-        style={{ width: 100, position: "relative", top: 7 }}
-      >
-        <CladeSelector />
-      </div>
       <CladeFilterDrawer />
     </div>
   );

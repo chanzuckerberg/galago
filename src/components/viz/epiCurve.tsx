@@ -1,17 +1,12 @@
 import { useSelector } from "react-redux";
-import React, { useState } from "react";
 import { BarStack } from "@visx/shape";
 import { Group } from "@visx/group";
 import { GridRows } from "@visx/grid";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { timeFormat } from "d3-time-format";
-// import { useTooltip, useTooltipInPortal, defaultStyles } from '@visx/tooltip';
 import { LegendOrdinal } from "@visx/legend";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import TimelineIcon from "@mui/icons-material/Timeline";
-import MapIcon from "@mui/icons-material/Map";
+
 import {
   getNodeAttr,
   get_dist,
@@ -39,9 +34,6 @@ export const EpiCurve = (props: EpiCurveProps) => {
   //@ts-ignore
   const state = useSelector((state) => state.global);
 
-  const [colorBy, setColorBy] = useState<"transmissions" | "geography">(
-    "transmissions"
-  );
   const { chartHeight, chartWidth, chartMargin } = props;
 
   // DATES
@@ -87,21 +79,11 @@ export const EpiCurve = (props: EpiCurveProps) => {
 
   // ACCESSORS & COUNTS
   // leaving these here bc they requires lots of state
-  const keys =
-    colorBy === "transmissions"
-      ? [
-          "Identical to primary case",
-          `Secondary / tertiary case (+1 - ${
-            state.mutsPerTransmissionMax * 2
-          } muts)`,
-          `Tertiary+ case (${state.mutsPerTransmissionMax * 2 + 1}+ muts)`,
-        ]
-      : [
-          state.location,
-          `Other counties in ${state.division}`,
-          `Other states in ${state.country}`,
-          "Other countries",
-        ];
+  const keys = [
+    "Identical to primary case",
+    `Secondary / tertiary case (+1 - ${state.mutsPerTransmissionMax * 2} muts)`,
+    `Tertiary+ case (${state.mutsPerTransmissionMax * 2 + 1}+ muts)`,
+  ];
 
   const getTransmissions = (node: Node) => {
     const nMuts = get_dist([node, state.mrca]);
@@ -115,22 +97,6 @@ export const EpiCurve = (props: EpiCurveProps) => {
     }
   };
 
-  const getGeography = (node: Node) => {
-    const nodeLocation = getNodeAttr(node, "location");
-    const nodeDivision = getNodeAttr(node, "division");
-    const nodeCountry = getNodeAttr(node, "country");
-
-    if (nodeLocation === state.location) {
-      return state.location;
-    } else if (nodeDivision === state.division) {
-      return `Other counties in ${state.division}`;
-    } else if (nodeCountry === state.country) {
-      return `Other states in ${state.country}`;
-    } else {
-      return "Other countries";
-    }
-  };
-
   // DATA WRANGLING
   const dataPoints: { [key: string]: any } = {};
   samples.forEach((n: Node) => {
@@ -141,8 +107,7 @@ export const EpiCurve = (props: EpiCurveProps) => {
         dataPoints[nodeDateBin][k] = 0;
       });
     }
-    const value =
-      colorBy === "transmissions" ? getTransmissions(n) : getGeography(n);
+    const value = getTransmissions(n);
     dataPoints[nodeDateBin][value] += 1;
   });
 
@@ -208,15 +173,6 @@ export const EpiCurve = (props: EpiCurveProps) => {
     yTickValues = countRange.filter((t) => t % 500 === 0);
   }
 
-  const handleColorbySelection = (
-    event: React.MouseEvent<HTMLElement>,
-    newValue: "transmissions" | "geography" | null
-  ) => {
-    if (newValue !== null) {
-      setColorBy(newValue);
-    }
-  };
-
   // PLOT
   return chartWidth < 10 ? null : (
     <div
@@ -229,45 +185,13 @@ export const EpiCurve = (props: EpiCurveProps) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-evenly",
+          justifyContent: "space-between",
           width: chartWidth,
+          height: 20,
+          fontSize: 10,
         }}
       >
-        {/* TODO: soften this requirement, show whatever geo bins are available */}
-        {state.location && state.division && state.country && (
-          <div style={{ width: 60 }}>
-            <ToggleButtonGroup
-              value={colorBy}
-              exclusive
-              onChange={handleColorbySelection}
-              aria-label="color by"
-            >
-              <ToggleButton
-                value="transmissions"
-                aria-label="transmissions"
-                style={{ width: 30, height: 30 }}
-              >
-                <TimelineIcon />
-              </ToggleButton>
-              <ToggleButton
-                value="geography"
-                aria-label="geography"
-                style={{ width: 30, height: 30 }}
-              >
-                <MapIcon />
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </div>
-        )}
-        <div
-          style={{
-            fontSize: "11px",
-            width: chartWidth - 80,
-            position: "relative",
-          }}
-        >
-          <LegendOrdinal scale={colorScale} direction="row" />
-        </div>
+        <LegendOrdinal scale={colorScale} direction="row" />
       </div>
 
       <svg width={chartWidth + chartMargin} height={chartHeight - 50}>

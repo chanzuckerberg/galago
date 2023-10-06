@@ -25,13 +25,13 @@ import {
   zipMetadataToTree,
 } from "../utils/metadataUtils";
 import { describe_clade } from "../utils/describeClade";
-import { formatMrcaSliderOptionValue } from "../components/viz/cladeSelection/cladeSlider";
 import {
   calcMutsPerTransmissionMax,
   pathogenParameters,
 } from "../utils/pathogenParameters";
 import { showErrorDefaults } from "src/utils/errorTypes";
 import { GalagoParams } from "src/utils/fetchData";
+import { formatMrcaSliderOptionValue } from "src/utils/formatValues";
 
 const defaultState = {
   samplesOfInterestNames: [], // literally just the names of the samplesOfInterest
