@@ -1,6 +1,8 @@
 import { Collapse, Alert, AlertTitle } from "@mui/material";
 import { useState } from "react";
 import { Theme } from "../../theme";
+import { Link } from "react-router-dom";
+import { ROUTES } from "../../routes";
 
 export const BetaBanner = () => {
   const [showAlert, setShowAlert] = useState<boolean>(true);
@@ -8,7 +10,7 @@ export const BetaBanner = () => {
   return (
     <Collapse in={showAlert}>
       <Alert
-        severity="info"
+        severity="warning"
         style={{
           width: 450,
           height: 75,
@@ -23,18 +25,19 @@ export const BetaBanner = () => {
         sx={{ backgroundColor: Theme.palette.secondary.lighter }}
       >
         <AlertTitle>
-          <strong>Galago is in beta - please share your feedback! </strong>
+          <strong>Galago is no longer regularly updated.</strong>
         </AlertTitle>
         <span style={{}}>
-          We'd love to hear from you via{" "}
-          <a href="https://github.com/chanzuckerberg/galago/discussions">
-            <b>discussion board</b>
-          </a>{" "}
-          or{" "}
-          <a href="mailto:galago@chanzuckerberg.com">
-            <b>email</b>
-          </a>
-          .
+          For usage instructions, see the{" "}
+          <Link target="_blank" rel="noreferrer noopener" to={ROUTES.FAQ}>
+            FAQs
+          </Link>{" "}
+          and{" "}
+          <Link target="_blank" rel="noreferrer noopener" to={ROUTES.FAQ}>
+            Methods
+          </Link>{" "}
+          pages. For questions, contact{" "}
+          <Link to="mailto:sidneymbell@gmail.com">Sidney Bell</Link>.
         </span>
       </Alert>
     </Collapse>
