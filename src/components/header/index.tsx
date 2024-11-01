@@ -5,6 +5,8 @@ import StagingBanner from "./stagingBanner";
 import { isAppRunningInStaging } from "src/utils/staging";
 import { useSelector } from "react-redux";
 import { GenericErrorBanner } from "./genericErrorBanner";
+import { Link } from "react-router-dom";
+import { ROUTES } from "src/routes";
 
 type HeaderProps = {
   sectionHeight?: number;
@@ -67,10 +69,12 @@ const Header = (props: HeaderProps) => {
           margin: 0,
         }}
       >
-        <img
-          src="https://github.com/chanzuckerberg/galago-labs/raw/main/src/images/galago-logo.svg"
-          height={50}
-        />
+        <Link to={ROUTES.HOMEPAGE}>
+          <img
+            src="https://github.com/chanzuckerberg/galago-labs/raw/main/src/images/galago-logo.svg"
+            height={50}
+          />
+        </Link>
       </div>
       <Helmet>
         <meta charSet="utf-8" />
