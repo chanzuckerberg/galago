@@ -33,10 +33,6 @@ export const LandingPage = () => {
           <Demo sectionWidth={middleWidth * 0.43} />
           <Upload sectionWidth={middleWidth * 0.43} />
         </div>
-
-        <div style={{ marginBottom: 30, marginTop: 30 }}>
-          <ContactUs />
-        </div>
       </div>
       <BigFoot />
     </div>
