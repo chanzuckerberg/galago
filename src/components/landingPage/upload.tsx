@@ -97,8 +97,12 @@ export const Upload = (props: UploadProps) => {
             title={
               <>
                 If you need help generating a phylogenetic tree, head over to{" "}
-                <a href="https://czgenepi.org" style={{ color: "white" }}>
-                  CZ GEN EPI
+                <a href="http://theiagenepi.org/" style={{ color: "white" }}>
+                  TheiaGenEpi
+                </a>{" "}
+                or{" "}
+                <a href="https://nextstrain.org/" style={{ color: "white" }}>
+                  Nextstrain
                 </a>
               </>
             }
