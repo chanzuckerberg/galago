@@ -23,6 +23,14 @@ const PackLayout = ({ width, height, margin }: PackLayoutProps) => {
   const [hoveredSample, setHoveredSample] =
     useState<HierarchyCircularNode<Node> | null>(null);
 
+  const handleMouseEnter = (node: HierarchyCircularNode<Node>) => {
+    setHoveredSample(node);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredSample(null);
+  };
+
   const checkIfSampleOfInterest = (sample: HierarchyCircularNode<Node>) => {
     return state.samplesOfInterestNames.includes(sample.data.name);
   };
@@ -137,13 +145,51 @@ const PackLayout = ({ width, height, margin }: PackLayoutProps) => {
         {(packData) => {
           const samples = packData.descendants().slice(1); // skip outer hierarchies
           return (
-            //@ts-expect-error Type 'HierarchyCircularNode<Node>' is missing the following properties from type 'HierarchyCircularNode<Node>': find, [Symbol.iterator]
-            <Group>{samples.map((sample, i) => plotSample(sample))}</Group>
+            <Group>
+              {samples.map((sample, i) => (
+                <g
+                  key={i}
+                  onMouseEnter={() =>
+                    handleMouseEnter(sample as HierarchyCircularNode<Node>)
+                  }
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {plotSample(sample as HierarchyCircularNode<Node>)}
+                </g>
+              ))}
+              {hoveredSample && (
+                <g>
+                  <rect
+                    x={hoveredSample.x - 6}
+                    y={hoveredSample.y - 15}
+                    width={hoveredSample.data.name.length * 10}
+                    height="20"
+                    fill="white"
+                    opacity={0.8}
+                    rx="4"
+                    ry="4"
+                    style={{ pointerEvents: "none" }}
+                  />
+                  <text
+                    y={hoveredSample.y}
+                    x={hoveredSample.x}
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "bold",
+                      pointerEvents: "none",
+                      fill: "black",
+                    }}
+                  >
+                    {hoveredSample.data.name}
+                  </text>
+                </g>
+              )}
+            </Group>
           );
         }}
       </Pack>
+
       <CladeSelectionVizLegend smallWindow={height < 350} />
-      {/* {hoveredSample && <PackLayoutTooltip hoveredSample={hoveredSample} />} */}
     </svg>
   );
 };
