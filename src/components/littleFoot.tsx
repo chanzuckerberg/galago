@@ -1,5 +1,7 @@
 import Divider from "@mui/material/Divider";
 import Theme from "../theme";
+import { Link } from "react-router-dom";
+import { ROUTES } from "src/routes";
 
 const LittleFoot = () => {
   return (
@@ -17,32 +19,40 @@ const LittleFoot = () => {
       }}
     >
       <div style={{ fontSize: 12 }}>
-        <b>Galago | </b>a little tree explorer made with &hearts; by the CZ GEN
-        EPI team &#11825; Free and open: MIT & CC0 licenses
+        <b>Galago | </b>a little tree explorer made with &hearts; by Sidney Bell
+        & Colin Megill &#11825; Free and open: MIT & CC0 licenses
       </div>
       <div
         style={{
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-evenly",
-          width: 450,
+          width: 300,
           fontSize: 12,
         }}
       >
-        <a
-          href="https://help.czgenepi.org/hc/en-us/categories/6217716150804-Genomic-Epidemiology-Learning-Center"
-          style={{ textDecoration: "none" }}
+        <Link
+          target="_blank"
+          rel="noreferrer noopener"
+          style={{
+            textDecoration: "none",
+          }}
+          to={ROUTES.FAQ}
         >
-          Learning Center
-        </a>
-        <a
-          href="https://github.com/chanzuckerberg/galago/discussions"
-          style={{ textDecoration: "none" }}
+          FAQs
+        </Link>
+        <Link
+          target="_blank"
+          rel="noreferrer noopener"
+          style={{
+            textDecoration: "none",
+          }}
+          to={ROUTES.METHODS}
         >
-          Discussion Board
-        </a>
+          Methods
+        </Link>
         <a
-          href="mailto:galago@chanzuckerberg.com"
+          href="mailto:sidneymbell@gmail.com"
           style={{ textDecoration: "none" }}
         >
           Contact Us
@@ -52,12 +62,6 @@ const LittleFoot = () => {
           style={{ textDecoration: "none" }}
         >
           Github
-        </a>
-        <a href="https://czgenepi.org/">
-          <img
-            src="https://github.com/chanzuckerberg/czgenepi/raw/trunk/src/frontend/public/CZGenEpiLogoBlack.svg"
-            style={{ height: "15px" }}
-          />
         </a>
       </div>
     </div>

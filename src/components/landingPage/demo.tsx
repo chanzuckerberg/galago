@@ -38,7 +38,7 @@ export const Demo = (props: DemoProps) => {
         </a>
         .
       </p>
-      <p style={{ marginTop: 40, height: 37 }} />
+      <p style={{ marginTop: 40, height: 11 }} />
       <p style={{ width: 200 }}>
         <Button
           variant="contained"
